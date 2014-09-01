@@ -1,0 +1,625 @@
+<?php
+
+/**
+ * Implementation of hook_menu().
+ */
+function bgpage_menu() {
+  // Add the Taxonomy tab.
+  $items['node/%bg_node/tree'] = array(
+    'title' => 'Taxonomy',
+    'page callback' => 'bgpage_tree',
+    'page arguments' => array(1),
+    'access callback' => 'bg_menu_access',
+    'access arguments' => array(1),
+    'weight' => -1,
+    'type' => MENU_LOCAL_TASK,
+  );
+  // Add the Browse tab.
+  $items['node/%bg_node/bgpage'] = array(
+    'title' => 'Browse',
+    'page callback' => 'bgpage_browse',
+    'page arguments' => array(1),
+    'access callback' => 'bg_menu_access',
+    'access arguments' => array(1),
+    'weight' => 1,
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+
+/**
+ * Change "View" tab to say "Info".
+ */
+function bgpage_menu_alter(&$items) {
+  $items['node/%node/view']['title'] = t('Info');
+}
+
+function bgpage_permissions() {
+  return array('view taxon ID field', 'view who edited bgpage', 'view raw parents');
+}
+
+function bgpage_theme() {
+  return array(
+    'bgpage_classification' => array(
+      'arguments' => array('node' => NULL),
+    ),
+    'bgpage_tree' => array(
+      'arguments' => array('children' => NULL, 'nids' => NULL, 'taxons' => NULL, 'titles' => NULL, 'scientific_names' => NULL),
+    ),
+    'taxonomytree' => array(
+      'arguments' => array('node' => NULL, 'output' => NULL, 'links' => NULL),
+    ),
+    'bgpage_taxonomy_reorder' => array(
+      'arguments' => array('element' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter()
+ * 
+ * Assumption: this form is only used for editing, not new nodes.
+ * New nodes are created with the bgpage quickadd form.
+ */
+function bgpage_form_bgpage_node_form_alter(&$form, &$form_state, $form_id) {
+  $node = $form['#entity'];
+  
+  //$form['title']['#access'] = FALSE;
+  if (!user_access('view taxon ID field')) {
+    $form['field_taxon']['#access'] = FALSE;
+  }
+  if (!user_access('view who edited bgpage')) {
+    $form['field_editors']['#access'] = FALSE;
+  }
+  if (!user_access('view raw parents')) {
+    $form['field_parents']['#access'] = FALSE;
+  }
+    
+  // Run our validator after the regular node validator runs.  
+  $form['#validate'][] = 'bgpage_node_form_validate';
+  
+}
+
+function bgpage_node_form_validate(&$form, &$form_state) {
+  global $TAXON_NAMES, $TAXON_IDS;
+  
+  // Use $node-> syntax for convenience.
+  $node = (object) $form_state['values'];
+
+  if (!isset($TAXON_NAMES[$node->field_taxon[$node->language][0]['value']])) {
+    $node->taxon_name = t('No Taxon');
+  }
+  else {
+    $node->taxon_name = $TAXON_NAMES[$node->field_taxon[$node->language][0]['value']];
+  }
+
+  if ($node->taxon_name == t('No Taxon')) {
+    // TODO this should really hide the field in form_alter()
+    $node->scientific_name = '';
+
+    // Check if this is a duplicate entry.
+    // TODO update for D7
+    //$nid = db_result(db_query("SELECT n.nid FROM {node} n JOIN {bgpage} p ON p.nid = n.nid WHERE n.title = '%s' AND p.parent = '%s' AND n.nid != %d", $node->title, $node->parent, $node->nid));
+    // Criteria: has same parent, also has same title, also is not this node (if editing)
+    $query = new EntityFieldQuery;        
+    $query->entityCondition('entity_type', 'node')
+                ->entityCondition('bundle', 'bgpage')
+                ->propertyCondition('title', $node->title)
+                ->fieldCondition('field_parent', 'value', $node->field_parent[$node->language][0]['value']);
+    // Existing nodes have nids.
+    // In that case we want the query to exclude the nid of this node
+    // because it is silly to alert that this node has the same title as this node.
+    if ($node->nid) {
+      $query->propertyCondition('nid', $node->nid,'<>');
+    }
+    $result = $query->execute();
+
+    if (!empty($result['node'])) {
+      foreach ($result['node'] as $nid => $info) {
+        form_set_error('common_name', t('That name already exists: @link', array('@link' => l($node->title, "node/$nid"))));
+      }
+    }
+  }
+  else if (isset($node->scientific_name)) {
+    $node->scientific_name = trim($node->scientific_name);
+    if (!$node->scientific_name)
+      form_set_error('scientific_name', t('You must specify a scientific name.'));
+    else if (strpos($node->scientific_name, ' '))
+      form_set_error('scientific_name', t('Scientific name should be one word only.'));
+    else if (preg_match("/[^A-Za-z-]/", $node->scientific_name) > 0)
+      form_set_error('scientific_name', t("Only the letters 'a' to 'z' are allowed."));
+    else if (($node->taxon_name == "Superfamily") &&
+      !bugguide_str_ends_with($node->scientific_name, "oidea"))
+      form_set_error('scientific_name', t("A superfamily name should end with 'oidea'."));
+    else if (($node->taxon_name == "Family") &&
+      !bugguide_str_ends_with($node->scientific_name, "idae"))
+      form_set_error('scientific_name', t("A family name should end with 'idae'."));
+    else if (($node->taxon_name == "Subfamily") &&
+      !bugguide_str_ends_with($node->scientific_name, "inae"))
+      form_set_error('scientific_name', t("A subfamily name should end with 'inae'."));
+    else if (($node->taxon_name == "Species") || ($node->taxon_name == "Subspecies")) {
+      $node->scientific_name = strtolower($node->scientific_name);
+      $nid = db_result(db_query("SELECT nid FROM {bgpage} WHERE scientific_name = '%s' AND nid != %d AND taxon = '%d' AND parent = '%s'", $node->scientific_name, $node->nid, $node->taxon, $node->parent));
+      if ($nid) {
+        form_set_error('scientific_name', t('That one already exists for this genus: @link', array('@link' => l($node->scientific_name, "node/$nid"))));
+      }
+    }
+    else {
+      $node->scientific_name = ucfirst(strtolower($node->scientific_name));
+      $nid = db_result(db_query("SELECT nid FROM {bgpage} WHERE scientific_name = '%s' AND nid != %d AND taxon <= %d", $node->scientific_name, $node->nid, $TAXON_IDS["Genus"]));
+      if ($nid) {
+        form_set_error('scientific_name', t('That taxon already exists: @link', array('@link' => l($node->scientific_name, "node/$nid"))));
+      }
+    }
+  }
+
+  // Pass value forward to submit function.
+  $form_state['values']['taxon_name'] = $node->taxon_name;
+  $form_state['values']['scientific_name'] = $node->scientific_name;
+
+  // Set titles appropriately, then pass the values forward.
+  // TODO bgpage_set_titles($node);
+  $form_state['values']['title_node'] = $node->title_node;
+  $form_state['values']['title_browser'] = $node->title_browser;
+  
+}
+
+/**
+ * Add information to bgpage node(s).
+ * 
+ * The information specific to each bgpage will load automatically
+ * but the bgpage exists in a hierarchy. Information for each parent
+ * of this bgpage needs to be retrieved efficiently.
+ */
+function bgpage_entity_load($entities, $type) {
+  global $TAXON_NAMES, $TAXON_IDS;
+  if ($type != 'node') {
+    return;
+  }
+  
+  // There are some known paths that we skip going through the extra work
+  // of attaching parent and taxa data.
+  $path_blacklist = array(
+    'admin/content',
+  );
+  
+  if (in_array($_GET['q'], $path_blacklist)) {
+    return;
+  }
+    
+  foreach ($entities as $node) {
+    if ($node->type != 'bgpage' || isset($node->bgpage_entity_load)) {
+      continue;
+    }
+    $node->bgpage_entity_load = TRUE;
+    // Populate the hierarchy with taxon codes, titles and scientific names.
+    $language = field_language('node', $node, 'field_parent');
+    $parent_nids = array();
+    // Only get parents if node has them.
+    if (isset($node->field_parent[$language][0]['value'])) {
+      $parent_nids = explode(',', $node->field_parent[$language][0]['value']);
+    }
+    $taxa = array();
+    $titles = array();
+    $scientific_names = array();
+    $entities = array();
+    
+    // Create an array of basic entities so that the field values
+    // for this set of parents can be retrieved all at once.
+    foreach ($parent_nids as $parent_nid) {
+      $entities[$parent_nid] = new stdClass();
+      $entities[$parent_nid]->type = 'bgpage';
+      $entities[$parent_nid]->bundle = 'bgpage';
+      $entities[$parent_nid]->id = $parent_nid;
+    }
+    
+    if (isset($parent_nid)) {
+      $node->immediate_parent = $parent_nid;
+    }
+    
+    $field_taxon_info = field_info_field('field_taxon');
+    
+    $options = array(
+      'field_id' => $field_taxon_info['id'],
+    );
+    
+    // Load taxon, title, scientific name info for all parents 
+    // without doing a full node load.
+    field_attach_load('node', $entities, FIELD_LOAD_CURRENT, $options);
+    
+    // Check if a cached entity set loaded. Any entity id is good enough
+    // to check for this so use the last parent nid from above.
+    if (isset($parent_nid) && !isset($entities[$parent_nid]->field_scientific_name[$language][0]['value'])) {
+      // We didn't hit a cached entity set; explicitly retrieve field values.
+      $field_scientific_name_info = field_info_field('field_scientific_name');
+      $options = array(
+        'field_id' => $field_taxon_info['field_id'],
+      );
+      field_attach_load('node', $entities, FIELD_LOAD_CURRENT, $options); 
+    }
+    
+    foreach ($parent_nids as $parent_nid) {
+      // taxon is a four-digit code defined in bugguide_globals.inc, in $TAXON_NAMES and $TAXON_IDs
+      $taxon = $entities[$parent_nid]->field_taxon[$language][0]['value'];
+      $taxa[] = $taxon;
+      $scientific_name = $entities[$parent_nid]->field_scientific_name[$language][0]['safe_value'];
+      $scientific_names[] = $scientific_name;
+      $title = $entities[$parent_nid]->field_common_name[$language][0]['safe_value'];
+      if (isset($entities[$parent_nid]->field_hodges_number[$language][0]['value']) && 
+        $entities[$parent_nid]->field_hodges_number[$language][0]['value']) {
+        $title .= ' - Hodges#' . $entities[$parent_nid]->field_hodges_number[$language][0]['value'];
+      }
+      $titles[] = $title;
+    }
+    
+    // Now for the node actually being loaded.
+    if (!isset($node->field_taxon[$language][0]['value'])) {
+      watchdog('bg', 'no taxon set for node !nid', array('!nid', $node->nid), WATCHDOG_WARNING);
+    }
+    else {
+      $taxon = $node->field_taxon[$language][0]['value'];
+      $taxa[] = $taxon;
+    }
+   
+    $taxon_name = isset($TAXON_NAMES[$taxon]) ? strtolower($TAXON_NAMES[$taxon]) : '';
+    if ($taxon_name) {
+      $node->$taxon_name = $scientific_name;
+      $node->taxon_name = $taxon_name;
+    }
+    $node->taxa = implode('|', $taxa);
+    $node->scientific_names = implode('|', $scientific_names);
+    $node->titles = implode('|', $titles);
+  } 
+}
+
+
+/**
+ * Menu callback for the Browse tab.
+ */
+function bgpage_browse($nid) {
+  $node = node_load($nid);
+  $PER_PAGE = 5;
+  $node->comment = 0;
+  $path = bgpage_get_path($node);
+  $output = '';
+
+  $stage_filter_sql = bgimage_get_stage_filter_sql();
+
+  if (!$stage_filter_sql) {
+    $result = pager_query("SELECT n.nid FROM {node} n, {bgpage} p WHERE p.nid = n.nid AND parent = '$path' AND status = '1' ORDER BY p.sequence, p.nid", $PER_PAGE);
+  }
+  else {
+    //$result = pager_query("SELECT p.nid, count(*) FROM {node} n, {bgpage} p, {bgimage} i WHERE p.nid = n.nid AND p.parent = '$path' AND concat(i.parent,',') LIKE concat(p.parent,',',p.nid,',%') AND status = '1' AND representative = 1 AND $stage_filter GROUP BY p.nid ORDER BY p.sequence, p.nid", $PER_PAGE, 0, "SELECT count(distinct p.nid) FROM {node} n, {bgpage} p, {bgimage} i WHERE p.nid = n.nid AND p.parent = '$path' AND concat(i.parent,',') LIKE concat(p.parent,',',p.nid,',%') AND representative = 1 AND status = '1' AND $stage_filter");
+    // now with parent_idx
+    $result = pager_query("SELECT p.nid, COUNT(*) FROM {node} n, {bgpage} p, {bgimage} i WHERE p.nid = n.nid AND p.parent = '$path' AND i.parent_idx LIKE concat(p.parent,',',p.nid,',%') AND status = '1' AND representative = 1 $stage_filter_sql GROUP BY p.nid ORDER BY p.sequence, p.nid", $PER_PAGE, 0, "SELECT COUNT(distinct p.nid) FROM {node} n, {bgpage} p, {bgimage} i WHERE p.nid = n.nid AND p.parent = '$path' AND i.parent_idx LIKE concat(p.parent,',',p.nid,',%') AND representative = 1 AND status = '1' $stage_filter_sql");
+  }
+
+  while ($child = db_fetch_object($result)) {
+    $count++;
+    $child = node_load(array('nid' => $child->nid, 'type' => 'bgpage'));
+    if (!$child) {
+      watchdog('bgpage', "bgpage_browse() cannot load node nid '%nid'", array('%nid' => $nid), WATCHDOG_ERROR);
+    }
+    if ($child->status == 1) {
+      $children[] = $child;
+    }
+  }
+
+  if ($children) {
+    $pager = theme('pager');
+    $output .= $pager;
+    foreach ($children as $child) {
+      $child_links[] = l($child->title, "node/$child->nid/bgpage");
+    }
+    if (count($child_links) > 1) {
+      $output .= "<div class=\"node-links\">" . implode(' | ', $child_links) . "</div>";
+    }
+    $output .= bgimage_stage_filter_selector($node);
+    $output .= '<br />';
+
+    foreach ($children as $child) {
+      $child->comment = 0;
+      $child->teaser = bgimage_representative_images($child, 0);
+
+      // TODO: check_markup() is stripping the images out.
+      // This ugly hack sets the node format to Full HTML.
+      // We should Do It Right instead of doing this.
+      $child->format = 2;
+      $output .= node_view($child, 1);
+    }
+    if ($pager) {
+      $output .= $pager;
+    }
+  } else {
+    $output .= bgimage_representative_images($node, $main);
+    $output .= "<br /><br />";
+    $output .= bgimage_stage_filter_selector($node);
+    $output .= "<br /><br /><p>There are no guide pages below this one.</p>";
+  }
+  return $output;
+}
+
+/**
+ * Generate the taxonomic tree from the root (Arthropoda) to the current taxon.
+ *
+ * @param $nid
+ *   The node ID of the node being viewed.
+ * @param $mode
+ *   If true, show all the children from this point in the taxonomic tree on
+ *   down.
+ */
+function bgpage_tree($nid, $mode = NULL) {
+  global $TAXON_NAMES, $TAXON_IDS;
+  $all = array();
+  $node = node_load($nid);
+  $node->comment = 0;
+  $language = field_language('node', $node, 'field_parent');
+  // Note use of 'tree' as the type in the hook_link invocation.
+  //$node->links = module_invoke_all('link', 'tree', $node, $teaser);
+  //drupal_alter('link', $node->links, $node);
+
+  // this is the parents 2,4,5,6
+  //$path = bgpage_get_path($node);
+
+  if ($mode == 'all') {
+    $result = db_query("SELECT n.nid, n.title, p.taxon, p.scientific_name, p.hodges_number, p.sequence, p.parent FROM {node} n, {bgpage} p WHERE p.nid = n.nid AND p.parent like '%s,%%' AND status = '1' ORDER BY p.parent, p.sequence", bgpage_get_path($node));
+    while (TRUE) {
+      $child = db_fetch_object($result);
+      if (!$child || !$last || ($child->parent != $last->parent)) {
+        if ($last) {
+          $all[$last->parent] = $children;
+        }
+        unset($children);
+        if (!$child) {
+          break;
+        }
+      }
+      $children[] = $child;
+      $last = $child;
+    }
+  }
+
+  ///$result = db_query("SELECT n.nid, n.title, p.taxon, p.scientific_name, p.hodges_number, p.sequence, p.parent FROM {node} n, {bgpage} p WHERE p.nid = n.nid AND parent = '%s' AND status = '1' ORDER BY p.sequence, p.nid", $path);
+  
+  // TODO need to restore the ability to order taxonomy (the sequence column in bg6)
+  // Get all nids of children of this bgpage.
+  $parent = $node->field_parent[$language][0]['value'];
+  $query = new EntityFieldQuery();
+  $query
+    ->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'bgpage')
+    ->propertyCondition('status', 1)
+    ->fieldCondition('field_parent', 'value', $parent);
+
+  $result = $query->execute();
+  $children = node_load_multiple(array_keys($result['node']));
+  unset($children[$nid]);
+
+  if ($parent) {
+    $nids = explode(',', $parent);
+    $taxa = explode('|', $node->taxa);
+    $titles = explode('|', $node->titles);
+    $scientific_names = explode('|', $node->scientific_names);
+  }
+
+  $nids[] = $node->nid;
+  $taxa[] = $node->field_taxon[$language][0]['value'];
+  $titles[] = $node->title . (isset($node->field_taxon[$language][0]['value']) ? " - Hodges#" . $node->field_taxon[$language][0]['value'] : '');
+  $scientific_names[] = $node->field_scientific_name[$language][0]['safe_value'];
+
+  return bgpage_tree_build($node, $children, $nids, $taxa, $titles, $scientific_names, $all, $mode);
+}
+
+function bgpage_tree_build($node, $children, $nids, $taxons, $titles, $scientific_names, $all, $mode = NULL) {
+  global $TAXON_NAMES, $TAXON_IDS;
+  $tagged_guides = array();
+  if (isset($_SESSION['tagged_guides'])) {
+    $tagged_guides = explode(',', $_SESSION['tagged_guides']);
+  }
+  $output = '';
+
+  for ($i = 0; $i < count($taxons); $i++) {
+    $taxon_name = $TAXON_NAMES[$taxons[$i]];
+    if (!$taxon_name) {
+      $taxon_name = "No Taxon";
+    }
+
+    $output .= "<div class=\"bgpage-taxon\">";
+    $output .= "<span class=\"bgpage-taxon-title\">$taxon_name </span>";
+    $italics = $taxons[$i] >= $TAXON_IDS['Genus'];
+    $output .= "<span class=\"bgpage-taxon-desc\">";
+    if ($italics) {
+      $output .= "<i>";
+    }
+    $output .= l("<strong>" . ($scientific_names[$i] ? $scientific_names[$i] : $titles[$i]) . "</strong>", "node/" . $nids[$i] . "/tree", array('html' => TRUE));
+    if ($italics) {
+      $output .= "</i>";
+    }
+    if ($scientific_names[$i] && ($scientific_names[$i] != $titles[$i])) {
+      $output .= " - " . $titles[$i];
+    }
+    $output .= "</span>\n";
+  }
+
+  $output .= "<div class=\"bgpage-taxon\">";
+
+  $output .= "<br />";
+  if ($children) {
+    if (user_access('create bgpages')) {
+      if ($mode == 'reorder') {
+        $form['mode'] = array(
+          '#type' => 'value',
+          '#value' => 'reorder',
+        );
+        $sequence = 10;
+      }
+      else if ($mode == 'tag') {
+        $form['mode'] = array(
+          '#type' => 'value',
+          '#value' => 'tag',
+        );
+      }
+    }
+
+    foreach ($children as $child) {
+      if (user_access('create bgpages')) {
+        if (!isset($form['nids'])) {
+          $form['nids'] = array(
+            '#type' => 'value',
+            '#value' => array(),
+          );
+        }
+        $form['nids']['#value'][] = $child->nid;
+
+        if ($mode == 'reorder') {
+          $form['reorder-' . $child->nid] = array(
+            '#type' => 'textfield',
+            '#default_value' => $sequence,
+            '#size' => 3,
+            '#maxlength' => 3,
+            '#title' => bgpage_tree_child($child),
+            '#theme' => 'bgpage_taxonomy_reorder',
+          );
+
+          $sequence += 10;
+        }
+        elseif ($mode == 'tag') {
+          $form['tag-' . $child->nid] = array(
+            '#type' => 'checkbox',
+            '#title' => bgpage_tree_child($child),
+          );
+          // If a taxon is already on the clipboard, show it as checked.
+          if (in_array($child->nid, $tagged_guides)) {
+            $form['tag-' . $child->nid]['#default_value'] = TRUE;
+          }
+        }
+      }
+
+      if ($mode != 'tag' && $mode != 'reorder') {
+        $output .= bgpage_tree_child($child);
+      }
+
+      if ($mode == 'all') {
+        $output .= bgpage_tree_children($all, $child);
+      }
+    }
+
+    if ((($mode == 'tag') || ($mode == 'reorder')) && user_access('create bgpages')) {
+      $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => arg(3) == 'tag' ? t('Move to Clipboard') : t('Reorder'),
+      );
+    }
+  }
+  else {
+    $output .= "Nothing below this " . strtolower($node->taxon_name) . '.';
+  }
+
+  // Display tree with appropriate form.
+  if ($mode == 'reorder') {
+    $output .= drupal_get_form('bgpage_taxon_reorder', $form);
+  }
+  elseif ($mode == 'tag') {
+    $output .= drupal_get_form('bgpage_taxon_tag', $form);
+  }
+  elseif (($mode == 'add') && user_access('create bgpages') && ($node->taxon < $TAXON_IDS['Subspecies'])) {
+   // Add form for adding new guide page.
+   $output .= drupal_get_form('bgpage_quickadd_guide_page_form', $node);
+  }
+  elseif (($mode == NULL || $mode == 'all') && user_access('create bgpages')) {
+    // Add a POST button to drop guide page from clipboard here.
+    if (count($tagged_guides)) {
+      $all_ok = TRUE;
+      foreach ($tagged_guides as $tagged_guide) {
+        $tagged = node_load(array('nid' => $tagged_guide, 'type' => 'bgpage'));
+
+        if (!$tagged) {
+          // Node does not exist or was not loaded.
+          $all_ok = FALSE;
+          watchdog('bgpage', 'node_load(%nid) failed!', array('%nid' => $nid), WATCHDOG_ERROR);
+        }
+        elseif
+          // (Either the taxon is NOT allowed to be a child of the current node
+          (!in_array($tagged->taxon_name, bgpage_get_allowed_children($node->taxon))
+          // OR the taxon ID is less than or equal to the current node)
+          // that is, you cannot nest a family under a family.
+          || $tagged->taxon <= $node->taxon) {
+            $all_ok = FALSE;
+        }
+      }
+
+      if ($all_ok) {
+        $output .= drupal_get_form('bgpage_paste_form', $node->nid);
+      }
+    }
+  }
+
+  $output .= "</div>\n";
+
+  for ($i = count($taxons); $i > 0; $i--) {
+    $output .= "</div>\n";
+  }
+
+  if ($output) {
+    $output = "<div class=\"bgpage-classification\">$output</div>";
+    $output .= "<br />";
+  }
+
+  // Wrap the returned output in taxonomytree.tpl.php.
+  //$links = theme('links', $node->links);
+  return theme('taxonomytree', $node, $output, array());
+}
+function bgpage_tree_children(&$all, $parent) {
+  $children = $all[bgpage_get_path($parent)];
+  if (!$children)
+    return;
+
+  $output .= "<div class=\"bgpage-taxon\">";
+  foreach ($children as $child) {
+    $output .= bgpage_tree_child($child);
+    $output .= bgpage_tree_children($all, $child);
+  }
+  $output .= "</div>\n";
+  return $output;
+}
+
+function bgpage_tree_child($child, $count_children = TRUE) {
+  global $TAXON_NAMES, $TAXON_IDS;
+  $taxon_name = $TAXON_NAMES[$child->taxon];
+  if (!$taxon_name) {
+    $taxon_name = t('No Taxon');
+    $child->scientific_name = $child->title;
+  }
+
+  $search_path = $child->parent . ','. $child->nid;
+  $child_count = '';
+  if ($count_children) {
+    // TODO: add caching here.
+    $count = db_query("SELECT COUNT(value) FROM {field_data_field_parent} WHERE value LIKE '$search_path%'")->fetchField();
+    
+    $child_count = ' ('. $count .')';
+  }
+
+  $output .= "<span class=\"bgpage-taxon-title\">$taxon_name </span>";
+  $italics = $child->taxon >= $TAXON_IDS["Genus"];
+  $output .= "<span class=\"bgpage-taxon-desc\">";
+  if ($italics) {
+    $output .= "<i>";
+  }
+  $output .= l("<strong>$child->scientific_name</strong>", "node/" . $child->nid . "/tree", array('html' => TRUE));
+  if ($italics) {
+    $output .= "</i>";
+  }
+  if ($child->title != $child->scientific_name) {
+    $output .= " - " . $child->title;
+  }
+  if ($child->hodges_number) {
+    $output .= " - Hodges#" . $child->hodges_number;
+  }
+  $output .= "$child_count</span><br />\n";
+
+  return $output;
+}
+

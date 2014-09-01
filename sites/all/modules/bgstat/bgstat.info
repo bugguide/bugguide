@@ -1,0 +1,5 @@
+name = BugGuide Statistics
+description = Runs queries to mine data from BugGuide.
+package = "Bugguide"
+core = 7.x
+version = 7.x-1.0

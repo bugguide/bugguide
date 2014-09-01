@@ -1,0 +1,6 @@
+; $Id$
+name = Guide Page
+description = Helper for Guide Page content type.
+package = "Bugguide"
+core = 7.x
+version = "7.x-1.0"

@@ -1,0 +1,262 @@
+<?php
+
+// Node ID of ID Request
+define('BG_ID_REQUEST_NID', 6);
+
+// Node ID of Frass
+define('BG_FRASS_NID', 9410);
+
+/**
+ * @file
+ * The bg module provides bugguide-specific functionality.
+ */
+
+/**
+ * Implementation of hook_theme().
+ */
+function bg_theme() {
+  return array(
+    'guidemap' => array(
+      'arguments' => array(),
+    ),
+    'bugguide_fixup_locations_table' => array(),
+  );
+}
+
+/**
+ * Wildcard resolver for BugGuide tabs.
+ */
+function bg_node_to_arg($arg, $map, $index) {
+  if ($arg == '%') {
+    return NULL;
+  }
+  $node = node_load($arg);
+  if ($node->type == 'bgimage' || $node->type == 'bglink' || $node->type == 'bgref') {
+    return $node->immediate_parent;
+  }
+  return $arg;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function bg_menu() {
+  $items['bg'] = array(
+    'title' => 'Utilities',
+    'description' => 'BugGuide system utilities',
+    'page callback' => 'bg_utilities',
+    'access arguments' => array('administer BG utilities'),
+    'expanded' => 1,
+    'file' => 'bg.admin.inc',
+  );
+  $items['bg/orphans'] = array(
+    'title' => 'Show orphaned nodes',
+    'description' => 'Shows pages, images, links, and references with no parent',
+    'page callback' => 'bg_orphans',
+    'access arguments' => array('administer BG utilities'),
+    'file' => 'bg.admin.inc',
+  );
+  $items['bg/lepstage'] = array(
+    'title' => 'Show stageless Leps',
+    'description' => 'Shows Lepidoptera that have not been marked adult or immature',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('bg_stageless_leps'),
+    'access arguments' => array('administer BG utilities'),
+    'file' => 'bg.admin.inc',
+  );
+  $items['bg/blankhodges'] = array(
+    'title' => 'Show Leps without Hodges #',
+    'description' => 'Shows Lepidoptera that have not been assigned a Hodges number',
+    'page callback' => 'bg_blank_hodges',
+    'access arguments' => array('administer BG utilities'),
+    'file' => 'bg.admin.inc',
+  );  
+  $items['bg/badlocations'] = array(
+    'title' => 'Fix image locations',
+    'description' => 'Shows images that have county names in county field',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('bg_fixup_locations_form'),
+    'access arguments' => array('administer BG utilities'),
+    'file' => 'bg.admin.inc',
+  );
+  
+  return $items;
+}
+
+/**
+ * Access callback for BugGuide tabs.
+ */
+function bg_menu_access($nid) {
+  if (!$nid) {
+    return FALSE;
+  }
+  $node = node_load($nid);
+  $pid = $node->immediate_parent;
+  // No tabs on ID Request (6) or Frass (9410).
+  if (user_access('access content') && ($pid != BG_ID_REQUEST_NID) && ($pid != BG_FRASS_NID)) {
+    $show = array(
+      'bgpage' => TRUE,
+      'bgimage' => TRUE,
+      'bgref' => TRUE,
+      'bglink' => TRUE,
+    );
+    if (isset($show[$node->type])) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function bg_block_info() {
+  global $user, $base_url;
+
+  $blocks['bg_guide'] = array(
+    'info' => t('Clickable Guide'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function bg_block_view($delta = '') {
+  switch($delta) {
+    case 'bg_guide':
+      $block['subject'] = t('Clickable Guide');
+      $block['content'] = array(
+        '#theme' => 'bg_guide',
+        '#title' => t('Clickable Guide'),
+      );
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function bg_permission() {
+  return array(
+    'view badges' => array(
+      'title' => t('View badges denoting privileged roles'),
+      'description' => t('Make visible which other users have enhanced privileges.'),
+    ),
+    'administer bg utilities' => array(
+      'title' => t('Administer bg utilities'),
+      'description' => t('Perform bg maintenance tasks'),
+    )
+  );
+}
+
+/**
+ * Determine if a string ends with a substring
+ *
+ * @param string $str
+ * @param string $sub
+ * @return string
+ */
+function bg_str_ends_with($str, $sub) {
+  return substr( $str, strlen( $str ) - strlen( $sub ) ) == $sub;
+}
+
+function bg_fixup_parent(&$node) {
+  $node->parent = bg_get_current_path($node->parent);
+}
+
+function bg_get_current_path($path) {
+  $parents = explode(',', $path);
+  if (count($parents) > 0) {
+    // Load the node of the next-to-last parent.
+    $parent = node_load(array(
+      'nid' => $parents[count($parents) - 1],
+      'type' => 'bgpage')
+      );
+    if ($parent) { // There exists a next-to-last parent.
+      return bgpage_get_path($parent);
+    }
+  }
+
+  // No parent or no next-to-last parent.
+  return $path;
+}
+
+/**
+ * Build a one-line taxonomic linked breadcrumb.
+ *
+ * @param $node
+ * @param integer $from
+ *   If the breadcrumb should not start at Home / Guide then specify which
+ *   the nid of the taxon it should start from.
+ * @return HTML
+ */
+function bg_create_taxonomic_breadcrumb($node, $from = NULL){
+  global $TAXON_NAMES;
+  global $base_url;
+  global $user;
+
+  $guidebc = $user->guide_breadcrumbs;
+  $bc = '';
+  if (!$from ) {
+    $bc = "<a href=\"" . $base_url . "\">Home</a> &raquo; Guide";
+  }
+  $parent = explode(',', $node->parent);
+  $parent[] = $node->nid;
+  $placeholders = db_placeholders($parent, 'int');
+  $sql = "SELECT n.nid, n.title, p.scientific_name, p.taxon, p.hodges_number
+          FROM {node} n JOIN {bgpage} p on p.nid = n.nid
+          WHERE n.status = 1 AND n.nid in ($placeholders)
+          ORDER BY p.taxon ASC";
+  $result = db_query(db_rewrite_sql($sql), $parent);
+
+  $start_building = $from ? FALSE : TRUE;
+  while($data = db_fetch_object($result)) {
+    if (!$start_building) {
+      if ($data->nid == $from) {
+        $start_building = TRUE;
+      }
+      else {
+        continue;
+      }
+    }
+
+    // Common name is the node title.
+    $common = $data->title;
+
+    // What level of hierarchy we're at
+    $taxon = $TAXON_NAMES[$data->taxon];
+    if (!$taxon) {
+      $taxon = t('No Taxon');
+    }
+
+    // We only look at the user preferences when there is a scientific name present
+    if ($data->scientific_name) {
+      if ($guidebc == 3) {
+        $linktext = $data->scientific_name;
+      }
+      else if ($guidebc == 2) {
+        $linktext = $common;
+      }
+      else if ($guidebc == 1) {
+        $linktext = $data->scientific_name . ' (' . $common . ')';
+      }
+      else{
+        $linktext = $common . ' (' . $data->scientific_name . ')';
+      }
+    }
+    else {
+      $linktext = $common;
+    }
+    $bc .= ' &raquo; <a alt="' . $taxon . '" href="' . $base_url . '/node/' . $data->nid . '">' . $linktext . '</a>';
+  }
+
+  if ($from) {
+    // Remove leading right angle quote.
+    $bc = substr($bc, 8);
+  }
+
+  return "<div class=\"breadcrumb\">" . $bc . "</div>";
+}

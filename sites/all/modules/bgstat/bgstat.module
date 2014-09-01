@@ -1,0 +1,113 @@
+<?php
+
+/**
+ * @file
+ * The bgstat module provides statistical insight into BugGuide.
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function bgstat_menu() {
+  $items['admin/reports/bgstat'] = array(
+    'title' => 'BugGuide Statistics',
+    'description' => 'Special data mining queries',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access bgstats'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  $items['admin/reports/bgstat/nodes_by_user'] = array(
+    'title' => 'Nodes by user',
+    'description' => 'Nodes by user, descending. Add /nodetype/numberofrecords to URL.',
+    'page callback' => 'bgstat_nodes_by_user',
+    'access arguments' => array('access bgstats'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/reports/bgstat/comments_by_user'] = array(
+    'title' => 'Comments by user',
+    'description' => 'Comments by user, descending',
+    'page callback' => 'bgstat_comments_by_user',
+    'access arguments' => array('access bgstats'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/reports/bgstat/logins'] = array(
+    'title' => 'Login statistics',
+    'description' => 'Mine the watchdog to build list of users with actual login events.',
+    'page callback' => 'bgstat_logins',
+    'access arguments' => array('access bgstats'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function bgstat_permission() {
+  return array('access bgstats');
+  return array(
+    'access bgstats' => array(
+      'title' => t('View badges denoting privileged roles'),
+      'description' => t('Make visible which other users have enhanced privileges.'),
+    ),
+    'administer bg utilities' => array(
+      'title' => t('Administer bg utilities'),
+      'description' => t('Perform bg maintenance tasks'),
+    )
+  );
+
+}
+
+function bgstat_nodes_by_user($node_type = 'all', $limit = 50) {
+  // Sanitize input.
+  if (!in_array($node_type, array('bgimage', 'bgpage', 'forum', 'bglink', 'bgref'))) {
+    $node_type = 'all';
+  }
+  $limit = (int) $limit;
+  if (($limit) == 0) {
+    return '';
+  }
+
+  if ($node_type == 'all') {
+    $result = db_query_range("SELECT u.name, COUNT(n.nid) AS nodes FROM {node} n JOIN {users_current} u ON n.uid = u.uid WHERE n.type IN ('bgimage', 'bgpage', 'forum', 'bglink', 'bgref') GROUP BY n.uid ORDER BY nodes DESC", $node_type, 0, $limit);
+  }
+  else {
+    $result = db_query_range("SELECT u.name, COUNT(n.nid) AS nodes FROM {node} n JOIN {users_current} u ON n.uid = u.uid WHERE type='%s' GROUP BY n.uid ORDER BY nodes DESC", $node_type, 0, $limit);
+  }
+
+  $output = "User\tCount\r";
+  while ($data = db_fetch_object($result)) {
+    $output .= $data->name . "\t" . $data->nodes . "\r";
+  }
+  drupal_set_header('Content-Type: text/ascii; utf-8');
+  print $output;
+  module_invoke_all('exit');
+}
+
+function bgstat_comments_by_user($limit = 50) {
+  // Sanitize input.
+  $limit = (int) $limit;
+  if (($limit) == 0) {
+    return '';
+  }
+
+  $result = db_query_range("SELECT u.name, COUNT(c.cid) AS comments FROM {comments} c JOIN {users_current} u ON c.uid = u.uid GROUP BY c.uid ORDER BY comments DESC", 0, $limit);
+
+  $output = "User\tCount\r";
+  while ($data = db_fetch_object($result)) {
+    $output .= $data->name . "\t" . $data->comments . "\r";
+  }
+  drupal_set_header('Content-Type: text/ascii; utf-8');
+  print $output;
+  module_invoke_all('exit');
+}
+
+function bgstat_logins() {
+  $result = db_query("");
+
+  drupal_set_header('Content-Type: text/ascii; utf-8');
+  print $output;
+  module_invoke_all('exit');
+}

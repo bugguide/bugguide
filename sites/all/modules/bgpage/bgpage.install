@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function bgpage_install() {
+  
+}
+
+/**
+ * Implements hook_schema().
+ */
+function bgpage_schema() {
+  return array();
+  
+  // Future optimization; not currently used.
+  $schema['bgpage'] = array(
+    'description' => 'Store parent, and taxon information for bgpage content type',
+    'fields' => array(
+      'vid' => array(
+        'description' => 'The current {node_revision}.vid version identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'parent' => array(
+        'description' => 'The parents of this node, delimited by commas.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'taxon' => array(
+        'description' => 'Taxon constant describing this taxon. See bg_globals.inc',
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'location_codes' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('vid'),
+  );
+  return $schema;
+}
