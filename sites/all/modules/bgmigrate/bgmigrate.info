@@ -1,0 +1,9 @@
+name = "BugGuide Migration"
+description = "Migrate data to native Drupal 7 nodes."
+package = "Bugguide"
+core = 7.x
+dependencies[] = taxonomy
+dependencies[] = migrate
+
+files[] = bgmigrate.module
+files[] = bgmigrate.inc
