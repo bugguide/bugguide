@@ -4,27 +4,34 @@
  * To define a migration process from a set of source data to a particular
  * kind of Drupal object (for example, a specific node type), you define
  * a class derived from Migration. You must define a constructor to initialize
- * your migration object. By default, your class name will be the "machine name"
- * of the migration, by which you refer to it. Note that the machine name is
- * case-sensitive.
+ * your migration object.
+ *
+ * For your classes to be instantiated so they can be used to import content,
+ * you must register them - look at migrate_example.migrate.inc to see how
+ * registration works. Right now, it's important to understand that each
+ * migration will have a unique "machine name", which is displayed in the UI
+ * and is used to reference the migration in drush commands.
  *
  * In any serious migration project, you will find there are some options
  * which are common to the individual migrations you're implementing. You can
  * define an abstract intermediate class derived from Migration, then derive your
  * individual migrations from that, to share settings, utility functions, etc.
  */
-abstract class BasicBugGuideMigration extends DynamicMigration {
-  public function __construct() {
-    // Always call the parent constructor first for basic setup
-    parent::__construct();
+abstract class BasicBugGuideMigration extends Migration {
+  // A Migration constructor takes an array of arguments as its first parameter.
+  // The arguments must be passed through to the parent constructor.
+  public function __construct($arguments) {
+    parent::__construct($arguments);
 
     // With migrate_ui enabled, migration pages will indicate people involved in
     // the particular migration, with their role and contact info. We default the
     // list in the shared class; it can be overridden for specific migrations.
-    //$this->team = array(
-    //  new MigrateTeamMember('Liz Taster', 'ltaster@example.com', t('Product Owner')),
-    //  new MigrateTeamMember('Larry Brewer', 'lbrewer@example.com', t('Implementor')),
-    //);
+   // $this->team = array(
+   //   new MigrateTeamMember('Liz Taster', 'ltaster@example.com',
+   //                        t('Product Owner')),
+   //   new MigrateTeamMember('Larry Brewer', 'lbrewer@example.com',
+   //                         t('Implementor')),
+   // );
 
     // Individual mappings in a migration can be linked to a ticket or issue
     // in an external tracking system. Define the URL pattern here in the shared
@@ -33,14 +40,13 @@ abstract class BasicBugGuideMigration extends DynamicMigration {
     //$this->issuePattern = 'http://drupal.org/node/:id:';
   }
 }
-
 /**
  * The BeerNodeMigration uses the migrate_example_beer_node table as source
  * and creates Drupal nodes of type 'Beer' as destination.
  */
 class BGPageFieldMigration extends BasicBugGuideMigration {
-  public function __construct() {
-    parent::__construct();
+  public function __construct($arguments) {
+    parent::__construct($arguments);
     $this->description = t('BGPages');
     
     // Only update existing nodes; do not create new nodes. The definitive
@@ -60,25 +66,34 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
           'type' => 'int',
           'not null' => TRUE,
           'description' => 'BG Node ID.',
-          'alias' => 'bgnid',
+          'alias' => 'bgp',
         )
       ),
       MigrateDestinationNode::getKeySchema()
     );
     
-    $query = db_select('bgpage', 'bgp');
+    $query = db_select('bgpage_archive', 'bgp');
+    $query->fields('bgp', array('nid', 'scientific_name', 'names', 'counts'));
     $this->source = new MigrateSourceSQL($query, array());
 
-    // Set up our destination - nodes of type migrate_example_beer
+    // Set up our destination - nodes of type bgpage
     $this->destination = new MigrateDestinationNode('bgpage');
 
     // Mapped fields
-    $this->addFieldMapping('title', 'name')
-         ->description(t('Mapping beer name in source to node title'));
+    $this->addFieldMapping('field_scientific_name', 'scientific_name')
+         ->description(t('Mapping scientific name'));
+    $this->addFieldMapping('nid', 'nid')
+         ->description(t('Node ID'));
+   $this->addFieldMapping('field_other_common_names', 'names')
+         ->description(t('Other common names'));
+   $this->addFieldMapping('field_counts', 'counts')
+         ->description(t('Counts'));
 
-
+    $this->addUnmigratedDestinations(array(
+    'title','uid','created','changed','status','promote','sticky','revision','log','language','tnid','translate','revision_uid','is_new','body','body:summary','body:format','body:language','field_common_name','field_common_name:language','field_counts:format','field_counts:language','field_editors','field_editors:language','field_etymology','field_etymology:format','field_etymology:language','field_food','field_food:format','field_food:language','field_habitat','field_habitat:format','field_habitat:language','field_hodges_number','field_id','field_id:language','field_internet_references','field_internet_references:format','field_internet_references:language','field_life_cycle','field_life_cycle:format','field_life_cycle:language','field_location_codes','field_location_codes:language','field_other_common_names:format','field_other_common_names:language','field_parent','field_parent:language','field_print_references','field_print_references:format','field_print_references:language','field_pronunciation','field_pronunciation:format','field_pronunciation:language','field_range','field_range:format','field_range:language','field_remarks','field_remarks:format','field_remarks:language','field_representative_images','field_representative_images:language','field_scientific_name:language','field_season','field_season:format','field_season:language','field_see_also','field_see_also:format','field_see_also:language','field_size','field_size:format','field_size:language','field_synonyms','field_synonyms:format','field_synonyms:language','field_taxon','comment',
+    ));
          
-         
+    /*     
          
          
     // To maintain node identities between the old and new systems (i.e., have
@@ -147,5 +162,6 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
     if (module_exists('statistics')) {
       $this->addUnmigratedDestinations(array('totalcount', 'daycount', 'timestamp'));
     }
+    */
   }
 }
