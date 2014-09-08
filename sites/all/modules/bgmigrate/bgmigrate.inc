@@ -73,7 +73,7 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
     );
     
     $query = db_select('bgpage_archive', 'bgp');
-    $query->fields('bgp', array('nid', 'scientific_name', 'names', 'counts'));
+    $query->fields('bgp', array('nid', 'scientific_name', 'names', 'counts', 'size', 'id', 'range', 'habitat', 'season'));
     $this->source = new MigrateSourceSQL($query, array());
 
     // Set up our destination - nodes of type bgpage
@@ -88,9 +88,19 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
          ->description(t('Other common names'));
    $this->addFieldMapping('field_counts', 'counts')
          ->description(t('Counts'));
+   $this->addFieldMapping('field_size', 'size')
+         ->description(t('Size'));
+   $this->addFieldMapping('field_id', 'id')
+         ->description(t('ID'));
+   $this->addFieldMapping('field_range', 'range')
+         ->description(t('Range'));
+   $this->addFieldMapping('field_habitat', 'habitat')
+         ->description(t('Habitat'));
+   $this->addFieldMapping('field_season', 'season')
+         ->description(t('Season'));
 
     $this->addUnmigratedDestinations(array(
-    'title','uid','created','changed','status','promote','sticky','revision','log','language','tnid','translate','revision_uid','is_new','body','body:summary','body:format','body:language','field_common_name','field_common_name:language','field_counts:format','field_counts:language','field_editors','field_editors:language','field_etymology','field_etymology:format','field_etymology:language','field_food','field_food:format','field_food:language','field_habitat','field_habitat:format','field_habitat:language','field_hodges_number','field_id','field_id:language','field_internet_references','field_internet_references:format','field_internet_references:language','field_life_cycle','field_life_cycle:format','field_life_cycle:language','field_location_codes','field_location_codes:language','field_other_common_names:format','field_other_common_names:language','field_parent','field_parent:language','field_print_references','field_print_references:format','field_print_references:language','field_pronunciation','field_pronunciation:format','field_pronunciation:language','field_range','field_range:format','field_range:language','field_remarks','field_remarks:format','field_remarks:language','field_representative_images','field_representative_images:language','field_scientific_name:language','field_season','field_season:format','field_season:language','field_see_also','field_see_also:format','field_see_also:language','field_size','field_size:format','field_size:language','field_synonyms','field_synonyms:format','field_synonyms:language','field_taxon','comment',
+    'title','uid','created','changed','status','promote','sticky','revision','log','language','tnid','translate','revision_uid','is_new','body','body:summary','body:format','body:language','field_common_name','field_common_name:language','field_counts:format','field_counts:language','field_editors','field_editors:language','field_etymology','field_etymology:format','field_etymology:language','field_food','field_food:format','field_food:language','field_habitat:format','field_habitat:language','field_hodges_number','field_id:language','field_internet_references','field_internet_references:format','field_internet_references:language','field_life_cycle','field_life_cycle:format','field_life_cycle:language','field_location_codes','field_location_codes:language','field_other_common_names:format','field_other_common_names:language','field_parent','field_parent:language','field_print_references','field_print_references:format','field_print_references:language','field_pronunciation','field_pronunciation:format','field_pronunciation:language','field_range:format','field_range:language','field_remarks','field_remarks:format','field_remarks:language','field_representative_images','field_representative_images:language','field_scientific_name:language','field_season:format','field_season:language','field_see_also','field_see_also:format','field_see_also:language','field_size:format','field_size:language','field_synonyms','field_synonyms:format','field_synonyms:language','field_taxon','comment',
     ));
          
     /*     
