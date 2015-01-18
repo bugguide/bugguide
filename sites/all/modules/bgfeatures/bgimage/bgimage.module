@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the BG Image feature.
+ */
+
+include_once 'bgimage.features.inc';
