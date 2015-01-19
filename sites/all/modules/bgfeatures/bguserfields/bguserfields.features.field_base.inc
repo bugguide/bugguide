@@ -94,13 +94,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_city_state_country''
-  $field_bases['field_city_state_country''] = array(
+  // Exported field_base: 'field_city_state_country'
+  $field_bases['field_city_state_country'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_city_state_country'',
+    'field_name' => 'field_city_state_country',
     'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
