@@ -113,8 +113,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_user_city_state_country''
-  $field_instances['user-user-field_user_city_state_country''] = array(
+  // Exported field_instance: 'user-user-field_city_state_country'
+  $field_instances['user-user-field_city_state_country'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -134,7 +134,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_user_city_state_country'',
+    'field_name' => 'field_city_state_country',
     'label' => 'City, State, Country',
     'required' => 0,
     'settings' => array(
@@ -159,8 +159,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_user_default_state_country'
-  $field_instances['user-user-field_user_default_state_country'] = array(
+  // Exported field_instance: 'user-user-field_default_state_country'
+  $field_instances['user-user-field_default_state_country'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -180,7 +180,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_user_default_state_country',
+    'field_name' => 'field_default_state_country',
     'label' => 'Default State and Country',
     'required' => 0,
     'settings' => array(
@@ -208,8 +208,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_user_email'
-  $field_instances['user-user-field_user_email'] = array(
+  // Exported field_instance: 'user-user-field_email'
+  $field_instances['user-user-field_email'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -224,7 +224,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_user_email',
+    'field_name' => 'field_email',
     'label' => 'Public e-mail address',
     'required' => 0,
     'settings' => array(
@@ -313,8 +313,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_user_license'
-  $field_instances['user-user-field_user_license'] = array(
+  // Exported field_instance: 'user-user-field_license'
+  $field_instances['user-user-field_license'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -329,7 +329,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_user_license',
+    'field_name' => 'field_license',
     'label' => 'Contributed content license terms',
     'required' => 0,
     'settings' => array(
@@ -344,8 +344,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_user_license_additional'
-  $field_instances['user-user-field_user_license_additional'] = array(
+  // Exported field_instance: 'user-user-field_license_additional'
+  $field_instances['user-user-field_license_additional'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -360,7 +360,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_user_license_additional',
+    'field_name' => 'field_license_additional',
     'label' => 'Additional license information',
     'required' => 0,
     'settings' => array(
