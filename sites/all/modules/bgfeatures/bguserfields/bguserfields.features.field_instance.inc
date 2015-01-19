@@ -10,8 +10,8 @@
 function bguserfields_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'user-user-field_bg_homepage'
-  $field_instances['user-user-field_bg_homepage'] = array(
+  // Exported field_instance: 'user-user-field_user_bg_homepage'
+  $field_instances['user-user-field_user_bg_homepage'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -26,7 +26,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_bg_homepage',
+    'field_name' => 'field_user_bg_homepage',
     'label' => 'BugGuide Homepage',
     'required' => 0,
     'settings' => array(
@@ -44,8 +44,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_biography'
-  $field_instances['user-user-field_biography'] = array(
+  // Exported field_instance: 'user-user-field_user_biography'
+  $field_instances['user-user-field_user_biography'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -60,7 +60,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_biography',
+    'field_name' => 'field_user_biography',
     'label' => 'Biography',
     'required' => 0,
     'settings' => array(
@@ -78,8 +78,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_breadcrumb_format'
-  $field_instances['user-user-field_breadcrumb_format'] = array(
+  // Exported field_instance: 'user-user-field_user_breadcrumb_format'
+  $field_instances['user-user-field_user_breadcrumb_format'] = array(
     'bundle' => 'user',
     'default_value' => array(
       0 => array(
@@ -98,7 +98,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_breadcrumb_format',
+    'field_name' => 'field_user_breadcrumb_format',
     'label' => 'Show me Guide breadcrumbs using',
     'required' => 1,
     'settings' => array(
@@ -113,8 +113,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_city_state_country'
-  $field_instances['user-user-field_city_state_country'] = array(
+  // Exported field_instance: 'user-user-field_user_city_state_country''
+  $field_instances['user-user-field_user_city_state_country''] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -134,7 +134,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_city_state_country',
+    'field_name' => 'field_user_city_state_country'',
     'label' => 'City, State, Country',
     'required' => 0,
     'settings' => array(
@@ -159,8 +159,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_default_state_country'
-  $field_instances['user-user-field_default_state_country'] = array(
+  // Exported field_instance: 'user-user-field_user_default_state_country'
+  $field_instances['user-user-field_user_default_state_country'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -180,7 +180,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_default_state_country',
+    'field_name' => 'field_user_default_state_country',
     'label' => 'Default State and Country',
     'required' => 0,
     'settings' => array(
@@ -208,8 +208,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_email'
-  $field_instances['user-user-field_email'] = array(
+  // Exported field_instance: 'user-user-field_user_email'
+  $field_instances['user-user-field_user_email'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -224,7 +224,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_email',
+    'field_name' => 'field_user_email',
     'label' => 'Public e-mail address',
     'required' => 0,
     'settings' => array(
@@ -241,8 +241,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_full_name'
-  $field_instances['user-user-field_full_name'] = array(
+  // Exported field_instance: 'user-user-field_user_full_name'
+  $field_instances['user-user-field_user_full_name'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -257,7 +257,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_full_name',
+    'field_name' => 'field_user_full_name',
     'label' => 'Full Name',
     'required' => 0,
     'settings' => array(
@@ -275,8 +275,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_homepage'
-  $field_instances['user-user-field_homepage'] = array(
+  // Exported field_instance: 'user-user-field_user_homepage'
+  $field_instances['user-user-field_user_homepage'] = array(
     'bundle' => 'user',
     'default_value' => array(
       0 => array(
@@ -295,7 +295,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_homepage',
+    'field_name' => 'field_user_homepage',
     'label' => 'Homepage',
     'required' => 0,
     'settings' => array(
@@ -313,8 +313,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_license'
-  $field_instances['user-user-field_license'] = array(
+  // Exported field_instance: 'user-user-field_user_license'
+  $field_instances['user-user-field_user_license'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -329,7 +329,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_license',
+    'field_name' => 'field_user_license',
     'label' => 'Contributed content license terms',
     'required' => 0,
     'settings' => array(
@@ -344,8 +344,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_license_additional'
-  $field_instances['user-user-field_license_additional'] = array(
+  // Exported field_instance: 'user-user-field_user_license_additional'
+  $field_instances['user-user-field_user_license_additional'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
@@ -360,7 +360,7 @@ function bguserfields_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_license_additional',
+    'field_name' => 'field_user_license_additional',
     'label' => 'Additional license information',
     'required' => 0,
     'settings' => array(
@@ -378,8 +378,8 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_scientific_use'
-  $field_instances['user-user-field_scientific_use'] = array(
+  // Exported field_instance: 'user-user-field_user_scientific_use'
+  $field_instances['user-user-field_user_scientific_use'] = array(
     'bundle' => 'user',
     'default_value' => array(
       0 => array(
@@ -388,6 +388,7 @@ function bguserfields_field_default_field_instances() {
     ),
     'deleted' => 0,
     'description' => 'The collection of data at BugGuide is very useful. For example, a researcher may want to use BugGuide observations to plot the spread of a species over time. We would very much like to include 
+
 data that you submit in the BugGuide data set. Your images will never be published without your permission, just included in scientific analyses. However, if you do not want your submissions included, you may uncheck this box.',
     'display' => array(
       'default' => array(
@@ -399,7 +400,7 @@ data that you submit in the BugGuide data set. Your images will never be publish
       ),
     ),
     'entity_type' => 'user',
-    'field_name' => 'field_scientific_use',
+    'field_name' => 'field_user_scientific_use',
     'label' => 'Include My Data in Scientific Use',
     'required' => 1,
     'settings' => array(
@@ -437,6 +438,7 @@ data that you submit in the BugGuide data set. Your images will never be publish
   t('Public e-mail address');
   t('Show me Guide breadcrumbs using');
   t('The collection of data at BugGuide is very useful. For example, a researcher may want to use BugGuide observations to plot the spread of a species over time. We would very much like to include 
+
 data that you submit in the BugGuide data set. Your images will never be published without your permission, just included in scientific analyses. However, if you do not want your submissions included, you may uncheck this box.');
   t('Where you live. This information is optional but it allows us to create this interesting <a href="">map of BugGuide users</a>. By default only state and country are shown publicly. If you want to contribute to the map but not show any location information publicly check the Do not share publicly box.');
 

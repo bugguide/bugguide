@@ -10,13 +10,13 @@
 function bguserfields_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_bg_homepage'
-  $field_bases['field_bg_homepage'] = array(
+  // Exported field_base: 'field_user_bg_homepage'
+  $field_bases['field_user_bg_homepage'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_bg_homepage',
+    'field_name' => 'field_user_bg_homepage',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(
@@ -39,13 +39,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_biography'
-  $field_bases['field_biography'] = array(
+  // Exported field_base: 'field_user_biography'
+  $field_bases['field_user_biography'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_biography',
+    'field_name' => 'field_user_biography',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(
@@ -66,13 +66,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_breadcrumb_format'
-  $field_bases['field_breadcrumb_format'] = array(
+  // Exported field_base: 'field_user_breadcrumb_format'
+  $field_bases['field_user_breadcrumb_format'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_breadcrumb_format',
+    'field_name' => 'field_user_breadcrumb_format',
     'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
@@ -94,13 +94,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_city_state_country'
-  $field_bases['field_city_state_country'] = array(
+  // Exported field_base: 'field_user_city_state_country''
+  $field_bases['field_user_city_state_country''] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_city_state_country',
+    'field_name' => 'field_user_city_state_country'',
     'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
@@ -110,13 +110,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'addressfield',
   );
 
-  // Exported field_base: 'field_default_state_country'
-  $field_bases['field_default_state_country'] = array(
+  // Exported field_base: 'field_user_default_state_country'
+  $field_bases['field_user_default_state_country'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_default_state_country',
+    'field_name' => 'field_user_default_state_country',
     'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
@@ -126,13 +126,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'addressfield',
   );
 
-  // Exported field_base: 'field_email'
-  $field_bases['field_email'] = array(
+  // Exported field_base: 'field_user_email'
+  $field_bases['field_user_email'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_email',
+    'field_name' => 'field_user_email',
     'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
@@ -142,13 +142,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'email',
   );
 
-  // Exported field_base: 'field_full_name'
-  $field_bases['field_full_name'] = array(
+  // Exported field_base: 'field_user_full_name'
+  $field_bases['field_user_full_name'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_full_name',
+    'field_name' => 'field_user_full_name',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(
@@ -171,13 +171,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_homepage'
-  $field_bases['field_homepage'] = array(
+  // Exported field_base: 'field_user_homepage'
+  $field_bases['field_user_homepage'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_homepage',
+    'field_name' => 'field_user_homepage',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(
@@ -200,13 +200,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_license'
-  $field_bases['field_license'] = array(
+  // Exported field_base: 'field_user_license'
+  $field_bases['field_user_license'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_license',
+    'field_name' => 'field_user_license',
     'foreign keys' => array(),
     'indexes' => array(
       'licence' => array(
@@ -233,13 +233,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'creative_commons',
   );
 
-  // Exported field_base: 'field_license_additional'
-  $field_bases['field_license_additional'] = array(
+  // Exported field_base: 'field_user_license_additional'
+  $field_bases['field_user_license_additional'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_license_additional',
+    'field_name' => 'field_user_license_additional',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(
@@ -260,13 +260,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_scientific_use'
-  $field_bases['field_scientific_use'] = array(
+  // Exported field_base: 'field_user_scientific_use'
+  $field_bases['field_user_scientific_use'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_scientific_use',
+    'field_name' => 'field_user_scientific_use',
     'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
