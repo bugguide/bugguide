@@ -10,6 +10,35 @@
 function bgimage_field_default_field_bases() {
   $field_bases = array();
 
+  // Exported field_base: 'field_bgimage_county'
+  $field_bases['field_bgimage_county'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_bgimage_county',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
+  );
+
   // Exported field_base: 'field_bgimage_custom_tag'
   $field_bases['field_bgimage_custom_tag'] = array(
     'active' => 1,
@@ -67,6 +96,32 @@ function bgimage_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'datetime',
+  );
+
+  // Exported field_base: 'field_bgimage_gender'
+  $field_bases['field_bgimage_gender'] = array(
+    'active' => 1,
+    'cardinality' => 2,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_bgimage_gender',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        1 => 'Female',
+        2 => 'Male',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_integer',
   );
 
   // Exported field_base: 'field_bgimage_image'
@@ -127,6 +182,22 @@ function bgimage_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
+  // Exported field_base: 'field_bgimage_location'
+  $field_bases['field_bgimage_location'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_bgimage_location',
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'addressfield',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'addressfield',
+  );
+
   // Exported field_base: 'field_bgimage_remarks'
   $field_bases['field_bgimage_remarks'] = array(
     'active' => 1,
@@ -152,6 +223,24 @@ function bgimage_field_default_field_bases() {
     'settings' => array(),
     'translatable' => 0,
     'type' => 'text_long',
+  );
+
+  // Exported field_base: 'field_bgimage_representative'
+  $field_bases['field_bgimage_representative'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_bgimage_representative',
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'fivestar',
+    'settings' => array(
+      'axis' => 'representative',
+    ),
+    'translatable' => 0,
+    'type' => 'fivestar',
   );
 
   // Exported field_base: 'field_bgimage_size'

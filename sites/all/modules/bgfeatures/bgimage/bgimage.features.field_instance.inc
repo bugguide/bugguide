@@ -10,6 +10,46 @@
 function bgimage_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'node-image-field_bgimage_county'
+  $field_instances['node-image-field_bgimage_county'] = array(
+    'bundle' => 'image',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 8,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_bgimage_county',
+    'label' => 'County',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 4,
+    ),
+  );
+
   // Exported field_instance: 'node-image-field_bgimage_custom_tag'
   $field_instances['node-image-field_bgimage_custom_tag'] = array(
     'bundle' => 'image',
@@ -103,6 +143,43 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-image-field_bgimage_gender'
+  $field_instances['node-image-field_bgimage_gender'] = array(
+    'bundle' => 'image',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'If you don\'t know for sure, don\'t check it. If the photo shows mating behavior, check both male and female.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 6,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_bgimage_gender',
+    'label' => 'Gender',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 2,
+    ),
+  );
+
   // Exported field_instance: 'node-image-field_bgimage_image'
   $field_instances['node-image-field_bgimage_image'] = array(
     'bundle' => 'image',
@@ -190,6 +267,64 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-image-field_bgimage_location'
+  $field_instances['node-image-field_bgimage_location'] = array(
+    'bundle' => 'image',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'addressfield',
+        'settings' => array(
+          'format_handlers' => array(
+            0 => 'address',
+          ),
+          'use_widget_handlers' => 1,
+        ),
+        'type' => 'addressfield_default',
+        'weight' => 7,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_bgimage_location',
+    'label' => 'Location',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'addressfield',
+      'settings' => array(
+        'available_countries' => array(
+          'CA' => 'CA',
+          'US' => 'US',
+        ),
+        'default_country' => 'US',
+        'format_handlers' => array(
+          'address' => 'address',
+          'address-hide-postal-code' => 'address-hide-postal-code',
+          'address-hide-street' => 'address-hide-street',
+          'address-optional' => 'address-optional',
+          'address-hide-country' => 0,
+          'organisation' => 0,
+          'name-full' => 0,
+          'name-oneline' => 0,
+        ),
+      ),
+      'type' => 'addressfield_standard',
+      'weight' => 3,
+    ),
+  );
+
   // Exported field_instance: 'node-image-field_bgimage_remarks'
   $field_instances['node-image-field_bgimage_remarks'] = array(
     'bundle' => 'image',
@@ -227,6 +362,55 @@ function bgimage_field_default_field_instances() {
       ),
       'type' => 'text_textarea',
       'weight' => -1,
+    ),
+  );
+
+  // Exported field_instance: 'node-image-field_bgimage_representative'
+  $field_instances['node-image-field_bgimage_representative'] = array(
+    'bundle' => 'image',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'fivestar',
+        'settings' => array(
+          'expose' => TRUE,
+          'style' => 'average',
+          'text' => 'average',
+          'widget' => array(
+            'fivestar_widget' => NULL,
+          ),
+        ),
+        'type' => 'fivestar_formatter_default',
+        'weight' => 9,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_bgimage_representative',
+    'label' => 'Representative Images',
+    'required' => 0,
+    'settings' => array(
+      'allow_clear' => 0,
+      'allow_ownvote' => 1,
+      'allow_revote' => 1,
+      'stars' => 5,
+      'target' => 'none',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'fivestar',
+      'settings' => array(),
+      'type' => 'exposed',
+      'weight' => 5,
     ),
   );
 
@@ -272,16 +456,21 @@ function bgimage_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('County');
   t('Custom Tag');
   t('Date');
   t('Date taken, if known (mm/dd/yy). Only specify this for wild specimens.');
   t('Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).');
+  t('Gender');
   t('If you don\'t know for sure, don\'t check it. For example: for caterpillars check immature and for butterflies and moths check adult. If an image shows more than one life stage, check each one.');
+  t('If you don\'t know for sure, don\'t check it. If the photo shows mating behavior, check both male and female.');
   t('If you have more than one image of the same specimen, submit this form first. Then view the first submitted image and select the "add image" link to add another. Please limit yourself to just a few of your best shots for a particular specimen.');
   t('Image');
   t('Life Stage');
+  t('Location');
   t('Optional. An identifier for your own use. If you choose something unique here from your own records, you can easily find this image later using search.');
   t('Remarks');
+  t('Representative Images');
   t('Size');
   t('Size, if known, in millimeters.');
 
