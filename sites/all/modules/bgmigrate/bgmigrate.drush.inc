@@ -3,7 +3,7 @@
 /**
  * Implements hook_drush_command().
  */
-function drush_bgmigrate_command() {
+function bgmigrate_drush_command() {
 
   $items['bgmigrate-users'] = array(
     'description' => 'Migrate users to D7 fields.',
