@@ -43,7 +43,7 @@ function drush_bgmigrate_users() {
     // field_user_breadcrumb_format and field_user_scientific_use are list fields
     $edit['field_user_bg_homepage'][LANGUAGE_NONE][0]['value'] = $account->profile_homepage;
     
-    if (!isset($account->data['guide_breadcrumbs']) {
+    if (!isset($account->data['guide_breadcrumbs'])) {
       //drupal_set_message(print_r($account));
       $account->data['guide_breadcrumbs'] = '0';
     }
