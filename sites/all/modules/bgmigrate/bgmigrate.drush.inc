@@ -9,6 +9,10 @@ function bgmigrate_drush_command() {
     'description' => 'Migrate users to D7 fields.',
     'aliases' => array('bgmu'),
   );
+  $items['bgmigrate-users-data'] = array(
+    'description' => 'Enumerate user data.',
+    'aliases' => array('bgmud'),
+  );
 
   return $items;
 }
@@ -17,60 +21,141 @@ function drush_bgmigrate_users() {
   $result = db_query('SELECT uid FROM {users} WHERE uid > 0');
   foreach ($result as $record) {
     $uid = $record->uid;
-    $result1 = db_query('SELECT f.name, f.type, v.uid, v.value FROM {profile_field} f INNER JOIN {profile_value} v ON f.fid = v.fid WHERE uid = :uid', array(':uid' => $uid));
-    $profile = array();
-    foreach ($result1 as $record1) {
-      if (empty($profile[$record1->name])) {
-        // No need to unserialize because only date needs that
-        // and we don't have any date profile fields.
-        $profile[$record1->name] = $record1->value;
-      }
-    }
- 
-    if (!$profile) {
+    
+    $account = user_load($uid);
+    if (!isset($account->data)) {
       continue;
     }
     
-    $account = user_load($uid);
+    $data = $account->data;
     
-    $fields = array('user_bg_homepage', 'user_biography', 'city_state_country', 'default_state_country', 'email', 'user_full_name', 'user_homepage', 'license', 'license_additional');
-    foreach ($fields as $field) {
-      if (isset($profile['profile_' . $field])) {
-        $edit['field_' . $field][LANGUAGE_NONE][0]['value'] = $profile['profile_' . $field];
-      }
-    }
+    $user_full_name = isset($data['full_name']) ? $data['full_name'] : '';
+    $account->field_user_full_name[LANGUAGE_NONE][0]['value'] = $user_full_name;
+    
+    $public_email = isset($data['public_email']) ? $data['public_email'] : '';
+    $account->field_email[LANGUAGE_NONE][0]['email'] = $public_email;
+    
+    $homepage = isset($data['homepage']) ? $data['homepage'] : '';
+    $account->field_user_homepage[LANGUAGE_NONE][0]['value'] = $homepage;
+    
+    // contact
+    // $data['contact'] - information on how to contact user
+    // This is being replaced by the Contact module which provides
+    // anonymous contact.
+    
+    // location
+    
+    // biography
+    $biography = isset($data['biography']) ? $data['biography'] : '';
+    $account->field_user_biography[LANGUAGE_NONE][0]['value'] = $biography;
+    
+    // license
+    
+    // license_details
+    
+    // subscriptions_auto
+    // TODO: look in modern subscriptions module to see how this is stored
+    
+    // subscriptions_subscribe
+    // TODO: what is this?
+    
+    // bugguide_homepage
+    $bg_homepage = isset($data['bugguide_homepage']) ? $data['bugguide_homepage'] : '';
+    $account->field_user_bg_homepage[LANGUAGE_NONE][0]['value'] = $bg_homepage;
+        
+    // TODO
+    // location code is something like 'IA'
+    // Map this into addressfield
+    //$location_code = isset($data['location_code']) ? $data['location_code'] : '';
+    //$account->field_default_state_country
+    
+    // county
+    
+    // fullsize - what is this?
     
     // field_user_breadcrumb_format and field_user_scientific_use are list fields
-    $edit['field_user_bg_homepage'][LANGUAGE_NONE][0]['value'] = $account->profile_homepage;
     
-    if (!isset($account->data['guide_breadcrumbs'])) {
-      //drupal_set_message(print_r($account));
-      $account->data['guide_breadcrumbs'] = '0';
-    }
+    $breadcrumbs = isset($account->data['guide_breadcrumbs']) ? $data['guide_breadcrumbs'] : '0';
     
-    switch($account->data['guide_breadcrumbs']) {
+    switch($breadcrumbs) {
       case '0':
-        $edit['field_breadcrumb_format'][LANGUAGE_NONE][0]['value'] = 'Common name (Scientific name)';
+        $account->field_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Common name (Scientific name)';
         break;
         
       case '1':
-        $edit['field_breadcrumb_format'][LANGUAGE_NONE][0]['value'] = 'Scientific name (Common name)';
+        $account->field_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Scientific name (Common name)';
         break;
         
       case '2':
-        $edit['field_breadcrumb_format'][LANGUAGE_NONE][0]['value'] = 'Common name';
+        $account->field_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Common name';
         break;
         
       case '3':
-        $edit['field_breadcrumb_format'][LANGUAGE_NONE][0]['value'] = 'Scientific name';
+        $account->field_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Scientific name';
         break;
         
     }
     
     // All users default to this; they can opt-out by unchecking the box.
-    $edit['field_user_scientific_use'][LANGUAGE_NONE][0]['value'] = 1;
-    
-    // TODO migrate location and county to addressfield
-    // TODO migrate subscriptions
+    $account->field_user_scientific_use[LANGUAGE_NONE][0]['value'] = 1;
+   
+    user_save($account); 
    }
+}
+
+function bgmigrate_user_presave(&$edit, $account, $category) {
+  $key = array(
+    'biography',
+    'block',
+    'full_name',
+    'public_email',
+    'homepage',
+    'bugguide_homepage',
+    'guide_breadcrumbs',
+    'pass1',
+    'pass2',
+    'session',
+  );
+  foreach ($keys as $key) {
+    unset($edit[$key]);
+  }
+  
+}
+
+function drush_bgmigrate_users_data() {
+  $data = array();
+  $data['nodata'] = 0;
+  
+  $blocks = array();
+  
+  $result = db_query('SELECT uid FROM {users} WHERE uid > 0');
+  foreach ($result as $record) {
+    $uid = $record->uid;
+    $account = user_load($uid);
+    if (!isset($account->data)) {
+      $data['nodata']++;
+      continue;
+    }
+    
+    if (!is_array($account->data)) {
+      print "Data is not an array in uid $uid";
+    }
+    
+    if (isset($account->data['location'])) {
+      print $account->data['location'];
+      print "\r";
+    }
+    
+    //foreach($account->data as $key => $value) {
+    //  if (!isset($data[$key])) {
+    //    $data[$key] = 0;
+    //  }
+    //  $data[$key]++;
+    //}
+    // Every 1000 give some output.
+    //if ($uid % 1000 == 0) {
+    //  print $uid . " ";
+    //}
+  }
+  print_r($data);
 }
