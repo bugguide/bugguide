@@ -48,6 +48,7 @@ function drush_bgmigrate_users() {
     // biography
     $biography = isset($data['biography']) ? $data['biography'] : '';
     $account->field_user_biography[LANGUAGE_NONE][0]['value'] = $biography;
+    $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 1;
     
     // license
     
@@ -79,19 +80,19 @@ function drush_bgmigrate_users() {
     
     switch($breadcrumbs) {
       case '0':
-        $account->field_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Common name (Scientific name)';
+        $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Common name (Scientific name)';
         break;
         
       case '1':
-        $account->field_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Scientific name (Common name)';
+        $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Scientific name (Common name)';
         break;
         
       case '2':
-        $account->field_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Common name';
+        $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Common name';
         break;
         
       case '3':
-        $account->field_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Scientific name';
+        $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Scientific name';
         break;
         
     }
