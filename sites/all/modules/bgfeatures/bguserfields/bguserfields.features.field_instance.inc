@@ -10,6 +10,153 @@
 function bguserfields_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'user-user-field_default_state_country'
+  $field_instances['user-user-field_default_state_country'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Image submissions will use this location by default. (You can change it during image submission.)',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'addressfield',
+        'settings' => array(
+          'format_handlers' => array(
+            0 => 'address',
+          ),
+          'use_widget_handlers' => 1,
+        ),
+        'type' => 'addressfield_default',
+        'weight' => 10,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_default_state_country',
+    'label' => 'Default State and Country',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'addressfield',
+      'settings' => array(
+        'available_countries' => array(
+          'CA' => 'CA',
+          'US' => 'US',
+        ),
+        'default_country' => '',
+        'format_handlers' => array(
+          'address' => 'address',
+          'address-hide-country' => 0,
+          'organisation' => 0,
+          'name-full' => 0,
+          'name-oneline' => 0,
+        ),
+      ),
+      'type' => 'addressfield_standard',
+      'weight' => 17,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_email'
+  $field_instances['user-user-field_email'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Optional email address for others to see. You may wish to modify it in an obvious way to avoid spam (for example, me_NO_SPAM@example.com).',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'email',
+        'settings' => array(),
+        'type' => 'email_default',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_email',
+    'label' => 'Public e-mail address',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'email',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'email_textfield',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_license'
+  $field_instances['user-user-field_license'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'creative_commons',
+        'settings' => array(),
+        'type' => 'creative_commons_small_image',
+        'weight' => 5,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_license',
+    'label' => 'Contributed content license terms',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'creative_commons',
+      'settings' => array(),
+      'type' => 'radios',
+      'weight' => 12,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_license_additional'
+  $field_instances['user-user-field_license_additional'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Feel free to provide more specific license information here.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 6,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_license_additional',
+    'label' => 'Additional license information',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 1,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 3,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 13,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_user_bg_homepage'
   $field_instances['user-user-field_user_bg_homepage'] = array(
     'bundle' => 'user',
@@ -113,134 +260,6 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_city_state_country'
-  $field_instances['user-user-field_city_state_country'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Where you live. This information is optional but it allows us to create this interesting <a href="">map of BugGuide users</a>. By default only state and country are shown publicly. If you want to contribute to the map but not show any location information publicly check the Do not share publicly box.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'addressfield',
-        'settings' => array(
-          'format_handlers' => array(
-            0 => 'address',
-          ),
-          'use_widget_handlers' => 1,
-        ),
-        'type' => 'addressfield_default',
-        'weight' => 4,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_city_state_country',
-    'label' => 'City, State, Country',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'addressfield',
-      'settings' => array(
-        'available_countries' => array(),
-        'default_country' => '',
-        'format_handlers' => array(
-          'address' => 'address',
-          'address-hide-country' => 0,
-          'organisation' => 0,
-          'name-full' => 0,
-          'name-oneline' => 0,
-        ),
-      ),
-      'type' => 'addressfield_standard',
-      'weight' => 11,
-    ),
-  );
-
-  // Exported field_instance: 'user-user-field_default_state_country'
-  $field_instances['user-user-field_default_state_country'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Image submissions will use this location by default. (You can change it during image submission.)',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'addressfield',
-        'settings' => array(
-          'format_handlers' => array(
-            0 => 'address',
-          ),
-          'use_widget_handlers' => 1,
-        ),
-        'type' => 'addressfield_default',
-        'weight' => 10,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_default_state_country',
-    'label' => 'Default State and Country',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'addressfield',
-      'settings' => array(
-        'available_countries' => array(
-          'CA' => 'CA',
-          'US' => 'US',
-        ),
-        'default_country' => '',
-        'format_handlers' => array(
-          'address' => 'address',
-          'address-hide-country' => 0,
-          'organisation' => 0,
-          'name-full' => 0,
-          'name-oneline' => 0,
-        ),
-      ),
-      'type' => 'addressfield_standard',
-      'weight' => 17,
-    ),
-  );
-
-  // Exported field_instance: 'user-user-field_email'
-  $field_instances['user-user-field_email'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Optional email address for others to see. You may wish to modify it in an obvious way to avoid spam (for example, me_NO_SPAM@example.com).',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'email',
-        'settings' => array(),
-        'type' => 'email_default',
-        'weight' => 1,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_email',
-    'label' => 'Public e-mail address',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'email',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'email_textfield',
-      'weight' => 8,
-    ),
-  );
-
   // Exported field_instance: 'user-user-field_user_full_name'
   $field_instances['user-user-field_user_full_name'] = array(
     'bundle' => 'user',
@@ -313,71 +332,6 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_license'
-  $field_instances['user-user-field_license'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'creative_commons',
-        'settings' => array(),
-        'type' => 'creative_commons_small_image',
-        'weight' => 5,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_license',
-    'label' => 'Contributed content license terms',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'creative_commons',
-      'settings' => array(),
-      'type' => 'radios',
-      'weight' => 12,
-    ),
-  );
-
-  // Exported field_instance: 'user-user-field_license_additional'
-  $field_instances['user-user-field_license_additional'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Feel free to provide more specific license information here.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 6,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_license_additional',
-    'label' => 'Additional license information',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 1,
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 3,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 13,
-    ),
-  );
-
   // Exported field_instance: 'user-user-field_user_scientific_use'
   $field_instances['user-user-field_user_scientific_use'] = array(
     'bundle' => 'user',
@@ -422,7 +376,6 @@ data that you submit in the BugGuide data set. Your images will never be publish
   t('Additional license information');
   t('Biography');
   t('BugGuide Homepage');
-  t('City, State, Country');
   t('Contributed content license terms');
   t('Default State and Country');
   t('Feel free to provide more specific license information here.');
@@ -440,7 +393,6 @@ data that you submit in the BugGuide data set. Your images will never be publish
   t('The collection of data at BugGuide is very useful. For example, a researcher may want to use BugGuide observations to plot the spread of a species over time. We would very much like to include 
 
 data that you submit in the BugGuide data set. Your images will never be published without your permission, just included in scientific analyses. However, if you do not want your submissions included, you may uncheck this box.');
-  t('Where you live. This information is optional but it allows us to create this interesting <a href="">map of BugGuide users</a>. By default only state and country are shown publicly. If you want to contribute to the map but not show any location information publicly check the Do not share publicly box.');
 
   return $field_instances;
 }
