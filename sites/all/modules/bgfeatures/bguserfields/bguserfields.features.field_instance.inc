@@ -10,55 +10,6 @@
 function bguserfields_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'user-user-field_default_state_country'
-  $field_instances['user-user-field_default_state_country'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Image submissions will use this location by default. (You can change it during image submission.)',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'addressfield',
-        'settings' => array(
-          'format_handlers' => array(
-            0 => 'address',
-          ),
-          'use_widget_handlers' => 1,
-        ),
-        'type' => 'addressfield_default',
-        'weight' => 10,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_default_state_country',
-    'label' => 'Default State and Country',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'addressfield',
-      'settings' => array(
-        'available_countries' => array(
-          'CA' => 'CA',
-          'US' => 'US',
-        ),
-        'default_country' => '',
-        'format_handlers' => array(
-          'address' => 'address',
-          'address-hide-country' => 0,
-          'organisation' => 0,
-          'name-full' => 0,
-          'name-oneline' => 0,
-        ),
-      ),
-      'type' => 'addressfield_standard',
-      'weight' => 17,
-    ),
-  );
-
   // Exported field_instance: 'user-user-field_email'
   $field_instances['user-user-field_email'] = array(
     'bundle' => 'user',
@@ -260,6 +211,40 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_user_default_county'
+  $field_instances['user-user-field_user_default_county'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Image submissions will use this by default.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 12,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_user_default_county',
+    'label' => 'Default County/Parish/District/Region',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 19,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_user_full_name'
   $field_instances['user-user-field_user_full_name'] = array(
     'bundle' => 'user',
@@ -377,12 +362,12 @@ data that you submit in the BugGuide data set. Your images will never be publish
   t('Biography');
   t('BugGuide Homepage');
   t('Contributed content license terms');
-  t('Default State and Country');
+  t('Default County/Parish/District/Region');
   t('Feel free to provide more specific license information here.');
   t('Full Name');
   t('Homepage');
   t('If you wish, tell others a little bit about yourself.');
-  t('Image submissions will use this location by default. (You can change it during image submission.)');
+  t('Image submissions will use this by default.');
   t('Include My Data in Scientific Use');
   t('Optional URL of your home page on the internet.');
   t('Optional email address for others to see. You may wish to modify it in an obvious way to avoid spam (for example, me_NO_SPAM@example.com).');

@@ -10,22 +10,6 @@
 function bguserfields_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_default_state_country'
-  $field_bases['field_default_state_country'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_default_state_country',
-    'foreign keys' => array(),
-    'indexes' => array(),
-    'locked' => 0,
-    'module' => 'addressfield',
-    'settings' => array(),
-    'translatable' => 0,
-    'type' => 'addressfield',
-  );
-
   // Exported field_base: 'field_email'
   $field_bases['field_email'] = array(
     'active' => 1,
@@ -193,6 +177,35 @@ function bguserfields_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_user_city_state_country',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
+  );
+
+  // Exported field_base: 'field_user_default_county'
+  $field_bases['field_user_default_county'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_user_default_county',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(
