@@ -44,7 +44,7 @@ function drush_bgmigrate_users() {
     // anonymous contact.
     
     // location
-    $city_state_country = isser($data['location']) ? $data['location'] : '';
+    $city_state_country = isset($data['location']) ? $data['location'] : '';
     $account->field_user_city_state_country[LANGUAGE_NONE][0] = 
     
     // biography
@@ -73,6 +73,8 @@ function drush_bgmigrate_users() {
     //$account->field_default_state_country
     
     // county
+    $default_county = isset($data['county']) ? $data['county'] : '';
+    $account->field_user_default_county[LANGUAGE_NONE][0]['value'] = $default_county;
     
     // fullsize - what is this?
     
