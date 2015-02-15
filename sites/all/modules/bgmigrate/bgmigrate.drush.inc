@@ -21,7 +21,6 @@ function drush_bgmigrate_users() {
   $result = db_query('SELECT uid FROM {users} WHERE uid > 0');
   foreach ($result as $record) {
     $uid = $record->uid;
-    $uid = 84754;
     
     $account = user_load($uid);
     if (!isset($account->data)) {
@@ -43,6 +42,9 @@ function drush_bgmigrate_users() {
     // $data['contact'] - information on how to contact user
     // This is being replaced by the Contact module which provides
     // anonymous contact.
+    $contact_info = isset($data['contact']) ? $data['contact'] : '';
+    $account->field_user_contact_info[LANGUAGE_NONE][0] = $contact_info;
+    $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 1;    
     
     // location
     $city_state_country = isset($data['location']) ? $data['location'] : '';
@@ -157,7 +159,7 @@ function drush_bgmigrate_users_data() {
       print "\r";
     }
     
-    $field_of_interest = 'fullsize';
+    $field_of_interest = 'contact';
     if (isset($account->data[$field_of_interest])) {
       print $account->data[$field_of_interest];
       print "\r";
