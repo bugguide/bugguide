@@ -1,0 +1,11 @@
+name = Hash wrapper
+description = Store files hashed
+core = 7.x
+files[] = hash_wrapper.module
+
+; Information added by drupal.org packaging script on 2013-09-30
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "hash_wrapper"
+datestamp = "1380581732"
+

@@ -1,0 +1,134 @@
+<?php
+
+/**
+ * Implements hook_stream_wrappers().
+ */
+function hash_wrapper_stream_wrappers() {
+  return array(
+    'hash' => array(
+      'name' => t('Hashed files'),
+      'class' => 'HashStreamWrapper',
+      'description' => t('Hashed local files served by the webserver.'),
+      'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
+    ),
+  );
+}
+
+class HashStreamWrapper extends DrupalPublicStreamWrapper {
+  /**
+   * Return the local filesystem path.
+   *
+   * Minimally modified DrupalPublicStreamWrapper::getLocalPath to call
+   * $this->uriTarget() instead of file_uri_target().
+   *
+   * @param $uri
+   *   Optional URI, supplied when doing a move or rename.
+   */
+  protected function getLocalPath($uri = NULL) {
+    if (!isset($uri)) {
+      $uri = $this->uri;
+    }
+    $basedir = $this->getDirectoryPath();
+    $path = $basedir . '/' . $this->uriTarget($uri, $basedir);
+    $realpath = realpath($path);
+    if (!$realpath) {
+      // This file does not yet exist.
+      $realpath = realpath(dirname($path)) . '/' . basename($path);
+    }
+    $directory = realpath($basedir);
+    if (!$realpath || !$directory || strpos($realpath, $directory) !== 0) {
+      return FALSE;
+    }
+    return $realpath;
+  }
+
+  /**
+   * Overrides getExternalUrl().
+   *
+   * Minimally modified DrupalPublicStreamWrapper::getExternalUrl() to call
+   * $this->uriTarget() instead of file_uri_target().
+   *
+   * Return the HTML URI of a public file.
+   */
+  function getExternalUrl() {
+    $basedir = self::getDirectoryPath();
+    $path = str_replace('\\', '/', self::uriTarget($this->uri, $basedir));
+    return $GLOBALS['base_url'] . "/$basedir/$path";
+  }
+
+  /**
+   * Support for mkdir().
+   *
+   * Minimall modified DrupalPublicStreamWrapper::mkdir() to call
+   * $this->uriTarget() instead of file_uri_target().
+   *
+   * @param $uri
+   *   A string containing the URI to the directory to create.
+   * @param $mode
+   *   Permission flags - see mkdir().
+   * @param $options
+   *   A bit mask of STREAM_REPORT_ERRORS and STREAM_MKDIR_RECURSIVE.
+   * @return
+   *   TRUE if directory was successfully created.
+   * @see http://php.net/manual/en/streamwrapper.mkdir.php
+   */
+  public function mkdir($uri, $mode, $options) {
+    $this->uri = $uri;
+    $recursive = (bool)($options & STREAM_MKDIR_RECURSIVE);
+    if ($recursive) {
+      // $this->getLocalPath() fails if $uri has multiple levels of directories
+      // that do not yet exist.
+      $basedir = $this->getDirectoryPath();
+      $localpath = $basedir . '/' . $this->uriTarget($uri, $basedir);
+    }
+    else {
+      $localpath = $this->getLocalPath($uri);
+    }
+    if ($options & STREAM_REPORT_ERRORS) {
+      return mkdir($localpath, $mode, $recursive);
+    }
+    else {
+      return @mkdir($localpath, $mode, $recursive);
+    }
+  }
+
+  /**
+   * Returns the target of a URI (e.g. a stream).
+   *
+   * @param $uri
+   *   A stream, referenced as "scheme://target".
+   * @return
+   *   A string containing the target (path), or FALSE if none.
+   *   For example, the URI "public://sample/test.txt" would return
+   *   "sample/test.txt".
+   */
+  function uriTarget($uri, $basedir) {
+    $filepath = file_uri_target($uri);
+    // If all we got is hash://directory or even just hash:// then we can't
+    // really continue.
+    if (!$filepath || strpos($filepath, '.') === FALSE) {
+      return $filepath;
+    }
+    $directory = dirname($filepath);
+    $dir_parts = explode('/', $directory);
+    if (count($dir_parts) >= 2 && strlen(array_pop($dir_parts)) == 2 && strlen(array_pop($dir_parts)) == 2) {
+      return $filepath;
+    }
+    $file_parts = explode('.', $filepath);
+    $count = count($file_parts);
+    $extension = ($count > 1) ? '.' . array_pop($file_parts) : '';
+    $basedir .= "/$directory";
+
+    // Remove styles/$style/hash path before generating the hash.
+    $filepath = preg_replace('/styles\/.+\/hash\//', '', $filepath);
+
+    $target = md5($filepath) . $extension;
+    $level1 = "$target[0]$target[1]$target[2]";
+    $level2 = "$target[3]$target[4]$target[5]";
+    if (!is_dir("$basedir/$level1/$level2")) {
+      drupal_mkdir("$basedir/$level1/$level2", NULL, TRUE);
+    }
+
+    return "$directory/$level1/$level2/$target";
+  }
+}
