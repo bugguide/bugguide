@@ -132,7 +132,7 @@ function bgmigrate_user_presave(&$edit, $account, $category) {
 }
 
 /**
- * Walk through the legacy serialized data in users table.
+ * Walk through the legacy serialized data in users table. Requires >1024M RAM.
  * Usage:
  * 
  * drush bgmud
