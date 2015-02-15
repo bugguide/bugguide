@@ -115,10 +115,15 @@ function drush_bgmigrate_users() {
 }
 
 function bgmigrate_user_presave(&$edit, $account, $category) {
-  $key = array(
+  $keys = array(
     'biography',
     'block',
+    'contact',
+    'county',
     'full_name',
+    'fullsize',
+    'license_details',
+    'location',
     'public_email',
     'homepage',
     'bugguide_homepage',
