@@ -21,6 +21,7 @@ function drush_bgmigrate_users() {
   $result = db_query('SELECT uid FROM {users} WHERE uid > 0');
   foreach ($result as $record) {
     $uid = $record->uid;
+    $uid = 84754;
     
     $account = user_load($uid);
     if (!isset($account->data)) {
@@ -45,7 +46,7 @@ function drush_bgmigrate_users() {
     
     // location
     $city_state_country = isset($data['location']) ? $data['location'] : '';
-    $account->field_user_city_state_country[LANGUAGE_NONE][0] = 
+    $account->field_user_city_state_country[LANGUAGE_NONE][0] = $city_state_country;
     
     // biography
     $biography = isset($data['biography']) ? $data['biography'] : '';
@@ -55,6 +56,8 @@ function drush_bgmigrate_users() {
     // license
     
     // license_details
+    $license_details = isset($data['license_details']) ? $data['license_details'] : '';
+    $account->field_license_additional[LANGUAGE_NONE][0]['value'] = $license_details;
     
     // subscriptions_auto
     // TODO: look in modern subscriptions module to see how this is stored
@@ -77,11 +80,12 @@ function drush_bgmigrate_users() {
     $account->field_user_default_county[LANGUAGE_NONE][0]['value'] = $default_county;
     
     // fullsize - what is this?
+    // This was the capability to allow a user full-size access to one or more
+    // images. This was not used and we are leaving it behind.
     
     // field_user_breadcrumb_format and field_user_scientific_use are list fields
     
-    $breadcrumbs = isset($account->data['guide_breadcrumbs']) ? $data['guide_breadcrumbs'] : '0';
-    
+    $breadcrumbs = isset($account->data['guide_breadcrumbs']) ? $data['guide_breadcrumbs'] : '0';    
     switch($breadcrumbs) {
       case '0':
         $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'] = 'Common name (Scientific name)';
@@ -127,6 +131,12 @@ function bgmigrate_user_presave(&$edit, $account, $category) {
   
 }
 
+/**
+ * Walk through the legacy serialized data in users table.
+ * Usage:
+ * 
+ * drush bgmud
+ */
 function drush_bgmigrate_users_data() {
   $data = array();
   $data['nodata'] = 0;
@@ -144,10 +154,12 @@ function drush_bgmigrate_users_data() {
     
     if (!is_array($account->data)) {
       print "Data is not an array in uid $uid";
+      print "\r";
     }
     
-    if (isset($account->data['location'])) {
-      print $account->data['location'];
+    $field_of_interest = 'fullsize';
+    if (isset($account->data[$field_of_interest])) {
+      print $account->data[$field_of_interest];
       print "\r";
     }
     
@@ -157,10 +169,11 @@ function drush_bgmigrate_users_data() {
     //  }
     //  $data[$key]++;
     //}
-    // Every 1000 give some output.
-    //if ($uid % 1000 == 0) {
-    //  print $uid . " ";
-    //}
+    
+    //Every 1000 give some output.
+    if ($uid % 1000 == 0) {
+      print $uid . "\r\n";
+    }
   }
   print_r($data);
 }
