@@ -126,7 +126,7 @@ function bgmigrate_user_presave(&$edit, $account, $category) {
     'session',
   );
   foreach ($keys as $key) {
-    unset($edit[$key]);
+    unset($edit['data'][$key]);
   }
   
 }
