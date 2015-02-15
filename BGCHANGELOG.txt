@@ -1,0 +1,5 @@
+SUMMARY OF CHANGES
+
+Account-related changes
+
+Timezone settings did not transfer. To set your timezone, edit your account page and select your Time zone from the Locale settings section.
