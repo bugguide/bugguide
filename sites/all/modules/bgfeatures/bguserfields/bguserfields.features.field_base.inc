@@ -199,6 +199,33 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text',
   );
 
+  // Exported field_base: 'field_user_contact_info'
+  $field_bases['field_user_contact_info'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_user_contact_info',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'text_long',
+  );
+
   // Exported field_base: 'field_user_default_county'
   $field_bases['field_user_default_county'] = array(
     'active' => 1,

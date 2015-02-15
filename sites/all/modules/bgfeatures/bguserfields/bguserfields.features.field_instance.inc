@@ -211,6 +211,40 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_user_contact_info'
+  $field_instances['user-user-field_user_contact_info'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'You may provide additional contact details if, for example, someone wants to license an image you have contributed.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 13,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_user_contact_info',
+    'label' => 'Contact Information',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 1,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 20,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_user_default_county'
   $field_instances['user-user-field_user_default_county'] = array(
     'bundle' => 'user',
@@ -361,6 +395,7 @@ data that you submit in the BugGuide data set. Your images will never be publish
   t('Additional license information');
   t('Biography');
   t('BugGuide Homepage');
+  t('Contact Information');
   t('Contributed content license terms');
   t('Default County/Parish/District/Region');
   t('Feel free to provide more specific license information here.');
@@ -378,6 +413,7 @@ data that you submit in the BugGuide data set. Your images will never be publish
   t('The collection of data at BugGuide is very useful. For example, a researcher may want to use BugGuide observations to plot the spread of a species over time. We would very much like to include 
 
 data that you submit in the BugGuide data set. Your images will never be published without your permission, just included in scientific analyses. However, if you do not want your submissions included, you may uncheck this box.');
+  t('You may provide additional contact details if, for example, someone wants to license an image you have contributed.');
 
   return $field_instances;
 }
