@@ -39,72 +39,7 @@ function bguserfields_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'email_textfield',
-      'weight' => 8,
-    ),
-  );
-
-  // Exported field_instance: 'user-user-field_license'
-  $field_instances['user-user-field_license'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'creative_commons',
-        'settings' => array(),
-        'type' => 'creative_commons_small_image',
-        'weight' => 5,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_license',
-    'label' => 'Contributed content license terms',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'creative_commons',
-      'settings' => array(),
-      'type' => 'radios',
-      'weight' => 12,
-    ),
-  );
-
-  // Exported field_instance: 'user-user-field_license_additional'
-  $field_instances['user-user-field_license_additional'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Feel free to provide more specific license information here.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 6,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_license_additional',
-    'label' => 'Additional license information',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 1,
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 3,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 13,
+      'weight' => 3,
     ),
   );
 
@@ -138,7 +73,7 @@ function bguserfields_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 14,
+      'weight' => 9,
     ),
   );
 
@@ -172,7 +107,7 @@ function bguserfields_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 10,
+      'weight' => 5,
     ),
   );
 
@@ -207,7 +142,7 @@ function bguserfields_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 16,
+      'weight' => 11,
     ),
   );
 
@@ -241,7 +176,76 @@ function bguserfields_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 20,
+      'weight' => 13,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_user_content_license'
+  $field_instances['user-user-field_user_content_license'] = array(
+    'bundle' => 'user',
+    'default_value' => array(
+      0 => array(
+        'value' => 'CC_BY_NC_SA',
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 14,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_user_content_license',
+    'label' => 'Contributed content license terms',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => 1,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_user_content_license_add'
+  $field_instances['user-user-field_user_content_license_add'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'If you chose Custom license terms, provide more specific license information here.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 15,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_user_content_license_add',
+    'label' => 'Additional license information',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 1,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 3,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 7,
     ),
   );
 
@@ -275,7 +279,7 @@ function bguserfields_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 19,
+      'weight' => 12,
     ),
   );
 
@@ -309,7 +313,7 @@ function bguserfields_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 7,
+      'weight' => 2,
     ),
   );
 
@@ -347,7 +351,7 @@ function bguserfields_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 9,
+      'weight' => 4,
     ),
   );
 
@@ -386,7 +390,7 @@ data that you submit in the BugGuide data set. Your images will never be publish
         'display_label' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 15,
+      'weight' => 10,
     ),
   );
 
@@ -398,9 +402,9 @@ data that you submit in the BugGuide data set. Your images will never be publish
   t('Contact Information');
   t('Contributed content license terms');
   t('Default County/Parish/District/Region');
-  t('Feel free to provide more specific license information here.');
   t('Full Name');
   t('Homepage');
+  t('If you chose Custom license terms, provide more specific license information here.');
   t('If you wish, tell others a little bit about yourself.');
   t('Image submissions will use this by default.');
   t('Include My Data in Scientific Use');

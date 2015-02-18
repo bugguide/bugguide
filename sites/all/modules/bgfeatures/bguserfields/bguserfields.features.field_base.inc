@@ -26,66 +26,6 @@ function bguserfields_field_default_field_bases() {
     'type' => 'email',
   );
 
-  // Exported field_base: 'field_license'
-  $field_bases['field_license'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_license',
-    'foreign keys' => array(),
-    'indexes' => array(
-      'licence' => array(
-        0 => 'licence',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'creative_commons',
-    'settings' => array(
-      'allowed_values' => array(
-        1 => 1,
-        8 => 8,
-        9 => 9,
-        2 => 2,
-        3 => 3,
-        4 => 4,
-        5 => 5,
-        6 => 6,
-        7 => 7,
-      ),
-      'jurisdiction' => '',
-    ),
-    'translatable' => 0,
-    'type' => 'creative_commons',
-  );
-
-  // Exported field_base: 'field_license_additional'
-  $field_bases['field_license_additional'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_license_additional',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(),
-    'translatable' => 0,
-    'type' => 'text_long',
-  );
-
   // Exported field_base: 'field_user_bg_homepage'
   $field_bases['field_user_bg_homepage'] = array(
     'active' => 1,
@@ -206,6 +146,67 @@ function bguserfields_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_user_contact_info',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'text_long',
+  );
+
+  // Exported field_base: 'field_user_content_license'
+  $field_bases['field_user_content_license'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_user_content_license',
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'CC_NONE' => 'All rights reserved (no use without explicit written permission)',
+        'CC_0' => 'CC0 (<a href="http://creativecommons.org/about/cc0">No rights reserved</a>)',
+        'CC_PD' => '<a href="http://creativecommons.org/about/pdm">Public Domain</a> (typically very old works)',
+        'CC_BY' => '<a href="http://creativecommons.org/licenses/">Attribution CC BY</a>',
+        'CC_BY_SA' => '<a href="http://creativecommons.org/licenses/">Attribution, Share Alike CC BY-SA</a>',
+        'CC_BY_ND' => '<a href="http://creativecommons.org/licenses/">Attribution, No Derivative Works CC BY-ND</a>',
+        'CC_BY_NC' => '<a href="http://creativecommons.org/licenses/">Attribution, Non-Commercial CC BY-NC</a>',
+        'CC_BY_NC_SA' => '<a href="http://creativecommons.org/licenses/">Attribution, Non-Commercial, Share Alike CC BY-NC-SA</a>',
+        'CC_BY_NC_ND' => '<a href="http://creativecommons.org/licenses/">Attribution, Non-Commercial, No Derivative Works CC BY-NC-ND</a>',
+        'CUSTOM' => 'Custom; provide details below',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
+  // Exported field_base: 'field_user_content_license_add'
+  $field_bases['field_user_content_license_add'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_user_content_license_add',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(

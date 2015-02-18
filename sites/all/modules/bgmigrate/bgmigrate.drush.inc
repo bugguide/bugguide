@@ -57,10 +57,12 @@ function drush_bgmigrate_users() {
     $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 1;
     
     // license
+    //$license = isset($data['license']) ? $data['license'] : 'CC_BY_NC_ND';
+    
     
     // license_details
     $license_details = isset($data['license_details']) ? $data['license_details'] : '';
-    $account->field_license_additional[LANGUAGE_NONE][0]['value'] = $license_details;
+    $account->field_user_license_add[LANGUAGE_NONE][0]['value'] = $license_details;
     
     // subscriptions_auto
     // TODO: look in modern subscriptions module to see how this is stored
