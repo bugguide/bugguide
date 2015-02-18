@@ -21,6 +21,7 @@ function drush_bgmigrate_users() {
   $result = db_query('SELECT uid FROM {users} WHERE uid > 0');
   foreach ($result as $record) {
     $uid = $record->uid;
+    watchdog('bgmigrate', $uid);
     
     $account = user_load($uid);
     if (!isset($account->data)) {
