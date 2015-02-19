@@ -57,12 +57,19 @@ function drush_bgmigrate_users() {
     $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 1;
     
     // license
-    //$license = isset($data['license']) ? $data['license'] : 'CC_BY_NC_ND';
-    
+    // Two values possible. 0 = All rights reserved. 1 = CC_BY_NC_ND
+    $license_num = isset($data['license']) ? $data['license'] : 0;
+    if ($license_num == 0) {
+      $account->field_user_content_license[LANGUAGE_NONE][0]['value'] = 'CC_NONE';
+    }
+    else {
+      $account->field_user_content_license[LANGUAGE_NONE][0]['value'] = 'CC_BY_NC_ND';
+    }
     
     // license_details
     $license_details = isset($data['license_details']) ? $data['license_details'] : '';
-    $account->field_user_license_add[LANGUAGE_NONE][0]['value'] = $license_details;
+    $account->field_user_content_license_add[LANGUAGE_NONE][0]['value'] = $license_details;
+    $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 1;
     
     // subscriptions_auto
     // TODO: look in modern subscriptions module to see how this is stored
@@ -150,8 +157,9 @@ function bgmigrate_user_presave(&$edit, $account, $category) {
 function drush_bgmigrate_users_data() {
   $data = array();
   $data['nodata'] = 0;
-  
-  $blocks = array();
+  $data['notset'] = 0;
+  $data['CC'] = 0;
+  $data['CC_NONE'] = 0;
   
   $result = db_query('SELECT uid FROM {users} WHERE uid > 0');
   foreach ($result as $record) {
@@ -167,10 +175,20 @@ function drush_bgmigrate_users_data() {
       print "\r";
     }
     
-    $field_of_interest = 'contact';
-    if (isset($account->data[$field_of_interest])) {
-      print $account->data[$field_of_interest];
+    $field_of_interest = 'license';
+    $account_data = $account->data;
+    if (isset($account_data[$field_of_interest])) {
+      if ($account_data[$field_of_interest] == 1) {
+        $data['CC']++;
+      }
+      if ($account_data[$field_of_interest] == 0) {
+        $data['CC_NONE']++;
+      }
+      //print_r( $account->data['subscriptions_subscribe']);//[$field_of_interest];
       print "\r";
+    }
+    else {
+      $data['notset']++;
     }
     
     //foreach($account->data as $key => $value) {
@@ -183,6 +201,7 @@ function drush_bgmigrate_users_data() {
     //Every 1000 give some output.
     if ($uid % 1000 == 0) {
       print $uid . "\r\n";
+      print $data['notset'] . ' ' . $data['CC'] . ' ' . $data['CC_NONE'] . ' ' . $data['nodata'] . "\r\n";
     }
   }
   print_r($data);
