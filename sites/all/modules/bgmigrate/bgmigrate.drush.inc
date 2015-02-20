@@ -45,7 +45,7 @@ function drush_bgmigrate_users() {
     // anonymous contact.
     $contact_info = isset($data['contact']) ? $data['contact'] : '';
     $account->field_user_contact_info[LANGUAGE_NONE][0] = $contact_info;
-    $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 1;    
+    $account->field_user_contact_info[LANGUAGE_NONE][0]['format'] = 1;    
     
     // location
     $city_state_country = isset($data['location']) ? $data['location'] : '';
