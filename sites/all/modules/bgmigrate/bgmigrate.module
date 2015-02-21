@@ -21,5 +21,12 @@ function bgmigrate_menu() {
     'access arguments' => array('administer BG utilities'),
     'file' => 'bgmigrate.drush.inc',
   );
+  $items['bgmigrate_bgimages'] = array(
+    'title' => 'Migrate images from bgimage',
+    'description' => 'Migrate into native nodes',
+    'page callback' => 'drush_bgmigrate_bgimages',
+    'access arguments' => array('administer BG utilities'),
+    'file' => 'bgmigrate.drush.inc',
+  );
   return $items;
 }

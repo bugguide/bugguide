@@ -14,7 +14,11 @@ function bgmigrate_drush_command() {
     'aliases' => array('bgmud'),
   );
 
-  return $items;
+  $items['bgmigrate-bgimages'] = array(
+    'description' => 'Enumerate bgimage data.',
+    'aliases' => array('bgmim'),
+  );
+return $items;
 }
 
 function drush_bgmigrate_users() {
@@ -205,4 +209,12 @@ function drush_bgmigrate_users_data() {
     }
   }
   print_r($data);
+}
+
+function drush_bgmigrate_bgimages() {
+  $result = db_query('SELECT nid FROM {bgimage} ORDER BY nid');
+  foreach ($result as $record) {
+    $nid = $record->nid;
+    $node = node_load($nid);
+  }
 }
