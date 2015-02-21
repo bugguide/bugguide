@@ -10,12 +10,52 @@
 function bgimage_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'node-image-field_bgimage_copyright_owner'
+  $field_instances['node-image-field_bgimage_copyright_owner'] = array(
+    'bundle' => 'image',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '<b>Leave this blank if the image is your own</b>. If the image is not your own you must get permission from the owner before submitting it here. If you have permission, specify the copyright owner\'s name here.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 10,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_bgimage_copyright_owner',
+    'label' => 'Copyright Owner',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 11,
+    ),
+  );
+
   // Exported field_instance: 'node-image-field_bgimage_county'
   $field_instances['node-image-field_bgimage_county'] = array(
     'bundle' => 'image',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'If known, otherwise leave blank. Do not include the word \'County\' or \'Parish\' here as the system will provide that as needed.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -33,7 +73,7 @@ function bgimage_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_bgimage_county',
-    'label' => 'County',
+    'label' => 'County/Parish/District/Region',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -46,7 +86,7 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 4,
+      'weight' => 2,
     ),
   );
 
@@ -86,7 +126,7 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => -2,
+      'weight' => 5,
     ),
   );
 
@@ -139,7 +179,7 @@ function bgimage_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_text',
-      'weight' => -4,
+      'weight' => 3,
     ),
   );
 
@@ -176,7 +216,7 @@ function bgimage_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 2,
+      'weight' => 9,
     ),
   );
 
@@ -226,7 +266,7 @@ function bgimage_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 1,
+      'weight' => 8,
     ),
   );
 
@@ -263,7 +303,7 @@ function bgimage_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 0,
+      'weight' => 7,
     ),
   );
 
@@ -321,7 +361,7 @@ function bgimage_field_default_field_instances() {
         ),
       ),
       'type' => 'addressfield_standard',
-      'weight' => 3,
+      'weight' => 1,
     ),
   );
 
@@ -361,7 +401,7 @@ function bgimage_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => -1,
+      'weight' => 6,
     ),
   );
 
@@ -410,7 +450,7 @@ function bgimage_field_default_field_instances() {
       'module' => 'fivestar',
       'settings' => array(),
       'type' => 'exposed',
-      'weight' => 5,
+      'weight' => 10,
     ),
   );
 
@@ -450,18 +490,21 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => -3,
+      'weight' => 4,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('County');
+  t('<b>Leave this blank if the image is your own</b>. If the image is not your own you must get permission from the owner before submitting it here. If you have permission, specify the copyright owner\'s name here.');
+  t('Copyright Owner');
+  t('County/Parish/District/Region');
   t('Custom Tag');
   t('Date');
   t('Date taken, if known (mm/dd/yy). Only specify this for wild specimens.');
   t('Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).');
   t('Gender');
+  t('If known, otherwise leave blank. Do not include the word \'County\' or \'Parish\' here as the system will provide that as needed.');
   t('If you don\'t know for sure, don\'t check it. For example: for caterpillars check immature and for butterflies and moths check adult. If an image shows more than one life stage, check each one.');
   t('If you don\'t know for sure, don\'t check it. If the photo shows mating behavior, check both male and female.');
   t('If you have more than one image of the same specimen, submit this form first. Then view the first submitted image and select the "add image" link to add another. Please limit yourself to just a few of your best shots for a particular specimen.');
