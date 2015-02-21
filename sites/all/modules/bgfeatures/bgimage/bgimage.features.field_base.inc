@@ -227,6 +227,24 @@ function bgimage_field_default_field_bases() {
     'type' => 'addressfield',
   );
 
+  // Exported field_base: 'field_bgimage_photo_quality'
+  $field_bases['field_bgimage_photo_quality'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_bgimage_photo_quality',
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'fivestar',
+    'settings' => array(
+      'axis' => 'vote',
+    ),
+    'translatable' => 0,
+    'type' => 'fivestar',
+  );
+
   // Exported field_base: 'field_bgimage_remarks'
   $field_bases['field_bgimage_remarks'] = array(
     'active' => 1,
@@ -266,7 +284,7 @@ function bgimage_field_default_field_bases() {
     'locked' => 0,
     'module' => 'fivestar',
     'settings' => array(
-      'axis' => 'representative',
+      'axis' => 'vote',
     ),
     'translatable' => 0,
     'type' => 'fivestar',

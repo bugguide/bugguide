@@ -46,7 +46,7 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 11,
+      'weight' => 12,
     ),
   );
 
@@ -365,6 +365,55 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-image-field_bgimage_photo_quality'
+  $field_instances['node-image-field_bgimage_photo_quality'] = array(
+    'bundle' => 'image',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Quality of image. 1: blurry, taken on a cheap camera phone; 5: professional-quality image, great depth of field, excellent lighting.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'fivestar',
+        'settings' => array(
+          'expose' => TRUE,
+          'style' => 'average',
+          'text' => 'average',
+          'widget' => array(
+            'fivestar_widget' => NULL,
+          ),
+        ),
+        'type' => 'fivestar_formatter_default',
+        'weight' => 11,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_bgimage_photo_quality',
+    'label' => 'Photographic Quality',
+    'required' => 0,
+    'settings' => array(
+      'allow_clear' => 0,
+      'allow_ownvote' => 1,
+      'allow_revote' => 1,
+      'stars' => 5,
+      'target' => 'none',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'fivestar',
+      'settings' => array(),
+      'type' => 'exposed',
+      'weight' => 11,
+    ),
+  );
+
   // Exported field_instance: 'node-image-field_bgimage_remarks'
   $field_instances['node-image-field_bgimage_remarks'] = array(
     'bundle' => 'image',
@@ -410,7 +459,7 @@ function bgimage_field_default_field_instances() {
     'bundle' => 'image',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'How representative of this taxon is this specimen? 1: can hardly recognize it as a member of this taxon; 5: I would show someone this picture to introduce them to this taxon',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -435,7 +484,7 @@ function bgimage_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_bgimage_representative',
-    'label' => 'Representative Images',
+    'label' => 'Representative Image',
     'required' => 0,
     'settings' => array(
       'allow_clear' => 0,
@@ -504,6 +553,7 @@ function bgimage_field_default_field_instances() {
   t('Date taken, if known (mm/dd/yy). Only specify this for wild specimens.');
   t('Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).');
   t('Gender');
+  t('How representative of this taxon is this specimen? 1: can hardly recognize it as a member of this taxon; 5: I would show someone this picture to introduce them to this taxon');
   t('If known, otherwise leave blank. Do not include the word \'County\' or \'Parish\' here as the system will provide that as needed.');
   t('If you don\'t know for sure, don\'t check it. For example: for caterpillars check immature and for butterflies and moths check adult. If an image shows more than one life stage, check each one.');
   t('If you don\'t know for sure, don\'t check it. If the photo shows mating behavior, check both male and female.');
@@ -512,8 +562,10 @@ function bgimage_field_default_field_instances() {
   t('Life Stage');
   t('Location');
   t('Optional. An identifier for your own use. If you choose something unique here from your own records, you can easily find this image later using search.');
+  t('Photographic Quality');
+  t('Quality of image. 1: blurry, taken on a cheap camera phone; 5: professional-quality image, great depth of field, excellent lighting.');
   t('Remarks');
-  t('Representative Images');
+  t('Representative Image');
   t('Size');
   t('Size, if known, in millimeters.');
 
