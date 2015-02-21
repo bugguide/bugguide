@@ -44,7 +44,7 @@ function drush_bgmigrate_users() {
     // This is being replaced by the Contact module which provides
     // anonymous contact.
     $contact_info = isset($data['contact']) ? $data['contact'] : '';
-    $account->field_user_contact_info[LANGUAGE_NONE][0] = $contact_info;
+    $account->field_user_contact_info[LANGUAGE_NONE][0]['value'] = $contact_info;
     $account->field_user_contact_info[LANGUAGE_NONE][0]['format'] = 1;    
     
     // location
