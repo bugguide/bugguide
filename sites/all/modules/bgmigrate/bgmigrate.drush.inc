@@ -35,30 +35,42 @@ function drush_bgmigrate_users() {
     $data = $account->data;
     
     $user_full_name = isset($data['full_name']) ? $data['full_name'] : '';
-    $account->field_user_full_name[LANGUAGE_NONE][0]['value'] = $user_full_name;
+    if ($user_full_name) {
+      $account->field_user_full_name[LANGUAGE_NONE][0]['value'] = $user_full_name;
+    }
     
     $public_email = isset($data['public_email']) ? $data['public_email'] : '';
-    $account->field_email[LANGUAGE_NONE][0]['email'] = $public_email;
+    if ($public_email) {
+      $account->field_email[LANGUAGE_NONE][0]['email'] = $public_email;
+    }
     
     $homepage = isset($data['homepage']) ? $data['homepage'] : '';
-    $account->field_user_homepage[LANGUAGE_NONE][0]['value'] = $homepage;
+    if ($homepage) {
+      $account->field_user_homepage[LANGUAGE_NONE][0]['value'] = $homepage;
+    }
     
     // contact
     // $data['contact'] - information on how to contact user
     // This is being replaced by the Contact module which provides
     // anonymous contact.
     $contact_info = isset($data['contact']) ? $data['contact'] : '';
-    $account->field_user_contact_info[LANGUAGE_NONE][0]['value'] = $contact_info;
-    $account->field_user_contact_info[LANGUAGE_NONE][0]['format'] = 1;    
+    if ($contact_info) {
+      $account->field_user_contact_info[LANGUAGE_NONE][0]['value'] = $contact_info;
+      $account->field_user_contact_info[LANGUAGE_NONE][0]['format'] = 1;
+    }
     
     // location
     $city_state_country = isset($data['location']) ? $data['location'] : '';
-    $account->field_user_city_state_country[LANGUAGE_NONE][0] = $city_state_country;
+    if ($city_state_country) {
+      $account->field_user_city_state_country[LANGUAGE_NONE][0] = $city_state_country;
+    }
     
     // biography
     $biography = isset($data['biography']) ? $data['biography'] : '';
-    $account->field_user_biography[LANGUAGE_NONE][0]['value'] = $biography;
-    $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 1;
+    if ($biography) {
+      $account->field_user_biography[LANGUAGE_NONE][0]['value'] = $biography;
+      $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 1;
+    }
     
     // license
     // Two values possible. 0 = All rights reserved. 1 = CC_BY_NC_ND
@@ -72,8 +84,10 @@ function drush_bgmigrate_users() {
     
     // license_details
     $license_details = isset($data['license_details']) ? $data['license_details'] : '';
-    $account->field_user_content_license_add[LANGUAGE_NONE][0]['value'] = $license_details;
-    $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 1;
+    if ($license_details) {
+      $account->field_user_content_license_add[LANGUAGE_NONE][0]['value'] = $license_details;
+      $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 1;
+    }
     
     // subscriptions_auto
     // TODO: look in modern subscriptions module to see how this is stored
@@ -83,7 +97,9 @@ function drush_bgmigrate_users() {
     
     // bugguide_homepage
     $bg_homepage = isset($data['bugguide_homepage']) ? $data['bugguide_homepage'] : '';
-    $account->field_user_bg_homepage[LANGUAGE_NONE][0]['value'] = $bg_homepage;
+    if ($bg_homepage) {
+      $account->field_user_bg_homepage[LANGUAGE_NONE][0]['value'] = $bg_homepage;
+    }
         
     // TODO
     // location code is something like 'IA'
@@ -93,7 +109,9 @@ function drush_bgmigrate_users() {
     
     // county
     $default_county = isset($data['county']) ? $data['county'] : '';
-    $account->field_user_default_county[LANGUAGE_NONE][0]['value'] = $default_county;
+    if ($default_county) {
+      $account->field_user_default_county[LANGUAGE_NONE][0]['value'] = $default_county;
+    }
     
     // fullsize - what is this?
     // This was the capability to allow a user full-size access to one or more
