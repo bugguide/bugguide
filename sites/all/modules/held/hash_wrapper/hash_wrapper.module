@@ -92,7 +92,7 @@ class HashStreamWrapper extends DrupalPublicStreamWrapper {
     }
   }
 
-  /**
+ /**
    * Returns the target of a URI (e.g. a stream).
    *
    * @param $uri
@@ -111,9 +111,12 @@ class HashStreamWrapper extends DrupalPublicStreamWrapper {
     }
     $directory = dirname($filepath);
     $dir_parts = explode('/', $directory);
-    if (count($dir_parts) >= 2 && strlen(array_pop($dir_parts)) == 2 && strlen(array_pop($dir_parts)) == 2) {
+    // If $uri already contains two three-character directories before the
+    // filename, assume that the hash has already been created and applied.
+    if (count($dir_parts) >= 2 && strlen(array_pop($dir_parts)) == 3 && strlen(array_pop($dir_parts)) == 3) {
       return $filepath;
     }
+
     $file_parts = explode('.', $filepath);
     $count = count($file_parts);
     $extension = ($count > 1) ? '.' . array_pop($file_parts) : '';
