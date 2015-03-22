@@ -12,7 +12,7 @@ function bgimage_field_default_field_instances() {
 
   // Exported field_instance: 'node-image-field_bgimage_copyright_owner'
   $field_instances['node-image-field_bgimage_copyright_owner'] = array(
-    'bundle' => 'image',
+    'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '<b>Leave this blank if the image is your own</b>. If the image is not your own you must get permission from the owner before submitting it here. If you have permission, specify the copyright owner\'s name here.',
@@ -52,7 +52,7 @@ function bgimage_field_default_field_instances() {
 
   // Exported field_instance: 'node-image-field_bgimage_county'
   $field_instances['node-image-field_bgimage_county'] = array(
-    'bundle' => 'image',
+    'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'If known, otherwise leave blank. Do not include the word \'County\' or \'Parish\' here as the system will provide that as needed.',
@@ -92,7 +92,7 @@ function bgimage_field_default_field_instances() {
 
   // Exported field_instance: 'node-image-field_bgimage_custom_tag'
   $field_instances['node-image-field_bgimage_custom_tag'] = array(
-    'bundle' => 'image',
+    'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'Optional. An identifier for your own use. If you choose something unique here from your own records, you can easily find this image later using search.',
@@ -132,7 +132,7 @@ function bgimage_field_default_field_instances() {
 
   // Exported field_instance: 'node-image-field_bgimage_date'
   $field_instances['node-image-field_bgimage_date'] = array(
-    'bundle' => 'image',
+    'bundle' => 'bgimage',
     'deleted' => 0,
     'description' => 'Date taken, if known (mm/dd/yy). Only specify this for wild specimens.',
     'display' => array(
@@ -185,7 +185,7 @@ function bgimage_field_default_field_instances() {
 
   // Exported field_instance: 'node-image-field_bgimage_gender'
   $field_instances['node-image-field_bgimage_gender'] = array(
-    'bundle' => 'image',
+    'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'If you don\'t know for sure, don\'t check it. If the photo shows mating behavior, check both male and female.',
@@ -222,7 +222,7 @@ function bgimage_field_default_field_instances() {
 
   // Exported field_instance: 'node-image-field_bgimage_image'
   $field_instances['node-image-field_bgimage_image'] = array(
-    'bundle' => 'image',
+    'bundle' => 'bgimage',
     'deleted' => 0,
     'description' => 'If you have more than one image of the same specimen, submit this form first. Then view the first submitted image and select the "add image" link to add another. Please limit yourself to just a few of your best shots for a particular specimen.',
     'display' => array(
@@ -272,7 +272,7 @@ function bgimage_field_default_field_instances() {
 
   // Exported field_instance: 'node-image-field_bgimage_life_stage'
   $field_instances['node-image-field_bgimage_life_stage'] = array(
-    'bundle' => 'image',
+    'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'If you don\'t know for sure, don\'t check it. For example: for caterpillars check immature and for butterflies and moths check adult. If an image shows more than one life stage, check each one.',
@@ -309,7 +309,7 @@ function bgimage_field_default_field_instances() {
 
   // Exported field_instance: 'node-image-field_bgimage_location'
   $field_instances['node-image-field_bgimage_location'] = array(
-    'bundle' => 'image',
+    'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -367,7 +367,7 @@ function bgimage_field_default_field_instances() {
 
   // Exported field_instance: 'node-image-field_bgimage_photo_quality'
   $field_instances['node-image-field_bgimage_photo_quality'] = array(
-    'bundle' => 'image',
+    'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'Quality of image. 1: blurry, taken on a cheap camera phone; 5: professional-quality image, great depth of field, excellent lighting.',
@@ -416,7 +416,7 @@ function bgimage_field_default_field_instances() {
 
   // Exported field_instance: 'node-image-field_bgimage_remarks'
   $field_instances['node-image-field_bgimage_remarks'] = array(
-    'bundle' => 'image',
+    'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).',
@@ -456,7 +456,7 @@ function bgimage_field_default_field_instances() {
 
   // Exported field_instance: 'node-image-field_bgimage_representative'
   $field_instances['node-image-field_bgimage_representative'] = array(
-    'bundle' => 'image',
+    'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'How representative of this taxon is this specimen? 1: can hardly recognize it as a member of this taxon; 5: I would show someone this picture to introduce them to this taxon',
@@ -505,7 +505,7 @@ function bgimage_field_default_field_instances() {
 
   // Exported field_instance: 'node-image-field_bgimage_size'
   $field_instances['node-image-field_bgimage_size'] = array(
-    'bundle' => 'image',
+    'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'Size, if known, in millimeters.',

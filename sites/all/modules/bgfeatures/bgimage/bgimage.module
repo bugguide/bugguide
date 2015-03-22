@@ -5,3 +5,33 @@
  */
 
 include_once 'bgimage.features.inc';
+include_once './images/image_obfuscate.inc';
+
+function bgimage_node_validate($node, $form, &$form_state) {
+  if ($node->type != 'bgimage') {
+    return;
+  }
+  
+}
+
+function bgimage_node_insert($node) {
+  if ($node->type != 'bgimage') {
+    return;
+  }
+
+  include_once('./images/image_obfuscate.inc');
+  $uuid = md5(rand());
+  // 
+  $obfuscate = image_obfuscate($uuid);
+  $prefix = bgimage_get_prefix($obfuscate);
+  $directory = 'public://raw/' . $prefix;
+  if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
+    watchdog('image', 'Failed to create style directory: %directory', array('%directory' => $directory), WATCHDOG_ERROR);
+    return FALSE;
+  }
+  
+  $data = file_load($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid']);
+  // Move file into scalable file area, e.g.
+  // files/raw/7H3/HEH/7H3HEHUZ6H3HMLUZ8LWZUHLRUHVZMLZR5LAZ8LUZ6HBH0L6Z4H6ZLLOHIHBHQL5Z8H.jpg
+  $result = file_move($data, $directory . $obfuscate . '.jpg');
+}

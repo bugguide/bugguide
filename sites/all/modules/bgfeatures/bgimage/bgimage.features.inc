@@ -9,7 +9,7 @@
  */
 function bgimage_node_info() {
   $items = array(
-    'image' => array(
+    'bgimage' => array(
       'name' => t('Image'),
       'base' => 'node_content',
       'description' => '',
