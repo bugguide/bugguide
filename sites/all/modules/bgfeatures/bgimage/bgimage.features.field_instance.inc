@@ -10,8 +10,53 @@
 function bgimage_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-image-field_bgimage_copyright_owner'
-  $field_instances['node-image-field_bgimage_copyright_owner'] = array(
+  // Exported field_instance: 'node-bgimage-body'
+  $field_instances['node-bgimage-body'] = array(
+    'bundle' => 'bgimage',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'trim_length' => 600,
+        ),
+        'trim_length' => 600,
+        'type' => 'text_summary_or_trimmed',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'body',
+    'label' => 'Body',
+    'required' => 0,
+    'settings' => array(
+      'display_summary' => TRUE,
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 20,
+        'summary_rows' => 5,
+      ),
+      'type' => 'text_textarea_with_summary',
+      'weight' => -4,
+    ),
+  );
+
+  // Exported field_instance: 'node-bgimage-field_bgimage_copyright_owner'
+  $field_instances['node-bgimage-field_bgimage_copyright_owner'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
@@ -50,8 +95,8 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-image-field_bgimage_county'
-  $field_instances['node-image-field_bgimage_county'] = array(
+  // Exported field_instance: 'node-bgimage-field_bgimage_county'
+  $field_instances['node-bgimage-field_bgimage_county'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
@@ -90,8 +135,8 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-image-field_bgimage_custom_tag'
-  $field_instances['node-image-field_bgimage_custom_tag'] = array(
+  // Exported field_instance: 'node-bgimage-field_bgimage_custom_tag'
+  $field_instances['node-bgimage-field_bgimage_custom_tag'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
@@ -130,8 +175,8 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-image-field_bgimage_date'
-  $field_instances['node-image-field_bgimage_date'] = array(
+  // Exported field_instance: 'node-bgimage-field_bgimage_date'
+  $field_instances['node-bgimage-field_bgimage_date'] = array(
     'bundle' => 'bgimage',
     'deleted' => 0,
     'description' => 'Date taken, if known (mm/dd/yy). Only specify this for wild specimens.',
@@ -183,8 +228,8 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-image-field_bgimage_gender'
-  $field_instances['node-image-field_bgimage_gender'] = array(
+  // Exported field_instance: 'node-bgimage-field_bgimage_gender'
+  $field_instances['node-bgimage-field_bgimage_gender'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
@@ -220,8 +265,8 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-image-field_bgimage_image'
-  $field_instances['node-image-field_bgimage_image'] = array(
+  // Exported field_instance: 'node-bgimage-field_bgimage_image'
+  $field_instances['node-bgimage-field_bgimage_image'] = array(
     'bundle' => 'bgimage',
     'deleted' => 0,
     'description' => 'If you have more than one image of the same specimen, submit this form first. Then view the first submitted image and select the "add image" link to add another. Please limit yourself to just a few of your best shots for a particular specimen.',
@@ -270,8 +315,8 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-image-field_bgimage_life_stage'
-  $field_instances['node-image-field_bgimage_life_stage'] = array(
+  // Exported field_instance: 'node-bgimage-field_bgimage_life_stage'
+  $field_instances['node-bgimage-field_bgimage_life_stage'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
@@ -307,8 +352,8 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-image-field_bgimage_location'
-  $field_instances['node-image-field_bgimage_location'] = array(
+  // Exported field_instance: 'node-bgimage-field_bgimage_location'
+  $field_instances['node-bgimage-field_bgimage_location'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
@@ -365,8 +410,8 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-image-field_bgimage_photo_quality'
-  $field_instances['node-image-field_bgimage_photo_quality'] = array(
+  // Exported field_instance: 'node-bgimage-field_bgimage_photo_quality'
+  $field_instances['node-bgimage-field_bgimage_photo_quality'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
@@ -414,8 +459,8 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-image-field_bgimage_remarks'
-  $field_instances['node-image-field_bgimage_remarks'] = array(
+  // Exported field_instance: 'node-bgimage-field_bgimage_remarks'
+  $field_instances['node-bgimage-field_bgimage_remarks'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
@@ -454,8 +499,8 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-image-field_bgimage_representative'
-  $field_instances['node-image-field_bgimage_representative'] = array(
+  // Exported field_instance: 'node-bgimage-field_bgimage_representative'
+  $field_instances['node-bgimage-field_bgimage_representative'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
@@ -503,8 +548,8 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-image-field_bgimage_size'
-  $field_instances['node-image-field_bgimage_size'] = array(
+  // Exported field_instance: 'node-bgimage-field_bgimage_size'
+  $field_instances['node-bgimage-field_bgimage_size'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
@@ -546,6 +591,7 @@ function bgimage_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('<b>Leave this blank if the image is your own</b>. If the image is not your own you must get permission from the owner before submitting it here. If you have permission, specify the copyright owner\'s name here.');
+  t('Body');
   t('Copyright Owner');
   t('County/Parish/District/Region');
   t('Custom Tag');
