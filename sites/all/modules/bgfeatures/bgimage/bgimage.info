@@ -37,4 +37,4 @@ features[field_instance][] = node-image-field_bgimage_photo_quality
 features[field_instance][] = node-image-field_bgimage_remarks
 features[field_instance][] = node-image-field_bgimage_representative
 features[field_instance][] = node-image-field_bgimage_size
-features[node][] = image
+features[node][] = bgimage
