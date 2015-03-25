@@ -35,3 +35,21 @@ function bgimage_node_insert($node) {
   // files/raw/7H3/HEH/7H3HEHUZ6H3HMLUZ8LWZUHLRUHVZMLZR5LAZ8LUZ6HBH0L6Z4H6ZLLOHIHBHQL5Z8H.jpg
   $result = file_move($data, $directory . $obfuscate . '.jpg');
 }
+
+/**
+ * Modify paths of derivative images.
+ * 
+ * @param string $result
+ *   $result = $scheme . '://styles/' . $style_name . '/' . $scheme . '/' . $path;
+ * @param unknown_type $context
+ *   $context = array(
+ *     'style_name' => $style_name,
+ *     'uri' => $uri,
+ *     'scheme' => $scheme,
+ *     'path' => $path,
+ *   );
+ */
+function bgimage_image_style_path($result, $context) {
+  $foo = 'bar';
+  
+}
