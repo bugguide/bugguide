@@ -824,6 +824,12 @@ function image_style_deliver($style, $scheme) {
   }
 
   $image_uri = $scheme . '://' . $target;
+  
+  // Core hack! -JV
+  // If the image being requested is a derivative of a raw image,
+  // substitute the URI of the real raw image.
+  $image_uri = bgimage_original_from_derivative_path($scheme, $target);
+  
   $derivative_uri = image_style_path($style['name'], $image_uri);
 
   // If using the private scheme, let other modules provide headers and
