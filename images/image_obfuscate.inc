@@ -11,6 +11,13 @@ function bgimage_get_prefix($s) {
   return substr($s, 0, 3) . '/' . substr($s, 3, 3) . '/';
 }
 
+function bgimage_remove_prefix($s) {
+  if (substr($s, 0, 4) == 'raw/') {
+    return substr($s, 12);
+  }
+  return $s;
+}
+
 function char_to_base36($char) {
 	$base36_charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
 	$decimal = ord($char);
