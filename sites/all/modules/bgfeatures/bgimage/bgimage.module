@@ -50,28 +50,55 @@ function bgimage_node_insert($node) {
  *   );
  */
 function bgimage_image_style_path_alter(&$style_path, $context) {
-  // Only modify path if a derivative of a raw image was requested.
+  // Only modify path if a derivative of a raw image was requested, like
+  // raw/ELI/RTZ/ELIRTZ8RTL8RZH4ROLXZALIZNLYLCZQRYZMRFZ0RCZIROZRZCLMZRH0RFZFL3ZRZOZ.jpg
   if (substr($context['path'], 0, 4) != 'raw/') {
     return;
   }
   
   $s = pathinfo($context['path'], PATHINFO_FILENAME);
+  // 7H3HEHUZ6H3HMLUZ8LWZUHLRUHVZMLZR5LAZ8LUZ6HBH0L6Z4H6ZLLOHIHBHQL5Z8H
+
   $uuid = image_deobfuscate($s);
+  // faed59f39f56052153b48643f20ee94e
+
   $path = image_obfuscate($uuid . ',' . $context['style_name']) . '.jpg';
+  // NH8ZYZMZZHIZOZZRILVZQLVHQLEZSL1HXHCHIHYHNHAZ8LNZMLUZGLAZIL1Z2HAHMH2ZGLUZUH9Z2H1Z.jpg
+  
   $prefix = bgimage_get_prefix($path);
+  // NH8/ZYZ/
+  
   $style_path = $context['scheme'] . '://styles/' . $context['style_name'] . '/' . $context['scheme'] . '/' . $prefix . $path;
+  // public://styles/medium/public/NH8/ZYZ/NH8ZYZMZZHIZOZZRILVZQLVHQLEZSL1HXHCHIHYHNHAZ8LNZMLUZGLAZIL1Z2HAHMH2ZGLUZUH9Z2H1Z.jpg
 }
 
 /**
  * Given URI of a derivative, return URI of original.
  */
 function bgimage_original_from_derivative_path($scheme, $target) {
+  // Only attempt to get original URI for scalable targets like
+  // NH8/ZYZ/NH8ZYZMZZHIZOZZRILVZQLVHQLEZSL1HXHCHIHYHNHAZ8LNZMLUZGLAZIL1Z2HAHMH2ZGLUZUH9Z2H1Z.jpg
+  if (strlen($target) < 8 || $target[3] != '/' || $target[7] != '/') {
+    // Stock Drupal image_uri.
+    return $scheme . '://' . $target;
+  }
+  
   $s = pathinfo($target, PATHINFO_FILENAME);
+  // NH8ZYZMZZHIZOZZRILVZQLVHQLEZSL1HXHCHIHYHNHAZ8LNZMLUZGLAZIL1Z2HAHMH2ZGLUZUH9Z2H1Z
+  
   $info = image_deobfuscate($s);
+  // faed59f39f56052153b48643f20ee94e,medium
+  
   $parts = explode(',', $info);
   $uuid = array_shift($parts);
+  // faed59f39f56052153b48643f20ee94e
+  
   $obfuscated = image_obfuscate($uuid);
+  // ELIRTZ8RTL8RZH4ROLXZALIZNLYLCZQRYZMRFZ0RCZIROZRZCLMZRH0RFZFL3ZRZOZ
+  
   $prefix = bgimage_get_prefix($obfuscated);
+  // ELI/RTZ/
   
   return $scheme . '://' . 'raw/' . $prefix . $obfuscated . '.jpg';
+  // public://raw/ELI/RTZ/ELIRTZ8RTL8RZH4ROLXZALIZNLYLCZQRYZMRFZ0RCZIROZRZCLMZRH0RFZFL3ZRZOZ.jpg
 }
