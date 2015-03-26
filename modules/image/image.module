@@ -1092,15 +1092,15 @@ function image_style_path($style_name, $uri) {
   // Addition of drupal_alter() allows modification of paths for
   // derivatives. In our case we do not want guessable original paths
   // from derivative paths.
-  $result = $scheme . '://styles/' . $style_name . '/' . $scheme . '/' . $path;
+  $style_path = $scheme . '://styles/' . $style_name . '/' . $scheme . '/' . $path;
   $context = array(
   'style_name' => $style_name,
   'uri' => $uri,
   'scheme' => $scheme,
   'path' => $path,
   );
-  drupal_alter('image_style_path', $result, $context);
-  return $result;
+  drupal_alter('image_style_path', $style_path, $context);
+  return $style_path;
   
   return $scheme . '://styles/' . $style_name . '/' . $scheme . '/' . $path;
 }
