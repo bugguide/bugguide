@@ -12,17 +12,56 @@ function bgimage_node_validate($node, $form, &$form_state) {
     return;
   }
   
+  if ($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid'] == 0) {
+    form_set_error('field_bgimage_image', 'Did you forget to attach an image? Please attach one and resubmit.'); 
+  }
+  
+  if ($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value'] === NULL) {
+    $form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value'] = $form_state['values']['created'];
+  }
+  
+  if (strtotime($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value']) > $form_state['values']['created']) {
+    form_set_error('field_bgimage_date', 'The date taken cannot be in the future.'); 
+  }
+  
+  //if ((strstr($node->parent, ",57,") && !$node->immature && !$node->adult)) {
+	//  $error["leps_stage"] = theme("theme_error", "Please check adult (moth/butterfly) and/or immature (egg/caterpillar/pupa) when submitting to Lepidoptera.");
+  //}
+  
+  $county = isset($node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] : '';
+  if (bg_str_ends_with(strtoupper($county), ' PARISH')) {
+     $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] = substr($county, 0, strlen($county) - 7);
+  }
+  if (bg_str_ends_with(strtoupper($county), ' COUNTY')) {
+     $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] = substr($county, 0, strlen($county) - 7);
+  }
+  if (bg_str_ends_with(strtoupper($county), ' CO')) {
+     $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] = substr($county, 0, strlen($county) - 3);
+  }
+  if (bg_str_ends_with(strtoupper($county), ' CO.')) {
+     $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] = substr($county, 0, strlen($county) - 4);
+  }
+  if ((strtoupper($county) == 'USA') ||
+		(strtoupper($county) == 'UNITED STATES') ||
+		(strtoupper($county) == 'CANADA')) {
+		form_set_error('field_bgimage_county', 'You have entered a country here. Please specify the county/parish/district/region instead.');
+	}
+ 
+	// TODO
+	// bgimage_set_titles()
 }
 
+/**
+ * Implement hook_node_insert().
+ */
 function bgimage_node_insert($node) {
   if ($node->type != 'bgimage') {
     return;
   }
 
   include_once('./images/image_obfuscate.inc');
-  $uuid = md5(rand());
-  // 
-  $obfuscate = image_obfuscate($uuid);
+  $node->bgimage_uuid = md5(rand());
+  $obfuscate = image_obfuscate($node->bgimage_uuid);
   $prefix = bgimage_get_prefix($obfuscate);
   $directory = 'public://raw/' . $prefix;
   if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
@@ -34,6 +73,70 @@ function bgimage_node_insert($node) {
   // Move file into scalable file area, e.g.
   // files/raw/7H3/HEH/7H3HEHUZ6H3HMLUZ8LWZUHLRUHVZMLZR5LAZ8LUZ6HBH0L6Z4H6ZLLOHIHBHQL5Z8H.jpg
   $result = file_move($data, $directory . $obfuscate . '.jpg');
+  
+  // Mirror information to bgimage table for scalability.
+  // Note that we are inside node_save()'s database transaction.
+  $fields = _bgimage_prepare($node, $data);
+  $result = db_insert('bgimage')
+    ->fields($fields)
+    ->execute();
+  
+}
+
+function _bgimage_prepare($node, $data) {
+  $custom_tags = array();
+  foreach ($node->{'field_bgimage_custom_tag'}[LANGUAGE_NONE] as $tag) {
+    $custom_tags[] = $tag['value'];
+  }
+  
+  $male = 0;
+  $female = 0;
+  foreach ($node->{'field_bgimage_gender'}[LANGUAGE_NONE] as $checkbox) {
+    if ($checkbox['value'] == '1') {
+      $female = 1;
+    }
+    if ($checkbox['value'] == '2') {
+      $male = 1;
+    }
+  }
+
+  $egg = 0;
+  $immature = 0;
+  $pupa = 0;
+  $adult = 0;
+  foreach ($node->{'field_bgimage_life_stage'}[LANGUAGE_NONE] as $checkbox) {
+    if ($checkbox['value'] == '2') {
+      $immature = 1;
+    }
+    if ($checkbox['value'] == '4') {
+      $adult = 1;
+    }
+  }
+  
+  $fields = array(
+    'nid' => $node->nid,
+    'parent' => '',
+    'parent_idx' => '',
+    'base' => $node->bgimage_uuid,
+    'id' => implode(' ', $custom_tags), // field_bgimage_custom_tag
+    'location' => $node->{'field_bgimage_location'}[LANGUAGE_NONE][0]['locality'],
+    'date_taken' => strtotime($node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value']),
+    'width' => $node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['width'],
+    'height' => $node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['width'],
+    'filesize' => $data->filesize,
+    'weight' => 0,
+    'representative' => 0,
+    'male' => $male, // field_bgimage_gender checkboxes 1
+    'female' => $female,
+    'adult' => $adult, // field_bgimage_life_stage
+    'immature' => $immature, // field_bgimage_life_stage
+    'size' => isset($node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value'] : '',
+    'owner' => isset($node->{'field_bgimage_copyright_owner'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_copyright_owner'}[LANGUAGE_NONE][0]['value'] : '',
+    'location_code' => $node->{'field_bgimage_location'}[LANGUAGE_NONE][0]['administrative_area'], // state e.g., IA
+    'county' => isset($node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] : '' 
+  );
+  return $fields;
+
 }
 
 /**
