@@ -49,7 +49,15 @@ function bgimage_node_insert($node) {
  *     'path' => $path,
  *   );
  */
-function bgimage_image_style_path($result, $context) {
-  $foo = 'bar';
+function bgimage_image_style_path_alter(&$style_path, $context) {
+  // Only modify path if a derivative of a raw image was requested.
+  if (substr($context['path'], 0, 4) != 'raw/') {
+    return;
+  }
   
+  $s = pathinfo($context['path'], PATHINFO_FILENAME);
+  $uuid = image_deobfuscate($s);
+  $path = image_obfuscate($uuid . ',' . $context['style_name']) . '.jpg';
+  $prefix = bgimage_get_prefix($path);
+  $style_path = $context['scheme'] . '://styles/' . $context['style_name'] . '/' . $context['scheme'] . '/' . $prefix . $path;
 }
