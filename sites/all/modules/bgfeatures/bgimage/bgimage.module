@@ -61,3 +61,17 @@ function bgimage_image_style_path_alter(&$style_path, $context) {
   $prefix = bgimage_get_prefix($path);
   $style_path = $context['scheme'] . '://styles/' . $context['style_name'] . '/' . $context['scheme'] . '/' . $prefix . $path;
 }
+
+/**
+ * Given URI of a derivative, return URI of original.
+ */
+function bgimage_original_from_derivative_path($scheme, $target) {
+  $s = pathinfo($target, PATHINFO_FILENAME);
+  $info = image_deobfuscate($s);
+  $parts = explode(',', $info);
+  $uuid = array_shift($parts);
+  $obfuscated = image_obfuscate($uuid);
+  $prefix = bgimage_get_prefix($obfuscated);
+  
+  return $scheme . '://' . 'raw/' . $prefix . $obfuscated . '.jpg';
+}
