@@ -15,7 +15,7 @@ function bgimage_field_default_field_instances() {
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -37,17 +37,18 @@ function bgimage_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'body',
-    'label' => 'Body',
+    'label' => 'Remarks',
     'required' => 0,
     'settings' => array(
-      'display_summary' => TRUE,
+      'display_summary' => 1,
       'text_processing' => 1,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
+      'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'rows' => 20,
+        'rows' => 5,
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
@@ -291,7 +292,7 @@ function bgimage_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_bgimage_image',
     'label' => 'Image',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'alt_field' => 0,
       'default_image' => 0,
@@ -459,46 +460,6 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_remarks'
-  $field_instances['node-bgimage-field_bgimage_remarks'] = array(
-    'bundle' => 'bgimage',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 3,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_bgimage_remarks',
-    'label' => 'Remarks',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 1,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 5,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 6,
-    ),
-  );
-
   // Exported field_instance: 'node-bgimage-field_bgimage_representative'
   $field_instances['node-bgimage-field_bgimage_representative'] = array(
     'bundle' => 'bgimage',
@@ -591,7 +552,6 @@ function bgimage_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('<b>Leave this blank if the image is your own</b>. If the image is not your own you must get permission from the owner before submitting it here. If you have permission, specify the copyright owner\'s name here.');
-  t('Body');
   t('Copyright Owner');
   t('County/Parish/District/Region');
   t('Custom Tag');
