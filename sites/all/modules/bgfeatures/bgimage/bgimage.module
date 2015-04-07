@@ -59,7 +59,6 @@ function bgimage_node_insert($node) {
     return;
   }
 
-  include_once('./images/image_obfuscate.inc');
   $node->bgimage_uuid = md5(rand());
   $obfuscate = image_obfuscate($node->bgimage_uuid);
   $prefix = bgimage_get_prefix($obfuscate);
@@ -69,18 +68,36 @@ function bgimage_node_insert($node) {
     return FALSE;
   }
   
-  $data = file_load($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid']);
+  $file = file_load($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid']);
   // Move file into scalable file area, e.g.
   // files/raw/7H3/HEH/7H3HEHUZ6H3HMLUZ8LWZUHLRUHVZMLZR5LAZ8LUZ6HBH0L6Z4H6ZLLOHIHBHQL5Z8H.jpg
-  $result = file_move($data, $directory . $obfuscate . '.jpg');
+  $result = file_move($file, $directory . $obfuscate . '.jpg');
   
   // Mirror information to bgimage table for scalability.
   // Note that we are inside node_save()'s database transaction.
-  $fields = _bgimage_prepare($node, $data);
+  $fields = _bgimage_prepare($node, $file);
   $result = db_insert('bgimage')
     ->fields($fields)
-    ->execute();
-  
+    ->execute();  
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function bgimage_node_update($node) {
+  if ($node->type != 'bgimage') {
+    return;
+  }
+
+  $file = file_load($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid']);
+
+  // Mirror information to bgimage table for scalability.
+  // Note that we are inside node_save()'s database transaction.
+  $fields = _bgimage_prepare($node, $file);
+  $result = db_update('bgimage')
+    ->fields($fields)
+    ->condition('nid', $node->nid)
+    ->execute();   
 }
 
 function _bgimage_prepare($node, $data) {
@@ -135,6 +152,7 @@ function _bgimage_prepare($node, $data) {
     'location_code' => $node->{'field_bgimage_location'}[LANGUAGE_NONE][0]['administrative_area'], // state e.g., IA
     'county' => isset($node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] : '' 
   );
+  
   return $fields;
 
 }
