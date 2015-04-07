@@ -7,6 +7,13 @@
 include_once 'bgimage.features.inc';
 include_once './images/image_obfuscate.inc';
 
+/**
+ * Alter the bgimage form.
+ */
+function bgimage_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['field_bgimage_parent']['#access'] = FALSE;
+}
+
 function bgimage_node_validate($node, $form, &$form_state) {
   if ($node->type != 'bgimage') {
     return;
@@ -52,7 +59,7 @@ function bgimage_node_validate($node, $form, &$form_state) {
 }
 
 /**
- * Implement hook_node_insert().
+ * Implements hook_node_insert().
  */
 function bgimage_node_insert($node) {
   if ($node->type != 'bgimage') {
