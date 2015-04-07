@@ -411,12 +411,52 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-bgimage-field_bgimage_parent'
+  $field_instances['node-bgimage-field_bgimage_parent'] = array(
+    'bundle' => 'bgimage',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 12,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_bgimage_parent',
+    'label' => 'Parent',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 94,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 13,
+    ),
+  );
+
   // Exported field_instance: 'node-bgimage-field_bgimage_photo_quality'
   $field_instances['node-bgimage-field_bgimage_photo_quality'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Quality of image. 1: blurry, taken on a cheap camera phone; 5: professional-quality image, great depth of field, excellent lighting.',
+    'description' => 'Quality of image.<br>1: blurry, taken on a cheap camera phone;<br>5: professional-quality image, great depth of field, excellent lighting.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -465,7 +505,7 @@ function bgimage_field_default_field_instances() {
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'How representative of this taxon is this specimen? 1: can hardly recognize it as a member of this taxon; 5: I would show someone this picture to introduce them to this taxon',
+    'description' => 'How representative of this taxon is this specimen?<br>1: can hardly recognize it as a member of this taxon;<br>5: I would show someone this picture to introduce them to this taxon',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -559,7 +599,7 @@ function bgimage_field_default_field_instances() {
   t('Date taken, if known (mm/dd/yy). Only specify this for wild specimens.');
   t('Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).');
   t('Gender');
-  t('How representative of this taxon is this specimen? 1: can hardly recognize it as a member of this taxon; 5: I would show someone this picture to introduce them to this taxon');
+  t('How representative of this taxon is this specimen?<br>1: can hardly recognize it as a member of this taxon;<br>5: I would show someone this picture to introduce them to this taxon');
   t('If known, otherwise leave blank. Do not include the word \'County\' or \'Parish\' here as the system will provide that as needed.');
   t('If you don\'t know for sure, don\'t check it. For example: for caterpillars check immature and for butterflies and moths check adult. If an image shows more than one life stage, check each one.');
   t('If you don\'t know for sure, don\'t check it. If the photo shows mating behavior, check both male and female.');
@@ -568,8 +608,9 @@ function bgimage_field_default_field_instances() {
   t('Life Stage');
   t('Location');
   t('Optional. An identifier for your own use. If you choose something unique here from your own records, you can easily find this image later using search.');
+  t('Parent');
   t('Photographic Quality');
-  t('Quality of image. 1: blurry, taken on a cheap camera phone; 5: professional-quality image, great depth of field, excellent lighting.');
+  t('Quality of image.<br>1: blurry, taken on a cheap camera phone;<br>5: professional-quality image, great depth of field, excellent lighting.');
   t('Remarks');
   t('Representative Image');
   t('Size');
