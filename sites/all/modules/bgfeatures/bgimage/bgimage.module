@@ -103,6 +103,7 @@ function bgimage_node_insert($node) {
   // Mirror information to bgimage table for scalability.
   // Note that we are inside node_save()'s database transaction.
   $fields = _bgimage_prepare($node, $file);
+  $fields['base'] = $node->bgimage_uuid;
   $result = db_insert('bgimage')
     ->fields($fields)
     ->execute();  
@@ -117,7 +118,7 @@ function bgimage_node_update($node) {
   }
 
   $file = file_load($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid']);
-
+  
   // Mirror information to bgimage table for scalability.
   // Note that we are inside node_save()'s database transaction.
   $fields = _bgimage_prepare($node, $file);
@@ -159,9 +160,8 @@ function _bgimage_prepare($node, $data) {
   
   $fields = array(
     'nid' => $node->nid,
-    'parent' => '',
-    'parent_idx' => '',
-    'base' => $node->bgimage_uuid,
+    'parent' => $node->{'field_bgimage_parent'}[LANGUAGE_NONE][0]['value'],
+    'parent_idx' => $node->{'field_bgimage_parent'}[LANGUAGE_NONE][0]['value'] . ',',
     'id' => implode(' ', $custom_tags), // field_bgimage_custom_tag
     'location' => $node->{'field_bgimage_location'}[LANGUAGE_NONE][0]['locality'],
     'date_taken' => strtotime($node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value']),
