@@ -25,16 +25,21 @@ function bgimage_node_validate($node, $form, &$form_state) {
   if ($form_state['values']['field_bgimage_parent'][LANGUAGE_NONE][0]['value'] == '') {
     $potential_parent = arg(3); // node/add/bgimage/1234
     if ($potential_parent === NULL) {
-      form_set_error('bgimage is unable to continue without a parent.');
+      form_set_error('field_bgimage_parent', 'bgimage is unable to continue without a parent.');
     }
     else {
       $parent = (int)$potential_parent;
       if ($parent == 0) {
-        form_set_error('bgimage could not make sense of parent.');
+        form_set_error('field_bgimage_parent', 'bgimage could not make sense of parent.');
       }
       else {
-        $full_parent = bgimage_get_full_parent($parent) . ',' . $parent;
-        $form_state['values']['field_bgimage_parent'][LANGUAGE_NONE][0]['value'] = $full_parent;
+        $full_parent = bgimage_get_full_parent($parent);
+        if ($full_parent === FALSE) {
+          form_set_error('field_bgimage_parent', 'bgimage: No such parent.');
+        }
+        else {
+          $form_state['values']['field_bgimage_parent'][LANGUAGE_NONE][0]['value'] = $full_parent . ',' . $parent;
+        }
       }
     }
   }
