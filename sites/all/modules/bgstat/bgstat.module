@@ -46,7 +46,6 @@ function bgstat_menu() {
  * Implements hook_permission().
  */
 function bgstat_permission() {
-  return array('access bgstats');
   return array(
     'access bgstats' => array(
       'title' => t('View badges denoting privileged roles'),
@@ -57,7 +56,6 @@ function bgstat_permission() {
       'description' => t('Perform bg maintenance tasks'),
     )
   );
-
 }
 
 function bgstat_nodes_by_user($node_type = 'all', $limit = 50) {
