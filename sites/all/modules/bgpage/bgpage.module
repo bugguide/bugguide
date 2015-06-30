@@ -273,11 +273,14 @@ function bgpage_entity_load($entities, $type) {
       $taxa[] = $taxon;
     }
 
-    $taxon_name = isset($TAXON_NAMES[$taxon]) ? strtolower($TAXON_NAMES[$taxon]) : '';
-    if ($taxon_name) {
-      $node->$taxon_name = $scientific_name;
-      $node->taxon_name = $taxon_name;
+    if (isset($taxon)) {
+      $taxon_name = isset($TAXON_NAMES[$taxon]) ? strtolower($TAXON_NAMES[$taxon]) : '';
+      if ($taxon_name) {
+        $node->$taxon_name = $scientific_name;
+        $node->taxon_name = $taxon_name;
+      }
     }
+
     $node->taxa = implode('|', $taxa);
     $node->scientific_names = implode('|', $scientific_names);
     $node->titles = implode('|', $titles);
