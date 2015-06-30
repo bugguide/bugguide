@@ -70,7 +70,7 @@ function bg_menu() {
     'page callback' => 'bg_blank_hodges',
     'access arguments' => array('administer BG utilities'),
     'file' => 'bg.admin.inc',
-  );  
+  );
   $items['bg/badlocations'] = array(
     'title' => 'Fix image locations',
     'description' => 'Shows images that have county names in county field',
@@ -79,7 +79,7 @@ function bg_menu() {
     'access arguments' => array('administer BG utilities'),
     'file' => 'bg.admin.inc',
   );
-  
+
   return $items;
 }
 
@@ -91,7 +91,7 @@ function bg_menu_access($nid) {
     return FALSE;
   }
   $node = node_load($nid);
-  $pid = $node->immediate_parent;
+  $pid = !empty($node->immediate_parent) ? $node->immediate_parent : NULL;
   // No tabs on ID Request (6) or Frass (9410).
   if (user_access('access content') && ($pid != BG_ID_REQUEST_NID) && ($pid != BG_FRASS_NID)) {
     $show = array(

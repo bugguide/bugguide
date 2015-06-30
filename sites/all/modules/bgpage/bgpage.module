@@ -36,8 +36,18 @@ function bgpage_menu_alter(&$items) {
   $items['node/%node/view']['title'] = t('Info');
 }
 
-function bgpage_permissions() {
-  return array('view taxon ID field', 'view who edited bgpage', 'view raw parents');
+function bgpage_permission() {
+  return array(
+    'view taxon ID field' => array(
+      'title' => 'View taxon ID field',
+    ),
+    'view who edited bgpage' => array(
+      'title' => 'View who edited a bgpage',
+    ),
+    'view raw parents' => array(
+      'title' => 'View raw parents',
+    ),
+  );
 }
 
 function bgpage_theme() {
@@ -59,13 +69,13 @@ function bgpage_theme() {
 
 /**
  * Implements hook_form_FORM_ID_alter()
- * 
+ *
  * Assumption: this form is only used for editing, not new nodes.
  * New nodes are created with the bgpage quickadd form.
  */
 function bgpage_form_bgpage_node_form_alter(&$form, &$form_state, $form_id) {
   $node = $form['#entity'];
-  
+
   //$form['title']['#access'] = FALSE;
   if (!user_access('view taxon ID field')) {
     $form['field_taxon']['#access'] = FALSE;
@@ -76,15 +86,15 @@ function bgpage_form_bgpage_node_form_alter(&$form, &$form_state, $form_id) {
   if (!user_access('view raw parents')) {
     $form['field_parents']['#access'] = FALSE;
   }
-    
-  // Run our validator after the regular node validator runs.  
+
+  // Run our validator after the regular node validator runs.
   $form['#validate'][] = 'bgpage_node_form_validate';
-  
+
 }
 
 function bgpage_node_form_validate(&$form, &$form_state) {
   global $TAXON_NAMES, $TAXON_IDS;
-  
+
   // Use $node-> syntax for convenience.
   $node = (object) $form_state['values'];
 
@@ -103,7 +113,7 @@ function bgpage_node_form_validate(&$form, &$form_state) {
     // TODO update for D7
     //$nid = db_result(db_query("SELECT n.nid FROM {node} n JOIN {bgpage} p ON p.nid = n.nid WHERE n.title = '%s' AND p.parent = '%s' AND n.nid != %d", $node->title, $node->parent, $node->nid));
     // Criteria: has same parent, also has same title, also is not this node (if editing)
-    $query = new EntityFieldQuery;        
+    $query = new EntityFieldQuery;
     $query->entityCondition('entity_type', 'node')
                 ->entityCondition('bundle', 'bgpage')
                 ->propertyCondition('title', $node->title)
@@ -163,12 +173,12 @@ function bgpage_node_form_validate(&$form, &$form_state) {
   // TODO bgpage_set_titles($node);
   $form_state['values']['title_node'] = $node->title_node;
   $form_state['values']['title_browser'] = $node->title_browser;
-  
+
 }
 
 /**
  * Add information to bgpage node(s).
- * 
+ *
  * The information specific to each bgpage will load automatically
  * but the bgpage exists in a hierarchy. Information for each parent
  * of this bgpage needs to be retrieved efficiently.
@@ -178,17 +188,17 @@ function bgpage_entity_load($entities, $type) {
   if ($type != 'node') {
     return;
   }
-  
+
   // There are some known paths that we skip going through the extra work
   // of attaching parent and taxa data.
   $path_blacklist = array(
     'admin/content',
   );
-  
+
   if (in_array($_GET['q'], $path_blacklist)) {
     return;
   }
-    
+
   foreach ($entities as $node) {
     if ($node->type != 'bgpage' || isset($node->bgpage_entity_load)) {
       continue;
@@ -205,7 +215,7 @@ function bgpage_entity_load($entities, $type) {
     $titles = array();
     $scientific_names = array();
     $entities = array();
-    
+
     // Create an array of basic entities so that the field values
     // for this set of parents can be retrieved all at once.
     foreach ($parent_nids as $parent_nid) {
@@ -214,21 +224,21 @@ function bgpage_entity_load($entities, $type) {
       $entities[$parent_nid]->bundle = 'bgpage';
       $entities[$parent_nid]->id = $parent_nid;
     }
-    
+
     if (isset($parent_nid)) {
       $node->immediate_parent = $parent_nid;
     }
-    
+
     $field_taxon_info = field_info_field('field_taxon');
-    
+
     $options = array(
       'field_id' => $field_taxon_info['id'],
     );
-    
-    // Load taxon, title, scientific name info for all parents 
+
+    // Load taxon, title, scientific name info for all parents
     // without doing a full node load.
     field_attach_load('node', $entities, FIELD_LOAD_CURRENT, $options);
-    
+
     // Check if a cached entity set loaded. Any entity id is good enough
     // to check for this so use the last parent nid from above.
     if (isset($parent_nid) && !isset($entities[$parent_nid]->field_scientific_name[$language][0]['value'])) {
@@ -237,9 +247,9 @@ function bgpage_entity_load($entities, $type) {
       $options = array(
         'field_id' => $field_taxon_info['field_id'],
       );
-      field_attach_load('node', $entities, FIELD_LOAD_CURRENT, $options); 
+      field_attach_load('node', $entities, FIELD_LOAD_CURRENT, $options);
     }
-    
+
     foreach ($parent_nids as $parent_nid) {
       // taxon is a four-digit code defined in bugguide_globals.inc, in $TAXON_NAMES and $TAXON_IDs
       $taxon = $entities[$parent_nid]->field_taxon[$language][0]['value'];
@@ -247,13 +257,13 @@ function bgpage_entity_load($entities, $type) {
       $scientific_name = $entities[$parent_nid]->field_scientific_name[$language][0]['safe_value'];
       $scientific_names[] = $scientific_name;
       $title = $entities[$parent_nid]->field_common_name[$language][0]['safe_value'];
-      if (isset($entities[$parent_nid]->field_hodges_number[$language][0]['value']) && 
+      if (isset($entities[$parent_nid]->field_hodges_number[$language][0]['value']) &&
         $entities[$parent_nid]->field_hodges_number[$language][0]['value']) {
         $title .= ' - Hodges#' . $entities[$parent_nid]->field_hodges_number[$language][0]['value'];
       }
       $titles[] = $title;
     }
-    
+
     // Now for the node actually being loaded.
     if (!isset($node->field_taxon[$language][0]['value'])) {
       watchdog('bg', 'no taxon set for node !nid', array('!nid', $node->nid), WATCHDOG_WARNING);
@@ -262,16 +272,19 @@ function bgpage_entity_load($entities, $type) {
       $taxon = $node->field_taxon[$language][0]['value'];
       $taxa[] = $taxon;
     }
-   
-    $taxon_name = isset($TAXON_NAMES[$taxon]) ? strtolower($TAXON_NAMES[$taxon]) : '';
-    if ($taxon_name) {
-      $node->$taxon_name = $scientific_name;
-      $node->taxon_name = $taxon_name;
+
+    if (isset($taxon)) {
+      $taxon_name = isset($TAXON_NAMES[$taxon]) ? strtolower($TAXON_NAMES[$taxon]) : '';
+      if ($taxon_name) {
+        $node->$taxon_name = $scientific_name;
+        $node->taxon_name = $taxon_name;
+      }
     }
+
     $node->taxa = implode('|', $taxa);
     $node->scientific_names = implode('|', $scientific_names);
     $node->titles = implode('|', $titles);
-  } 
+  }
 }
 
 
@@ -382,7 +395,7 @@ function bgpage_tree($nid, $mode = NULL) {
   }
 
   ///$result = db_query("SELECT n.nid, n.title, p.taxon, p.scientific_name, p.hodges_number, p.sequence, p.parent FROM {node} n, {bgpage} p WHERE p.nid = n.nid AND parent = '%s' AND status = '1' ORDER BY p.sequence, p.nid", $path);
-  
+
   // TODO need to restore the ability to order taxonomy (the sequence column in bg6)
   // Get all nids of children of this bgpage.
   $parent = $node->field_parent[$language][0]['value'];
@@ -598,7 +611,7 @@ function bgpage_tree_child($child, $count_children = TRUE) {
   if ($count_children) {
     // TODO: add caching here.
     $count = db_query("SELECT COUNT(value) FROM {field_data_field_parent} WHERE value LIKE '$search_path%'")->fetchField();
-    
+
     $child_count = ' ('. $count .')';
   }
 
