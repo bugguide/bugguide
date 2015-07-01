@@ -191,72 +191,87 @@ function bg_get_current_path($path) {
  * @param integer $from
  *   If the breadcrumb should not start at Home / Guide then specify which
  *   the nid of the taxon it should start from.
- * @return HTML
+ * @return array of links with title and href.
  */
 function bg_create_taxonomic_breadcrumb($node, $from = NULL){
   global $TAXON_NAMES;
-  global $base_url;
   global $user;
 
-  $guidebc = $user->guide_breadcrumbs;
-  $bc = '';
+  $bc = array();
   if (!$from ) {
-    $bc = "<a href=\"" . $base_url . "\">Home</a> &raquo; Guide";
+    $bc[] = l('Home', '');
   }
-  $parent = explode(',', $node->parent);
-  $parent[] = $node->nid;
-  $placeholders = db_placeholders($parent, 'int');
-  $sql = "SELECT n.nid, n.title, p.scientific_name, p.taxon, p.hodges_number
-          FROM {node} n JOIN {bgpage} p on p.nid = n.nid
-          WHERE n.status = 1 AND n.nid in ($placeholders)
-          ORDER BY p.taxon ASC";
-  $result = db_query(db_rewrite_sql($sql), $parent);
 
-  $start_building = $from ? FALSE : TRUE;
-  while($data = db_fetch_object($result)) {
-    if (!$start_building) {
-      if ($data->nid == $from) {
-        $start_building = TRUE;
+  $nids = array($node->nid);
+  if (isset($node->field_parent[LANGUAGE_NONE][0]['value'])) {
+    $parent_nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
+    $nids = array_merge($parent_nids, $nids);
+  }
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'bgpage')
+    ->propertyCondition('nid', $nids, 'IN');
+    //->fieldOrderBy('field_taxon', 'value', 'ASC');
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    $nids = array_keys($result['node']);
+    $nodes = entity_load('node', $nids);
+
+    $start_building = $from ? FALSE : TRUE;
+    foreach($nodes as $parent_node) {
+      if (!$start_building) {
+        if ($parent_node->nid == $from) {
+          $start_building = TRUE;
+        }
+        else {
+          continue;
+        }
+      }
+
+      // Common name is the node title.
+      $common = $parent_node->title;
+
+      // What level of hierarchy we're at
+      $taxon = $TAXON_NAMES[$parent_node->field_taxon[LANGUAGE_NONE][0]['value']];
+      if (!$taxon) {
+        $taxon = t('No Taxon');
+      }
+
+      // We only look at the user preferences when there is a scientific name present
+      if (user_is_logged_in()) {
+        $account = user_load($user->uid);
+        $guidebc = $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'];
+        $scientific_name = $parent_node->field_scientific_name[LANGUAGE_NONE][0]['value'];
+        if ($guidebc == 'Scientific name') {
+          $linktext = $scientific_name;
+        }
+        else if ($guidebc == 'Common name') {
+          $linktext = $common;
+        }
+        else if ($guidebc == 'Scientific name (Common name)') {
+          $linktext = $scientific_name . ' (' . $common . ')';
+        }
+        else{
+          $linktext = $common . ' (' . $scientific_name . ')';
+        }
       }
       else {
-        continue;
-      }
-    }
-
-    // Common name is the node title.
-    $common = $data->title;
-
-    // What level of hierarchy we're at
-    $taxon = $TAXON_NAMES[$data->taxon];
-    if (!$taxon) {
-      $taxon = t('No Taxon');
-    }
-
-    // We only look at the user preferences when there is a scientific name present
-    if ($data->scientific_name) {
-      if ($guidebc == 3) {
-        $linktext = $data->scientific_name;
-      }
-      else if ($guidebc == 2) {
         $linktext = $common;
       }
-      else if ($guidebc == 1) {
-        $linktext = $data->scientific_name . ' (' . $common . ')';
-      }
-      else{
-        $linktext = $common . ' (' . $data->scientific_name . ')';
-      }
+      $bc[] = l($linktext, 'node/' . $parent_node->nid);
     }
-    else {
-      $linktext = $common;
-    }
-    $bc .= ' &raquo; <a alt="' . $taxon . '" href="' . $base_url . '/node/' . $data->nid . '">' . $linktext . '</a>';
   }
 
-  if ($from) {
-    // Remove leading right angle quote.
-    $bc = substr($bc, 8);
-  }
+  return $bc;
+}
 
-  return "<div class=\"breadcrumb\">" . $bc . "</div>";
+/**
+ * Implements hook_preprocess_page().
+ */
+function bg_preprocess_page(&$vars) {
+  // Set breadcrumb for bgpage and bgimage nodes.
+  $node = menu_get_object();
+  if (!empty($node) && isset($node->type) && in_array($node->type, array('bgpage', 'bgimage'))) {
+    drupal_set_breadcrumb(bg_create_taxonomic_breadcrumb($node));
+  }
 }
