@@ -254,8 +254,9 @@ function bgpage_entity_load($entities, $type) {
       if (!empty($entities[$parent_nid]->field_taxon)) {
          $taxa[] = $entities[$parent_nid]->field_taxon[$language][0]['value'];
       }
-      $scientific_name = $entities[$parent_nid]->field_scientific_name[$language][0]['safe_value'];
-      $scientific_names[] = $scientific_name;
+      if (!empty($entities[$parent_nid]->field_scientific_name)) {
+        $scientific_names[] = $entities[$parent_nid]->field_scientific_name[$language][0]['safe_value'];
+      }
 
       $titles = array();
       if (!empty($entities[$parent_nid]->field_common_name)) {
@@ -400,29 +401,28 @@ function bgpage_tree($nid, $mode = NULL) {
 
   // TODO need to restore the ability to order taxonomy (the sequence column in bg6)
   // Get all nids of children of this bgpage.
-  $parent = $node->field_parent[$language][0]['value'];
   $query = new EntityFieldQuery();
-  $query
-    ->entityCondition('entity_type', 'node')
+  $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'bgpage')
     ->propertyCondition('status', 1)
-    ->fieldCondition('field_parent', 'value', $parent);
+    ->fieldCondition('field_parent', 'value', $node->nid, 'CONTAINS');
 
   $result = $query->execute();
   $children = node_load_multiple(array_keys($result['node']));
   unset($children[$nid]);
-
-  if ($parent) {
-    $nids = explode(',', $parent);
-    $taxa = explode('|', $node->taxa);
-    $titles = explode('|', $node->titles);
-    $scientific_names = explode('|', $node->scientific_names);
+  // Remove wrong matches found by a node nid containing the nid.
+  // For example: 1,282,3000 will match 82.
+  foreach ($children as $child_node) {
+    $parent_nids = explode(',', $child_node->field_parent[LANGUAGE_NONE][0]['value']);
+    if (!in_array($node->nid, $parent_nids)) {
+      unset($children[$child_node->nid]);
+    }
   }
 
-  $nids[] = $node->nid;
-  $taxa[] = $node->field_taxon[$language][0]['value'];
-  $titles[] = $node->title . (isset($node->field_taxon[$language][0]['value']) ? " - Hodges#" . $node->field_taxon[$language][0]['value'] : '');
-  $scientific_names[] = $node->field_scientific_name[$language][0]['safe_value'];
+  $taxa = array();
+  $titles = array();
+  $scientific_names = array();
+  $nids = array_keys($children);
 
   return bgpage_tree_build($node, $children, $nids, $taxa, $titles, $scientific_names, $all, $mode);
 }
@@ -529,7 +529,10 @@ function bgpage_tree_build($node, $children, $nids, $taxons, $titles, $scientifi
     }
   }
   else {
-    $output .= "Nothing below this " . strtolower($node->taxon_name) . '.';
+    $output .= 'Nothing below this';
+    if (!empty($node->field_taxon)) {
+      $output .= " " . strtolower($node->field_taxon[LANGUAGE_NONE][0]['value']) . '.';
+    }
   }
 
   // Display tree with appropriate form.
@@ -584,7 +587,7 @@ function bgpage_tree_build($node, $children, $nids, $taxons, $titles, $scientifi
 
   // Wrap the returned output in taxonomytree.tpl.php.
   //$links = theme('links', $node->links);
-  return theme('taxonomytree', $node, $output, array());
+  return theme('taxonomytree', array('node' => $node, 'output' => $output));
 }
 function bgpage_tree_children(&$all, $parent) {
   $children = $all[bgpage_get_path($parent)];
@@ -602,36 +605,47 @@ function bgpage_tree_children(&$all, $parent) {
 
 function bgpage_tree_child($child, $count_children = TRUE) {
   global $TAXON_NAMES, $TAXON_IDS;
-  $taxon_name = $TAXON_NAMES[$child->taxon];
-  if (!$taxon_name) {
+  if (!empty($child->field_taxon) && isset($TAXON_NAMES[$child->field_taxon[LANGUAGE_NONE][0]['value']])) {
+    $taxon_name = $TAXON_NAMES[$child->field_taxon[LANGUAGE_NONE][0]['value']];
+    $taxon_id = $child->field_taxon[LANGUAGE_NONE][0]['value'];
+  }
+  else {
     $taxon_name = t('No Taxon');
-    $child->scientific_name = $child->title;
+    $taxon_id = NULL;
   }
 
-  $search_path = $child->parent . ','. $child->nid;
+  $scientific_name = check_plain($child->title);
+  if (!empty($child->field_scientific_name)) {
+    $scientific_name = $child->field_scientific_name[LANGUAGE_NONE][0]['value'];
+  }
+
+  $search_path = $child->field_parent[LANGUAGE_NONE][0]['value'] . ','. $child->nid;
   $child_count = '';
   if ($count_children) {
     // TODO: add caching here.
-    $count = db_query("SELECT COUNT(value) FROM {field_data_field_parent} WHERE value LIKE '$search_path%'")->fetchField();
-
+    $query = new EntityFieldQuery;
+    $query->entityCondition('entity_type', 'node')
+          ->entityCondition('bundle', 'bgpage')
+          ->fieldCondition('field_parent', 'value', $search_path, 'CONTAINS');
+    $count = $query->count()->execute();
     $child_count = ' ('. $count .')';
   }
 
-  $output .= "<span class=\"bgpage-taxon-title\">$taxon_name </span>";
-  $italics = $child->taxon >= $TAXON_IDS["Genus"];
+  $output = "<span class=\"bgpage-taxon-title\">$taxon_name </span>";
+  $italics = $taxon_id >= $TAXON_IDS["Genus"];
   $output .= "<span class=\"bgpage-taxon-desc\">";
   if ($italics) {
     $output .= "<i>";
   }
-  $output .= l("<strong>$child->scientific_name</strong>", "node/" . $child->nid . "/tree", array('html' => TRUE));
+  $output .= l("<strong>$scientific_name</strong>", "node/" . $child->nid . "/tree", array('html' => TRUE));
   if ($italics) {
     $output .= "</i>";
   }
-  if ($child->title != $child->scientific_name) {
-    $output .= " - " . $child->title;
+  if ($child->title != $scientific_name) {
+    $output .= " - " . check_plain($child->title);
   }
-  if ($child->hodges_number) {
-    $output .= " - Hodges#" . $child->hodges_number;
+  if (!empty($child->field_hodges_number)) {
+    $output .= " - Hodges#" . $child->field_hodges_number[LANGUAGE_NONE][0]['value'];
   }
   $output .= "$child_count</span><br />\n";
 
