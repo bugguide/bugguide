@@ -230,7 +230,6 @@ function bgpage_entity_load($entities, $type) {
     }
 
     $field_taxon_info = field_info_field('field_taxon');
-
     $options = array(
       'field_id' => $field_taxon_info['id'],
     );
@@ -252,25 +251,23 @@ function bgpage_entity_load($entities, $type) {
 
     foreach ($parent_nids as $parent_nid) {
       // taxon is a four-digit code defined in bugguide_globals.inc, in $TAXON_NAMES and $TAXON_IDs
-      $taxa[] = array();
-      if (!empty($entities[$parent_nid]->field_taxon[$language][0]['value'])) {
+      if (!empty($entities[$parent_nid]->field_taxon)) {
          $taxa[] = $entities[$parent_nid]->field_taxon[$language][0]['value'];
       }
       $scientific_name = $entities[$parent_nid]->field_scientific_name[$language][0]['safe_value'];
       $scientific_names[] = $scientific_name;
 
       $titles = array();
-      if (!empty($entities[$parent_nid]->field_common_name[$language][0]['safe_value'])) {
+      if (!empty($entities[$parent_nid]->field_common_name)) {
         $titles[] = $entities[$parent_nid]->field_common_name[$language][0]['safe_value'];
       }
-      if (!empty($entities[$parent_nid]->field_hodges_number[$language][0]['value']) &&
-        $entities[$parent_nid]->field_hodges_number[$language][0]['value']) {
+      if (!empty($entities[$parent_nid]->field_hodges_number)) {
         $titles[] =  'Hodges#' . $entities[$parent_nid]->field_hodges_number[$language][0]['value'];
       }
     }
 
     // Now for the node actually being loaded.
-    if (!isset($node->field_taxon[$language][0]['value'])) {
+    if (empty($node->field_taxon)) {
       watchdog('bg', 'no taxon set for node !nid', array('!nid', $node->nid), WATCHDOG_WARNING);
     }
     else {

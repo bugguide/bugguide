@@ -232,8 +232,10 @@ function bg_create_taxonomic_breadcrumb($node, $from = NULL){
       $common = $parent_node->title;
 
       // What level of hierarchy we're at
-      $taxon = $TAXON_NAMES[$parent_node->field_taxon[LANGUAGE_NONE][0]['value']];
-      if (!$taxon) {
+      if (!empty($parent_node->field_taxon) && isset($TAXON_NAMES[$parent_node->field_taxon[LANGUAGE_NONE][0]['value']])) {
+        $taxon = $TAXON_NAMES[$parent_node->field_taxon[LANGUAGE_NONE][0]['value']];
+      }
+      else {
         $taxon = t('No Taxon');
       }
 
@@ -241,7 +243,7 @@ function bg_create_taxonomic_breadcrumb($node, $from = NULL){
       if (user_is_logged_in()) {
         $account = user_load($user->uid);
         $guidebc = $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'];
-        $scientific_name = $parent_node->field_scientific_name[LANGUAGE_NONE][0]['value'];
+        $scientific_name = !empty($parent_node->field_scientific_name) ? $parent_node->field_scientific_name[LANGUAGE_NONE][0]['value'] : '';
         if ($guidebc == 'Scientific name') {
           $linktext = $scientific_name;
         }
