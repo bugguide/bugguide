@@ -245,23 +245,28 @@ function bgpage_entity_load($entities, $type) {
       // We didn't hit a cached entity set; explicitly retrieve field values.
       $field_scientific_name_info = field_info_field('field_scientific_name');
       $options = array(
-        'field_id' => $field_taxon_info['field_id'],
+        'field_id' => $field_taxon_info['id'],
       );
       field_attach_load('node', $entities, FIELD_LOAD_CURRENT, $options);
     }
 
     foreach ($parent_nids as $parent_nid) {
       // taxon is a four-digit code defined in bugguide_globals.inc, in $TAXON_NAMES and $TAXON_IDs
-      $taxon = $entities[$parent_nid]->field_taxon[$language][0]['value'];
-      $taxa[] = $taxon;
+      $taxa[] = array();
+      if (!empty($entities[$parent_nid]->field_taxon[$language][0]['value'])) {
+         $taxa[] = $entities[$parent_nid]->field_taxon[$language][0]['value'];
+      }
       $scientific_name = $entities[$parent_nid]->field_scientific_name[$language][0]['safe_value'];
       $scientific_names[] = $scientific_name;
-      $title = $entities[$parent_nid]->field_common_name[$language][0]['safe_value'];
-      if (isset($entities[$parent_nid]->field_hodges_number[$language][0]['value']) &&
-        $entities[$parent_nid]->field_hodges_number[$language][0]['value']) {
-        $title .= ' - Hodges#' . $entities[$parent_nid]->field_hodges_number[$language][0]['value'];
+
+      $titles = array();
+      if (!empty($entities[$parent_nid]->field_common_name[$language][0]['safe_value'])) {
+        $titles[] = $entities[$parent_nid]->field_common_name[$language][0]['safe_value'];
       }
-      $titles[] = $title;
+      if (!empty($entities[$parent_nid]->field_hodges_number[$language][0]['value']) &&
+        $entities[$parent_nid]->field_hodges_number[$language][0]['value']) {
+        $titles[] =  'Hodges#' . $entities[$parent_nid]->field_hodges_number[$language][0]['value'];
+      }
     }
 
     // Now for the node actually being loaded.
