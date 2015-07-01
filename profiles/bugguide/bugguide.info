@@ -20,6 +20,11 @@ dependencies[] = search
 dependencies[] = field_ui
 dependencies[] = file
 dependencies[] = rdf
+
+# Contrib modules.
 dependencies[] = diff
+dependencies[] = ds
 dependencies[] = features
+
+# custom modules.
 dependencies[] = bg
