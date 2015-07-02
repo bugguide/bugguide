@@ -13,6 +13,7 @@ dependencies[] = bguserfields
 dependencies[] = ctools
 dependencies[] = diff
 dependencies[] = ds
+dependencies[] = entitycache
 dependencies[] = features
 dependencies[] = guide_page
 dependencies[] = suitcase_config
