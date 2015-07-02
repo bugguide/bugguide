@@ -28,3 +28,4 @@ dependencies[] = features
 
 # custom modules.
 dependencies[] = bg
+dependencies[] = suitcase_config
