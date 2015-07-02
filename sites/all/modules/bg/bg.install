@@ -1,8 +1,0 @@
-<?php
-
-/**
- * Implements hook_install().
- */
-function bg_install() {
-  
-}
