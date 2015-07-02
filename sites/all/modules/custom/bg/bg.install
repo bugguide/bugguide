@@ -4,5 +4,20 @@
  * Implements hook_install().
  */
 function bg_install() {
-  
+  // Set seven as admin theme and suitcase as default theme.
+  $enable = array(
+    'theme_default' => 'suitcase',
+    'admin_theme' => 'seven',
+  );
+  theme_enable($enable);
+
+  foreach ($enable as $var => $theme) {
+    if (!is_numeric($var)) {
+      variable_set($var, $theme);
+    }
+  }
+
+  // Disable Bartik theme.
+  theme_disable(array('bartik'));
+
 }
