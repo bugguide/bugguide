@@ -1,0 +1,63 @@
+language: php
+
+php:
+  - 5.3
+
+mysql:
+  database: suitcase
+  username: root
+  encoding: utf8
+
+before_install:
+  - sudo apt-get update > /dev/null
+
+install:
+  # install php packages required for running a web server from drush on php 5.3
+  - sudo apt-get install -y --force-yes php5-cgi php5-mysql
+
+  # add composer's global bin directory to the path
+  # see: https://github.com/drush-ops/drush#install---composer
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+  # install drush globally
+  - composer global require drush/drush:6.*
+
+before_script:
+  # navigate out of module directory to prevent blown stack by recursive module lookup
+  - cd ../..
+
+  # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
+  - mysql -e 'create database suitcase'
+  - php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php --yes core-quick-drupal --profile=testing --no-server --db-url=mysql://root:@127.0.0.1/suitcase --enable=simpletest suitcase
+
+  # reference and enable travis_ci_drupal_module_example in build site
+  - ln -s $(readlink -e $(cd -)) suitcase/drupal/sites/all/themes/suitcase
+  - cd suitcase/drupal/sites/all/modules/
+  - git clone https://github.com/isubit/luggage_ckeditor.git
+  - git clone https://github.com/isubit/luggage_contrib.git
+  - git clone https://github.com/isubit/luggage_core.git
+  - git clone https://github.com/isubit/luggage_roles.git
+  - drush --yes pm-enable suitcase luggage_ckeditor luggage_contrib luggage_core luggage_roles
+  - drush fra -y
+  - drush cc all
+  
+  - drush en simpletest -y
+  
+  - drush status
+  
+  # start a web server on port 8080, run in the background; wait for initialization
+  - drush runserver --server=builtin 8080 &
+  - sleep 4
+  - drush vset --yes simpletest_verbose FALSE
+  # - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
+  
+script:
+  - drush test-run 'suitcase' --debug --uri=http://127.0.0.1:8080
+
+# script: drush test-run 'Travis-CI Drupal Module Example' --uri=http://127.0.0.1:8080
+
+notifications:
+  email: false
+  irc: "irc.freenode.org##luggage"
+    on_success: never
+    on_failure: always
