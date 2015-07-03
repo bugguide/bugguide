@@ -1,14 +1,59 @@
 <?php
 /**
  * @file
- * guide_page.features.field_instance.inc
+ * bgpage.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function guide_page_field_default_field_instances() {
+function bgpage_field_default_field_instances() {
   $field_instances = array();
+
+  // Exported field_instance: 'node-bgpage-body'
+  $field_instances['node-bgpage-body'] = array(
+    'bundle' => 'bgpage',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'trim_length' => 600,
+        ),
+        'trim_length' => 600,
+        'type' => 'text_summary_or_trimmed',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'body',
+    'label' => 'Body',
+    'required' => 0,
+    'settings' => array(
+      'display_summary' => TRUE,
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 20,
+        'summary_rows' => 5,
+      ),
+      'type' => 'text_textarea_with_summary',
+      'weight' => -4,
+    ),
+  );
 
   // Exported field_instance: 'node-bgpage-field_common_name'
   $field_instances['node-bgpage-field_common_name'] = array(
@@ -978,6 +1023,7 @@ function guide_page_field_default_field_instances() {
   t('A simple guide to pronunciation showing syllables and emphasis. For example, lepidoptera might be leh-pih-DOP-ter-ra. Particularly useful for scientific names and those with unexpected pronunciations.');
   t('Additional common names; one per line. Note that larvae sometimes have different common names than adults.');
   t('Any general remarks or notes of interest.');
+  t('Body');
   t('Classification changes can be noted here.');
   t('Common Name');
   t('Counts');
