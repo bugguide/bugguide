@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the Guide Page feature.
- */
-
-include_once 'guide_page.features.inc';

@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * guide_page.features.inc
+ * bgpage.features.inc
  */
 
 /**
  * Implements hook_ctools_plugin_api().
  */
-function guide_page_ctools_plugin_api($module = NULL, $api = NULL) {
+function bgpage_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -16,7 +16,7 @@ function guide_page_ctools_plugin_api($module = NULL, $api = NULL) {
 /**
  * Implements hook_node_info().
  */
-function guide_page_node_info() {
+function bgpage_node_info() {
   $items = array(
     'bgpage' => array(
       'name' => t('Guide Page'),
