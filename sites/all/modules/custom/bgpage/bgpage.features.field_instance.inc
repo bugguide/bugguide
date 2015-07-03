@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * guide_page.features.field_instance.inc
+ * bgpage.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function guide_page_field_default_field_instances() {
+function bgpage_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'node-bgpage-body'

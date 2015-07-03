@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * guide_page.strongarm.inc
+ * bgpage.strongarm.inc
  */
 
 /**
  * Implements hook_strongarm().
  */
-function guide_page_strongarm() {
+function bgpage_strongarm() {
   $export = array();
 
   $strongarm = new stdClass();

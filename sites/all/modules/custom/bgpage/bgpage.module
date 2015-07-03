@@ -1,5 +1,7 @@
 <?php
 
+include_once 'bgpage.features.inc';
+
 /**
  * Implementation of hook_menu().
  */
