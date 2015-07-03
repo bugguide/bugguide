@@ -48,7 +48,7 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
   public function __construct($arguments) {
     parent::__construct($arguments);
     $this->description = t('BGPages');
-    
+
     // Only update existing nodes; do not create new nodes. The definitive
     // node id is the one in the destination. Since we are migrating data from
     // a MySQL table into existing Drupal 7 nodes/fields, this makes sense.
@@ -71,9 +71,9 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
       ),
       MigrateDestinationNode::getKeySchema()
     );
-    
+
     $query = db_select('bgpage_archive', 'bgp');
-    $query->fields('bgp', array('nid', 'scientific_name', 'names', 'counts', 'size', 'id', 'raynge', 'habitat', 'season', 'food', 'life_cycle', 'pronunciation', 'etymology', 'synonyms', 'see_also', 'print_references'));
+    $query->fields('bgp', array('nid', 'parent', 'scientific_name', 'names', 'counts', 'size', 'id', 'raynge', 'habitat', 'season', 'food', 'life_cycle', 'pronunciation', 'etymology', 'synonyms', 'see_also', 'print_references', 'taxon', 'hodges_number', 'uids', 'location_codes'));
     $this->source = new MigrateSourceSQL($query, array());
 
     // Set up our destination - nodes of type bgpage
@@ -84,6 +84,8 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
          ->description(t('Mapping scientific name'));
     $this->addFieldMapping('nid', 'nid')
          ->description(t('Node ID'));
+    $this->addFieldMapping('field_parent', 'parent')
+         ->description(t('Parent'));
    $this->addFieldMapping('field_other_common_names', 'names')
          ->description(t('Other common names'));
    $this->addFieldMapping('field_counts', 'counts')
@@ -108,18 +110,84 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
          ->description(t('Etymology'));
    $this->addFieldMapping('field_synonyms', 'synonyms')
          ->description(t('Synonyms'));
+   $this->addFieldMapping('field_taxon', 'taxon')
+         ->description(t('Taxon'));
+   $this->addFieldMapping('field_hodges_number', 'hodges_numbers')
+         ->description(t('Hodges Number'));
+   $this->addFieldMapping('field_editors', 'uids')
+         ->description(t('Editors'));
+   $this->addFieldMapping('field_location_codes', 'location_codes')
+         ->description(t('Location Codes'));
    $this->addFieldMapping('field_see_also', 'see_also')
          ->description(t('See also'));
    $this->addFieldMapping('field_print_references', 'print_references')
          ->description(t('Print references'));
 
     $this->addUnmigratedDestinations(array(
-    'title','uid','created','changed','status','promote','sticky','revision','log','language','tnid','translate','revision_uid','is_new','body','body:summary','body:format','body:language','field_common_name','field_common_name:language','field_counts:format','field_counts:language','field_editors','field_editors:language','field_etymology:format','field_etymology:language','field_food:format','field_food:language','field_habitat:format','field_habitat:language','field_hodges_number','field_id:language','field_internet_references','field_internet_references:format','field_internet_references:language','field_life_cycle:format','field_life_cycle:language','field_location_codes','field_location_codes:language','field_other_common_names:format','field_other_common_names:language','field_parent','field_parent:language','field_print_references:format','field_print_references:language','field_pronunciation:format','field_pronunciation:language','field_range:format','field_range:language','field_remarks','field_remarks:format','field_remarks:language','field_representative_images','field_representative_images:language','field_scientific_name:language','field_season:format','field_season:language','field_see_also:format','field_see_also:language','field_size:format','field_size:language','field_synonyms:format','field_synonyms:language','field_taxon','comment',
+      'title',
+      'uid',
+      'created',
+      'changed',
+      'status',
+      'promote',
+      'sticky',
+      'revision',
+      'log',
+      'language',
+      'tnid',
+      'translate',
+      'revision_uid',
+      'is_new','body',
+      'body:summary',
+      'body:format',
+      'body:language',
+      'field_common_name',
+      'field_common_name:language',
+      'field_counts:format',
+      'field_counts:language',
+      'field_editors:language',
+      'field_etymology:format',
+      'field_etymology:language',
+      'field_food:format',
+      'field_food:language',
+      'field_habitat:format',
+      'field_habitat:language',
+      'field_id:language',
+      'field_internet_references',
+      'field_internet_references:format',
+      'field_internet_references:language',
+      'field_life_cycle:format',
+      'field_life_cycle:language',
+      'field_location_codes:language',
+      'field_other_common_names:format',
+      'field_other_common_names:language',
+      'field_parent:language',
+      'field_print_references:format',
+      'field_print_references:language',
+      'field_pronunciation:format',
+      'field_pronunciation:language',
+      'field_range:format',
+      'field_range:language',
+      'field_remarks',
+      'field_remarks:format',
+      'field_remarks:language',
+      'field_representative_images',
+      'field_representative_images:language',
+      'field_scientific_name:language',
+      'field_season:format',
+      'field_season:language',
+      'field_see_also:format',
+      'field_see_also:language',
+      'field_size:format',
+      'field_size:language',
+      'field_synonyms:format',
+      'field_synonyms:language',
+      'comment',
     ));
-         
-    /*     
-         
-         
+
+    /*
+
+
     // To maintain node identities between the old and new systems (i.e., have
     // the same unique IDs), map the ID column from the old system to nid and
     // set is_new to TRUE. This works only if we're importing into a system that

@@ -1,5 +1,7 @@
 <?php
 
+include_once 'bgpage.features.inc';
+
 /**
  * Implementation of hook_menu().
  */
@@ -220,7 +222,7 @@ function bgpage_entity_load($entities, $type) {
     // for this set of parents can be retrieved all at once.
     foreach ($parent_nids as $parent_nid) {
       $entities[$parent_nid] = new stdClass();
-      $entities[$parent_nid]->type = 'bgpage';
+      $entities[$parent_nid]->type = 'node';
       $entities[$parent_nid]->bundle = 'bgpage';
       $entities[$parent_nid]->id = $parent_nid;
     }
@@ -279,7 +281,6 @@ function bgpage_entity_load($entities, $type) {
     if (isset($taxon)) {
       $taxon_name = isset($TAXON_NAMES[$taxon]) ? strtolower($TAXON_NAMES[$taxon]) : '';
       if ($taxon_name) {
-        $node->$taxon_name = $scientific_name;
         $node->taxon_name = $taxon_name;
       }
     }
@@ -589,6 +590,7 @@ function bgpage_tree_build($node, $children, $nids, $taxons, $titles, $scientifi
   //$links = theme('links', $node->links);
   return theme('taxonomytree', array('node' => $node, 'output' => $output));
 }
+
 function bgpage_tree_children(&$all, $parent) {
   $children = $all[bgpage_get_path($parent)];
   if (!$children)
