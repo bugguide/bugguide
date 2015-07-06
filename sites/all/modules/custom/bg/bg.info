@@ -17,6 +17,7 @@ dependencies[] = entitycache
 dependencies[] = features
 dependencies[] = suitcase_config
 dependencies[] = strongarm
+dependencies[] = xbbcode_basic
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2
 features[variable][] = admin_theme
