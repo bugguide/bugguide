@@ -153,6 +153,7 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
       'field_habitat:format',
       'field_habitat:language',
       'field_id:language',
+      'field_id:format',
       'field_internet_references',
       'field_internet_references:format',
       'field_internet_references:language',
