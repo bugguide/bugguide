@@ -30,6 +30,23 @@ function bgpage_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_ds_fields_info().
+ */
+function bgpage_ds_fields_info($entity_type) {
+  $fields = array();
+
+  if ($entity_type == 'node') {
+    $fields['bgpage_classification'] = array(
+      'title' => t('Guide page classification'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bgpage_classification',
+      'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
+    );
+    return array($entity_type => $fields);
+  }
+  return;
+}
 
 /**
  * Change "View" tab to say "Info".
@@ -59,9 +76,6 @@ function bgpage_theme() {
     ),
     'bgpage_tree' => array(
       'arguments' => array('children' => NULL, 'nids' => NULL, 'taxons' => NULL, 'titles' => NULL, 'scientific_names' => NULL),
-    ),
-    'taxonomytree' => array(
-      'arguments' => array('node' => NULL, 'output' => NULL, 'links' => NULL),
     ),
     'bgpage_taxonomy_reorder' => array(
       'arguments' => array('element' => NULL),
@@ -443,7 +457,7 @@ function bgpage_tree_build($node, $children, $nids, $taxons, $titles, $scientifi
     }
 
     $output .= "<div class=\"bgpage-taxon\">";
-    $output .= "<span class=\"bgpage-taxon-title\">$taxon_name </span>";
+    $output .= '<span class="bgpage-taxon-title">' . str_repeat('&nbsp;', $i * 2) . $taxon_name  . '&nbsp;</span>';
     $italics = $taxons[$i] >= $TAXON_IDS['Genus'];
     $output .= "<span class=\"bgpage-taxon-desc\">";
     if ($italics) {
@@ -461,7 +475,6 @@ function bgpage_tree_build($node, $children, $nids, $taxons, $titles, $scientifi
 
   $output .= "<div class=\"bgpage-taxon\">";
 
-  $output .= "<br />";
   if ($children) {
     if (user_access('create bgpages')) {
       if ($mode == 'reorder') {
@@ -530,9 +543,8 @@ function bgpage_tree_build($node, $children, $nids, $taxons, $titles, $scientifi
     }
   }
   else {
-    $output .= 'Nothing below this';
     if (!empty($node->field_taxon)) {
-      $output .= " " . strtolower($node->field_taxon[LANGUAGE_NONE][0]['value']) . '.';
+      $output .= str_repeat('&nbsp;', $i * 2) . check_plain($node->title);
     }
   }
 
@@ -583,12 +595,9 @@ function bgpage_tree_build($node, $children, $nids, $taxons, $titles, $scientifi
 
   if ($output) {
     $output = "<div class=\"bgpage-classification\">$output</div>";
-    $output .= "<br />";
   }
 
-  // Wrap the returned output in taxonomytree.tpl.php.
-  //$links = theme('links', $node->links);
-  return theme('taxonomytree', array('node' => $node, 'output' => $output));
+  return $output;
 }
 
 function bgpage_tree_children(&$all, $parent) {
