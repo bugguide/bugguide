@@ -279,10 +279,31 @@ function bg_preprocess_page(&$vars) {
 }
 
 /**
- * Fetches a field for an array of nids of a given type.
+ * Builds an array of entities to use on field_attach_load.
  *
- * @param string $content_type
- *   The node's content type machine name.
+ * @param array $nids
+ *   An array of node nids.
+ * @param string type
+ *   The content type of the nids.
+ * @return array
+ *   An array of entities ready to be used for field_attach_load().
+ */
+function bg_prepare_nodes($nids, $type) {
+  $entities = array();
+  foreach ($nids as $nid) {
+    $entities[$nid] = (object) array(
+      'type' => $type,
+      'nid' => $nid,
+      'vid' => NULL,
+    );
+  }
+  return $entities;
+}
+
+
+/**
+ * Fetches a field for an array of entities.
+ *
  * @param string $field
  *   The field name to fetch such as field_taxon.
  * @param array $nids
@@ -290,22 +311,15 @@ function bg_preprocess_page(&$vars) {
  * @return
  *   array of stdClass objects.
  */
-function bg_field_load_multiple($content_type, $field, $nids) {
-  $entities = array();
-
-  foreach ($nids as $nid) {
-    $entities[$nid] = (object) array(
-      'type' => 'bgpage',
-      'nid' => $nid,
-      'vid' => NULL,
+function bg_field_load_multiple($field, $entities) {
+  if (count($entities)) {
+    $first_entity = reset($entities);
+    $fields = field_info_instances('node', $first_entity->type);
+    $options = array(
+      'field_id' => $fields[$field]['field_id'],
     );
+    field_attach_load('node', $entities, FIELD_LOAD_CURRENT, $options);
   }
-  $fields = field_info_instances('node', $content_type);
-  $options = array(
-    'field_id' => $fields[$field]['field_id'],
-  );
-  field_attach_load('node', $entities, FIELD_LOAD_CURRENT, $options);
-
   return $entities;
 }
 

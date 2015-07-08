@@ -443,88 +443,23 @@ function bgpage_tree($nid, $mode = NULL) {
   return bgpage_tree_build($node, $children, $nids, $taxa, $titles, $scientific_names, $all, $mode);
 }
 
-function bgpage_tree_build($node, $children, $nids, $taxons, $titles, $scientific_names, $all, $mode = NULL) {
+/**
+ * Builds a hierarchy tree for a set of related nodes.
+ *
+ * @param array $nodes
+ *   An array of pseudo-nodes ordered hierarchycally. The term pseudo is
+ *   used because they are not fully loaded nodes due to performance reasons.
+ * @returns string
+ *   The rendered HTML that represents the tree.
+ */
+function bgpage_tree_build($nodes) {
   global $TAXON_NAMES, $TAXON_IDS;
-  $tagged_guides = array();
-  if (isset($_SESSION['tagged_guides'])) {
-    $tagged_guides = explode(',', $_SESSION['tagged_guides']);
-  }
-  $output = '';
+  $output = '<span class="graytext">Kingdom</span> <strong>Animalia</strong> - Animals<br/>';
 
-  for ($i = 0; $i < count($taxons); $i++) {
-    $taxon_name = $TAXON_NAMES[$taxons[$i]];
-    if (!$taxon_name) {
-      $taxon_name = "No Taxon";
-    }
-
-    $output .= "<div class=\"bgpage-taxon\">";
-    $output .= '<span class="bgpage-taxon-title">' . str_repeat('&nbsp;', $i * 2 + 2) . $taxon_name  . '&nbsp;</span>';
-    $italics = $taxons[$i] >= $TAXON_IDS['Genus'];
-    $output .= "<span class=\"bgpage-taxon-desc\">";
-    if ($italics) {
-      $output .= "<i>";
-    }
-    $output .= l("<strong>" . ($scientific_names[$i] ? $scientific_names[$i] : $titles[$i]) . "</strong>", "node/" . $nids[$i] . "/tree", array('html' => TRUE));
-    if ($italics) {
-      $output .= "</i>";
-    }
-    if ($scientific_names[$i] && ($scientific_names[$i] != $titles[$i])) {
-      $output .= " - " . $titles[$i];
-    }
-    $output .= "</span>\n";
-  }
-
-  $output .= "<div class=\"bgpage-taxon\">";
-
-  $output .= str_repeat('&nbsp;', $i * 2 + 2) . bgpage_tree_child($node);
-
-  // Display tree with appropriate form.
-  if ($mode == 'reorder') {
-    $output .= drupal_get_form('bgpage_taxon_reorder', $form);
-  }
-  elseif ($mode == 'tag') {
-    $output .= drupal_get_form('bgpage_taxon_tag', $form);
-  }
-  elseif (($mode == 'add') && user_access('create bgpages') && ($node->taxon < $TAXON_IDS['Subspecies'])) {
-   // Add form for adding new guide page.
-   $output .= drupal_get_form('bgpage_quickadd_guide_page_form', $node);
-  }
-  elseif (($mode == NULL || $mode == 'all') && user_access('create bgpages')) {
-    // Add a POST button to drop guide page from clipboard here.
-    if (count($tagged_guides)) {
-      $all_ok = TRUE;
-      foreach ($tagged_guides as $tagged_guide) {
-        $tagged = node_load(array('nid' => $tagged_guide, 'type' => 'bgpage'));
-
-        if (!$tagged) {
-          // Node does not exist or was not loaded.
-          $all_ok = FALSE;
-          watchdog('bgpage', 'node_load(%nid) failed!', array('%nid' => $nid), WATCHDOG_ERROR);
-        }
-        elseif
-          // (Either the taxon is NOT allowed to be a child of the current node
-          (!in_array($tagged->taxon_name, bgpage_get_allowed_children($node->taxon))
-          // OR the taxon ID is less than or equal to the current node)
-          // that is, you cannot nest a family under a family.
-          || $tagged->taxon <= $node->taxon) {
-            $all_ok = FALSE;
-        }
-      }
-
-      if ($all_ok) {
-        $output .= drupal_get_form('bgpage_paste_form', $node->nid);
-      }
-    }
-  }
-
-  $output .= "</div>\n";
-
-  for ($i = count($taxons); $i > 0; $i--) {
-    $output .= "</div>\n";
-  }
-
-  if ($output) {
-    $output = "<div class=\"bgpage-classification\">$output</div>";
+  $i = 1;
+  foreach ($nodes as $node) {
+    $output .= str_repeat('&nbsp;', $i * 2) . bgpage_tree_child($node);
+    $i = $i + 2;
   }
 
   return $output;
@@ -544,25 +479,33 @@ function bgpage_tree_children(&$all, $parent) {
   return $output;
 }
 
-function bgpage_tree_child($child, $count_children = TRUE) {
+/**
+ * Renders a tree element.
+ *
+ * @param object node
+ *   A pseudo node that contains title, field_parent, field_taxon and field_scientific_name.
+ * @return string
+ *   The rendered tree item.
+ */
+function bgpage_tree_child($node) {
   global $TAXON_NAMES, $TAXON_IDS;
-  if (!empty($child->field_taxon) && isset($TAXON_NAMES[$child->field_taxon[LANGUAGE_NONE][0]['value']])) {
-    $taxon_name = $TAXON_NAMES[$child->field_taxon[LANGUAGE_NONE][0]['value']];
-    $taxon_id = $child->field_taxon[LANGUAGE_NONE][0]['value'];
+  if (!empty($node->field_taxon) && isset($TAXON_NAMES[$node->field_taxon[LANGUAGE_NONE][0]['value']])) {
+    $taxon_name = $TAXON_NAMES[$node->field_taxon[LANGUAGE_NONE][0]['value']];
+    $taxon_id = $node->field_taxon[LANGUAGE_NONE][0]['value'];
   }
   else {
     $taxon_name = t('No Taxon');
     $taxon_id = NULL;
   }
 
-  $scientific_name = check_plain($child->title);
-  if (!empty($child->field_scientific_name)) {
-    $scientific_name = $child->field_scientific_name[LANGUAGE_NONE][0]['value'];
+  $scientific_name = check_plain($node->title);
+  if (!empty($node->field_scientific_name)) {
+    $scientific_name = $node->field_scientific_name[LANGUAGE_NONE][0]['value'];
   }
 
-  $search_path = $child->field_parent[LANGUAGE_NONE][0]['value'] . ','. $child->nid;
   $child_count = '';
-  if ($count_children) {
+  if (!empty($node->field_parent)) {
+    $search_path = $node->field_parent[LANGUAGE_NONE][0]['value'] . ','. $node->nid;
     // TODO: add caching here.
     $query = new EntityFieldQuery;
     $query->entityCondition('entity_type', 'node')
@@ -578,15 +521,15 @@ function bgpage_tree_child($child, $count_children = TRUE) {
   if ($italics) {
     $output .= "<i>";
   }
-  $output .= l("<strong>$scientific_name</strong>", "node/" . $child->nid . "/tree", array('html' => TRUE));
+  $output .= l("<strong>$scientific_name</strong>", "node/" . $node->nid . "/tree", array('html' => TRUE));
   if ($italics) {
     $output .= "</i>";
   }
-  if ($child->title != $scientific_name) {
-    $output .= " - " . check_plain($child->title);
+  if ($node->title != $scientific_name) {
+    $output .= " - " . check_plain($node->title);
   }
-  if (!empty($child->field_hodges_number)) {
-    $output .= " - Hodges#" . $child->field_hodges_number[LANGUAGE_NONE][0]['value'];
+  if (!empty($node->field_hodges_number)) {
+    $output .= " - Hodges#" . $node->field_hodges_number[LANGUAGE_NONE][0]['value'];
   }
   $output .= "$child_count</span><br />\n";
 
