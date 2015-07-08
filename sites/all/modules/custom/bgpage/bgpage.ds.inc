@@ -23,7 +23,7 @@ function bgpage_ds_field_settings_info() {
       'format' => 'default',
     ),
     'bgpage_classification' => array(
-      'weight' => '0',
+      'weight' => '1',
       'label' => 'hidden',
       'format' => 'default',
     ),
