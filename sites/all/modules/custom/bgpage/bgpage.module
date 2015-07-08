@@ -43,6 +43,7 @@ function bgpage_ds_fields_info($entity_type) {
       'function' => '_bgpage_classification',
       'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
     );
+
     return array($entity_type => $fields);
   }
   return;
@@ -457,7 +458,7 @@ function bgpage_tree_build($node, $children, $nids, $taxons, $titles, $scientifi
     }
 
     $output .= "<div class=\"bgpage-taxon\">";
-    $output .= '<span class="bgpage-taxon-title">' . str_repeat('&nbsp;', $i * 2) . $taxon_name  . '&nbsp;</span>';
+    $output .= '<span class="bgpage-taxon-title">' . str_repeat('&nbsp;', $i * 2 + 2) . $taxon_name  . '&nbsp;</span>';
     $italics = $taxons[$i] >= $TAXON_IDS['Genus'];
     $output .= "<span class=\"bgpage-taxon-desc\">";
     if ($italics) {
@@ -475,78 +476,7 @@ function bgpage_tree_build($node, $children, $nids, $taxons, $titles, $scientifi
 
   $output .= "<div class=\"bgpage-taxon\">";
 
-  if ($children) {
-    if (user_access('create bgpages')) {
-      if ($mode == 'reorder') {
-        $form['mode'] = array(
-          '#type' => 'value',
-          '#value' => 'reorder',
-        );
-        $sequence = 10;
-      }
-      else if ($mode == 'tag') {
-        $form['mode'] = array(
-          '#type' => 'value',
-          '#value' => 'tag',
-        );
-      }
-    }
-
-    foreach ($children as $child) {
-      if (user_access('create bgpages')) {
-        if (!isset($form['nids'])) {
-          $form['nids'] = array(
-            '#type' => 'value',
-            '#value' => array(),
-          );
-        }
-        $form['nids']['#value'][] = $child->nid;
-
-        if ($mode == 'reorder') {
-          $form['reorder-' . $child->nid] = array(
-            '#type' => 'textfield',
-            '#default_value' => $sequence,
-            '#size' => 3,
-            '#maxlength' => 3,
-            '#title' => bgpage_tree_child($child),
-            '#theme' => 'bgpage_taxonomy_reorder',
-          );
-
-          $sequence += 10;
-        }
-        elseif ($mode == 'tag') {
-          $form['tag-' . $child->nid] = array(
-            '#type' => 'checkbox',
-            '#title' => bgpage_tree_child($child),
-          );
-          // If a taxon is already on the clipboard, show it as checked.
-          if (in_array($child->nid, $tagged_guides)) {
-            $form['tag-' . $child->nid]['#default_value'] = TRUE;
-          }
-        }
-      }
-
-      if ($mode != 'tag' && $mode != 'reorder') {
-        $output .= bgpage_tree_child($child);
-      }
-
-      if ($mode == 'all') {
-        $output .= bgpage_tree_children($all, $child);
-      }
-    }
-
-    if ((($mode == 'tag') || ($mode == 'reorder')) && user_access('create bgpages')) {
-      $form['submit'] = array(
-        '#type' => 'submit',
-        '#value' => arg(3) == 'tag' ? t('Move to Clipboard') : t('Reorder'),
-      );
-    }
-  }
-  else {
-    if (!empty($node->field_taxon)) {
-      $output .= str_repeat('&nbsp;', $i * 2) . check_plain($node->title);
-    }
-  }
+  $output .= str_repeat('&nbsp;', $i * 2 + 2) . bgpage_tree_child($node);
 
   // Display tree with appropriate form.
   if ($mode == 'reorder') {

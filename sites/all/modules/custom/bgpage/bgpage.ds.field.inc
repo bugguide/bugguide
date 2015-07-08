@@ -28,7 +28,8 @@ function _bgpage_classification($field) {
     $scientific_names[] = $parent_node->field_scientific_name[LANGUAGE_NONE][0]['value'];
   }
 
-  // Build classiication tree.
-  $output = '<div class="field-label">Classification</div>';
+  // Build classification tree.
+  $output = '<div class="field-label">Classification:</div>';
+  $output .= '<span class="graytext">Kingdom</span> <strong>Animalia</strong> - Animals<br/>';
   return $output . bgpage_tree_build($node, array(), $parent_nids, $taxons, $titles, $scientific_names, array());
 }
