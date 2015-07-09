@@ -5,7 +5,6 @@ package = Bugguide
 version = 7.x-1.0
 project = bg
 dependencies[] = admin_menu
-dependencies[] = bg
 dependencies[] = bg_state_province_taxonomy
 dependencies[] = bgimage
 dependencies[] = bgpage
