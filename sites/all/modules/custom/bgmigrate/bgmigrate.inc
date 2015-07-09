@@ -87,29 +87,41 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
     $this->addFieldMapping('field_parent', 'parent')
          ->description(t('Parent'));
    $this->addFieldMapping('field_other_common_names', 'names')
-         ->description(t('Other common names'));
+         ->description(t('Other common names'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_counts', 'counts')
-         ->description(t('Counts'));
+         ->description(t('Counts'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_size', 'size')
-         ->description(t('Size'));
+         ->description(t('Size'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_id', 'id')
-         ->description(t('ID'));
+         ->description(t('ID'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_range', 'raynge')
-         ->description(t('Range'));
+         ->description(t('Range'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_habitat', 'habitat')
-         ->description(t('Habitat'));
+         ->description(t('Habitat'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_season', 'season')
-         ->description(t('Season'));
+         ->description(t('Season'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_food', 'food')
-         ->description(t('Food'));
+         ->description(t('Food'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_life_cycle', 'life_cycle')
-         ->description(t('Life Cycle'));
+         ->description(t('Life Cycle'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_pronunciation', 'pronunciation')
-         ->description(t('Pronunciation'));
+         ->description(t('Pronunciation'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_etymology', 'etymology')
-         ->description(t('Etymology'));
+         ->description(t('Etymology'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_synonyms', 'synonyms')
-         ->description(t('Synonyms'));
+         ->description(t('Synonyms'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_taxon', 'taxon')
          ->description(t('Taxon'));
    $this->addFieldMapping('field_hodges_number', 'hodges_numbers')
@@ -119,9 +131,11 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
    $this->addFieldMapping('field_location_codes', 'location_codes')
          ->description(t('Location Codes'));
    $this->addFieldMapping('field_see_also', 'see_also')
-         ->description(t('See also'));
+         ->description(t('See also'))
+         ->arguments(array('format' => 1));
    $this->addFieldMapping('field_print_references', 'print_references')
-         ->description(t('Print references'));
+         ->description(t('Print references'))
+         ->arguments(array('format' => 1));
 
     $this->addUnmigratedDestinations(array(
       'title',
