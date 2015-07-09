@@ -153,6 +153,25 @@ function bg_permission() {
 }
 
 /**
+ * Implements hook_filter_info().
+ */
+function bg_filter_info() {
+  $filters['bg_list'] = array(
+    'title' => t('List item filter'),
+    'description' => t('Every line that starts with a + will be converted into a list item.'),
+    'process callback'  => '_bg_filter_list_item_process',
+  );
+  return $filters;
+}
+
+/**
+ * BG list item filter process callback.
+ */
+function _bg_filter_list_item_process($text, $filter, $format) {
+  return preg_replace('/^\+(.+)$/mi', '<div class="bgpage-bullet">$1</div>', $text);
+}
+
+/**
  * Determine if a string ends with a substring
  *
  * @param string $str
