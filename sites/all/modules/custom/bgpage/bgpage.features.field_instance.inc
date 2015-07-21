@@ -54,6 +54,46 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-bgpage-field_citations'
+  $field_instances['node-bgpage-field_citations'] = array(
+    'bundle' => 'bgpage',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 35,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_citations',
+    'label' => 'Citations',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 25,
+    ),
+  );
+
   // Exported field_instance: 'node-bgpage-field_common_name'
   $field_instances['node-bgpage-field_common_name'] = array(
     'bundle' => 'bgpage',
@@ -1013,6 +1053,7 @@ function bgpage_field_default_field_instances() {
   t('Additional common names; one per line. Note that larvae sometimes have different common names than adults.');
   t('Any general remarks or notes of interest.');
   t('Body');
+  t('Citations');
   t('Classification changes can be noted here.');
   t('Common Name');
   t('Counts');
