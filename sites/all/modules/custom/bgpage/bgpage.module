@@ -44,6 +44,13 @@ function bgpage_ds_fields_info($entity_type) {
       'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
     );
 
+    $fields['bgpage_citations'] = array(
+      'title' => t('Works cited'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bgpage_citations',
+      'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
+    );
+
     return array($entity_type => $fields);
   }
   return;

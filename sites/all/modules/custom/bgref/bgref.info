@@ -1,0 +1,6 @@
+name = BugGuide book references
+description = Defines a content type to represent book references.
+core = 7.x
+package = Bugguide
+version = 7.x-1.0
+project = bgref
