@@ -27,6 +27,11 @@ function bgpage_ds_field_settings_info() {
       'label' => 'hidden',
       'format' => 'default',
     ),
+    'bgpage_citations' => array(
+      'weight' => '17',
+      'label' => 'above',
+      'format' => 'default',
+    ),
   );
   $export['node|bgpage|default'] = $ds_fieldsetting;
 
@@ -66,6 +71,7 @@ function bgpage_ds_layout_settings_info() {
         14 => 'field_see_also',
         15 => 'field_print_references',
         16 => 'field_internet_references',
+        17 => 'bgpage_citations',
       ),
     ),
     'fields' => array(
@@ -86,6 +92,7 @@ function bgpage_ds_layout_settings_info() {
       'field_see_also' => 'ds_content',
       'field_print_references' => 'ds_content',
       'field_internet_references' => 'ds_content',
+      'bgpage_citations' => 'ds_content',
     ),
     'classes' => array(),
     'wrappers' => array(
