@@ -40,6 +40,7 @@ abstract class BasicBugGuideMigration extends Migration {
     //$this->issuePattern = 'http://drupal.org/node/:id:';
   }
 }
+
 /**
  * The BeerNodeMigration uses the migrate_example_beer_node table as source
  * and creates Drupal nodes of type 'Beer' as destination.
@@ -201,76 +202,58 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
       'field_synonyms:language',
       'comment',
     ));
+  }
+}
 
-    /*
+/**
+ * Migrates bgref content into book_reference nodes.
+ */
+class BGRefFieldMigration extends BasicBugGuideMigration {
+  public function __construct($arguments) {
+    parent::__construct($arguments);
+    $this->description = t('Book References');
 
+    // Only update existing nodes; do not create new nodes. The definitive
+    // node id is the one in the destination. Since we are migrating data from
+    // a MySQL table into existing Drupal 7 nodes/fields, this makes sense.
+    // https://www.drupal.org/node/1117454
+    $this->systemOfRecord = Migration::DESTINATION;
 
-    // To maintain node identities between the old and new systems (i.e., have
-    // the same unique IDs), map the ID column from the old system to nid and
-    // set is_new to TRUE. This works only if we're importing into a system that
-    // has no existing nodes with the nids being imported.
-    $this->addFieldMapping('nid', 'bid')
-         ->description(t('Preserve old beer ID as nid in Drupal'));
-    $this->addFieldMapping('is_new')
-         ->defaultValue(TRUE);
+    $this->map = new MigrateSQLMap($this->machineName,
+      array(
+        'nid' => array(
+          'type' => 'int',
+          'not null' => TRUE,
+          'description' => 'Book Reference Node ID.',
+          'alias' => 'bgr',
+        )
+      ),
+      MigrateDestinationNode::getKeySchema()
+    );
 
-    // References to related objects (such as the author of the content) are
-    // most likely going to be identifiers from the source data, not Drupal
-    // identifiers (such as uids). You can use the mapping from the relevant
-    // migration to translate from the old ID to the Drupal identifier.
-    // Note that we also provide a default value of 1 - if the lookup fails to
-    // find a corresponding uid for the aid, the owner will be the administrative
-    // account.
-    $this->addFieldMapping('uid', 'aid')
-         ->sourceMigration('BeerUser')
-         ->defaultValue(1);
+    $query = db_select('bgref', 'bgr');
+    $query->fields('bgr', array('nid', 'parent', 'isbn', 'author', 'weight', 'publisher', 'year', 'show_image'));
+    $this->source = new MigrateSourceSQL($query, array());
 
-    // This is a multi-value text field
-    $this->addFieldMapping('field_migrate_example_country', 'countries')
-         ->separator('|');
-    // These are related terms, which by default will be looked up by name
-    $this->addFieldMapping('migrate_example_beer_styles', 'terms')
-         ->separator(',');
+    // Set up our destination - nodes of type book_reference.
+    $this->destination = new MigrateDestinationNode('book_reference');
 
-    // Some fields may have subfields such as text formats or summaries
-    // (equivalent to teasers in previous Drupal versions).
-    // These can be individually mapped as we see here.
-    $this->addFieldMapping('body', 'body');
-    $this->addFieldMapping('body:summary', 'excerpt');
-
-    // Copy an image file, write DB record to files table, and save in Field storage.
-    // We map the filename (relative to the source_dir below) to the field itself.
-    $this->addFieldMapping('field_migrate_example_image', 'image');
-    // Here we specify the directory containing the source files.
-    $this->addFieldMapping('field_migrate_example_image:source_dir')
-         ->defaultValue(drupal_get_path('module', 'migrate_example'));
-    // And we map the alt and title values in the database to those on the image.
-    $this->addFieldMapping('field_migrate_example_image:alt', 'image_alt');
-    $this->addFieldMapping('field_migrate_example_image:title', 'image_title');
-
-    // No description for images, only alt and title
-    $this->addUnmigratedSources(array('image_description'));
-
-    // Unmapped destination fields
-    $this->addUnmigratedDestinations(array('created', 'changed', 'status',
-      'promote', 'revision', 'language', 'revision_uid', 'log', 'tnid',
-      'body:format', 'body:language', 'migrate_example_beer_styles:source_type',
-      'migrate_example_beer_styles:create_term', 'field_migrate_example_image:destination_dir',
-      'field_migrate_example_image:language', 'field_migrate_example_image:file_replace',
-      'field_migrate_example_image:preserve_files', 'field_migrate_example_country:language', 'comment',
-      'field_migrate_example_image:file_class', 'field_migrate_example_image:destination_file'));
-
-    if (module_exists('path')) {
-      $this->addFieldMapping('path')
-           ->issueGroup(t('DNM'));
-      if (module_exists('pathauto')) {
-        $this->addFieldMapping('pathauto')
-             ->issueGroup(t('DNM'));
-      }
-    }
-    if (module_exists('statistics')) {
-      $this->addUnmigratedDestinations(array('totalcount', 'daycount', 'timestamp'));
-    }
-    */
+    // Mapped fields
+    $this->addFieldMapping('field_book_reference_isbn', 'isbn')
+         ->description(t('ISBN'));
+    $this->addFieldMapping('nid', 'nid')
+         ->description(t('Node ID'));
+    $this->addFieldMapping('field_parent', 'parent')
+         ->description(t('Parent'));
+   $this->addFieldMapping('field_book_reference_author', 'author')
+         ->description(t('Author'));
+   $this->addFieldMapping('field_book_reference_weight', 'weight')
+         ->description(t('Weight'));
+   $this->addFieldMapping('field_book_reference_publisher', 'publisher')
+         ->description(t('Publisher'));
+   $this->addFieldMapping('field_book_reference_year', 'year')
+         ->description(t('Year'));
+   $this->addFieldMapping('field_book_reference_show_image', 'show_image')
+         ->description(t('Show image'));
   }
 }

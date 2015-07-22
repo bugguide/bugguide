@@ -25,9 +25,13 @@ function bgmigrate_migrate_api() {
     'migrations' => array(
       'bgpagefields' => array(
         'class_name' => 'BGPageFieldMigration',
-        'group_name' => 'bugguide',        
+        'group_name' => 'bugguide',
       ),
-   ),
+      'bgreffields' => array(
+        'class_name' => 'BGRefFieldMigration',
+        'group_name' => 'bugguide',
+      ),
+    ),
   );
   return $api;
 }
