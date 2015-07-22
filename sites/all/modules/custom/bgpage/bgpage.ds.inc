@@ -24,7 +24,7 @@ function bgpage_ds_field_settings_info() {
     ),
     'bgpage_classification' => array(
       'weight' => '1',
-      'label' => 'hidden',
+      'label' => 'above',
       'format' => 'default',
     ),
     'bgpage_citations' => array(
