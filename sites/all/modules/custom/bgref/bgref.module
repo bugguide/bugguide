@@ -1,6 +1,12 @@
 <?php
 /**
  * @file
+ * Code for the BugGuide book references feature.
+ */
+
+include_once 'bgref.features.inc';
+/**
+ * @file
  * bgref module hook implementations.
  */
 
