@@ -155,7 +155,7 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
       'tnid',
       'translate',
       'revision_uid',
-      'is_new','body',
+      'is_new',
       'body:summary',
       'body:format',
       'body:language',
@@ -202,6 +202,18 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
       'field_synonyms:language',
       'comment',
     ));
+  }
+
+  /**
+   * Acts after a node has been saved.
+   */
+  public function complete($entity, stdClass $row) {
+    // Copy body into field_remarks.
+    $entity->field_remarks[LANGUAGE_NONE][0] = array(
+      'value' => $entity->body[LANGUAGE_NONE][0]['value'],
+      'format' => 1,
+    );
+    node_save($entity);
   }
 }
 
