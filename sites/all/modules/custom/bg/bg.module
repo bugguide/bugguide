@@ -1,5 +1,7 @@
 <?php
 
+include_once 'bg.features.inc';
+
 // Node ID of ID Request
 define('BG_ID_REQUEST_NID', 6);
 
