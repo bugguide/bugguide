@@ -117,22 +117,25 @@ function bgpage_form_bgpage_node_form_alter(&$form, &$form_state, $form_id) {
 
 }
 
+/**
+ * Form validate callback for bgpage nodes.
+ */
 function bgpage_node_form_validate(&$form, &$form_state) {
   global $TAXON_NAMES, $TAXON_IDS;
 
-  // Use $node-> syntax for convenience.
-  $node = (object) $form_state['values'];
+  $scientific_name = NULL;
 
-  if (!isset($TAXON_NAMES[$node->field_taxon[$node->language][0]['value']])) {
-    $node->taxon_name = t('No Taxon');
+  $values = $form_state['values'];
+
+  if (!isset($TAXON_NAMES[$values['field_taxon'][LANGUAGE_NONE][0]['value']])) {
+    $taxon_name = t('No Taxon');
   }
   else {
-    $node->taxon_name = $TAXON_NAMES[$node->field_taxon[$node->language][0]['value']];
+    $taxon_name = $TAXON_NAMES[$values['field_taxon'][LANGUAGE_NONE][0]['value']];
   }
 
-  if ($node->taxon_name == t('No Taxon')) {
+  if ($taxon_name == t('No Taxon')) {
     // TODO this should really hide the field in form_alter()
-    $node->scientific_name = '';
 
     // Check if this is a duplicate entry.
     // TODO update for D7
@@ -140,65 +143,94 @@ function bgpage_node_form_validate(&$form, &$form_state) {
     // Criteria: has same parent, also has same title, also is not this node (if editing)
     $query = new EntityFieldQuery;
     $query->entityCondition('entity_type', 'node')
-                ->entityCondition('bundle', 'bgpage')
-                ->propertyCondition('title', $node->title)
-                ->fieldCondition('field_parent', 'value', $node->field_parent[$node->language][0]['value']);
+          ->entityCondition('bundle', 'bgpage')
+          ->propertyCondition('title', $values['title'])
+          ->fieldCondition('field_parent', 'value', $values['field_parent'][LANGUAGE_NONE][0]['value']);
     // Existing nodes have nids.
     // In that case we want the query to exclude the nid of this node
     // because it is silly to alert that this node has the same title as this node.
-    if ($node->nid) {
-      $query->propertyCondition('nid', $node->nid,'<>');
+    if (isset($values['nid'])) {
+      $query->propertyCondition('nid', $values['nid'], '<>');
     }
     $result = $query->execute();
-
     if (!empty($result['node'])) {
       foreach ($result['node'] as $nid => $info) {
-        form_set_error('common_name', t('That name already exists: @link', array('@link' => l($node->title, "node/$nid"))));
+        form_set_error('', t('There is a <a href="!link" target="_blank">guide page</a> with that title and parent.', array(
+          '!link' => url('node/' . $nid),
+        )));
       }
     }
   }
-  else if (isset($node->scientific_name)) {
-    $node->scientific_name = trim($node->scientific_name);
-    if (!$node->scientific_name)
-      form_set_error('scientific_name', t('You must specify a scientific name.'));
-    else if (strpos($node->scientific_name, ' '))
-      form_set_error('scientific_name', t('Scientific name should be one word only.'));
-    else if (preg_match("/[^A-Za-z-]/", $node->scientific_name) > 0)
-      form_set_error('scientific_name', t("Only the letters 'a' to 'z' are allowed."));
-    else if (($node->taxon_name == "Superfamily") &&
-      !bugguide_str_ends_with($node->scientific_name, "oidea"))
-      form_set_error('scientific_name', t("A superfamily name should end with 'oidea'."));
-    else if (($node->taxon_name == "Family") &&
-      !bugguide_str_ends_with($node->scientific_name, "idae"))
-      form_set_error('scientific_name', t("A family name should end with 'idae'."));
-    else if (($node->taxon_name == "Subfamily") &&
-      !bugguide_str_ends_with($node->scientific_name, "inae"))
-      form_set_error('scientific_name', t("A subfamily name should end with 'inae'."));
-    else if (($node->taxon_name == "Species") || ($node->taxon_name == "Subspecies")) {
-      $node->scientific_name = strtolower($node->scientific_name);
-      $nid = db_result(db_query("SELECT nid FROM {bgpage} WHERE scientific_name = '%s' AND nid != %d AND taxon = '%d' AND parent = '%s'", $node->scientific_name, $node->nid, $node->taxon, $node->parent));
-      if ($nid) {
-        form_set_error('scientific_name', t('That one already exists for this genus: @link', array('@link' => l($node->scientific_name, "node/$nid"))));
+  elseif (isset($values['field_scientific_name'][LANGUAGE_NONE][0]['value'])) {
+    $scientific_name = trim($values['field_scientific_name'][LANGUAGE_NONE][0]['value']);
+    if (!$scientific_name) {
+      form_set_error('field_scientific_name', t('You must specify a scientific name.'));
+    }
+    elseif (strpos($scientific_name, ' ')) {
+      form_set_error('field_scientific_name', t('Scientific name should be one word only.'));
+    }
+    elseif (preg_match("/[^A-Za-z-]/", $scientific_name) > 0) {
+      form_set_error('field_scientific_name', t("Only the letters 'a' to 'z' are allowed."));
+    }
+    elseif (($taxon_name == "Superfamily") && !bugguide_str_ends_with($values['field_scientific_name'][LANGUAGE_NONE][0]['value'], "oidea")) {
+      form_set_error('field_scientific_name', t("A superfamily name should end with 'oidea'."));
+    }
+    elseif (($taxon_name == "Family") && !bugguide_str_ends_with($scientific_name, "idae")) {
+      form_set_error('field_scientific_name', t("A family name should end with 'idae'."));
+    }
+    elseif (($taxon_name == "Subfamily") && !bugguide_str_ends_with($scientific_name, "inae")) {
+      form_set_error('field_scientific_name', t("A subfamily name should end with 'inae'."));
+    }
+    elseif (($taxon_name == "Species") || ($taxon_name == "Subspecies")) {
+      $scientific_name = strtolower($scientific_name);
+      $query = new EntityFieldQuery;
+      $query->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'bgpage')
+            ->fieldCondition('field_scientific_name', 'value', $scientific_name)
+            ->fieldCondition('field_taxon', 'value', $values['field_taxon'][LANGUAGE_NONE][0]['value'])
+            ->fieldCondition('field_parent', 'value', $values['field_parent'][LANGUAGE_NONE][0]['value']);
+      // Existing nodes have nids.
+      // In that case we want the query to exclude the nid of this node
+      // because it is silly to alert that this node has the same title as this node.
+      if (isset($values['nid'])) {
+        $query->propertyCondition('nid', $values['nid'], '<>');
+      }
+      $result = $query->execute();
+      if (!empty($result['node'])) {
+        foreach ($result['node'] as $nid => $info) {
+          form_set_error('', t('There is a <a href="!link" target="_blank">guide page</a> with that scientific name, taxon and parent.', array(
+            '!link' => url('node/' . $nid),
+          )));
+        }
       }
     }
     else {
-      $node->scientific_name = ucfirst(strtolower($node->scientific_name));
-      $nid = db_result(db_query("SELECT nid FROM {bgpage} WHERE scientific_name = '%s' AND nid != %d AND taxon <= %d", $node->scientific_name, $node->nid, $TAXON_IDS["Genus"]));
-      if ($nid) {
-        form_set_error('scientific_name', t('That taxon already exists: @link', array('@link' => l($node->scientific_name, "node/$nid"))));
+      $scientific_name = ucfirst(strtolower($scientific_name));
+      $query = new EntityFieldQuery;
+      $query->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'bgpage')
+            ->fieldCondition('field_scientific_name', 'value', $scientific_name)
+            ->fieldCondition('field_taxon', 'value', $values['field_taxon'][LANGUAGE_NONE][0]['value']);
+      // Existing nodes have nids.
+      // In that case we want the query to exclude the nid of this node
+      // because it is silly to alert that this node has the same title as this node.
+      if (isset($values['nid'])) {
+        $query->propertyCondition('nid', $values['nid'], '<>');
+      }
+      $result = $query->execute();
+      if (!empty($result['node'])) {
+        foreach ($result['node'] as $nid => $info) {
+          form_set_error('', t('There is a <a href="!link" target="_blank">guide page</a> with that scientific name and taxon.', array(
+            '!link' => url('node/' . $nid),
+          )));
+        }
       }
     }
   }
 
   // Pass value forward to submit function.
-  $form_state['values']['taxon_name'] = $node->taxon_name;
-  $form_state['values']['scientific_name'] = $node->scientific_name;
-
-  // Set titles appropriately, then pass the values forward.
-  // TODO bgpage_set_titles($node);
-  $form_state['values']['title_node'] = $node->title_node;
-  $form_state['values']['title_browser'] = $node->title_browser;
-
+  $form_state['values']['taxon_name'] = $taxon_name;
+  $form_state['values']['scientific_name'] = $scientific_name;
 }
 
 /**
