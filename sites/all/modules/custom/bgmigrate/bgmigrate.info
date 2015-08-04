@@ -6,4 +6,6 @@ dependencies[] = taxonomy
 dependencies[] = migrate
 
 files[] = bgmigrate.module
-files[] = bgmigrate.inc
+files[] = lib/BasicBugGuideMigration.inc
+files[] = lib/BGPageFieldMigration.inc
+files[] = lib/BGRefFieldMigration.inc
