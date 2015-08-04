@@ -7,12 +7,6 @@
 include_once 'bgimage.features.inc';
 include_once './images/image_obfuscate.inc';
 
-/**
- * Alter the bgimage form.
- */
-function bgimage_form_node_form_alter(&$form, &$form_state, $form_id) {
-  $form['field_bgimage_parent']['#access'] = FALSE;
-}
 
 function bgimage_node_validate($node, $form, &$form_state) {
   if ($node->type != 'bgimage') {
@@ -20,9 +14,9 @@ function bgimage_node_validate($node, $form, &$form_state) {
   }
   // Need a bg_str_ends_with from bg.module
   drupal_load('module', 'bg');
-  
+
   // Set parent.
-  if ($form_state['values']['field_bgimage_parent'][LANGUAGE_NONE][0]['value'] == '') {
+  if ($form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] == '') {
     $potential_parent = arg(3); // node/add/bgimage/1234
     if ($potential_parent === NULL) {
       form_set_error('field_bgimage_parent', 'bgimage is unable to continue without a parent.');
@@ -35,31 +29,31 @@ function bgimage_node_validate($node, $form, &$form_state) {
       else {
         $full_parent = bgimage_get_full_parent($parent);
         if ($full_parent === FALSE) {
-          form_set_error('field_bgimage_parent', 'bgimage: No such parent.');
+          form_set_error('field_parent', 'bgimage: No such parent.');
         }
         else {
-          $form_state['values']['field_bgimage_parent'][LANGUAGE_NONE][0]['value'] = $full_parent . ',' . $parent;
+          $form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] = $full_parent . ',' . $parent;
         }
       }
     }
   }
-  
+
   if ($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid'] == 0) {
-    form_set_error('field_bgimage_image', 'Did you forget to attach an image? Please attach one and resubmit.'); 
+    form_set_error('field_bgimage_image', 'Did you forget to attach an image? Please attach one and resubmit.');
   }
-  
+
   if ($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value'] === NULL) {
     $form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value'] = $form_state['values']['created'];
   }
-  
+
   if (strtotime($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value']) > $form_state['values']['created']) {
-    form_set_error('field_bgimage_date', 'The date taken cannot be in the future.'); 
+    form_set_error('field_bgimage_date', 'The date taken cannot be in the future.');
   }
-  
+
   //if ((strstr($node->parent, ",57,") && !$node->immature && !$node->adult)) {
 	//  $error["leps_stage"] = theme("theme_error", "Please check adult (moth/butterfly) and/or immature (egg/caterpillar/pupa) when submitting to Lepidoptera.");
   //}
-  
+
   $county = isset($node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] : '';
   if (bg_str_ends_with(strtoupper($county), ' PARISH')) {
      $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] = substr($county, 0, strlen($county) - 7);
@@ -78,7 +72,7 @@ function bgimage_node_validate($node, $form, &$form_state) {
 		(strtoupper($county) == 'CANADA')) {
 		form_set_error('field_bgimage_county', 'You have entered a country here. Please specify the county/parish/district/region instead.');
 	}
- 
+
 	// TODO
 	// bgimage_set_titles()
 }
@@ -99,19 +93,19 @@ function bgimage_node_insert($node) {
     watchdog('image', 'Failed to create style directory: %directory', array('%directory' => $directory), WATCHDOG_ERROR);
     return FALSE;
   }
-  
+
   $file = file_load($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid']);
   // Move file into scalable file area, e.g.
   // files/raw/7H3/HEH/7H3HEHUZ6H3HMLUZ8LWZUHLRUHVZMLZR5LAZ8LUZ6HBH0L6Z4H6ZLLOHIHBHQL5Z8H.jpg
   $result = file_move($file, $directory . $obfuscate . '.jpg');
-  
+
   // Mirror information to bgimage table for scalability.
   // Note that we are inside node_save()'s database transaction.
   $fields = _bgimage_prepare($node, $file);
   $fields['base'] = $node->bgimage_uuid;
   $result = db_insert('bgimage')
     ->fields($fields)
-    ->execute();  
+    ->execute();
 }
 
 /**
@@ -123,14 +117,14 @@ function bgimage_node_update($node) {
   }
 
   $file = file_load($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid']);
-  
+
   // Mirror information to bgimage table for scalability.
   // Note that we are inside node_save()'s database transaction.
   $fields = _bgimage_prepare($node, $file);
   $result = db_update('bgimage')
     ->fields($fields)
     ->condition('nid', $node->nid)
-    ->execute();   
+    ->execute();
 }
 
 function _bgimage_prepare($node, $data) {
@@ -138,7 +132,7 @@ function _bgimage_prepare($node, $data) {
   foreach ($node->{'field_bgimage_custom_tag'}[LANGUAGE_NONE] as $tag) {
     $custom_tags[] = $tag['value'];
   }
-  
+
   $male = 0;
   $female = 0;
   foreach ($node->{'field_bgimage_gender'}[LANGUAGE_NONE] as $checkbox) {
@@ -162,13 +156,12 @@ function _bgimage_prepare($node, $data) {
       $adult = 1;
     }
   }
-  
+
   $fields = array(
     'nid' => $node->nid,
-    'parent' => $node->{'field_bgimage_parent'}[LANGUAGE_NONE][0]['value'],
-    'parent_idx' => $node->{'field_bgimage_parent'}[LANGUAGE_NONE][0]['value'] . ',',
+    'parent' => $node->{'field_parent'}[LANGUAGE_NONE][0]['value'],
+    'parent_idx' => $node->{'field_parent'}[LANGUAGE_NONE][0]['value'] . ',',
     'id' => implode(' ', $custom_tags), // field_bgimage_custom_tag
-    'location' => $node->{'field_bgimage_location'}[LANGUAGE_NONE][0]['locality'],
     'date_taken' => strtotime($node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value']),
     'width' => $node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['width'],
     'height' => $node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['width'],
@@ -181,17 +174,16 @@ function _bgimage_prepare($node, $data) {
     'immature' => $immature, // field_bgimage_life_stage
     'size' => isset($node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value'] : '',
     'owner' => isset($node->{'field_bgimage_copyright_owner'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_copyright_owner'}[LANGUAGE_NONE][0]['value'] : '',
-    'location_code' => $node->{'field_bgimage_location'}[LANGUAGE_NONE][0]['administrative_area'], // state e.g., IA
-    'county' => isset($node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] : '' 
+    'county' => isset($node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] : ''
   );
-  
+
   return $fields;
 
 }
 
 /**
  * Modify paths of derivative images.
- * 
+ *
  * @param string $result
  *   $result = $scheme . '://styles/' . $style_name . '/' . $scheme . '/' . $path;
  * @param unknown_type $context
@@ -208,7 +200,7 @@ function bgimage_image_style_path_alter(&$style_path, $context) {
   if (substr($context['path'], 0, 4) != 'raw/') {
     return;
   }
-  
+
   $s = pathinfo($context['path'], PATHINFO_FILENAME);
   // 7H3HEHUZ6H3HMLUZ8LWZUHLRUHVZMLZR5LAZ8LUZ6HBH0L6Z4H6ZLLOHIHBHQL5Z8H
 
@@ -217,10 +209,10 @@ function bgimage_image_style_path_alter(&$style_path, $context) {
 
   $path = image_obfuscate($uuid . ',' . $context['style_name']) . '.jpg';
   // NH8ZYZMZZHIZOZZRILVZQLVHQLEZSL1HXHCHIHYHNHAZ8LNZMLUZGLAZIL1Z2HAHMH2ZGLUZUH9Z2H1Z.jpg
-  
+
   $prefix = bgimage_get_prefix($path);
   // NH8/ZYZ/
-  
+
   $style_path = $context['scheme'] . '://styles/' . $context['style_name'] . '/' . $context['scheme'] . '/' . $prefix . $path;
   // public://styles/medium/public/NH8/ZYZ/NH8ZYZMZZHIZOZZRILVZQLVHQLEZSL1HXHCHIHYHNHAZ8LNZMLUZGLAZIL1Z2HAHMH2ZGLUZUH9Z2H1Z.jpg
 }
@@ -235,23 +227,23 @@ function bgimage_original_from_derivative_path($scheme, $target) {
     // Stock Drupal image_uri.
     return $scheme . '://' . $target;
   }
-  
+
   $s = pathinfo($target, PATHINFO_FILENAME);
   // NH8ZYZMZZHIZOZZRILVZQLVHQLEZSL1HXHCHIHYHNHAZ8LNZMLUZGLAZIL1Z2HAHMH2ZGLUZUH9Z2H1Z
-  
+
   $info = image_deobfuscate($s);
   // faed59f39f56052153b48643f20ee94e,medium
-  
+
   $parts = explode(',', $info);
   $uuid = array_shift($parts);
   // faed59f39f56052153b48643f20ee94e
-  
+
   $obfuscated = image_obfuscate($uuid);
   // ELIRTZ8RTL8RZH4ROLXZALIZNLYLCZQRYZMRFZ0RCZIROZRZCLMZRH0RFZFL3ZRZOZ
-  
+
   $prefix = bgimage_get_prefix($obfuscated);
   // ELI/RTZ/
-  
+
   return $scheme . '://' . 'raw/' . $prefix . $obfuscated . '.jpg';
   // public://raw/ELI/RTZ/ELIRTZ8RTL8RZH4ROLXZALIZNLYLCZQRYZMRFZ0RCZIROZRZCLMZRH0RFZFL3ZRZOZ.jpg
 }

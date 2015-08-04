@@ -52,7 +52,47 @@ function bgimage_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => -4,
+      'weight' => 1,
+    ),
+  );
+
+  // Exported field_instance: 'node-bgimage-field_bgimage_base'
+  $field_instances['node-bgimage-field_bgimage_base'] = array(
+    'bundle' => 'bgimage',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 13,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_bgimage_base',
+    'label' => 'Base',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 3,
     ),
   );
 
@@ -92,7 +132,7 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 12,
+      'weight' => 11,
     ),
   );
 
@@ -132,47 +172,7 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 2,
-    ),
-  );
-
-  // Exported field_instance: 'node-bgimage-field_bgimage_custom_tag'
-  $field_instances['node-bgimage-field_bgimage_custom_tag'] = array(
-    'bundle' => 'bgimage',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Optional. An identifier for your own use. If you choose something unique here from your own records, you can easily find this image later using search.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_bgimage_custom_tag',
-    'label' => 'Custom Tag',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 5,
+      'weight' => 12,
     ),
   );
 
@@ -204,7 +204,7 @@ function bgimage_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_bgimage_date',
-    'label' => 'Date',
+    'label' => 'Date taken',
     'required' => 0,
     'settings' => array(
       'default_value' => 'blank',
@@ -225,7 +225,7 @@ function bgimage_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_text',
-      'weight' => 3,
+      'weight' => 7,
     ),
   );
 
@@ -263,6 +263,46 @@ function bgimage_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_buttons',
       'weight' => 9,
+    ),
+  );
+
+  // Exported field_instance: 'node-bgimage-field_bgimage_id'
+  $field_instances['node-bgimage-field_bgimage_id'] = array(
+    'bundle' => 'bgimage',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 14,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_bgimage_id',
+    'label' => 'ID',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 4,
     ),
   );
 
@@ -312,7 +352,7 @@ function bgimage_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 8,
+      'weight' => 14,
     ),
   );
 
@@ -349,7 +389,7 @@ function bgimage_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 7,
+      'weight' => 10,
     ),
   );
 
@@ -362,15 +402,10 @@ function bgimage_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'addressfield',
-        'settings' => array(
-          'format_handlers' => array(
-            0 => 'address',
-          ),
-          'use_widget_handlers' => 1,
-        ),
-        'type' => 'addressfield_default',
-        'weight' => 7,
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 15,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -384,46 +419,33 @@ function bgimage_field_default_field_instances() {
     'label' => 'Location',
     'required' => 0,
     'settings' => array(
+      'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'addressfield',
+      'module' => 'text',
       'settings' => array(
-        'available_countries' => array(
-          'CA' => 'CA',
-          'US' => 'US',
-        ),
-        'default_country' => 'US',
-        'format_handlers' => array(
-          'address' => 'address',
-          'address-hide-postal-code' => 'address-hide-postal-code',
-          'address-hide-street' => 'address-hide-street',
-          'address-optional' => 'address-optional',
-          'address-hide-country' => 0,
-          'organisation' => 0,
-          'name-full' => 0,
-          'name-oneline' => 0,
-        ),
+        'size' => 60,
       ),
-      'type' => 'addressfield_standard',
-      'weight' => 1,
+      'type' => 'text_textfield',
+      'weight' => 5,
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_parent'
-  $field_instances['node-bgimage-field_bgimage_parent'] = array(
+  // Exported field_instance: 'node-bgimage-field_bgimage_location_code'
+  $field_instances['node-bgimage-field_bgimage_location_code'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'hidden',
+        'label' => 'above',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 12,
+        'weight' => 18,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -433,8 +455,8 @@ function bgimage_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_bgimage_parent',
-    'label' => 'Parent',
+    'field_name' => 'field_bgimage_location_code',
+    'label' => 'Location code',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -444,7 +466,7 @@ function bgimage_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'size' => 94,
+        'size' => 60,
       ),
       'type' => 'text_textfield',
       'weight' => 13,
@@ -496,7 +518,7 @@ function bgimage_field_default_field_instances() {
       'module' => 'fivestar',
       'settings' => array(),
       'type' => 'exposed',
-      'weight' => 11,
+      'weight' => 15,
     ),
   );
 
@@ -545,7 +567,7 @@ function bgimage_field_default_field_instances() {
       'module' => 'fivestar',
       'settings' => array(),
       'type' => 'exposed',
-      'weight' => 10,
+      'weight' => 8,
     ),
   );
 
@@ -554,14 +576,14 @@ function bgimage_field_default_field_instances() {
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Size, if known, in millimeters.',
+    'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 1,
+        'weight' => 19,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -585,21 +607,62 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 4,
+      'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'node-bgimage-field_parent'
+  $field_instances['node-bgimage-field_parent'] = array(
+    'bundle' => 'bgimage',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 12,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_parent',
+    'label' => 'Parent',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 2,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
   t('<b>Leave this blank if the image is your own</b>. If the image is not your own you must get permission from the owner before submitting it here. If you have permission, specify the copyright owner\'s name here.');
+  t('Base');
   t('Copyright Owner');
   t('County/Parish/District/Region');
-  t('Custom Tag');
-  t('Date');
+  t('Date taken');
   t('Date taken, if known (mm/dd/yy). Only specify this for wild specimens.');
   t('Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).');
   t('Gender');
   t('How representative of this taxon is this specimen?<br>1: can hardly recognize it as a member of this taxon;<br>5: I would show someone this picture to introduce them to this taxon');
+  t('ID');
   t('If known, otherwise leave blank. Do not include the word \'County\' or \'Parish\' here as the system will provide that as needed.');
   t('If you don\'t know for sure, don\'t check it. For example: for caterpillars check immature and for butterflies and moths check adult. If an image shows more than one life stage, check each one.');
   t('If you don\'t know for sure, don\'t check it. If the photo shows mating behavior, check both male and female.');
@@ -607,14 +670,13 @@ function bgimage_field_default_field_instances() {
   t('Image');
   t('Life Stage');
   t('Location');
-  t('Optional. An identifier for your own use. If you choose something unique here from your own records, you can easily find this image later using search.');
+  t('Location code');
   t('Parent');
   t('Photographic Quality');
   t('Quality of image.<br>1: blurry, taken on a cheap camera phone;<br>5: professional-quality image, great depth of field, excellent lighting.');
   t('Remarks');
   t('Representative Image');
   t('Size');
-  t('Size, if known, in millimeters.');
 
   return $field_instances;
 }
