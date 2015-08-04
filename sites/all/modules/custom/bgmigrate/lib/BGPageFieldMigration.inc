@@ -1,50 +1,9 @@
 <?php
-
 /**
- * To define a migration process from a set of source data to a particular
- * kind of Drupal object (for example, a specific node type), you define
- * a class derived from Migration. You must define a constructor to initialize
- * your migration object.
- *
- * For your classes to be instantiated so they can be used to import content,
- * you must register them - look at migrate_example.migrate.inc to see how
- * registration works. Right now, it's important to understand that each
- * migration will have a unique "machine name", which is displayed in the UI
- * and is used to reference the migration in drush commands.
- *
- * In any serious migration project, you will find there are some options
- * which are common to the individual migrations you're implementing. You can
- * define an abstract intermediate class derived from Migration, then derive your
- * individual migrations from that, to share settings, utility functions, etc.
+ * @file
+ * Migration class for bgpage nodes.
  */
-abstract class BasicBugGuideMigration extends Migration {
-  // A Migration constructor takes an array of arguments as its first parameter.
-  // The arguments must be passed through to the parent constructor.
-  public function __construct($arguments) {
-    parent::__construct($arguments);
 
-    // With migrate_ui enabled, migration pages will indicate people involved in
-    // the particular migration, with their role and contact info. We default the
-    // list in the shared class; it can be overridden for specific migrations.
-   // $this->team = array(
-   //   new MigrateTeamMember('Liz Taster', 'ltaster@example.com',
-   //                        t('Product Owner')),
-   //   new MigrateTeamMember('Larry Brewer', 'lbrewer@example.com',
-   //                         t('Implementor')),
-   // );
-
-    // Individual mappings in a migration can be linked to a ticket or issue
-    // in an external tracking system. Define the URL pattern here in the shared
-    // class with ':id:' representing the position of the issue number, then add
-    // ->issueNumber(1234) to a mapping.
-    //$this->issuePattern = 'http://drupal.org/node/:id:';
-  }
-}
-
-/**
- * The BeerNodeMigration uses the migrate_example_beer_node table as source
- * and creates Drupal nodes of type 'Beer' as destination.
- */
 class BGPageFieldMigration extends BasicBugGuideMigration {
   public function __construct($arguments) {
     parent::__construct($arguments);
@@ -214,58 +173,5 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
       'format' => 1,
     );
     node_save($entity);
-  }
-}
-
-/**
- * Migrates bgref content into book_reference nodes.
- */
-class BGRefFieldMigration extends BasicBugGuideMigration {
-  public function __construct($arguments) {
-    parent::__construct($arguments);
-    $this->description = t('Book References');
-
-    // Only update existing nodes; do not create new nodes. The definitive
-    // node id is the one in the destination. Since we are migrating data from
-    // a MySQL table into existing Drupal 7 nodes/fields, this makes sense.
-    // https://www.drupal.org/node/1117454
-    $this->systemOfRecord = Migration::DESTINATION;
-
-    $this->map = new MigrateSQLMap($this->machineName,
-      array(
-        'nid' => array(
-          'type' => 'int',
-          'not null' => TRUE,
-          'description' => 'Book Reference Node ID.',
-          'alias' => 'bgr',
-        )
-      ),
-      MigrateDestinationNode::getKeySchema()
-    );
-
-    $query = db_select('bgref', 'bgr');
-    $query->fields('bgr', array('nid', 'parent', 'isbn', 'author', 'weight', 'publisher', 'year', 'show_image'));
-    $this->source = new MigrateSourceSQL($query, array());
-
-    // Set up our destination - nodes of type book_reference.
-    $this->destination = new MigrateDestinationNode('book_reference');
-
-    // Mapped fields
-    $this->addFieldMapping('field_book_reference_isbn', 'isbn')
-         ->description(t('ISBN'));
-    $this->addFieldMapping('nid', 'nid')
-         ->description(t('Node ID'));
-    $this->addFieldMapping('field_parent', 'parent')
-         ->description(t('Parent'));
-   $this->addFieldMapping('field_book_reference_author', 'author')
-         ->description(t('Author'));
-   $this->addFieldMapping('field_book_reference_weight', 'weight')
-         ->description(t('Weight'));
-   $this->addFieldMapping('field_book_reference_publisher', 'publisher')
-         ->description(t('Publisher'));
-   $this->addFieldMapping('field_book_reference_year', 'year')
-         ->description(t('Year'));
-   $this->addFieldMapping('field_book_reference_show_image', 'show_image')
-         ->description(t('Show image'));
   }
 }
