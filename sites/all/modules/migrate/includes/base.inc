@@ -290,6 +290,23 @@ abstract class MigrationBase {
   }
 
   /**
+   * Any module hooks which should be disabled during migration processes.
+   *
+   * @var array
+   *  Key: Hook name (e.g., 'node_insert')
+   *  Value: Array of modules for which to disable this hook (e.g., array('pathauto')).
+   */
+  protected $disableHooks = array();
+  public function getDisableHooks() {
+    return $this->disableHooks;
+  }
+
+  /**
+   * An array to track 'mail_system' variable if disabled.
+   */
+  protected $mailSystem = array();
+
+  /**
    * Have we already warned about obsolete constructor argumentss on this request?
    *
    * @var bool
@@ -358,9 +375,7 @@ abstract class MigrationBase {
       $this->arguments['group_name'] = $arguments->getName();
       if (!self::$groupArgumentWarning &&
           variable_get('migrate_deprecation_warnings', 1)) {
-        self::displayMessage(t('Passing a group object to a migration ' .
-          'constructor is now deprecated - pass through the arguments array ' .
-          'passed to the leaf class instead.'));
+        self::displayMessage(t('Passing a group object to a migration constructor is now deprecated - pass through the arguments array passed to the leaf class instead.'));
         self::$groupArgumentWarning = TRUE;
       }
     }
@@ -369,9 +384,7 @@ abstract class MigrationBase {
         $this->arguments = array();
         if (!self::$emptyArgumentsWarning &&
             variable_get('migrate_deprecation_warnings', 1)) {
-          self::displayMessage(t('Passing an empty first parameter to a ' .
-            'migration constructor is now deprecated - pass through the ' .
-            'arguments array passed to the leaf class instead.'));
+          self::displayMessage(t('Passing an empty first parameter to a migration constructor is now deprecated - pass through the arguments array passed to the leaf class instead.'));
           self::$emptyArgumentsWarning = TRUE;
         }
       }
@@ -389,10 +402,12 @@ abstract class MigrationBase {
     else {
       // Deprecated - this supports old code which does not pass the arguments
       // array through to the base constructor. Remove in the next version.
-      $this->machineName = $this->machineFromClass(get_class());
+      $this->machineName = $this->machineFromClass(get_class($this));
     }
-    // Make any group arguments directly accessible to the specific migration.
+    // Make any group arguments directly accessible to the specific migration,
+    // other than group dependencies.
     $group_arguments = $this->group->getArguments();
+    unset($group_arguments['dependencies']);
     $this->arguments += $group_arguments;
 
     // Record the memory limit in bytes
@@ -422,19 +437,20 @@ abstract class MigrationBase {
     // Record the time limit
     $this->timeLimit = ini_get('max_execution_time');
 
-    // Prevent any emails from being sent out on migration
-    global $conf;
-    if (!empty($conf['mail_system'])) {
-      foreach ($conf['mail_system'] as $system => $class) {
-        $conf['mail_system'][$system] = 'MigrateMailIgnore';
-      }
-    }
-    else {
-      $conf['mail_system']['default-system'] = 'MigrateMailIgnore';
-    }
+    // Save the current mail system, prior to disabling emails.
+    $this->saveMailSystem();
+
+    // Prevent emails from being sent out during migrations.
+    $this->disableMailSystem();
 
     // Make sure we clear our semaphores in case of abrupt exit
-    register_shutdown_function(array($this, 'endProcess'));
+    drupal_register_shutdown_function(array($this, 'endProcess'));
+
+    // Save any hook disablement information.
+    if (isset($this->arguments['disable_hooks']) &&
+        is_array($this->arguments['disable_hooks'])) {
+      $this->disableHooks = $this->arguments['disable_hooks'];
+    }
   }
 
   /**
@@ -585,7 +601,15 @@ abstract class MigrationBase {
       }
       $arguments['machine_name'] = $machine_name;
       if (class_exists($class_name)) {
-        $migrations[$machine_name_key] = new $class_name($arguments);
+        try {
+          $migrations[$machine_name_key] = new $class_name($arguments);
+        }
+        catch (Exception $e) {
+          self::displayMessage(t('Migration !machine could not be constructed.',
+            array('!machine' => $machine_name)));
+          self::displayMessage($e->getMessage());
+          return NULL;
+        }
       }
       else {
         self::displayMessage(t('No migration class !class found',
@@ -778,9 +802,16 @@ abstract class MigrationBase {
         if (!empty($this->highwaterField['type']) && $this->highwaterField['type'] == 'int') {
           // If the highwater is an integer type, we need to force the DB server
           // to treat the varchar highwater field as an integer (otherwise it will
-          // think '5' > '10'). CAST(highwater AS INTEGER) would be ideal, but won't
-          // work in MySQL. This hack is thought to be portable.
-          $query->where('(highwater+0) < :highwater', array(':highwater' => $highwater));
+          // think '5' > '10').
+          switch (Database::getConnection()->databaseType()) {
+            case 'pgsql':
+              $query->where('(CASE WHEN highwater=\'\' THEN 0 ELSE CAST(highwater AS INTEGER) END) < :highwater', array(':highwater' => intval($highwater)));
+              break;
+            default:
+              // CAST(highwater AS INTEGER) would be ideal, but won't
+              // work in MySQL. This hack is thought to be portable.
+              $query->where('(highwater+0) < :highwater', array(':highwater' => $highwater));
+          }
         }
         else {
           $query->condition('highwater', $highwater, '<');
@@ -837,7 +868,7 @@ abstract class MigrationBase {
     else {
       foreach ($this->dependencies as $dependency) {
         $migration = MigrationBase::getInstance($dependency);
-        if (!$migration->isComplete()) {
+        if (!$migration || !$migration->isComplete()) {
           return FALSE;
         }
       }
@@ -852,7 +883,7 @@ abstract class MigrationBase {
     $incomplete = array();
     foreach ($this->getDependencies() as $dependency) {
       $migration = MigrationBase::getInstance($dependency);
-      if (!$migration->isComplete()) {
+      if (!$migration || !$migration->isComplete()) {
         $incomplete[] = $dependency;
       }
     }
@@ -904,6 +935,17 @@ abstract class MigrationBase {
                        'initialHighwater' => $this->getHighwater(),
                        ))
                      ->execute();
+    }
+
+    // If we're disabling any hooks, reset the static module_implements cache so
+    // it is rebuilt with the specified hooks removed by our
+    // hook_module_implements_alter(). By setting #write_cache to FALSE, we
+    // ensure that our munged version of the hooks array does not get written
+    // to the persistent cache and interfere with other Drupal processes.
+    if (!empty($this->disableHooks)) {
+      $implementations = &drupal_static('module_implements');
+      $implementations = array();
+      $implementations['#write_cache'] = FALSE;
     }
   }
 
@@ -1187,11 +1229,7 @@ abstract class MigrationBase {
     }
     else {
       if (self::$showEncryptionWarning) {
-        MigrationBase::displayMessage(t('Encryption of secure migration ' .
-              'information is not supported. Ensure the ' .
-              '<a href="@encrypt">Encrypt module</a> or ' .
-              '<a href="mcrypt">mcrypt PHP extension</a> is installed for ' .
-              'this functionality.',
+        MigrationBase::displayMessage(t('Encryption of secure migration information is not supported. Ensure the <a href="@encrypt">Encrypt module</a> or <a href="mcrypt">mcrypt PHP extension</a> is installed for this functionality.',
             array(
               '@encrypt' => 'http://drupal.org/project/encrypt',
               '@mcrypt' => 'http://php.net/manual/en/book.mcrypt.php',
@@ -1229,11 +1267,7 @@ abstract class MigrationBase {
     }
     else {
       if (self::$showEncryptionWarning) {
-        MigrationBase::displayMessage(t('Encryption of secure migration ' .
-              'information is not supported. Ensure the ' .
-              '<a href="@encrypt">Encrypt module</a> or ' .
-              '<a href="mcrypt">mcrypt PHP extension</a> is installed for ' .
-              'this functionality.',
+        MigrationBase::displayMessage(t('Encryption of secure migration information is not supported. Ensure the <a href="@encrypt">Encrypt module</a> or <a href="mcrypt">mcrypt PHP extension</a> is installed for this functionality.',
             array(
               '@encrypt' => 'http://drupal.org/project/encrypt',
               '@mcrypt' => 'http://php.net/manual/en/book.mcrypt.php',
@@ -1276,8 +1310,18 @@ abstract class MigrationBase {
     if (isset($arguments['encrypted_arguments'])) {
       foreach ($arguments['encrypted_arguments'] as $argument_name) {
         if (isset($arguments[$argument_name])) {
-          $arguments[$argument_name] = unserialize(
-            self::decrypt($arguments[$argument_name]));
+          $decrypted_string = self::decrypt($arguments[$argument_name]);
+          // A decryption failure will return FALSE and issue a notice. We need
+          // to distinguish a failure from a serialized FALSE.
+          $unserialized_value = @unserialize($decrypted_string);
+          if ($unserialized_value === FALSE && $decrypted_string != serialize(FALSE)) {
+            self::displayMessage(t('Failed to decrypt argument %argument_name',
+              array('%argument_name' => $argument_name)));
+            unset($arguments[$argument_name]);
+          }
+          else {
+            $arguments[$argument_name] = $unserialized_value;
+          }
         }
       }
     }
@@ -1310,6 +1354,39 @@ abstract class MigrationBase {
       }
     }
     return $time;
+  }
+
+  /**
+   * Saves the current mail system, or set a system default if there is none.
+   */
+  protected function saveMailSystem() {
+    global $conf;
+    if (empty($conf['mail_system'])) {
+      $conf['mail_system']['default-system'] = 'MigrateMailIgnore';
+    }
+    else {
+      $this->mailSystem = $conf['mail_system'];
+    }
+  }
+
+  /**
+   * Disables mail system to prevent emails from being sent during migrations.
+   */
+  public function disableMailSystem() {
+    global $conf;
+    if (!empty($conf['mail_system'])) {
+      foreach ($conf['mail_system'] as $system => $class) {
+        $conf['mail_system'][$system] = 'MigrateMailIgnore';
+      }
+    }
+  }
+
+  /**
+   * Restores the original saved mail system for migrations that require it.
+   */
+  public function restoreMailSystem() {
+    global $conf;
+    $conf['mail_system'] = $this->mailSystem;
   }
 }
 

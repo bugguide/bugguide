@@ -230,6 +230,9 @@ class MigrateDestinationUser extends MigrateDestinationEntity {
       $account->login = MigrationBase::timestamp($account->login);
     }
 
+    // Validate field data prior to saving.
+    MigrateDestinationEntity::fieldAttachValidate('user', $account);
+
     migrate_instrument_start('user_save');
     $newaccount = user_save($old_account, (array)$account);
     migrate_instrument_stop('user_save');
@@ -262,6 +265,14 @@ class MigrateDestinationUser extends MigrateDestinationEntity {
       }
       else {
         $this->numCreated++;
+        // user_save() doesn't update file_usage on account creation, we have
+        // to do it ourselves.
+        if (!empty($newaccount->picture)) {
+          $file = file_load($newaccount->picture);
+          if (is_object($file)) {
+            file_usage_add($file, 'user', 'user', $newaccount->uid);
+          }
+        }
       }
       $this->complete($newaccount, $row);
       $return = array($newaccount->uid);
