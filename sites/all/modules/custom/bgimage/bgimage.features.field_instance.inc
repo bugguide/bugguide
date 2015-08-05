@@ -235,9 +235,10 @@ function bgimage_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
+        'module' => 'list',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 17,
+        'type' => 'list_default',
+        'weight' => 20,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -348,7 +349,7 @@ function bgimage_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 16,
+      'weight' => 15,
     ),
   );
 
@@ -361,9 +362,10 @@ function bgimage_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
+        'module' => 'list',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 19,
+        'type' => 'list_default',
+        'weight' => 21,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -374,7 +376,7 @@ function bgimage_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_bgimage_life_stage',
-    'label' => 'Life Stage',
+    'label' => 'Life stage',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -504,7 +506,7 @@ function bgimage_field_default_field_instances() {
       'module' => 'fivestar',
       'settings' => array(),
       'type' => 'exposed',
-      'weight' => 15,
+      'weight' => 14,
     ),
   );
 
@@ -646,7 +648,7 @@ function bgimage_field_default_field_instances() {
   t('If you have more than one image of the same specimen, submit this form first. Then view the first submitted image and select the "add image" link to add another. Please limit yourself to just a few of your best shots for a particular specimen.
 ');
   t('Image');
-  t('Life Stage');
+  t('Life stage');
   t('Location');
   t('Location code');
   t('Parent');
