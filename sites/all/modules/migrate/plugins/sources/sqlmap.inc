@@ -69,10 +69,39 @@ class MigrateSQLMap extends MigrateMap {
    */
   protected $ensured;
 
+  /**
+   * Provide caching for Source or Desination Map Lookups.
+   */
+  protected $cacheMapLookups;
+
+  /**
+   * Constructor.
+   *
+   * @param string $machine_name
+   *   The unique reference to the migration that we are mapping.
+   * @param array $source_key
+   *   The database schema for the source key.
+   * @param array $destination_key
+   *   The database schema for the destination key.
+   * @param string $connection_key
+   *   Optional - The connection used to create the mapping tables. By default 
+   *   this is the destination (Drupal). If it's not possible to make joins
+   *   between the destination database and your source database you can specify
+   *   a different connection to create the mapping tables on.
+   * @param array $options
+   *   Optional - Options applied to this source.
+   */
   public function __construct($machine_name, array $source_key,
       array $destination_key, $connection_key = 'default', $options = array()) {
     if (isset($options['track_last_imported'])) {
       $this->trackLastImported = TRUE;
+    }
+
+    if (isset($options['cache_map_lookups'])) {
+      $this->cacheMapLookups = $options['cache_map_lookups'];
+    }
+    else {
+      $this->cacheMapLookups = FALSE;
     }
 
     $this->connection = Database::getConnection('default', $connection_key);
@@ -285,6 +314,16 @@ class MigrateSQLMap extends MigrateMap {
    */
   public function lookupSourceID(array $destination_id) {
     migrate_instrument_start('lookupSourceID');
+    // Try a cache lookup if enabled.
+    if ($this->cacheMapLookups) {
+      $cache = &drupal_static($this->mapTable . '_sourceIDCache');
+      $serialized = json_encode($destination_id);
+      if (isset($cache[$serialized])) {
+        migrate_instrument_stop('lookupSourceID');
+        return $cache[$serialized];
+      }
+    }
+
     $query = $this->connection->select($this->mapTable, 'map')
               ->fields('map', $this->sourceKeyMap);
     foreach ($this->destinationKeyMap as $key_name) {
@@ -292,6 +331,12 @@ class MigrateSQLMap extends MigrateMap {
     }
     $result = $query->execute();
     $source_id = $result->fetchAssoc();
+
+    // Store the id in a cache if enabled.
+    if ($this->cacheMapLookups) {
+      $cache[$serialized] = $destination_id;
+    }
+
     migrate_instrument_stop('lookupSourceID');
     return $source_id;
   }
@@ -307,6 +352,16 @@ class MigrateSQLMap extends MigrateMap {
    */
   public function lookupDestinationID(array $source_id) {
     migrate_instrument_start('lookupDestinationID');
+    // Try a cache lookup if enabled.
+    if ($this->cacheMapLookups) {
+      $cache = &drupal_static($this->mapTable . '_destinationIDCache');
+      $serialized = json_encode($source_id);
+      if (isset($cache[$serialized])) {
+        migrate_instrument_stop('lookupDestinationID');
+        return $cache[$serialized];
+      }
+    }
+
     $query = $this->connection->select($this->mapTable, 'map')
               ->fields('map', $this->destinationKeyMap);
     foreach ($this->sourceKeyMap as $key_name) {
@@ -314,10 +369,15 @@ class MigrateSQLMap extends MigrateMap {
     }
     $result = $query->execute();
     $destination_id = $result->fetchAssoc();
+
+    // Store the id in a cache if enabled.
+    if ($this->cacheMapLookups) {
+      $cache[$serialized] = $destination_id;
+    }
+
     migrate_instrument_stop('lookupDestinationID');
     return $destination_id;
   }
-
   /**
    * Called upon import of one record, we record a mapping from the source key
    * to the destination key. Also may be called, setting the third parameter to
@@ -391,8 +451,8 @@ class MigrateSQLMap extends MigrateMap {
     if (is_array($source_key)) {
       foreach ($source_key as $key_value) {
         $fields['sourceid' . $count++] = $key_value;
-        // If any key value is empty, we can't save - print out and abort
-        if (empty($key_value)) {
+        // If any key value is not set, we can't save - print out and abort
+        if (!isset($key_value)) {
           print($message);
           return;
         }
