@@ -137,6 +137,33 @@ abstract class Migration extends MigrationBase {
     if (empty($allFieldMappings)) {
       $this->allFieldMappings = array_merge($this->getCodedFieldMappings(),
                                             $this->getStoredFieldMappings());
+      // If there are multiple mappings of a given source field to no
+      // destination field, keep only the last (so the UI can override a source
+      // field DNM that was defined in code).
+      $no_destination = array();
+      // But also remove a mapping of a source field to nothing, if there is
+      // a mapping to something.
+      $mapped_source_fields = array();
+      /** @var MigrateFieldMapping $mapping */
+      foreach ($this->allFieldMappings as $destination_field => $mapping) {
+        $source_field = $mapping->getSourceField();
+        // If the source field is not mapped to a destination field, the
+        // array index is integer.
+        if (is_int($destination_field)) {
+          if (isset($no_destination[$source_field])) {
+            unset($this->allFieldMappings[$no_destination[$source_field]]);
+            unset($no_destination[$source_field]);
+          }
+          $no_destination[$source_field] = $destination_field;
+          if (isset($mapped_source_fields[$source_field])) {
+            unset($this->allFieldMappings[$destination_field]);
+          }
+        }
+        else {
+          $mapped_source_fields[$source_field] = $source_field;
+        }
+      }
+
       // Make sure primary fields come before their subfields
       ksort($this->allFieldMappings);
     }
@@ -235,7 +262,7 @@ abstract class Migration extends MigrationBase {
     try {
       // Remove map and message tables
       $migration = self::getInstance($machine_name);
-      if (method_exists($migration, 'getMap')) {
+      if ($migration && method_exists($migration, 'getMap')) {
         $migration->getMap()->destroy();
       }
 
@@ -677,8 +704,8 @@ abstract class Migration extends MigrationBase {
     }
     catch (Exception $e) {
       self::displayMessage(
-        t('Migration failed with source plugin exception: !e',
-          array('!e' => $e->getMessage())));
+        t('Migration failed with source plugin exception: %e, in %file:%line',
+          array('%e' => $e->getMessage(), '%file' => $e->getFile(), '%line' => $e->getLine())));
       return MigrationBase::RESULT_FAILED;
     }
     while ($this->source->valid()) {
@@ -755,8 +782,8 @@ abstract class Migration extends MigrationBase {
       }
       catch (Exception $e) {
         self::displayMessage(
-          t('Migration failed with source plugin exception: !e',
-            array('!e' => $e->getMessage())));
+          t('Migration failed with source plugin exception: %e, in %file:%line',
+            array('%e' => $e->getMessage(), '%file' => $e->getFile(), '%line' => $e->getLine())));
         return MigrationBase::RESULT_FAILED;
       }
     }
@@ -1186,7 +1213,7 @@ abstract class Migration extends MigrationBase {
 
         // If there's a source mapping, and a source value in the data row, copy
         // to the destination
-        if ($source && property_exists($this->sourceValues, $source)) {
+        if ($source && isset($this->sourceValues->{$source})) {
           $destination_values = $this->sourceValues->$source;
         }
         // Otherwise, apply the default value (if any)
@@ -1250,8 +1277,11 @@ abstract class Migration extends MigrationBase {
         // Are we dealing with the primary value of the destination field, or a
         // subfield?
         $destination = explode(':', $destination);
+        // Count how many levels of fields are in the mapping. We'll use the
+        // last one.
+        $destination_count = count($destination);
         $destination_field = $destination[0];
-        if (isset($destination[1])) {
+	      if ($destination_count == 2) {
           $subfield = $destination[1];
           // We're processing the subfield before the primary value, initialize it
           if (!property_exists($this->destinationValues, $destination_field)) {
@@ -1265,6 +1295,24 @@ abstract class Migration extends MigrationBase {
           // Add the subfield value to the arguments array.
           $this->destinationValues->{$destination_field}['arguments'][$subfield] = $destination_values;
         }
+        elseif ($destination_count == 3) {
+	        $subfield2 = $destination[2];
+	        // We're processing the subfield before the primary value, initialize it
+	        if (!property_exists($this->destinationValues, $destination_field)) {
+		        $this->destinationValues->$destination_field = array();
+	        }
+	        // We have a value, and need to convert to an array so we can add
+	        // arguments.
+	        elseif (!is_array($this->destinationValues->$destination_field)) {
+		        $this->destinationValues->$destination_field = array($this->destinationValues->$destination_field);
+	        }
+	        if (!is_array($this->destinationValues->{$destination_field}['arguments'][$destination[1]])) {
+		        // Convert first subfield level to an array so we can add to it.
+		        $this->destinationValues->{$destination_field}['arguments'][$destination[1]] = array( $this->destinationValues->{$destination_field}['arguments'][$destination[1]] );
+	        }
+	        // Add the subfield value to the arguments array.
+	        $this->destinationValues->{$destination_field}['arguments'][$destination[1]]['arguments'][$subfield2] = $destination_values;
+        }
         // Just the primary value, the first time through for this field, simply
         // set it.
         elseif (!property_exists($this->destinationValues, $destination_field)) {
@@ -1272,7 +1320,8 @@ abstract class Migration extends MigrationBase {
         }
         // We've seen a subfield, so add as an array value.
         else {
-          $this->destinationValues->{$destination_field}[] = $destination_values;
+          $this->destinationValues->{$destination_field} = array_merge(
+            (array)$destination_values, $this->destinationValues->{$destination_field});
         }
       }
     }
@@ -1341,7 +1390,9 @@ abstract class Migration extends MigrationBase {
           break;
         }
       }
-      if ($continue || empty($source_key)) {
+      // Occasionally $source_key comes through with an empty string.
+      $sanity_check = array_filter($source_key);
+      if ($continue || empty($source_key) || empty($sanity_check)) {
         continue;
       }
       // Loop through each source migration, checking for an existing dest ID.
@@ -1531,9 +1582,7 @@ abstract class DynamicMigration extends Migration {
     parent::__construct($arguments);
     if (variable_get('migrate_deprecation_warnings', 1) &&
         !self::$deprecationWarning) {
-      self::displayMessage(t('The DynamicMigration class is no longer necessary ' .
-        'and is now deprecated - please derive your migration classes directly ' .
-        'from Migration.'));
+      self::displayMessage(t('The DynamicMigration class is no longer necessary and is now deprecated - please derive your migration classes directly from Migration.'));
       self::$deprecationWarning = TRUE;
     }
   }
