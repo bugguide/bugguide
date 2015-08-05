@@ -159,7 +159,7 @@ function bgimage_field_default_field_bases() {
   // Exported field_base: 'field_bgimage_gender'
   $field_bases['field_bgimage_gender'] = array(
     'active' => 1,
-    'cardinality' => 2,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_gender',
@@ -173,13 +173,13 @@ function bgimage_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        1 => 'Female',
-        2 => 'Male',
+        'female' => 'Female',
+        'male' => 'Male',
       ),
       'allowed_values_function' => '',
     ),
     'translatable' => 0,
-    'type' => 'list_integer',
+    'type' => 'list_text',
   );
 
   // Exported field_base: 'field_bgimage_id'
@@ -244,7 +244,7 @@ function bgimage_field_default_field_bases() {
   // Exported field_base: 'field_bgimage_life_stage'
   $field_bases['field_bgimage_life_stage'] = array(
     'active' => 1,
-    'cardinality' => 4,
+    'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_life_stage',
@@ -258,15 +258,15 @@ function bgimage_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        1 => 'Egg',
-        2 => 'Immature (caterpillar, nymph, etc.)',
-        4 => 'Pupa',
-        5 => 'Adult',
+        'egg' => 'Egg',
+        'immature' => 'Immature (caterpillar, nymph, etc.)',
+        'pupa' => 'Pupa',
+        'adult' => 'Adult',
       ),
       'allowed_values_function' => '',
     ),
     'translatable' => 0,
-    'type' => 'list_integer',
+    'type' => 'list_text',
   );
 
   // Exported field_base: 'field_bgimage_location'
