@@ -116,15 +116,17 @@ function bgimage_node_update($node) {
     return;
   }
 
-  $file = file_load($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid']);
+  if (!empty($node->field_bgimage_image[LANGUAGE_NONE])) {
+    $file = file_load($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid']);
 
-  // Mirror information to bgimage table for scalability.
-  // Note that we are inside node_save()'s database transaction.
-  $fields = _bgimage_prepare($node, $file);
-  $result = db_update('bgimage')
-    ->fields($fields)
-    ->condition('nid', $node->nid)
-    ->execute();
+    // Mirror information to bgimage table for scalability.
+    // Note that we are inside node_save()'s database transaction.
+    $fields = _bgimage_prepare($node, $file);
+    $result = db_update('bgimage')
+      ->fields($fields)
+      ->condition('nid', $node->nid)
+      ->execute();
+  }
 }
 
 function _bgimage_prepare($node, $data) {
