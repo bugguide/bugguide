@@ -33,7 +33,7 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
     );
 
     $query = db_select('bgimage', 'bgi');
-    $query->fields('bgi', array('nid', 'parent', 'base', 'id', 'location', 'size', 'date_taken', 'owner', 'county', 'location_code'));
+    $query->fields('bgi', array('nid', 'parent', 'base', 'id', 'location', 'size', 'date_taken', 'owner', 'county', 'location_code', 'male', 'female', 'adult', 'immature'));
     $this->source = new MigrateSourceSQL($query, array());
 
     // Set up our destination - nodes of type bgpage
@@ -50,6 +50,8 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
     $this->addFieldMapping('field_bgimage_copyright_owner', 'owner');
     $this->addFieldMapping('field_bgimage_county', 'county');
     $this->addFieldMapping('field_bgimage_location_code', 'location_code');
+    $this->addFieldMapping('field_bgimage_gender', 'gender');
+    $this->addFieldMapping('field_bgimage_life_stage', 'life_stage');
 
     $this->addUnmigratedDestinations(array(
       'title',
@@ -71,5 +73,29 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
       'body:language',
       'comment',
     ));
+  }
+
+  /**
+   * Called from the source plugin upon first pulling the raw data from the source.
+   */
+  public function prepareRow($row) {
+    // Prepare values for field_bgimage_gender.
+    $row->gender = array();
+    if ($row->female == 1) {
+      $row->gender[] = 'female';
+    }
+    if ($row->male == 1) {
+      $row->gender[] = 'male';
+    }
+
+    // Prepare values for field_bgimage_life_stage
+    $row->life_stage = array();
+    if ($row->adult == 1) {
+      $row->life_stage[] = 'adult';
+    }
+    if ($row->immature == 1) {
+      $row->life_stage[] = 'immature';
+    }
+    return parent::prepareRow($row);
   }
 }
