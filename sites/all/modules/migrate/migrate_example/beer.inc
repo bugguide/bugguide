@@ -133,8 +133,7 @@ class BeerTermMigration extends BasicExampleMigration {
     // Documenting your mappings makes it easier for the whole team to see
     // exactly what the status is when developing a migration process.
     $this->addFieldMapping('parent_name', 'style_parent')
-         ->description(t('The incoming style_parent field is the name of the ' .
-                         'term parent'));
+         ->description(t('The incoming style_parent field is the name of the term parent'));
 
     // Mappings are assigned issue groups, by which they are grouped on the
     // migration info page when the migrate_ui module is enabled. The default
@@ -425,15 +424,13 @@ class BeerNodeMigration extends BasicExampleMigration {
     // subfields of the same field may be grouped on the same line), and indent
     // subfields to distinguish them from top-level fields.
     $this->addUnmigratedDestinations(array(
-        'body:format', 'body:language',
+        'body:format',
       'changed',
       'comment',
       'created',
-        'field_migrate_example_country:language',
         'field_migrate_example_image:destination_dir',
         'field_migrate_example_image:destination_file',
         'field_migrate_example_image:file_replace',
-        'field_migrate_example_image:language',
         'field_migrate_example_image:preserve_files',
         'field_migrate_example_image:urlencode',
       'is_new',
@@ -516,7 +513,7 @@ class BeerCommentMigration extends BasicExampleMigration {
     // Unmapped destination fields
     $this->addUnmigratedDestinations(array(
       'changed',
-        'comment_body:format', 'comment_body:language',
+        'comment_body:format',
       'created',
       'homepage',
       'hostname',

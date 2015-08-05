@@ -60,7 +60,10 @@ class MigratePollEntityHandler extends MigrateDestinationHandler {
     $this->registerTypes(array('node'));
   }
 
-  public function fields($entity_type, $bundle) {
+  /**
+   * Implementation of MigrateDestinationHandler::fields().
+   */
+  public function fields($entity_type, $bundle, $migration = NULL) {
     if ($bundle == 'poll') {
       $fields = array(
         'active' => t('Active status'),
@@ -97,14 +100,16 @@ class MigratePollEntityHandler extends MigrateDestinationHandler {
 
       // Insert actual votes.
       foreach ($row->votes as $vote) {
-        $chid = $vote['chid'];
-        if (!isset($chid)) {
+        if (!isset($vote['chid'])) {
           $result = db_select('poll_choice', 'pc')
                   ->fields('pc', array('chid'))
                   ->condition('pc.nid', $entity->nid)
                   ->condition('pc.chtext', $vote['chtext'])
                   ->execute();
           $chid = $result->fetchField();
+        }
+        else {
+          $chid = $vote['chid'];
         }
         db_insert('poll_vote')
           ->fields(array(

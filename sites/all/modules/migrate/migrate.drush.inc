@@ -18,6 +18,7 @@ function migrate_drush_command() {
     'force' => 'Force an operation to run, even if all dependencies are not satisfied',
     'group' => 'Name of the migration group to run',
     'notify' => 'Send email notification upon completion of operation',
+    'wildcard' => 'Process migrations that match a certain pattern. For example, Content*.',
   );
   $items['migrate-status'] = array(
     'description' => 'List all migrations with current status.',
@@ -131,8 +132,6 @@ function migrate_drush_command() {
   $items['migrate-rollback'] = array(
     'description' => 'Roll back the destination objects from a given migration',
     'options' => $migration_options,
-    // We will bootstrap to login from within the command callback.
-    'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
     'arguments' => array(
       'migration' => 'Name of migration(s) to roll back. Delimit multiple using commas.',
     ),
@@ -152,6 +151,7 @@ function migrate_drush_command() {
   $migration_options['stop'] = 'Stop specified migration(s) if applicable.';
   $migration_options['rollback'] = 'Rollback specified migration(s) if applicable.';
   $migration_options['file_function'] = 'Override file function to use when migrating images.';
+  $migration_options['ignore-highwater'] = 'Ignore the highwater field during migration';
   $items['migrate-import'] = array(
     'description' => 'Perform one or more migration processes',
     'options' => $migration_options,
@@ -162,6 +162,7 @@ function migrate_drush_command() {
       'migrate-import Article' => 'Import new articles',
       'migrate-import Article --update' => 'Import new items, and also update previously-imported items',
       'migrate-import Article --idlist=4,9' => 'Import two specific articles. The ids refer to the value of the primary key in base table',
+      'migrate-import Article --idlist=450:pasta,451' => 'Import two specific articles. A colon can be used to separate parts of compound keys; otherwise, compound keys match by the first key field.',
       'migrate-import Article --limit="60 seconds" --stop --rollback' =>
         'Import for up to 60 seconds after stopping and rolling back the Article migration.',
       'migrate-import Article --limit="100 items"' =>
@@ -174,7 +175,8 @@ function migrate_drush_command() {
   );
   $items['migrate-stop'] = array(
     'description' => 'Stop an active migration operation',
-    'options' => array('all' => 'Stop all active migration operations'),
+    'options' => array('all' => 'Stop all active migration operations',
+      'group' => 'Name of a specific migration group to stop'),
     'arguments' => array(
       'migration' => 'Name of migration to stop',
     ),
@@ -215,12 +217,12 @@ function migrate_drush_command() {
     'drupal dependencies' => array('migrate'),
   );
   $items['migrate-auto-register'] = array(
-    'description' => 'Register any newly-defined migration classes',
+    'description' => 'Register any newly defined migration classes',
     'drupal dependencies' => array('migrate'),
     'aliases' => array('mar'),
   );
   $items['migrate-register'] = array(
-    'description' => 'Register or reregister any statically-defined migrations',
+    'description' => 'Register or reregister any statically defined migrations',
     'drupal dependencies' => array('migrate'),
     'aliases' => array('mreg'),
   );
@@ -247,9 +249,11 @@ function migrate_drush_command() {
  */
 function drush_migrate_get_options() {
   $options = array();
-  $blacklist = array('stop', 'rollback', 'update', 'all');
+  $blacklist = array('stop', 'rollback', 'update', 'all', 'group');
   $command = drush_parse_command();
-  foreach ($command['options'] as $key => $value) {
+  $global_options = drush_get_global_options();
+  $opts = array_merge($command['options'], $global_options);
+  foreach ($opts as $key => $value) {
     // Strip leading --
     $key = ltrim($key, '-');
     if (!in_array($key, $blacklist)) {
@@ -576,6 +580,10 @@ function drush_migrate_mappings($args = NULL) {
  * Display messages for a migration.
  */
 function drush_migrate_messages($migration_name) {
+  if (!trim($migration_name)) {
+    drush_log(dt('You must specify a migration name'), 'status');
+    return;
+  }
   try {
     $migration = MigrationBase::getInstance($migration_name);
     if (is_a($migration, 'Migration')) {
@@ -818,15 +826,6 @@ function drush_migrate_rollback($args = NULL) {
       // Capture non-informational output for mailing
       ob_start();
       ob_implicit_flush(FALSE);
-      // Save original mail setup, which Migrate will disable, so we can
-      // restore it later.
-      global $conf;
-      if (!empty($conf['mail_system'])) {
-        $mail_system = $conf['mail_system'];
-      }
-      else {
-        $mail_system = NULL;
-      }
     }
 
     $migrations = drush_migrate_get_migrations($args);
@@ -922,12 +921,6 @@ function drush_migrate_rollback($args = NULL) {
 
   // Notify user
   if (drush_get_option('notify')) {
-    if (is_null($mail_system)) {
-      unset($conf['mail_system']);
-    }
-    else {
-      $conf['mail_system'] = $mail_system;
-    }
     _drush_migrate_notify();
   }
 }
@@ -960,7 +953,7 @@ function drush_migrate_get_migrations($args) {
     $seen = $start === TRUE ? TRUE : FALSE;
 
     foreach ($migration_objects as $name => $migration) {
-      if (!$seen && (drupal_strtolower($start) . 'migration' == drupal_strtolower($name))) {
+      if (!$seen && (drupal_strtolower($start) == drupal_strtolower($name))) {
         // We found our starting migration. $seen is always TRUE now.
         $seen = TRUE;
       }
@@ -975,6 +968,14 @@ function drush_migrate_get_migrations($args) {
       if (drupal_strtolower($group) !=
           drupal_strtolower($migration->getGroup()->getName()) ||
             !$migration->getEnabled()) {
+        unset($migration_objects[$name]);
+      }
+    }
+  }
+  elseif ($wildcard = drush_get_option('wildcard')) {
+    foreach ($migration_objects as $name => $migration) {
+      if (!fnmatch(drupal_strtolower($wildcard), drupal_strtolower($name)) ||
+        !$migration->getEnabled()) {
         unset($migration_objects[$name]);
       }
     }
@@ -1051,18 +1052,23 @@ function drush_migrate_rollback_validate($args = NULL) {
 
 function drush_migrate_validate_common($args) {
   if (drush_get_option('all')) {
-    if (!empty($args) || drush_get_option('group')) {
-      return drush_set_error(NULL, dt('You must specify exactly one of a migration name, --all, or --group'));
+    if (!empty($args) || drush_get_option('group') || drush_get_option('wildcard')) {
+      return drush_set_error(NULL, dt('You must specify exactly one of a migration name, --all, or --group, or --wildcard'));
     }
   }
   elseif (drush_get_option('group')) {
-    if (!empty($args) || drush_get_option('all')) {
-      return drush_set_error(NULL, dt('You must specify exactly one of a migration name, --all, or --group'));
+    if (!empty($args) || drush_get_option('all') || drush_get_option('wildcard')) {
+      return drush_set_error(NULL, dt('You must specify exactly one of a migration name, --all, or --group, or --wildcard'));
+    }
+  }
+  elseif (drush_get_option('wildcard')) {
+    if (!empty($args) || drush_get_option('all') || drush_get_option('group')) {
+      return drush_set_error(NULL, dt('You must specify exactly one of a migration name, --all, or --group, or --wildcard'));
     }
   }
   else {
     if (empty($args)) {
-      return drush_set_error(NULL, dt('You must specify exactly one of a migration name, --all, or --group'));
+      return drush_set_error(NULL, dt('You must specify exactly one of a migration name, --all, or --group, or --wildcard'));
     }
     $machine_names = explode(',', $args);
 
@@ -1101,7 +1107,29 @@ function drush_migrate_validate_common($args) {
  */
 function drush_migrate_pre_migrate_import($args = NULL) {
   if (drush_get_option('stop')) {
-    drush_invoke('migrate-stop', $args);
+    drush_unset_option('stop');
+    try {
+      /** @var Migration[] $migrations */
+      $migrations = drush_migrate_get_migrations($args);
+      foreach ($migrations as $migration) {
+        $status = $migration->getStatus();
+        if ($status == MigrationBase::STATUS_IMPORTING ||
+            $status == MigrationBase::STATUS_ROLLING_BACK) {
+          drush_log(dt("Stopping '!description' migration", array('!description' => $migration->getMachineName())));
+          $migration->stopProcess();
+          // Give the process a chance to stop.
+          $count = 0;
+          while ($migration->getStatus() != MigrationBase::STATUS_IDLE
+                 && $count++ < 5) {
+            sleep(1);
+          }
+        }
+      }
+    }
+    catch (MigrateException $e) {
+      drush_print($e->getMessage());
+      exit;
+    }
   }
   if (drush_get_option('rollback')) {
     drush_unset_option('rollback');
@@ -1121,15 +1149,6 @@ function drush_migrate_import($args = NULL) {
       // Capture non-informational output for mailing
       ob_start();
       ob_implicit_flush(FALSE);
-      // Save original mail setup, which Migrate will disable, so we can
-      // restore it later.
-      global $conf;
-      if (!empty($conf['mail_system'])) {
-        $mail_system = $conf['mail_system'];
-      }
-      else {
-        $mail_system = NULL;
-      }
     }
     $migrations = drush_migrate_get_migrations($args);
     $options = array();
@@ -1194,6 +1213,10 @@ function drush_migrate_import($args = NULL) {
         array('!description' => $machine_name)));
       if (drush_get_option('update') && !$idlist) {
         $migration->prepareUpdate();
+
+        if (drush_get_option('ignore-highwater')) {
+          $migration->setHighwaterField(array());
+        }
       }
       if (drush_get_option('needs-update')) {
         $map_rows = $migration->getMap()->getRowsNeedingUpdate(10000);
@@ -1284,12 +1307,6 @@ function drush_migrate_import($args = NULL) {
 
   // Notify user
   if (drush_get_option('notify')) {
-    if (is_null($mail_system)) {
-      unset($conf['mail_system']);
-    }
-    else {
-      $conf['mail_system'] = $mail_system;
-    }
     _drush_migrate_notify();
   }
 }
