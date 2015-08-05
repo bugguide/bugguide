@@ -46,59 +46,59 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
          ->description(t('Node ID'));
     $this->addFieldMapping('field_parent', 'parent')
          ->description(t('Parent'));
-   $this->addFieldMapping('field_other_common_names', 'names')
-         ->description(t('Other common names'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_counts', 'counts')
-         ->description(t('Counts'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_size', 'size')
-         ->description(t('Size'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_id', 'id')
-         ->description(t('ID'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_range', 'raynge')
-         ->description(t('Range'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_habitat', 'habitat')
-         ->description(t('Habitat'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_season', 'season')
-         ->description(t('Season'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_food', 'food')
-         ->description(t('Food'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_life_cycle', 'life_cycle')
-         ->description(t('Life Cycle'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_pronunciation', 'pronunciation')
-         ->description(t('Pronunciation'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_etymology', 'etymology')
-         ->description(t('Etymology'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_synonyms', 'synonyms')
-         ->description(t('Synonyms'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_taxon', 'taxon')
+    $this->addFieldMapping('field_other_common_names', 'names')
+         ->description(t('Other common names'));
+    $this->addFieldMapping('field_other_common_names:format')->defaultValue(1);
+    $this->addFieldMapping('field_counts', 'counts')
+         ->description(t('Counts'));
+    $this->addFieldMapping('field_counts:format')->defaultValue(1);
+    $this->addFieldMapping('field_size', 'size')
+         ->description(t('Size'));
+    $this->addFieldMapping('field_size:format')->defaultValue(1);
+    $this->addFieldMapping('field_id', 'id')
+         ->description(t('ID'));
+    $this->addFieldMapping('field_id:format')->defaultValue(1);
+    $this->addFieldMapping('field_range', 'raynge')
+         ->description(t('Range'));
+    $this->addFieldMapping('field_range:format')->defaultValue(1);
+    $this->addFieldMapping('field_habitat', 'habitat')
+         ->description(t('Habitat'));
+    $this->addFieldMapping('field_habitat:format')->defaultValue(1);
+    $this->addFieldMapping('field_season', 'season')
+         ->description(t('Season'));
+    $this->addFieldMapping('field_season:format')->defaultValue(1);
+    $this->addFieldMapping('field_food', 'food')
+         ->description(t('Food'));
+    $this->addFieldMapping('field_food:format')->defaultValue(1);
+    $this->addFieldMapping('field_life_cycle', 'life_cycle')
+         ->description(t('Life Cycle'));
+    $this->addFieldMapping('field_life_cycle:format')->defaultValue(1);
+    $this->addFieldMapping('field_pronunciation', 'pronunciation')
+         ->description(t('Pronunciation'));
+    $this->addFieldMapping('field_pronunciation:format')->defaultValue(1);
+    $this->addFieldMapping('field_etymology', 'etymology')
+         ->description(t('Etymology'));
+    $this->addFieldMapping('field_etymology:format')->defaultValue(1);
+    $this->addFieldMapping('field_synonyms', 'synonyms')
+         ->description(t('Synonyms'));
+    $this->addFieldMapping('field_synonyms:format')->defaultValue(1);
+    $this->addFieldMapping('field_taxon', 'taxon')
          ->description(t('Taxon'));
-   $this->addFieldMapping('field_hodges_number', 'hodges_numbers')
+    $this->addFieldMapping('field_hodges_number', 'hodges_numbers')
          ->description(t('Hodges Number'));
-   $this->addFieldMapping('field_editors', 'uids')
+    $this->addFieldMapping('field_editors', 'uids')
          ->description(t('Editors'));
-   $this->addFieldMapping('field_location_codes', 'location_codes')
+    $this->addFieldMapping('field_location_codes', 'location_codes')
          ->description(t('Location Codes'));
-   $this->addFieldMapping('field_see_also', 'see_also')
-         ->description(t('See also'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_print_references', 'print_references')
-         ->description(t('Print references'))
-         ->arguments(array('format' => 1));
-   $this->addFieldMapping('field_internet_references', 'web_references')
-         ->description(t('Internet references'))
-         ->arguments(array('format' => 1));
+    $this->addFieldMapping('field_see_also', 'see_also')
+         ->description(t('See also'));
+    $this->addFieldMapping('field_see_also:format')->defaultValue(1);
+    $this->addFieldMapping('field_print_references', 'print_references')
+         ->description(t('Print references'));
+    $this->addFieldMapping('field_print_references:format')->defaultValue(1);
+    $this->addFieldMapping('field_internet_references', 'web_references')
+         ->description(t('Internet references'));
+    $this->addFieldMapping('field_internet_references:format')->defaultValue(1);
 
     $this->addUnmigratedDestinations(array(
       'title',
@@ -118,47 +118,7 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
       'body:summary',
       'body:format',
       'body:language',
-      'field_common_name',
-      'field_common_name:language',
-      'field_counts:format',
-      'field_counts:language',
-      'field_editors:language',
-      'field_etymology:format',
-      'field_etymology:language',
-      'field_food:format',
-      'field_food:language',
-      'field_habitat:format',
-      'field_habitat:language',
-      'field_id:language',
-      'field_id:format',
-      'field_internet_references:format',
-      'field_internet_references:language',
-      'field_life_cycle:format',
-      'field_life_cycle:language',
-      'field_location_codes:language',
-      'field_other_common_names:format',
-      'field_other_common_names:language',
-      'field_parent:language',
-      'field_print_references:format',
-      'field_print_references:language',
-      'field_pronunciation:format',
-      'field_pronunciation:language',
-      'field_range:format',
-      'field_range:language',
-      'field_remarks',
-      'field_remarks:format',
-      'field_remarks:language',
-      'field_representative_images',
-      'field_representative_images:language',
-      'field_scientific_name:language',
-      'field_season:format',
-      'field_season:language',
-      'field_see_also:format',
-      'field_see_also:language',
-      'field_size:format',
-      'field_size:language',
-      'field_synonyms:format',
-      'field_synonyms:language',
+      'field_bgimage_image',
       'comment',
     ));
   }
