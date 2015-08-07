@@ -282,10 +282,6 @@ function bgpage_entity_load($entities, $type) {
       $entities[$parent_nid]->id = $parent_nid;
     }
 
-    if (isset($parent_nid)) {
-      $node->immediate_parent = $parent_nid;
-    }
-
     $field_taxon_info = field_info_field('field_taxon');
     $options = array(
       'field_id' => $field_taxon_info['id'],

@@ -33,10 +33,13 @@ function bg_node_to_arg($arg, $map, $index) {
     return NULL;
   }
   $node = node_load($arg);
-  if ($node->type == 'bgimage' || $node->type == 'bglink' || $node->type == 'bgref') {
-    return $node->immediate_parent;
+  $nid = bg_get_parent_nid($node);
+  if ($nid) {
+   return $nid;
   }
-  return $arg;
+  else {
+   return $arg;
+  }
 }
 
 /**
@@ -93,7 +96,7 @@ function bg_menu_access($nid) {
     return FALSE;
   }
   $node = node_load($nid);
-  $pid = !empty($node->immediate_parent) ? $node->immediate_parent : NULL;
+  $pid = bg_get_parent_nid($node);
   // No tabs on ID Request (6) or Frass (9410).
   if (user_access('access content') && ($pid != BG_ID_REQUEST_NID) && ($pid != BG_FRASS_NID)) {
     $show = array(
@@ -422,3 +425,19 @@ function bg_field_load_multiple($field, $entities) {
   return $entities;
 }
 
+/**
+ * Returns a node's immediate parent nid.
+ *
+ * @param object @node
+ * @return mixed
+ *   int when there is a parent nid.
+ *   NULL when there is no parent nid.
+ */
+function bg_get_parent_nid($node) {
+  $nid = NULL;
+  if (isset($node->field_parent) && !empty($node->field_parent[LANGUAGE_NONE])) {
+    $parents = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
+    $nid = end($parents);
+  }
+  return $nid;
+}
