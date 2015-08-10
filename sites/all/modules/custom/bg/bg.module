@@ -185,6 +185,7 @@ function _bg_filter_list_item_process($text, $filter, $format) {
  * BG cite filter process clallback.
  */
 function _bg_filter_cite_process($text, $filter, $format) {
+  $nodes = &drupal_static(__FUNCTION__ . '_nodes', array());
   if (preg_match_all("/\[cite(all)?:(\d+)(,(\d+))?(,(\d+))?\]/i", $text, $match)) {
     // Fetch the static variable where we gather citations from all fields.
     $all_cited = &drupal_static('bg_all_cited', array());
@@ -196,6 +197,13 @@ function _bg_filter_cite_process($text, $filter, $format) {
         $all_cited[$nid]->cite_index++;
       }
       else {
+        if (!in_array($nid, $nodes)) {
+          $nodes[] = $nid;
+        }
+        else {
+          // Short circuit infinite loops.
+          return $text;
+        }
         $all_cited[$nid] = node_load($nid);
         $all_cited[$nid]->cite_index = 1;
       }
