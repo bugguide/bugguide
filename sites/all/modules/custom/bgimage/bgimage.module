@@ -130,18 +130,15 @@ function bgimage_node_update($node) {
 }
 
 function _bgimage_prepare($node, $data) {
-  $custom_tags = array();
-  foreach ($node->{'field_bgimage_custom_tag'}[LANGUAGE_NONE] as $tag) {
-    $custom_tags[] = $tag['value'];
-  }
+  $wrapper = entity_metadata_wrapper('node', $node);
 
   $male = 0;
   $female = 0;
-  foreach ($node->{'field_bgimage_gender'}[LANGUAGE_NONE] as $checkbox) {
-    if ($checkbox['value'] == '1') {
+  foreach ($wrapper->field_bgimage_gender->value() as $selected_value) {
+    if ($selected_value == 'female') {
       $female = 1;
     }
-    if ($checkbox['value'] == '2') {
+    elseif ($selected_value == 'male') {
       $male = 1;
     }
   }
@@ -150,33 +147,44 @@ function _bgimage_prepare($node, $data) {
   $immature = 0;
   $pupa = 0;
   $adult = 0;
-  foreach ($node->{'field_bgimage_life_stage'}[LANGUAGE_NONE] as $checkbox) {
-    if ($checkbox['value'] == '2') {
+  foreach ($wrapper->field_bgimage_life_stage->value() as $selected_value) {
+    if ($selected_value == 'immature') {
       $immature = 1;
     }
-    if ($checkbox['value'] == '4') {
+    elseif ($selected_value == 'adult') {
       $adult = 1;
     }
   }
 
+  // Fetch image details.
+  $width = 0;
+  $height = 0;
+  $filesize = 0;
+  $image_data = $wrapper->field_bgimage_image->value();
+  if (!empty($image_data)) {
+    $width = $image_data['width'];
+    $height = $image_data['height'];
+    // Oopsie, the field does not store the filesize.
+  }
+
   $fields = array(
     'nid' => $node->nid,
-    'parent' => $node->{'field_parent'}[LANGUAGE_NONE][0]['value'],
-    'parent_idx' => $node->{'field_parent'}[LANGUAGE_NONE][0]['value'] . ',',
-    'id' => implode(' ', $custom_tags), // field_bgimage_custom_tag
-    'date_taken' => strtotime($node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value']),
-    'width' => $node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['width'],
-    'height' => $node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['width'],
-    'filesize' => $data->filesize,
+    'parent' => $wrapper->field_parent->value(),
+    'parent_idx' => $wrapper->field_parent->value() . ',',
+    'id' => $wrapper->field_bgimage_id->value(),
+    'date_taken' => $wrapper->field_bgimage_date->value(),
+    'width' => $width,
+    'height' => $height,
+    'filesize' => $filesize,
     'weight' => 0,
     'representative' => 0,
-    'male' => $male, // field_bgimage_gender checkboxes 1
+    'male' => $male,
     'female' => $female,
-    'adult' => $adult, // field_bgimage_life_stage
-    'immature' => $immature, // field_bgimage_life_stage
-    'size' => isset($node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value'] : '',
-    'owner' => isset($node->{'field_bgimage_copyright_owner'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_copyright_owner'}[LANGUAGE_NONE][0]['value'] : '',
-    'county' => isset($node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] : ''
+    'adult' => $adult,
+    'immature' => $immature,
+    'size' => $wrapper->field_bgimage_size->value(),
+    'owner' => $wrapper->field_bgimage_copyright_owner->value(),
+    'county' => $wrapper->field_bgimage_county->value(),
   );
 
   return $fields;
