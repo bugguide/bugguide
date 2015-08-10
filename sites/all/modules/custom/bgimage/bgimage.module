@@ -38,6 +38,10 @@ function bgimage_node_validate($node, $form, &$form_state) {
     }
   }
 
+  if ($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid'] == 0) {
+    form_set_error('field_bgimage_image', 'Did you forget to attach an image? Please attach one and resubmit.');
+  }
+
   if ($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value'] === NULL) {
     $form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value'] = $form_state['values']['created'];
   }
@@ -94,6 +98,89 @@ function bgimage_node_insert($node) {
   // Move file into scalable file area, e.g.
   // files/raw/7H3/HEH/7H3HEHUZ6H3HMLUZ8LWZUHLRUHVZMLZR5LAZ8LUZ6HBH0L6Z4H6ZLLOHIHBHQL5Z8H.jpg
   $result = file_move($file, $directory . $obfuscate . '.jpg');
+
+  // Mirror information to bgimage table for scalability.
+  // Note that we are inside node_save()'s database transaction.
+  $fields = _bgimage_prepare($node, $file);
+  $fields['base'] = $node->bgimage_uuid;
+  $result = db_insert('bgimage')
+    ->fields($fields)
+    ->execute();
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function bgimage_node_update($node) {
+  if ($node->type != 'bgimage') {
+    return;
+  }
+
+  if (!empty($node->field_bgimage_image[LANGUAGE_NONE])) {
+    $file = file_load($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid']);
+
+    // Mirror information to bgimage table for scalability.
+    // Note that we are inside node_save()'s database transaction.
+    $fields = _bgimage_prepare($node, $file);
+    $result = db_update('bgimage')
+      ->fields($fields)
+      ->condition('nid', $node->nid)
+      ->execute();
+  }
+}
+
+function _bgimage_prepare($node, $data) {
+  $custom_tags = array();
+  foreach ($node->{'field_bgimage_custom_tag'}[LANGUAGE_NONE] as $tag) {
+    $custom_tags[] = $tag['value'];
+  }
+
+  $male = 0;
+  $female = 0;
+  foreach ($node->{'field_bgimage_gender'}[LANGUAGE_NONE] as $checkbox) {
+    if ($checkbox['value'] == '1') {
+      $female = 1;
+    }
+    if ($checkbox['value'] == '2') {
+      $male = 1;
+    }
+  }
+
+  $egg = 0;
+  $immature = 0;
+  $pupa = 0;
+  $adult = 0;
+  foreach ($node->{'field_bgimage_life_stage'}[LANGUAGE_NONE] as $checkbox) {
+    if ($checkbox['value'] == '2') {
+      $immature = 1;
+    }
+    if ($checkbox['value'] == '4') {
+      $adult = 1;
+    }
+  }
+
+  $fields = array(
+    'nid' => $node->nid,
+    'parent' => $node->{'field_parent'}[LANGUAGE_NONE][0]['value'],
+    'parent_idx' => $node->{'field_parent'}[LANGUAGE_NONE][0]['value'] . ',',
+    'id' => implode(' ', $custom_tags), // field_bgimage_custom_tag
+    'date_taken' => strtotime($node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value']),
+    'width' => $node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['width'],
+    'height' => $node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['width'],
+    'filesize' => $data->filesize,
+    'weight' => 0,
+    'representative' => 0,
+    'male' => $male, // field_bgimage_gender checkboxes 1
+    'female' => $female,
+    'adult' => $adult, // field_bgimage_life_stage
+    'immature' => $immature, // field_bgimage_life_stage
+    'size' => isset($node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value'] : '',
+    'owner' => isset($node->{'field_bgimage_copyright_owner'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_copyright_owner'}[LANGUAGE_NONE][0]['value'] : '',
+    'county' => isset($node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value']) ? $node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['value'] : ''
+  );
+
+  return $fields;
+
 }
 
 /**
