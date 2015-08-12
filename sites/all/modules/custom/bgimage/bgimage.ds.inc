@@ -23,19 +23,24 @@ function bgimage_ds_field_settings_info() {
       'format' => 'default',
     ),
     'comments' => array(
-      'weight' => '8',
+      'weight' => '9',
       'label' => 'hidden',
       'format' => 'default',
     ),
     'changed_date' => array(
-      'weight' => '7',
+      'weight' => '8',
       'label' => 'hidden',
       'format' => 'ds_post_date_long',
     ),
     'submitted_by' => array(
-      'weight' => '6',
+      'weight' => '7',
       'label' => 'hidden',
       'format' => 'ds_time_ago',
+    ),
+    'bgimage_related' => array(
+      'weight' => '6',
+      'label' => 'hidden',
+      'format' => 'default',
     ),
   );
   $export['node|bgimage|default'] = $ds_fieldsetting;
@@ -65,9 +70,10 @@ function bgimage_ds_layout_settings_info() {
         3 => 'field_bgimage_date',
         4 => 'field_bgimage_size',
         5 => 'body',
-        6 => 'submitted_by',
-        7 => 'changed_date',
-        8 => 'comments',
+        6 => 'bgimage_related',
+        7 => 'submitted_by',
+        8 => 'changed_date',
+        9 => 'comments',
       ),
     ),
     'fields' => array(
@@ -77,6 +83,7 @@ function bgimage_ds_layout_settings_info() {
       'field_bgimage_date' => 'ds_content',
       'field_bgimage_size' => 'ds_content',
       'body' => 'ds_content',
+      'bgimage_related' => 'ds_content',
       'submitted_by' => 'ds_content',
       'changed_date' => 'ds_content',
       'comments' => 'ds_content',
@@ -92,6 +99,34 @@ function bgimage_ds_layout_settings_info() {
     'layout_link_custom' => '',
   );
   $export['node|bgimage|default'] = $ds_layout;
+
+  $ds_layout = new stdClass();
+  $ds_layout->api_version = 1;
+  $ds_layout->id = 'node|bgimage|teaser';
+  $ds_layout->entity_type = 'node';
+  $ds_layout->bundle = 'bgimage';
+  $ds_layout->view_mode = 'teaser';
+  $ds_layout->layout = 'ds_1col';
+  $ds_layout->settings = array(
+    'regions' => array(
+      'ds_content' => array(
+        0 => 'field_bgimage_image',
+      ),
+    ),
+    'fields' => array(
+      'field_bgimage_image' => 'ds_content',
+    ),
+    'classes' => array(),
+    'wrappers' => array(
+      'ds_content' => 'div',
+    ),
+    'layout_wrapper' => 'div',
+    'layout_attributes' => '',
+    'layout_attributes_merge' => 1,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
+  );
+  $export['node|bgimage|teaser'] = $ds_layout;
 
   return $export;
 }
