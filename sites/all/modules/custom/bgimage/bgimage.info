@@ -20,6 +20,7 @@ features[ctools][] = ds:ds:1
 features[ctools][] = strongarm:strongarm:1
 features[ds_field_settings][] = node|bgimage|default
 features[ds_layout_settings][] = node|bgimage|default
+features[ds_layout_settings][] = node|bgimage|teaser
 features[features_api][] = api:2
 features[field_base][] = body
 features[field_base][] = field_bgimage_base

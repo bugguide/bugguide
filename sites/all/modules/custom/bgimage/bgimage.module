@@ -7,6 +7,25 @@
 include_once 'bgimage.features.inc';
 include_once './images/image_obfuscate.inc';
 
+/**
+ * Implements hook_ds_fields_info().
+ */
+function bgimage_ds_fields_info($entity_type) {
+  $fields = array();
+
+  if ($entity_type == 'node') {
+    $fields['bgimage_related'] = array(
+      'title' => t('Related images'),
+      'description' => t('Renders related images for an specimen.'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bgimage_field_related_images',
+      'file' => drupal_get_path('module', 'bgimage') . '/bgimage.ds.field.inc',
+    );
+
+    return array($entity_type => $fields);
+  }
+  return;
+}
 
 function bgimage_node_validate($node, $form, &$form_state) {
   if ($node->type != 'bgimage') {
