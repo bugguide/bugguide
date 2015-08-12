@@ -13,6 +13,7 @@ dependencies[] = bgref
 dependencies[] = bgstat
 dependencies[] = bguserfields
 dependencies[] = ctools
+dependencies[] = date_popup
 dependencies[] = diff
 dependencies[] = ds
 dependencies[] = entity
