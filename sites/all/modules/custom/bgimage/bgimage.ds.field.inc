@@ -12,6 +12,21 @@ function _bgimage_field_photo_number($field) {
 }
 
 /**
+ * Callback to render a copyright statement.
+ */
+function _bgimage_field_copyright($field) {
+  $node = $field['entity'];
+  if (!isset($node->uid)) {
+    return;
+  }
+  $user_wrapper = entity_metadata_wrapper('user', $node->uid);
+  if (!$user_wrapper) {
+    return;
+  }
+  return 'Copyright &copy; ' . l($user_wrapper->field_user_full_name->value(), 'user/' . $node->uid);
+}
+
+/**
  * Callback to render related images.
  */
 function _bgimage_field_related_images($field) {
