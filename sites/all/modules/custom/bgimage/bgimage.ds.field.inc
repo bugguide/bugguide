@@ -3,6 +3,13 @@
  * @file
  * Display suite callbacks for bgimage module.
  */
+/**
+ * Callback to render photo number.
+ */
+function _bgimage_field_photo_number($field) {
+  $node = $field['entity'];
+  return 'Photo #' . $node->nid;
+}
 
 /**
  * Callback to render related images.
