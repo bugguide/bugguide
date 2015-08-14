@@ -142,7 +142,7 @@ function bgimage_node_update($node) {
 function _bgimage_obfuscate_uploaded_image($node) {
   // Even though the image field is required, during migration it may not be
   // present.
-  if (count($node->{'field_bgimage_image'}[LANGUAGE_NONE])) {
+  if (isset($node->field_bgimage_image[LANGUAGE_NONE])) {
     $node->bgimage_uuid = md5(rand());
     $obfuscate = image_obfuscate($node->bgimage_uuid);
     $prefix = bgimage_get_prefix($obfuscate);
