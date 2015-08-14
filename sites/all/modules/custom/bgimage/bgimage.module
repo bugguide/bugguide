@@ -22,6 +22,14 @@ function bgimage_ds_fields_info($entity_type) {
       'file' => drupal_get_path('module', 'bgimage') . '/bgimage.ds.field.inc',
     );
 
+    $fields['bgimage_copyright'] = array(
+      'title' => t('Photo copyright'),
+      'description' => t('Renders a copyright statement.'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bgimage_field_copyright',
+      'file' => drupal_get_path('module', 'bgimage') . '/bgimage.ds.field.inc',
+    );
+
     $fields['bgimage_related'] = array(
       'title' => t('Related images'),
       'description' => t('Renders related images for an specimen.'),
