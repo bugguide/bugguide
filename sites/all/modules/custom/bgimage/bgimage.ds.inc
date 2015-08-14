@@ -18,27 +18,32 @@ function bgimage_ds_field_settings_info() {
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
     'title' => array(
-      'weight' => '1',
+      'weight' => '2',
       'label' => 'hidden',
       'format' => 'default',
     ),
     'comments' => array(
-      'weight' => '9',
+      'weight' => '10',
       'label' => 'hidden',
       'format' => 'default',
     ),
     'changed_date' => array(
-      'weight' => '8',
+      'weight' => '9',
       'label' => 'hidden',
       'format' => 'ds_post_date_long',
     ),
     'submitted_by' => array(
-      'weight' => '7',
+      'weight' => '8',
       'label' => 'hidden',
       'format' => 'ds_time_ago',
     ),
+    'bgimage_photo_number' => array(
+      'weight' => '0',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
     'bgimage_related' => array(
-      'weight' => '6',
+      'weight' => '7',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -64,19 +69,21 @@ function bgimage_ds_layout_settings_info() {
   $ds_layout->settings = array(
     'regions' => array(
       'ds_content' => array(
-        0 => 'field_bgimage_image',
-        1 => 'title',
-        2 => 'field_bgimage_location',
-        3 => 'field_bgimage_date',
-        4 => 'field_bgimage_size',
-        5 => 'body',
-        6 => 'bgimage_related',
-        7 => 'submitted_by',
-        8 => 'changed_date',
-        9 => 'comments',
+        0 => 'bgimage_photo_number',
+        1 => 'field_bgimage_image',
+        2 => 'title',
+        3 => 'field_bgimage_location',
+        4 => 'field_bgimage_date',
+        5 => 'field_bgimage_size',
+        6 => 'body',
+        7 => 'bgimage_related',
+        8 => 'submitted_by',
+        9 => 'changed_date',
+        10 => 'comments',
       ),
     ),
     'fields' => array(
+      'bgimage_photo_number' => 'ds_content',
       'field_bgimage_image' => 'ds_content',
       'title' => 'ds_content',
       'field_bgimage_location' => 'ds_content',

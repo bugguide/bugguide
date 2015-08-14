@@ -14,6 +14,14 @@ function bgimage_ds_fields_info($entity_type) {
   $fields = array();
 
   if ($entity_type == 'node') {
+    $fields['bgimage_photo_number'] = array(
+      'title' => t('Photo number'),
+      'description' => t('Renders photo number as Photo #123456.'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bgimage_field_photo_number',
+      'file' => drupal_get_path('module', 'bgimage') . '/bgimage.ds.field.inc',
+    );
+
     $fields['bgimage_related'] = array(
       'title' => t('Related images'),
       'description' => t('Renders related images for an specimen.'),
