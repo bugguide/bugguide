@@ -129,6 +129,7 @@ class DateMigrateFieldHandler extends MigrateFieldHandler {
       // timestamp for 'now'.
       if (empty($from)) {
         $return[$language][$delta]['value'] = NULL;
+        $return[$language][$delta]['timezone'] = NULL;
         if (!empty($field_info['settings']['todate'])) {
           $return[$language][$delta]['value2'] = NULL;
         }
@@ -179,6 +180,7 @@ class DateMigrateFieldHandler extends MigrateFieldHandler {
       }
       else {
         $return[$language][$delta]['value'] = $from;
+        $return[$language][$delta]['timezone'] = $timezone;
         if (!empty($to)) {
           $return[$language][$delta]['value2'] = $to;
         }
