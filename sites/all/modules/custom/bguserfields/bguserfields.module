@@ -1,5 +1,7 @@
 <?php
 /**
  * @file
- * Drupal needs this blank file.
+ * Code for the BG User Fields feature.
  */
+
+include_once 'bguserfields.features.inc';
