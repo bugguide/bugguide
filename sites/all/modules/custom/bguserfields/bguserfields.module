@@ -5,3 +5,37 @@
  */
 
 include_once 'bguserfields.features.inc';
+
+/**
+ * Implements hook_ds_fields_info().
+ */
+function bguserfields_ds_fields_info($entity_type) {
+  $fields = array();
+
+  if ($entity_type == 'user') {
+    $fields['bguserfields_contributed_images'] = array(
+      'title' => t('Total contributed images'),
+      'description' => t('Renders a link to contributed images by a user.'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bguserfields_field_contributed_images',
+      'file' => drupal_get_path('module', 'bguserfields') . '/bguserfields.ds.field.inc',
+    );
+
+    return array($entity_type => $fields);
+  }
+  return;
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function bguserfields_views_pre_render($view) {
+  // Sets a heading that links to the author at Contributed images view.
+  if (($view->name == 'contributed_images') && ($view->current_display == 'page')) {
+    if (isset($view->args[0])) {
+      $user = user_load_by_name($view->args[0]);
+      $user_wrapper = entity_metadata_wrapper('user', $user);
+      $view->attachment_before = 'Contributed images by ' . l($user_wrapper->field_user_full_name->value(), 'user/' . $user->uid) . ':';
+    }
+  }
+}

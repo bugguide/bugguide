@@ -5,6 +5,30 @@
  */
 
 /**
+ * Implements hook_ds_field_settings_info().
+ */
+function bguserfields_ds_field_settings_info() {
+  $export = array();
+
+  $ds_fieldsetting = new stdClass();
+  $ds_fieldsetting->api_version = 1;
+  $ds_fieldsetting->id = 'user|user|default';
+  $ds_fieldsetting->entity_type = 'user';
+  $ds_fieldsetting->bundle = 'user';
+  $ds_fieldsetting->view_mode = 'default';
+  $ds_fieldsetting->settings = array(
+    'bguserfields_contributed_images' => array(
+      'weight' => '5',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+  );
+  $export['user|user|default'] = $ds_fieldsetting;
+
+  return $export;
+}
+
+/**
  * Implements hook_ds_layout_settings_info().
  */
 function bguserfields_ds_layout_settings_info() {
@@ -25,7 +49,8 @@ function bguserfields_ds_layout_settings_info() {
         2 => 'field_user_default_county',
         3 => 'field_user_biography',
         4 => 'field_user_content_license',
-        5 => 'field_user_content_license_add',
+        5 => 'bguserfields_contributed_images',
+        6 => 'field_user_content_license_add',
       ),
     ),
     'fields' => array(
@@ -34,6 +59,7 @@ function bguserfields_ds_layout_settings_info() {
       'field_user_default_county' => 'ds_content',
       'field_user_biography' => 'ds_content',
       'field_user_content_license' => 'ds_content',
+      'bguserfields_contributed_images' => 'ds_content',
       'field_user_content_license_add' => 'ds_content',
     ),
     'classes' => array(),
