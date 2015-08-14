@@ -23,6 +23,7 @@ dependencies[] = filter
 dependencies[] = php
 dependencies[] = strongarm
 dependencies[] = suitcase_config
+dependencies[] = views
 dependencies[] = xbbcode
 dependencies[] = xbbcode_basic
 features[ctools][] = strongarm:strongarm:1
