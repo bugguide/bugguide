@@ -52,10 +52,9 @@ function bguserfields_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 7,
+        'type' => 'hidden',
+        'weight' => 10,
       ),
     ),
     'entity_type' => 'user',
@@ -124,9 +123,8 @@ function bguserfields_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
+        'type' => 'hidden',
         'weight' => 9,
       ),
     ),
@@ -155,10 +153,9 @@ function bguserfields_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 13,
+        'type' => 'hidden',
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'user',
@@ -196,7 +193,7 @@ function bguserfields_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 14,
+        'weight' => 4,
       ),
     ),
     'entity_type' => 'user',
@@ -227,7 +224,7 @@ function bguserfields_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 15,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'user',
@@ -261,7 +258,7 @@ function bguserfields_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 12,
+        'weight' => 2,
       ),
     ),
     'entity_type' => 'user',
@@ -330,10 +327,9 @@ function bguserfields_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 2,
+        'type' => 'hidden',
+        'weight' => 12,
       ),
     ),
     'entity_type' => 'user',
@@ -370,9 +366,8 @@ data that you submit in the BugGuide data set. Your images will never be publish
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
+        'type' => 'hidden',
         'weight' => 8,
       ),
     ),
