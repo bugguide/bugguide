@@ -460,23 +460,32 @@ function bgpage_tree($nid, $mode = NULL) {
     ->fieldCondition('field_parent', 'value', $node->nid, 'CONTAINS');
 
   $result = $query->execute();
-  $children = node_load_multiple(array_keys($result['node']));
-  unset($children[$nid]);
+  $parent_nids = array_keys($result['node']);
+  $nodes = bg_prepare_nodes($parent_nids, 'bgpage');
+
+  // Fetch titles.
+  $result = db_query('SELECT nid, title FROM {node} WHERE nid IN (:nids)', array(':nids' => $parent_nids));
+  foreach ($result as $row) {
+    $nodes[$row->nid]->title = $row->title;
+  }
+  // Fetch taxon and scientific name.
+  $nodes = bg_field_load_multiple('field_parent', $nodes);
+  $nodes = bg_field_load_multiple('field_taxon', $nodes);
+  $nodes = bg_field_load_multiple('field_scientific_name', $nodes);
+
+  // Append current node at the end.
+  $nodes[] = $node;
+
   // Remove wrong matches found by a node nid containing the nid.
   // For example: 1,282,3000 will match 82.
-  foreach ($children as $child_node) {
+  foreach ($nodes as $child_node) {
     $parent_nids = explode(',', $child_node->field_parent[LANGUAGE_NONE][0]['value']);
     if (!in_array($node->nid, $parent_nids)) {
-      unset($children[$child_node->nid]);
+      unset($nodes[$child_node->nid]);
     }
   }
 
-  $taxa = array();
-  $titles = array();
-  $scientific_names = array();
-  $nids = array_keys($children);
-
-  return bgpage_tree_build($node, $children, $nids, $taxa, $titles, $scientific_names, $all, $mode);
+  return bgpage_tree_build($nodes);
 }
 
 /**
