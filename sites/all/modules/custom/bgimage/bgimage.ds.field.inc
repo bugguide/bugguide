@@ -49,18 +49,23 @@ function _bgimage_field_copyright($field) {
  */
 function _bgimage_field_title_classification($field) {
   $node = $field['entity'];
-  $classification = '';
+  $parent_classification = '';
+  $grandparent_classification = '';
 
   // Find the immediate parent's scientific name.
   $parent_nid = bg_get_parent_nid($node);
   $parent_node = node_load($parent_nid);
-  $bgpage_wrapper = entity_metadata_wrapper('node', $parent_node);
-  $parent_classification = $bgpage_wrapper->field_scientific_name->value();
+  if (!empty($parent_node)) {
+    $bgpage_wrapper = entity_metadata_wrapper('node', $parent_node);
+    $parent_classification = $bgpage_wrapper->field_scientific_name->value();
+  }
 
   // Find the grandparent's scientific name.
   $grandparent_nid = bg_get_parent_nid($parent_node);
   $bgpage_gp_wrapper = entity_metadata_wrapper('node', $grandparent_nid);
-  $grandparent_classification = $bgpage_gp_wrapper->field_scientific_name->value();
+  if (!empty($bgpage_gp_wrapper->id)) {
+    $grandparent_classification = $bgpage_gp_wrapper->field_scientific_name->value();
+  }
 
   return '<h2>' . check_plain($node->title) . ' &ndash; ' . $grandparent_classification . ' ' . $parent_classification . '</h2>';
 }
@@ -92,19 +97,21 @@ function _bgimage_field_related_images($field) {
   $nodes = node_load_multiple($nids);
   foreach ($nodes as $related_node) {
     $node_wrapper = entity_metadata_wrapper('node', $related_node);
-    $image_properties = array(
-      'style_name' => 'thumbnail',
-      'path' => $node_wrapper->field_bgimage_image->file->value()->uri,
-      'alt' => $node_wrapper->title->value(array('sanitize' => TRUE)),
-      'title' => $node_wrapper->title->value(array('sanitize' => TRUE)),
-      'attributes' => array('style' => 'margin: 10px;'),
-   );
-    // Add a border to the thumbnail of the current image.
-    if ($related_node->nid == $node->nid) {
-      $image_properties['attributes']['style'] .= 'border: 2px solid black;';
+    if (isset($node_wrapper) && $node_wrapper->field_bgimage_image->value()) {
+      $image_properties = array(
+        'style_name' => 'thumbnail',
+        'path' => $node_wrapper->field_bgimage_image->file->value()->uri,
+        'alt' => $node_wrapper->title->value(array('sanitize' => TRUE)),
+        'title' => $node_wrapper->title->value(array('sanitize' => TRUE)),
+        'attributes' => array('style' => 'margin: 10px;'),
+      );
+      // Add a border to the thumbnail of the current image.
+      if ($related_node->nid == $node->nid) {
+        $image_properties['attributes']['style'] .= 'border: 2px solid black;';
+      }
+      $image = theme('image_style', $image_properties);
+      $output .= '<div style="float:left"><a href="' . url('node/' . $related_node->nid) . '" title="' . $node_wrapper->title->value(array('sanitize' => TRUE)) . '">' . $image . '</a></div>';
     }
-    $image = theme('image_style', $image_properties);
-    $output .= '<div style="float:left"><a href="' . url('node/' . $related_node->nid) . '" title="' . $node_wrapper->title->value(array('sanitize' => TRUE)) . '">' . $image . '</a></div>';
   }
   return $output . '</div><div style="clear:both;">';
 }
