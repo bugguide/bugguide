@@ -38,6 +38,34 @@ function _bgimage_field_copyright($field) {
 }
 
 /**
+ * Callback to render title and classification.
+ *
+ * The scientific name is built of the image's grandparent and parent.
+ * For example, for image 334290, whose parents are
+ * 3,878075,52,57,82,44054,29246,13329,44077,10981,334494, we extract
+ * the scientific name of 334494 and 10981, which are schaefferalis
+ * and Petrophila respectivelly. Finally, we render the name as
+ * Petrophila schaefferalis.
+ */
+function _bgimage_field_title_classification($field) {
+  $node = $field['entity'];
+  $classification = '';
+
+  // Find the immediate parent's scientific name.
+  $parent_nid = bg_get_parent_nid($node);
+  $parent_node = node_load($parent_nid);
+  $bgpage_wrapper = entity_metadata_wrapper('node', $parent_node);
+  $parent_classification = $bgpage_wrapper->field_scientific_name->value();
+
+  // Find the grandparent's scientific name.
+  $grandparent_nid = bg_get_parent_nid($parent_node);
+  $bgpage_gp_wrapper = entity_metadata_wrapper('node', $grandparent_nid);
+  $grandparent_classification = $bgpage_gp_wrapper->field_scientific_name->value();
+
+  return '<h2>' . check_plain($node->title) . ' &ndash; ' . $grandparent_classification . ' ' . $parent_classification . '</h2>';
+}
+
+/**
  * Callback to render related images.
  */
 function _bgimage_field_related_images($field) {
