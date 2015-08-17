@@ -88,11 +88,23 @@ function _bgimage_field_related_images($field) {
 
   // Render as a list of image teasers.
   $output = '<div class="field-label">Images of this individual:</div>';
-  $output .= '<ul class="item-list hlist">';
+  $output .= '<div class="image-container">';
   $nodes = node_load_multiple($nids);
-  foreach ($nodes as $node) {
-    $field_view = field_view_field('node', $node, 'field_bgimage_image', 'teaser');
-    $output .= '<li>' . render($field_view) . '</li>';
+  foreach ($nodes as $related_node) {
+    $node_wrapper = entity_metadata_wrapper('node', $related_node);
+    $image_properties = array(
+      'style_name' => 'thumbnail',
+      'path' => $node_wrapper->field_bgimage_image->file->value()->uri,
+      'alt' => $node_wrapper->title->value(array('sanitize' => TRUE)),
+      'title' => $node_wrapper->title->value(array('sanitize' => TRUE)),
+      'attributes' => array('style' => 'margin: 10px;'),
+   );
+    // Add a border to the thumbnail of the current image.
+    if ($related_node->nid == $node->nid) {
+      $image_properties['attributes']['style'] .= 'border: 2px solid black;';
+    }
+    $image = theme('image_style', $image_properties);
+    $output .= '<div style="float:left"><a href="' . url('node/' . $related_node->nid) . '" title="' . $node_wrapper->title->value(array('sanitize' => TRUE)) . '">' . $image . '</a></div>';
   }
-  return $output . '</ul><div style="clear:both;"></div>';
+  return $output . '</div><div style="clear:both;">';
 }
