@@ -16,14 +16,25 @@ function _bgimage_field_photo_number($field) {
  */
 function _bgimage_field_copyright($field) {
   $node = $field['entity'];
-  if (!isset($node->uid)) {
-    return;
+  $year = '';
+  $user_name = '';
+
+  // Extract the year when the photo was taken.
+  $node_wrapper = entity_metadata_wrapper('node', $node->nid);
+  $date_taken = $node_wrapper->field_bgimage_date->value();
+  if (!empty($date_taken)) {
+    $year = date('Y', $date_taken);
   }
+
+  // Extract the user's name.
   $user_wrapper = entity_metadata_wrapper('user', $node->uid);
-  if (!$user_wrapper) {
-    return;
+  if ($user_wrapper) {
+    $user_name = $user_wrapper->field_user_full_name->value();
+    if (empty($user_name)) {
+      $user_name = $user_wrapper->name->value();
+    }
   }
-  return 'Copyright &copy; ' . l($user_wrapper->field_user_full_name->value(), 'user/' . $node->uid);
+  return 'Copyright &copy; ' . $year . ' ' . l($user_name, 'user/' . $node->uid);
 }
 
 /**
