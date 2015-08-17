@@ -159,6 +159,17 @@ function bgimage_node_update($node) {
 }
 
 /**
+ * Implements hook_field_widget_form_alter().
+ */
+function bgimage_preprocess_image_widget(&$variables) {
+  // Removes the 'Upload' button and source image URL from the bgimage image field.
+  if ($variables['element']['#field_name'] == 'field_bgimage_image') {
+    $variables['element']['upload_button']['#access'] = FALSE;
+    $variables['element']['filename']['#access'] = FALSE;
+  }
+}
+
+/**
  * Obfuscates an uploaded image for a bgimage node.
  *
  * @param object @node
