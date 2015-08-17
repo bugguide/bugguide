@@ -17,11 +17,6 @@ function bgimage_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'bgimage';
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
-    'title' => array(
-      'weight' => '3',
-      'label' => 'hidden',
-      'format' => 'default',
-    ),
     'comments' => array(
       'weight' => '11',
       'label' => 'hidden',
@@ -52,6 +47,11 @@ function bgimage_ds_field_settings_info() {
       'label' => 'hidden',
       'format' => 'default',
     ),
+    'bgimage_title_classification' => array(
+      'weight' => '3',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
   );
   $export['node|bgimage|default'] = $ds_fieldsetting;
 
@@ -77,7 +77,7 @@ function bgimage_ds_layout_settings_info() {
         0 => 'bgimage_photo_number',
         1 => 'field_bgimage_image',
         2 => 'bgimage_copyright',
-        3 => 'title',
+        3 => 'bgimage_title_classification',
         4 => 'field_bgimage_location',
         5 => 'field_bgimage_date',
         6 => 'field_bgimage_size',
@@ -92,7 +92,7 @@ function bgimage_ds_layout_settings_info() {
       'bgimage_photo_number' => 'ds_content',
       'field_bgimage_image' => 'ds_content',
       'bgimage_copyright' => 'ds_content',
-      'title' => 'ds_content',
+      'bgimage_title_classification' => 'ds_content',
       'field_bgimage_location' => 'ds_content',
       'field_bgimage_date' => 'ds_content',
       'field_bgimage_size' => 'ds_content',
