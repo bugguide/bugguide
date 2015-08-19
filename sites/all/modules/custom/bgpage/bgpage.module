@@ -420,70 +420,41 @@ function bgpage_browse($nid) {
  */
 function bgpage_tree($nid, $mode = NULL) {
   global $TAXON_NAMES, $TAXON_IDS;
-  $all = array();
+  $nids = array();
   $node = node_load($nid);
-  $node->comment = 0;
-  $language = field_language('node', $node, 'field_parent');
-  // Note use of 'tree' as the type in the hook_link invocation.
-  //$node->links = module_invoke_all('link', 'tree', $node, $teaser);
-  //drupal_alter('link', $node->links, $node);
+  $node_wrapper = entity_metadata_wrapper('node', $node);
 
-  // this is the parents 2,4,5,6
-  //$path = bgpage_get_path($node);
+  // Build the array of nids to list.
+  $nids = explode(',', $node_wrapper->field_parent->value());
 
-  if ($mode == 'all') {
-    $result = db_query("SELECT n.nid, n.title, p.taxon, p.scientific_name, p.hodges_number, p.sequence, p.parent FROM {node} n, {bgpage} p WHERE p.nid = n.nid AND p.parent like '%s,%%' AND status = '1' ORDER BY p.parent, p.sequence", bgpage_get_path($node));
-    while (TRUE) {
-      $child = db_fetch_object($result);
-      if (!$child || !$last || ($child->parent != $last->parent)) {
-        if ($last) {
-          $all[$last->parent] = $children;
-        }
-        unset($children);
-        if (!$child) {
-          break;
-        }
-      }
-      $children[] = $child;
-      $last = $child;
-    }
-  }
+  // Then, then node itself;
+  $nids[] = $node->nid;
 
-  ///$result = db_query("SELECT n.nid, n.title, p.taxon, p.scientific_name, p.hodges_number, p.sequence, p.parent FROM {node} n, {bgpage} p WHERE p.nid = n.nid AND parent = '%s' AND status = '1' ORDER BY p.sequence, p.nid", $path);
+  // Next, the immediate children.
+  $children_nids = db_query('SELECT entity_id
+                              FROM {field_data_field_parent} fdfp
+                              inner join {node} n on n.nid = fdfp.entity_id
+                              inner join {bgpage_archive} bgpage on bgpage.nid = n.nid
+                              where n.status = 1
+                              and fdfp.field_parent_value like :end
+                              order by bgpage.sequence, bgpage.nid', array(
+                                ':end' => '%,' . $node->nid,
+                              ))->fetchCol();
+  $nids = array_merge($nids, $children_nids);
 
-  // TODO need to restore the ability to order taxonomy (the sequence column in bg6)
-  // Get all nids of children of this bgpage.
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'bgpage')
-    ->propertyCondition('status', 1)
-    ->fieldCondition('field_parent', 'value', $node->nid, 'CONTAINS');
-
-  $result = $query->execute();
-  $parent_nids = array_keys($result['node']);
-  $nodes = bg_prepare_nodes($parent_nids, 'bgpage');
+  // Build an array of pseudo nodes to render the tree.
+  $nodes = bg_prepare_nodes($nids, 'bgpage');
 
   // Fetch titles.
-  $result = db_query('SELECT nid, title FROM {node} WHERE nid IN (:nids)', array(':nids' => $parent_nids));
+  $result = db_query('SELECT nid, title FROM {node} WHERE nid IN (:nids)', array(':nids' => $nids));
   foreach ($result as $row) {
     $nodes[$row->nid]->title = $row->title;
   }
+
   // Fetch taxon and scientific name.
   $nodes = bg_field_load_multiple('field_parent', $nodes);
   $nodes = bg_field_load_multiple('field_taxon', $nodes);
   $nodes = bg_field_load_multiple('field_scientific_name', $nodes);
-
-  // Append current node at the end.
-  $nodes[] = $node;
-
-  // Remove wrong matches found by a node nid containing the nid.
-  // For example: 1,282,3000 will match 82.
-  foreach ($nodes as $child_node) {
-    $parent_nids = explode(',', $child_node->field_parent[LANGUAGE_NONE][0]['value']);
-    if (!in_array($node->nid, $parent_nids)) {
-      unset($nodes[$child_node->nid]);
-    }
-  }
 
   return bgpage_tree_build($nodes);
 }
@@ -501,10 +472,10 @@ function bgpage_tree_build($nodes) {
   global $TAXON_NAMES, $TAXON_IDS;
   $output = '<span class="graytext">Kingdom</span> <strong>Animalia</strong> - Animals<br/>';
 
-  $i = 1;
   foreach ($nodes as $node) {
-    $output .= str_repeat('&nbsp;', $i * 2) . bgpage_tree_child($node);
-    $i = $i + 2;
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    $indents = count(explode(',', $node_wrapper->field_parent->value()));
+    $output .= str_repeat('&nbsp;', $indents * 2) . bgpage_tree_child($node);
   }
 
   return $output;
