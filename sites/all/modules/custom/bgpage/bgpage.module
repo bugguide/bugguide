@@ -418,7 +418,7 @@ function bgpage_browse($nid) {
  *   If true, show all the children from this point in the taxonomic tree on
  *   down.
  */
-function bgpage_tree($nid, $mode = NULL) {
+function bgpage_tree($nid, $mode = 'collapsed') {
   global $TAXON_NAMES, $TAXON_IDS;
   $nids = array();
   $node = node_load($nid);
@@ -430,16 +430,32 @@ function bgpage_tree($nid, $mode = NULL) {
   // Then, then node itself;
   $nids[] = $node->nid;
 
-  // Next, the immediate children.
+  // Next, the immediate or all the children.
+  if ($mode == 'collapsed') {
+    $conditions = ' fdfp.field_parent_value like :end ';
+    $parameters = array(':end' => '%,' . $node->nid);
+  }
+  else {
+    $conditions = ' (fdfp.field_parent_value like :end
+                     or fdfp.field_parent_value like :middle
+                     or fdfp.field_parent_value like :start) ';
+    $parameters = array(
+      ':end' => '%,' . $node->nid,
+      ':middle' => '%,' . $node->nid . ',%',
+      ':start' => $node->nid . ',%',
+    );
+  }
+
+  // Extract children nids.
   $children_nids = db_query('SELECT entity_id
-                              FROM {field_data_field_parent} fdfp
-                              inner join {node} n on n.nid = fdfp.entity_id
-                              inner join {bgpage_archive} bgpage on bgpage.nid = n.nid
-                              where n.status = 1
-                              and fdfp.field_parent_value like :end
-                              order by bgpage.sequence, bgpage.nid', array(
-                                ':end' => '%,' . $node->nid,
-                              ))->fetchCol();
+                             FROM {field_data_field_parent} fdfp
+                             inner join {node} n on n.nid = fdfp.entity_id
+                             inner join {bgpage_archive} bgpage on bgpage.nid = n.nid
+                             where n.status = 1
+                             and ' . $conditions . '
+                             order by bgpage.sequence, bgpage.nid', $parameters)->fetchCol();
+
+  // Add children to the list of nids.
   $nids = array_merge($nids, $children_nids);
 
   // Build an array of pseudo nodes to render the tree.
@@ -455,6 +471,13 @@ function bgpage_tree($nid, $mode = NULL) {
   $nodes = bg_field_load_multiple('field_parent', $nodes);
   $nodes = bg_field_load_multiple('field_taxon', $nodes);
   $nodes = bg_field_load_multiple('field_scientific_name', $nodes);
+
+  // Sort array by parent field.
+  uasort($nodes, function($node_a, $node_b) {
+    $node_a_wrapper = entity_metadata_wrapper('node', $node_a);
+    $node_b_wrapper = entity_metadata_wrapper('node', $node_b);
+    return strcmp($node_a_wrapper->field_parent->value(), $node_b_wrapper->field_parent->value());
+  });
 
   return bgpage_tree_build($nodes);
 }
