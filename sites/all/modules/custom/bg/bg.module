@@ -192,41 +192,46 @@ function _bg_filter_cite_process($text, $filter, $format) {
     $find = array();
     $replace = array();
     foreach ($match[2] as $idx => $nid) {
-      // Add citation to the static variable.
-      if (isset($all_cited[$nid])) {
-        $all_cited[$nid]->cite_index++;
+      $find[] = $match[0][$idx];
+      $cited_node = node_load($nid);
+      // If the node does not exist, don't render a link.
+      if (empty($cited_node)) {
+        $replace[] = '';
       }
       else {
-        if (!in_array($nid, $nodes)) {
-          $nodes[] = $nid;
-        }
-        else {
+        // Add citation to the static variable.
+        if (!isset($all_cited[$nid])) {
           // Short circuit infinite loops.
-          return $text;
+          if (!in_array($nid, $nodes)) {
+            $nodes[] = $nid;
+          }
+          else {
+            return $text;
+          }
+          // Initialize citation counter for this node.
+          $all_cited[$nid] = $cited_node;
         }
-        $all_cited[$nid] = node_load($nid);
-        $all_cited[$nid]->cite_index = 1;
+
+        // Extract citation index so we can show it as (index) in the text.
+        $citation_index = array_search($nid, array_keys($all_cited));
+
+        // Build citation text: title, author, 122-150.
+        $node = $all_cited[$nid];
+        $title = check_plain($node->title);
+        if (isset($node->bgauthor)) {
+          $title .= ", by " . $node->bgauthor;
+        }
+        $first_page = $match[4][$idx];
+        $last_page = $match[6][$idx];
+        if ($last_page) {
+          $title .= ", pages $first_page - $last_page";
+        }
+        elseif ($first_page) {
+          $title .= ", page $first_page";
+        }
       }
 
-      // Extract citation index so we can show it as (index) in the text.
-      $citation_index = array_search($nid, array_keys($all_cited));
-
-      // Build citation text: title, author, 122-150.
-      $node = $all_cited[$nid];
-      $title = check_plain($node->title);
-      if (isset($node->bgauthor)) {
-        $title .= ", by " . $node->bgauthor;
-      }
-      $first_page = $match[4][$idx];
-      $last_page = $match[6][$idx];
-      if ($last_page) {
-        $title .= ", pages $first_page - $last_page";
-      }
-      elseif ($first_page) {
-        $title .= ", page $first_page";
-      }
-
-      $find[] = $match[0][$idx];
+      // Replace citation for a link with the respective index.
       $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $node->nid) . ')</span>';
     }
 
