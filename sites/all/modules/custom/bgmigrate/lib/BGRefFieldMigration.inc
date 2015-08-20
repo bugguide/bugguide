@@ -44,15 +44,15 @@ class BGRefFieldMigration extends BasicBugGuideMigration {
          ->description(t('Node ID'));
     $this->addFieldMapping('field_parent', 'parent')
          ->description(t('Parent'));
-   $this->addFieldMapping('field_book_reference_author', 'author')
+    $this->addFieldMapping('field_book_reference_author', 'author')
          ->description(t('Author'));
-   $this->addFieldMapping('field_book_reference_weight', 'weight')
+    $this->addFieldMapping('field_book_reference_weight', 'weight')
          ->description(t('Weight'));
-   $this->addFieldMapping('field_book_reference_publisher', 'publisher')
+    $this->addFieldMapping('field_book_reference_publisher', 'publisher')
          ->description(t('Publisher'));
-   $this->addFieldMapping('field_book_reference_year', 'year')
+    $this->addFieldMapping('field_book_reference_year', 'year')
          ->description(t('Year'));
-   $this->addFieldMapping('field_book_reference_show_image', 'show_image')
+    $this->addFieldMapping('field_book_reference_show_image', 'show_image')
          ->description(t('Show image'));
   }
 }
