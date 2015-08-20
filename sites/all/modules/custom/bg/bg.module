@@ -185,49 +185,30 @@ function _bg_filter_list_item_process($text, $filter, $format) {
  * BG cite filter process clallback.
  */
 function _bg_filter_cite_process($text, $filter, $format) {
-  $nodes = &drupal_static(__FUNCTION__ . '_nodes', array());
   if (preg_match_all("/\[cite(all)?:(\d+)(,(\d+))?(,(\d+))?\]/i", $text, $match)) {
     // Fetch the static variable where we gather citations from all fields.
-    $all_cited = &drupal_static('bg_all_cited', array());
+    $citation_nids = &drupal_static('bg_citation_nids', array());
     $find = array();
     $replace = array();
     foreach ($match[2] as $idx => $nid) {
-      // Add citation to the static variable.
-      if (isset($all_cited[$nid])) {
-        $all_cited[$nid]->cite_index++;
+      $find[] = $match[0][$idx];
+
+      // Don't cite a deleted node.
+      $found = db_query('select * from {node} where nid = :nid', array(':nid' => $nid))->fetchField();
+      if (!$found) {
+        $replace[] = '';
       }
       else {
-        if (!in_array($nid, $nodes)) {
-          $nodes[] = $nid;
+        // Add citation to the static variable.
+        if (!in_array($nid, $citation_nids)) {
+          $citation_nids[] = $nid;
         }
-        else {
-          // Short circuit infinite loops.
-          return $text;
-        }
-        $all_cited[$nid] = node_load($nid);
-        $all_cited[$nid]->cite_index = 1;
-      }
 
-      // Extract citation index so we can show it as (index) in the text.
-      $citation_index = array_search($nid, array_keys($all_cited));
+        // Extract citation index so we can show it as "(7)" in the text.
+        $citation_index = array_search($nid, $citation_nids);
 
-      // Build citation text: title, author, 122-150.
-      $node = $all_cited[$nid];
-      $title = check_plain($node->title);
-      if (isset($node->bgauthor)) {
-        $title .= ", by " . $node->bgauthor;
+        $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid) . ')</span>';
       }
-      $first_page = $match[4][$idx];
-      $last_page = $match[6][$idx];
-      if ($last_page) {
-        $title .= ", pages $first_page - $last_page";
-      }
-      elseif ($first_page) {
-        $title .= ", page $first_page";
-      }
-
-      $find[] = $match[0][$idx];
-      $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $node->nid) . ')</span>';
     }
 
     $text = str_replace($find, $replace, $text);
@@ -242,11 +223,10 @@ function bg_node_presave($node) {
   if (isset($node->field_citations)) {
     // Populate field_citations with citations in the node fields.
     // This is used by display suite's field_citations_list to render them.
-    $all_cited = &drupal_static('bg_all_cited', array());
-    if (count($all_cited)) {
-      $nids = array_keys($all_cited);
+    $citation_nids = &drupal_static('bg_citation_nids', array());
+    if (count($citation_nids)) {
       $node->field_citations[LANGUAGE_NONE] = array();
-      foreach ($nids as $nid) {
+      foreach ($citation_nids as $nid) {
         $node->field_citations[LANGUAGE_NONE][]['value'] = $nid;
       }
       // Reset citations so they aren't dragged into the next node
