@@ -239,16 +239,23 @@ function _bg_filter_cite_process($text, $filter, $format) {
  * Implements hook_node_presave().
  */
 function bg_node_presave($node) {
-  // Populate field_citations with citations in the node fields.
-  // This is used by display suite's field_citations_list to render them.
-  $all_cited = &drupal_static('bg_all_cited', array());
-  if (count($all_cited)) {
-    $nids = array_keys($all_cited);
-    $node->field_citations[LANGUAGE_NONE] = array();
-    foreach ($nids as $nid) {
-      $node->field_citations[LANGUAGE_NONE][]['value'] = $nid;
+  if (isset($node->field_citations)) {
+    // Populate field_citations with citations in the node fields.
+    // This is used by display suite's field_citations_list to render them.
+    $all_cited = &drupal_static('bg_all_cited', array());
+    if (count($all_cited)) {
+      $nids = array_keys($all_cited);
+      $node->field_citations[LANGUAGE_NONE] = array();
+      foreach ($nids as $nid) {
+        $node->field_citations[LANGUAGE_NONE][]['value'] = $nid;
+      }
+      // Reset citations so they aren't dragged into the next node
+      // if we are processing multiple ones in this request.
+      $all_cited = array();
     }
-    return $node;
+    else {
+      $node->field_citations[LANGUAGE_NONE] = array();
+    }
   }
 }
 
