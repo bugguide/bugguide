@@ -8,6 +8,13 @@ include_once 'bgimage.features.inc';
 include_once './images/image_obfuscate.inc';
 
 /**
+ * Implements hook_menu_alter().
+ */
+function bgimage_menu_alter(&$items) {
+  $items['node/%node/clone/%clone_token']['title callback'] = '_bgimage_clone_action_link_title';
+}
+
+/**
  * Implements hook_ds_fields_info().
  */
 function bgimage_ds_fields_info($entity_type) {
@@ -137,6 +144,21 @@ function bgimage_node_insert($node) {
   $result = db_insert('bgimage')
     ->fields($fields)
     ->execute();
+
+  // Update bgimage_series table used for rendering related images.
+  if (isset($node->original_nid)) {
+    $result = db_query('select * from {bgimage_series} where nid = :nid', array(
+      ':nid' => $node->original_nid,
+    ))->fetchObject();
+
+    db_insert('bgimage_series')
+      ->fields(array(
+        'nid' => $node->nid,
+        'weight' => $result->weight + 1,
+        'series' => $result->series,
+      ))
+      ->execute();
+  }
 }
 
 /**
@@ -357,7 +379,25 @@ function bgimage_get_full_parent($nid) {
  */
 function bgimage_clone_node_alter(&$node, $context) {
   if ($context['method'] == 'prepopulate') {
+    // Don't prepopulate the image field.
     $node->field_bgimage_image = array(LANGUAGE_NONE => array());
+    // Remove "Clone of".
+    $node->title = str_replace('Clone of ', '', $node->title);
+    // Add the original nid in order to update bgimage_series.
+    $node->original_nid = $context['original_node']->nid;
   }
 }
 
+/**
+ * Altered menu title callback for cloning a bgimage node.
+ */
+function _bgimage_clone_action_link_title($node) {
+  // A hack to present a shorter title in contextual links.
+  if (current_path() != 'node/' . $node->nid) {
+    return t('Clone');
+  }
+  if (variable_get('clone_use_node_type_name', 0)) {
+    return t('Clone this !type', array('!type' => drupal_strtolower(node_type_get_name($node))));
+  }
+  return t('Add image');
+}

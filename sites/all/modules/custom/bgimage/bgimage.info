@@ -5,6 +5,7 @@ package = Bugguide
 version = 7.x-1.5
 project = bgimage
 dependencies[] = addressfield
+dependencies[] = clone
 dependencies[] = ctools
 dependencies[] = date
 dependencies[] = ds
