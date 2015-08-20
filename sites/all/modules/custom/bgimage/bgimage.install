@@ -1,0 +1,23 @@
+<?php
+/**
+ * @file
+ * Install and update hooks for the bgimage module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function bgimage_install() {
+  // Get the weight of clone module.
+  $weight = db_select('system', 's')
+              ->fields('s', array('weight'))
+              ->condition('name', 'clone', '=')
+              ->execute()
+              ->fetchField();
+
+  // Set this module to a weight 1 heavier, so it's hooks run later.
+  db_update('system')
+    ->fields(array('weight' => $weight + 1))
+    ->condition('name', 'bgimage', '=')
+    ->execute();
+}
