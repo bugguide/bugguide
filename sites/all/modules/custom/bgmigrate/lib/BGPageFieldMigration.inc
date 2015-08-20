@@ -33,71 +33,53 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
     );
 
     $query = db_select('bgpage_archive', 'bgp');
-    $query->fields('bgp', array('nid', 'parent', 'scientific_name', 'names', 'counts', 'size', 'id', 'raynge', 'habitat', 'season', 'food', 'life_cycle', 'pronunciation', 'etymology', 'synonyms', 'see_also', 'print_references', 'web_references', 'taxon', 'hodges_number', 'uids', 'location_codes'));
+    $query->join('field_data_body', 'fdb', 'fdb.entity_id = bgp.nid');
+    $query->fields('bgp', array('nid', 'parent', 'scientific_name', 'names', 'counts', 'size', 'id', 'raynge', 'habitat', 'season', 'food', 'life_cycle', 'pronunciation', 'etymology', 'synonyms', 'see_also', 'print_references', 'web_references', 'taxon', 'hodges_number', 'uids', 'location_codes'))
+          ->fields('fdb', array('body_value'));
     $this->source = new MigrateSourceSQL($query, array());
 
     // Set up our destination - nodes of type bgpage
     $this->destination = new MigrateDestinationNode('bgpage');
 
     // Mapped fields
-    $this->addFieldMapping('field_scientific_name', 'scientific_name')
-         ->description(t('Mapping scientific name'));
-    $this->addFieldMapping('nid', 'nid')
-         ->description(t('Node ID'));
-    $this->addFieldMapping('field_parent', 'parent')
-         ->description(t('Parent'));
-    $this->addFieldMapping('field_other_common_names', 'names')
-         ->description(t('Other common names'));
+    $this->addFieldMapping('field_remarks', 'body_value');
+    $this->addFieldMapping('field_remarks:format')->defaultValue(1);
+    $this->addFieldMapping('field_scientific_name', 'scientific_name');
+    $this->addFieldMapping('nid', 'nid');
+    $this->addFieldMapping('field_parent', 'parent');
+    $this->addFieldMapping('field_other_common_names', 'names');
     $this->addFieldMapping('field_other_common_names:format')->defaultValue(1);
-    $this->addFieldMapping('field_counts', 'counts')
-         ->description(t('Counts'));
+    $this->addFieldMapping('field_counts', 'counts');
     $this->addFieldMapping('field_counts:format')->defaultValue(1);
-    $this->addFieldMapping('field_size', 'size')
-         ->description(t('Size'));
+    $this->addFieldMapping('field_size', 'size');
     $this->addFieldMapping('field_size:format')->defaultValue(1);
-    $this->addFieldMapping('field_id', 'id')
-         ->description(t('ID'));
+    $this->addFieldMapping('field_id', 'id');
     $this->addFieldMapping('field_id:format')->defaultValue(1);
-    $this->addFieldMapping('field_range', 'raynge')
-         ->description(t('Range'));
+    $this->addFieldMapping('field_range', 'raynge');
     $this->addFieldMapping('field_range:format')->defaultValue(1);
-    $this->addFieldMapping('field_habitat', 'habitat')
-         ->description(t('Habitat'));
+    $this->addFieldMapping('field_habitat', 'habitat');
     $this->addFieldMapping('field_habitat:format')->defaultValue(1);
-    $this->addFieldMapping('field_season', 'season')
-         ->description(t('Season'));
+    $this->addFieldMapping('field_season', 'season');
     $this->addFieldMapping('field_season:format')->defaultValue(1);
-    $this->addFieldMapping('field_food', 'food')
-         ->description(t('Food'));
+    $this->addFieldMapping('field_food', 'food');
     $this->addFieldMapping('field_food:format')->defaultValue(1);
-    $this->addFieldMapping('field_life_cycle', 'life_cycle')
-         ->description(t('Life Cycle'));
+    $this->addFieldMapping('field_life_cycle', 'life_cycle');
     $this->addFieldMapping('field_life_cycle:format')->defaultValue(1);
-    $this->addFieldMapping('field_pronunciation', 'pronunciation')
-         ->description(t('Pronunciation'));
+    $this->addFieldMapping('field_pronunciation', 'pronunciation');
     $this->addFieldMapping('field_pronunciation:format')->defaultValue(1);
-    $this->addFieldMapping('field_etymology', 'etymology')
-         ->description(t('Etymology'));
+    $this->addFieldMapping('field_etymology', 'etymology');
     $this->addFieldMapping('field_etymology:format')->defaultValue(1);
-    $this->addFieldMapping('field_synonyms', 'synonyms')
-         ->description(t('Synonyms'));
+    $this->addFieldMapping('field_synonyms', 'synonyms');
     $this->addFieldMapping('field_synonyms:format')->defaultValue(1);
-    $this->addFieldMapping('field_taxon', 'taxon')
-         ->description(t('Taxon'));
-    $this->addFieldMapping('field_hodges_number', 'hodges_numbers')
-         ->description(t('Hodges Number'));
-    $this->addFieldMapping('field_editors', 'uids')
-         ->description(t('Editors'));
-    $this->addFieldMapping('field_location_codes', 'location_codes')
-         ->description(t('Location Codes'));
-    $this->addFieldMapping('field_see_also', 'see_also')
-         ->description(t('See also'));
+    $this->addFieldMapping('field_taxon', 'taxon');
+    $this->addFieldMapping('field_hodges_number', 'hodges_number');
+    $this->addFieldMapping('field_editors', 'uids');
+    $this->addFieldMapping('field_location_codes', 'location_codes');
+    $this->addFieldMapping('field_see_also', 'see_also');
     $this->addFieldMapping('field_see_also:format')->defaultValue(1);
-    $this->addFieldMapping('field_print_references', 'print_references')
-         ->description(t('Print references'));
+    $this->addFieldMapping('field_print_references', 'print_references');
     $this->addFieldMapping('field_print_references:format')->defaultValue(1);
-    $this->addFieldMapping('field_internet_references', 'web_references')
-         ->description(t('Internet references'));
+    $this->addFieldMapping('field_internet_references', 'web_references');
     $this->addFieldMapping('field_internet_references:format')->defaultValue(1);
 
     $this->addUnmigratedDestinations(array(
@@ -115,23 +97,15 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
       'translate',
       'revision_uid',
       'is_new',
+      'body',
       'body:summary',
       'body:format',
       'body:language',
       'field_bgimage_image',
+      'field_citations',
+      'field_common_name',
+      'field_representative_images',
       'comment',
     ));
-  }
-
-  /**
-   * Acts after a node has been saved.
-   */
-  public function complete($entity, stdClass $row) {
-    // Copy body into field_remarks.
-    $entity->field_remarks[LANGUAGE_NONE][0] = array(
-      'value' => $entity->body[LANGUAGE_NONE][0]['value'],
-      'format' => 1,
-    );
-    node_save($entity);
   }
 }
