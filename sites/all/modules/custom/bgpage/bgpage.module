@@ -361,6 +361,7 @@ function bgpage_tree($nid, $mode = 'collapsed') {
   $nodes = bg_field_load_multiple('field_parent', $nodes);
   $nodes = bg_field_load_multiple('field_taxon', $nodes);
   $nodes = bg_field_load_multiple('field_scientific_name', $nodes);
+  $nodes = bg_field_load_multiple('field_hodges_number', $nodes);
 
   // Sort array by parent field.
   uasort($nodes, function($node_a, $node_b) {
