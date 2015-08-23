@@ -235,6 +235,94 @@ function bgpage_node_form_validate(&$form, &$form_state) {
 }
 
 /**
+ * Builds a hierarchy tree for a set of related nodes.
+ *
+ * @param array $nodes
+ *   An array of pseudo-nodes ordered hierarchycally. The term pseudo is
+ *   used because they are not fully loaded nodes due to performance reasons.
+ * @returns string
+ *   The rendered HTML that represents the tree.
+ */
+function bgpage_tree_build($nodes) {
+  global $TAXON_NAMES, $TAXON_IDS;
+  $output = '<span class="graytext">Kingdom</span> <strong>Animalia</strong> - Animals<br/>';
+
+  foreach ($nodes as $node) {
+    // Calculate indentation for this item based on the number of parents.
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    $parents = $node_wrapper->field_parent->value();
+    if (empty($parents)) {
+      $indents = 0;
+    }
+    else {
+      $indents = count(explode(',', $parents));
+    }
+    $indents = str_repeat('&nbsp;', ($indents + 2) * 2);
+
+    // Render the element.
+    $output .= $indents . bgpage_tree_child($node);
+  }
+
+  return $output;
+}
+
+/**
+ * Renders a tree element.
+ *
+ * @param object node
+ *   A pseudo node that contains title, field_parent, field_taxon and field_scientific_name.
+ * @return string
+ *   The rendered tree item.
+ */
+function bgpage_tree_child($node) {
+  global $TAXON_NAMES, $TAXON_IDS;
+  if (!empty($node->field_taxon) && isset($TAXON_NAMES[$node->field_taxon[LANGUAGE_NONE][0]['value']])) {
+    $taxon_name = $TAXON_NAMES[$node->field_taxon[LANGUAGE_NONE][0]['value']];
+    $taxon_id = $node->field_taxon[LANGUAGE_NONE][0]['value'];
+  }
+  else {
+    $taxon_name = t('No Taxon');
+    $taxon_id = NULL;
+  }
+
+  $scientific_name = check_plain($node->title);
+  if (!empty($node->field_scientific_name)) {
+    $scientific_name = $node->field_scientific_name[LANGUAGE_NONE][0]['value'];
+  }
+
+  $child_count = '';
+  /*if (!empty($node->field_parent)) {
+    $search_path = $node->field_parent[LANGUAGE_NONE][0]['value'] . ','. $node->nid;
+    $query = new EntityFieldQuery;
+    $query->entityCondition('entity_type', 'node')
+          ->entityCondition('bundle', 'bgpage')
+          ->fieldCondition('field_parent', 'value', $search_path, 'CONTAINS');
+    $count = $query->count()->execute();
+    $child_count = ' ('. $count .')';
+  }*/
+
+  $output = "<span class=\"bgpage-taxon-title\">$taxon_name </span>";
+  $italics = $taxon_id >= $TAXON_IDS["Genus"];
+  $output .= "<span class=\"bgpage-taxon-desc\">";
+  if ($italics) {
+    $output .= "<i>";
+  }
+  $output .= l("<strong>$scientific_name</strong>", "node/" . $node->nid . "/tree", array('html' => TRUE));
+  if ($italics) {
+    $output .= "</i>";
+  }
+  if ($node->title != $scientific_name) {
+    $output .= " - " . check_plain($node->title);
+  }
+  if (!empty($node->field_hodges_number)) {
+    $output .= " - Hodges#" . $node->field_hodges_number[LANGUAGE_NONE][0]['value'];
+  }
+  $output .= "$child_count</span><br />\n";
+
+  return $output;
+}
+
+/**
  * Menu callback for the Browse tab.
  */
 function bgpage_browse($nid) {
