@@ -27,6 +27,10 @@ function _bgpage_classification($field) {
  * Callback to render citations in a bgpage node.
  */
 function _bgpage_citations($field) {
+  if ($field['view_mode'] != 'full') {
+    return;
+  }
+
   $node = $field['entity'];
   if (empty($node->field_citations[LANGUAGE_NONE])) {
     return t('There are no citations.');

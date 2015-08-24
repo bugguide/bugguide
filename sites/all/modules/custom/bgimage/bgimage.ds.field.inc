@@ -7,6 +7,10 @@
  * Callback to render photo number.
  */
 function _bgimage_field_photo_number($field) {
+  if ($field['view_mode'] != 'full') {
+    return;
+  }
+
   $node = $field['entity'];
   return 'Photo #' . $node->nid;
 }
@@ -15,6 +19,10 @@ function _bgimage_field_photo_number($field) {
  * Callback to render a copyright statement.
  */
 function _bgimage_field_copyright($field) {
+  if ($field['view_mode'] != 'full') {
+    return;
+  }
+
   $node = $field['entity'];
   $year = '';
   $user_name = '';
@@ -48,6 +56,10 @@ function _bgimage_field_copyright($field) {
  * Petrophila schaefferalis.
  */
 function _bgimage_field_title_classification($field) {
+  if ($field['view_mode'] != 'full') {
+    return;
+  }
+
   $node = $field['entity'];
   $parent_classification = '';
   $grandparent_classification = '';
@@ -74,6 +86,10 @@ function _bgimage_field_title_classification($field) {
  * Callback to render related images.
  */
 function _bgimage_field_related_images($field) {
+  if ($field['view_mode'] != 'full') {
+    return;
+  }
+
   $node = $field['entity'];
 
   // First, check if there are related images.
