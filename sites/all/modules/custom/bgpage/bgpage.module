@@ -242,13 +242,28 @@ function bgpage_apachesolr_index_document_build_node($document, $entity, $env_id
     return;
   }
 
-  // Classification field.
+  // Classification field used for sorting.
   $classification = '';
   if (!empty($entity->field_parent[LANGUAGE_NONE][0]['value'])) {
     $classification = $entity->field_parent[LANGUAGE_NONE][0]['value'] . ',';
   }
   $classification .= $entity->nid;
   $document->addField('ss_bgpage_classification', $classification);
+
+  // Parents field used for searching all descendants.
+  $parents = array();
+  if (!empty($entity->field_parent[LANGUAGE_NONE][0]['value'])) {
+    $parents = explode(',', $entity->field_parent[LANGUAGE_NONE][0]['value']);
+  }
+  foreach ($parents as $parent) {
+    $document->addField('sm_bgpage_parents', $parent);
+  }
+
+  // Immediate parent field used for searching direct descendants.
+  $parent_nid = bg_get_parent_nid($entity);
+  if ($parent_nid != NULL) {
+    $document->addField('ss_bgpage_immediate_parent', $parent_nid);
+  }
 }
 
 
@@ -286,7 +301,7 @@ function bgpage_tree_build($results) {
  */
 function bgpage_tree_child($result) {
   global $TAXON_NAMES, $TAXON_IDS;
-  if (!empty($result->its_field_taxon)) {
+  if (!empty($result->its_field_taxon) && isset($TAXON_NAMES[$result->its_field_taxon])) {
     $taxon_name = $TAXON_NAMES[$result->its_field_taxon];
     $taxon_id = $result->its_field_taxon;
   }
@@ -295,7 +310,7 @@ function bgpage_tree_child($result) {
     $taxon_id = NULL;
   }
 
-  $scientific_name = check_plain($result->label);
+  $scientific_name = $result->label;
   if (!empty($result->sm_field_scientific_name)) {
     $scientific_name = $result->sm_field_scientific_name[0];
   }
@@ -325,7 +340,7 @@ function bgpage_tree_child($result) {
     $output .= " - " . $result->label;
   }
   if (!empty($result->sm_field_hodges_number)) {
-    $output .= " - Hodges#" . $result->sm_field_hodges_number[0]['value'];
+    $output .= " - Hodges#" . $result->sm_field_hodges_number[0];
   }
   $output .= "$child_count</span><br />\n";
 
@@ -401,17 +416,21 @@ function bgpage_browse($nid) {
 /**
  * Fetches classification details for a set of nids.
  *
- * @param array $nids
+ * @param int $nid
+ *   The nid to use as the tree root.
+ * @param object $filter
+ *   SolrFilterSubQuery filter that defintes which elements to return.
  * @return array of ApacheSolr search result objects.
  */
-function bgpage_fetch_classification($nids) {
+function bgpage_fetch_classification($nid, $filter) {
   $results = array();
+
   try {
     $query = apachesolr_drupal_query('apachesolr', array());
     // Configure query.
-    $entity_ids = implode(' OR ', $nids);
-    $query->addParam('fq', 'entity_id:(' . $entity_ids . ')');
+    $query->addFilterSubQuery($filter);
     $query->addParam('fl', 'entity_id,label,ss_bgpage_classification,sm_field_hodges_number,its_field_taxon,sm_field_scientific_name');
+    $query->addParam('rows', 10000000);
     $sort_field = 'sort_bgpage_classification';
     $sort_direction = 'asc';
     $query->setAvailableSort($sort_field, $sort_direction);
@@ -420,13 +439,15 @@ function bgpage_fetch_classification($nids) {
     // Run query and render results if matches are found.
     list($final_query, $response) = apachesolr_do_query($query, pager_find_page());
     if ($response->code == '200' && $response->response->numFound > 0) {
-      $result = $response->response->docs;
+      $results = $response->response->docs;
     }
-    watchdog('bgpage', 'No results found for nids !nids', array('!nids' => implode(',', $nids)));
+    else {
+      watchdog('bgpage', 'No results found for nid !nid', array('!nid' => $nid));
+    }
   }
   catch (Exception $e) {
-    watchdog('bgpage', 'Could not connect to Solr to fetch data for !nids. Error was %error.', array(
-      '!nids' => implode(',', $nids),
+    watchdog('bgpage', 'Could not connect to Solr to fetch data for !nid. Error was %error.', array(
+      '!nid' => $nid,
       '%error' => $e->getMessage(),
     ), WATCHDOG_ERROR);
   }
