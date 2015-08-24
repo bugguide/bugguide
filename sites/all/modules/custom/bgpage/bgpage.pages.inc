@@ -44,11 +44,8 @@ function bgpage_tree($nid, $mode = 'collapsed') {
   $children_nids = db_query('SELECT entity_id
                              FROM {field_data_field_parent} fdfp
                              inner join {node} n on n.nid = fdfp.entity_id
-                             inner join {bgpage_archive} bgpage on bgpage.nid = n.nid
                              where n.status = 1
-                             and ' . $conditions . '
-                             order by bgpage.sequence, bgpage.nid', $parameters)->fetchCol();
-
+                             and ' . $conditions, $parameters)->fetchCol();
   // Add children to the list of nids.
   $nids = array_merge($nids, $children_nids);
 
