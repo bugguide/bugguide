@@ -410,12 +410,12 @@ function bg_prepare_nodes($nids, $type) {
  */
 function bg_field_load_multiple($field, $entities) {
   if (count($entities)) {
-    $first_entity = reset($entities);
-    $fields = field_info_instances('node', $first_entity->type);
-    $options = array(
-      'field_id' => $fields[$field]['field_id'],
-    );
-    field_attach_load('node', $entities, FIELD_LOAD_CURRENT, $options);
+    $result = db_query('select entity_id as nid, ' . $field . '_value as value from {field_data_' . $field . '} where entity_id in (:nids)', array(
+      ':nids' => array_keys($entities),
+    ));
+    foreach ($result as $row) {
+      $entities[$row->nid]->{$field}[LANGUAGE_NONE][0]['value'] = $row->value;
+    }
   }
   return $entities;
 }
