@@ -235,32 +235,42 @@ function bgpage_node_form_validate(&$form, &$form_state) {
 }
 
 /**
+ * Implements hook_apachesolr_index_document_build_node().
+ */
+function bgpage_apachesolr_index_document_build_node($document, $entity, $env_id) {
+  if ($entity->type !== 'bgpage') {
+    return;
+  }
+
+  // Classification field.
+  $classification = '';
+  if (!empty($entity->field_parent[LANGUAGE_NONE][0]['value'])) {
+    $classification = $entity->field_parent[LANGUAGE_NONE][0]['value'] . ',';
+  }
+  $classification .= $entity->nid;
+  $document->addField('ss_bgpage_classification', $classification);
+}
+
+
+/**
  * Builds a hierarchy tree for a set of related nodes.
  *
- * @param array $nodes
- *   An array of pseudo-nodes ordered hierarchycally. The term pseudo is
- *   used because they are not fully loaded nodes due to performance reasons.
+ * @param array $results
+ *   An array of Apache Solr search results.
  * @returns string
  *   The rendered HTML that represents the tree.
  */
-function bgpage_tree_build($nodes) {
+function bgpage_tree_build($results) {
   global $TAXON_NAMES, $TAXON_IDS;
   $output = '<span class="graytext">Kingdom</span> <strong>Animalia</strong> - Animals<br/>';
 
-  foreach ($nodes as $node) {
-    // Calculate indentation for this item based on the number of parents.
-    $node_wrapper = entity_metadata_wrapper('node', $node);
-    $parents = $node_wrapper->field_parent->value();
-    if (empty($parents)) {
-      $indents = 0;
-    }
-    else {
-      $indents = count(explode(',', $parents));
-    }
-    $indents = str_repeat('&nbsp;', ($indents + 2) * 2);
+  foreach ($results as $result) {
+    // Calculate indentation.
+    $indents = count(explode(',', $result->ss_bgpage_classification));
+    $indents = str_repeat('&nbsp;', ($indents) * 2);
 
     // Render the element.
-    $output .= $indents . bgpage_tree_child($node);
+    $output .= $indents . bgpage_tree_child($result);
   }
 
   return $output;
@@ -269,25 +279,25 @@ function bgpage_tree_build($nodes) {
 /**
  * Renders a tree element.
  *
- * @param object node
- *   A pseudo node that contains title, field_parent, field_taxon and field_scientific_name.
+ * @param object result
+ *   An Apache Solr search result.
  * @return string
  *   The rendered tree item.
  */
-function bgpage_tree_child($node) {
+function bgpage_tree_child($result) {
   global $TAXON_NAMES, $TAXON_IDS;
-  if (!empty($node->field_taxon) && isset($TAXON_NAMES[$node->field_taxon[LANGUAGE_NONE][0]['value']])) {
-    $taxon_name = $TAXON_NAMES[$node->field_taxon[LANGUAGE_NONE][0]['value']];
-    $taxon_id = $node->field_taxon[LANGUAGE_NONE][0]['value'];
+  if (!empty($result->its_field_taxon)) {
+    $taxon_name = $TAXON_NAMES[$result->its_field_taxon];
+    $taxon_id = $result->its_field_taxon;
   }
   else {
     $taxon_name = t('No Taxon');
     $taxon_id = NULL;
   }
 
-  $scientific_name = check_plain($node->title);
-  if (!empty($node->field_scientific_name)) {
-    $scientific_name = $node->field_scientific_name[LANGUAGE_NONE][0]['value'];
+  $scientific_name = check_plain($result->label);
+  if (!empty($result->sm_field_scientific_name)) {
+    $scientific_name = $result->sm_field_scientific_name[0];
   }
 
   $child_count = '';
@@ -307,15 +317,15 @@ function bgpage_tree_child($node) {
   if ($italics) {
     $output .= "<i>";
   }
-  $output .= l("<strong>$scientific_name</strong>", "node/" . $node->nid . "/tree", array('html' => TRUE));
+  $output .= l("<strong>$scientific_name</strong>", "node/" . $result->entity_id . "/tree", array('html' => TRUE));
   if ($italics) {
     $output .= "</i>";
   }
-  if ($node->title != $scientific_name) {
-    $output .= " - " . check_plain($node->title);
+  if ($result->label != $scientific_name) {
+    $output .= " - " . $result->label;
   }
-  if (!empty($node->field_hodges_number)) {
-    $output .= " - Hodges#" . $node->field_hodges_number[LANGUAGE_NONE][0]['value'];
+  if (!empty($result->sm_field_hodges_number)) {
+    $output .= " - Hodges#" . $result->sm_field_hodges_number[0]['value'];
   }
   $output .= "$child_count</span><br />\n";
 
@@ -386,4 +396,40 @@ function bgpage_browse($nid) {
     $output .= "<br /><br /><p>There are no guide pages below this one.</p>";
   }
   return $output;
+}
+
+/**
+ * Fetches classification details for a set of nids.
+ *
+ * @param array $nids
+ * @return array of ApacheSolr search result objects.
+ */
+function bgpage_fetch_classification($nids) {
+  $results = array();
+  try {
+    $query = apachesolr_drupal_query('apachesolr', array());
+    // Configure query.
+    $entity_ids = implode(' OR ', $nids);
+    $query->addParam('fq', 'entity_id:(' . $entity_ids . ')');
+    $query->addParam('fl', 'entity_id,label,ss_bgpage_classification,sm_field_hodges_number,its_field_taxon,sm_field_scientific_name');
+    $sort_field = 'sort_bgpage_classification';
+    $sort_direction = 'asc';
+    $query->setAvailableSort($sort_field, $sort_direction);
+    $query->setSolrsort($sort_field, $sort_direction);
+
+    // Run query and render results if matches are found.
+    list($final_query, $response) = apachesolr_do_query($query, pager_find_page());
+    if ($response->code == '200' && $response->response->numFound > 0) {
+      $result = $response->response->docs;
+    }
+    watchdog('bgpage', 'No results found for nids !nids', array('!nids' => implode(',', $nids)));
+  }
+  catch (Exception $e) {
+    watchdog('bgpage', 'Could not connect to Solr to fetch data for !nids. Error was %error.', array(
+      '!nids' => implode(',', $nids),
+      '%error' => $e->getMessage(),
+    ), WATCHDOG_ERROR);
+  }
+
+  return $results;
 }
