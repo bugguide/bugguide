@@ -19,7 +19,11 @@ function _bgpage_classification($field) {
   $nids[] = $node->nid;
 
   // Build classification tree.
-  $classified_results = bgpage_fetch_classification($nids);
+  $nids_filter = new SolrFilterSubQuery('OR');
+  foreach ($nids as $nid) {
+    $nids_filter->addFilter('entity_id', $nid);
+  }
+  $classified_results = bgpage_fetch_classification($node->nid, $nids_filter);
   return bgpage_tree_build($classified_results);
 }
 
