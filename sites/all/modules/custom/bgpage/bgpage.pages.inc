@@ -17,6 +17,7 @@ function bgpage_tree($nid, $mode = 'collapsed') {
   $nids = array();
   $node = node_load($nid);
   $node_wrapper = entity_metadata_wrapper('node', $node);
+  $output = '';
 
   // Build the array of nids to list.
   $nids = explode(',', $node_wrapper->field_parent->value());
@@ -49,32 +50,8 @@ function bgpage_tree($nid, $mode = 'collapsed') {
   // Add children to the list of nids.
   $nids = array_merge($nids, $children_nids);
 
-  // Build an array of pseudo nodes to render the tree.
-  $nodes = bg_prepare_nodes($nids, 'bgpage');
-
-  // Fetch titles.
-  $result = db_query('SELECT nid, title FROM {node} WHERE nid IN (:nids)', array(':nids' => $nids));
-  foreach ($result as $row) {
-    $nodes[$row->nid]->title = $row->title;
-  }
-
-  // Fetch taxon and scientific name.
-  $nodes = bg_field_load_multiple('field_parent', $nodes);
-  $nodes = bg_field_load_multiple('field_taxon', $nodes);
-  $nodes = bg_field_load_multiple('field_scientific_name', $nodes);
-  $nodes = bg_field_load_multiple('field_hodges_number', $nodes);
-
-  // Build an array where the keys are the parents + the node's nid.
-  $classified_nodes = array();
-  foreach ($nodes as $node) {
-    $key = (isset($node->field_parent[LANGUAGE_NONE][0]['value']) ? $node->field_parent[LANGUAGE_NONE][0]['value'] . ',' : '') . $node->nid;
-    $classified_nodes[$key] = $node;
-  }
-
-  // Sort array by parent field and title.
-  ksort($classified_nodes);
-
-  $output = bgpage_tree_build($classified_nodes);
+  $classified_results = bgpage_fetch_classification($nids);
+  $output = bgpage_tree_build($classified_results);
 
   if ($mode == 'collapsed') {
     $output .= '<p>' . l('view all', 'node/' . $nid . '/tree/full') . '</p>';
