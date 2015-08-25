@@ -8,31 +8,33 @@
  * Callback to render a guide page's classification tree.
  */
 function _bgpage_classification($field) {
-  $node = $field['entity'];
-  $parent_nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
-
-  $nodes = bg_prepare_nodes($parent_nids, 'bgpage');
-  // Fetch titles.
-  $result = db_query('SELECT nid, title FROM {node} WHERE nid IN (:nids)', array(':nids' => $parent_nids));
-  foreach ($result as $row) {
-    $nodes[$row->nid]->title = $row->title;
+  if ($field['view_mode'] != 'full') {
+    return;
   }
-  // Fetch taxon and scientific name.
-  $nodes = bg_field_load_multiple('field_parent', $nodes);
-  $nodes = bg_field_load_multiple('field_taxon', $nodes);
-  $nodes = bg_field_load_multiple('field_scientific_name', $nodes);
 
+  $node = $field['entity'];
+  // Extract parent nids.
+  $nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
   // Append current node at the end.
-  $nodes[] = $node;
+  $nids[] = $node->nid;
 
   // Build classification tree.
-  return bgpage_tree_build($nodes);
+  $nids_filter = new SolrFilterSubQuery('OR');
+  foreach ($nids as $nid) {
+    $nids_filter->addFilter('entity_id', $nid);
+  }
+  $classified_results = bgpage_fetch_classification($node->nid, $nids_filter);
+  return bgpage_tree_build($classified_results);
 }
 
 /**
  * Callback to render citations in a bgpage node.
  */
 function _bgpage_citations($field) {
+  if ($field['view_mode'] != 'full') {
+    return;
+  }
+
   $node = $field['entity'];
   if (empty($node->field_citations[LANGUAGE_NONE])) {
     return t('There are no citations.');
