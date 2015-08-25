@@ -185,6 +185,7 @@ function _bg_filter_list_item_process($text, $filter, $format) {
  * BG cite filter process clallback.
  */
 function _bg_filter_cite_process($text, $filter, $format) {
+  unset($match);
   if (preg_match_all("/\[cite(all)?:(\d+)(,(\d+))?(,(\d+))?\]/i", $text, $match)) {
     // Fetch the static variable where we gather citations from all fields.
     $citation_nids = &drupal_static('bg_citation_nids', array());
