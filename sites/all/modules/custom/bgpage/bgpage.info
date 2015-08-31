@@ -42,7 +42,6 @@ features[field_base][] = field_size
 features[field_base][] = field_synonyms
 features[field_base][] = field_taxon
 features[field_instance][] = node-bgpage-body
-features[field_instance][] = node-bgpage-field_citations
 features[field_instance][] = node-bgpage-field_common_name
 features[field_instance][] = node-bgpage-field_counts
 features[field_instance][] = node-bgpage-field_editors
