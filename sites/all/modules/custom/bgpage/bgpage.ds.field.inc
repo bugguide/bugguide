@@ -29,44 +29,9 @@ function _bgpage_classification($field) {
 
 /**
  * Callback to render citations in a bgpage node.
+ *
+ * @see bg_node_view_alter().
  */
 function _bgpage_citations($field) {
-  if ($field['view_mode'] != 'full') {
-    return;
-  }
-
-  $node = $field['entity'];
-  if (empty($node->field_citations[LANGUAGE_NONE])) {
-    return t('There are no citations.');
-  }
-
-  $wrapper = entity_metadata_wrapper('node', $node);
-  if (!$wrapper->field_citations->count()) {
-    return t('There are no citations.');
-  }
-
-  $list_items = '<ol>';
-  foreach ($wrapper->field_citations->getIterator() as $delta => $item_wrapper) {
-    $bgref_node = node_load($item_wrapper->value());
-    if (!empty($bgref_node)) {
-      $list_items .= '<li>' . l($bgref_node->title, 'node/' . $bgref_node->nid);
-      // Append book details if they are available.
-      $book_details = array();
-      if (isset($bgref_node->custom_fields['author'])) {
-        $book_details[] = check_plain($bgref_node->custom_fields['author']);
-      }
-      if (isset($bgref_node->custom_fields['year'])) {
-        $book_details[] = check_plain($bgref_node->custom_fields['year']);
-      }
-      if (isset($bgref_node->custom_fields['publisher'])) {
-        $book_details[] = check_plain($bgref_node->custom_fields['publisher']);
-      }
-      if (count($book_details)) {
-        $list_items .= '</br>' . implode('. ', $book_details) . '.';
-      }
-      $list_items .= '</li>';
-    }
-  }
-  $list_items .= '</ol>';
-  return $list_items;
+  return 'This is a placeholder to list citations.';
 }

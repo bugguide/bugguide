@@ -166,11 +166,6 @@ function bg_filter_info() {
     'description' => t('Every line that starts with a + will be converted into a list item.'),
     'process callback'  => '_bg_filter_list_item_process',
   );
-  $filters['bg_cite'] = array(
-    'title' => t('Citation filter'),
-    'description' => t('Translates [cite] tags into real citations.'),
-    'process callback'  => '_bg_filter_cite_process',
-  );
   return $filters;
 }
 
@@ -179,75 +174,6 @@ function bg_filter_info() {
  */
 function _bg_filter_list_item_process($text, $filter, $format) {
   return preg_replace('/^\+(.+)$/mi', '<div class="bgpage-bullet">$1</div>', $text);
-}
-
-/**
- * BG cite filter process clallback.
- */
-function _bg_filter_cite_process($text, $filter, $format) {
-  unset($match);
-  if (preg_match_all("/\[cite(all)?:(\d+)(,(\d+))?(,(\d+))?\]/i", $text, $match)) {
-    // Fetch the static variable where we gather citations from all fields.
-    $citation_nids = &drupal_static('bg_citation_nids', array());
-    $find = array();
-    $replace = array();
-    foreach ($match[2] as $idx => $nid) {
-      $find[] = $match[0][$idx];
-
-      // Don't cite a deleted node.
-      $found = db_query('select * from {node} where nid = :nid', array(':nid' => $nid))->fetchField();
-      if (!$found) {
-        $replace[] = '';
-      }
-      else {
-        // Add citation to the static variable.
-        if (!in_array($nid, $citation_nids)) {
-          $citation_nids[] = $nid;
-        }
-
-        // Extract citation index so we can show it as "(7)" in the text.
-        $citation_index = array_search($nid, $citation_nids);
-
-        $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid) . ')</span>';
-      }
-    }
-
-    $text = str_replace($find, $replace, $text);
-  }
-  return $text;
-}
-
-/**
- * Implements hook_node_presave().
- */
-function bg_node_presave($node) {
-  if (isset($node->field_citations)) {
-    // Populate field_citations with citations in the node fields.
-    // This is used by display suite's field_citations_list to render them.
-    $citation_nids = &drupal_static('bg_citation_nids', array());
-    if (count($citation_nids)) {
-      $node->field_citations[LANGUAGE_NONE] = array();
-      foreach ($citation_nids as $nid) {
-        $node->field_citations[LANGUAGE_NONE][]['value'] = $nid;
-      }
-      // Reset citations so they aren't dragged into the next node
-      // if we are processing multiple ones in this request.
-      $all_cited = array();
-    }
-    else {
-      $node->field_citations[LANGUAGE_NONE] = array();
-    }
-  }
-}
-
-/**
- * Implements hook_form_alter().
- */
-function bg_form_alter(&$form, &$form_state, $form_id) {
-  // Hide field_citations as it is managed internally.
-  if ((strpos($form_id, 'node_form') !== FALSE) && isset($form['field_citations'])) {
-    hide($form['field_citations']);
-  }
 }
 
 /**
@@ -436,4 +362,75 @@ function bg_get_parent_nid($node) {
     $nid = end($parents);
   }
   return $nid;
+}
+
+/**
+ * Implements hook_node_view_alter().
+ */
+function bg_node_view_alter(&$build) {
+  // Check if we need to process citations of type [cite:123].
+  if (($build['#view_mode'] != 'full') || !isset($build['bgpage_citations'])) {
+    return;
+  }
+
+  // Loop all fields and search for citation tokens.
+  // These are not Drupal tokens and that is why they are processed here.
+  $citation_nids = array();
+  foreach ($build as $field_key => $field) {
+    if (strpos('#', $field_key) === 0) {
+      continue;
+    }
+    if (is_array($field) && !empty($field[0]['#markup'])) {
+      $text = $field[0]['#markup'];
+      unset($match);
+      if (preg_match_all("/\[cite(all)?:(\d+)(,(\d+))?(,(\d+))?\]/i", $text, $match)) {
+        $find = array();
+        $replace = array();
+        // Loop citation matches and replace them by links of type "Some reference(2)".
+        foreach ($match[2] as $idx => $nid) {
+          $find[] = $match[0][$idx];
+          if (!in_array($nid, $citation_nids)) {
+            $citation_nids[] = $nid;
+          }
+
+          // Extract citation index so we can show it as "(7)" in the text.
+          $citation_index = array_search($nid, $citation_nids);
+
+          $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid) . ')</span>';
+        }
+        $build[$field_key][0]['#markup'] = str_replace($find, $replace, $text);
+      }
+    }
+  }
+
+  // List citations at field bgpge_citations.
+  if (count($citation_nids)) {
+    $list_items = '<ol>';
+    $cited_nodes = node_load_multiple($citation_nids);
+    foreach ($cited_nodes as $bgref_node) {
+      if (!empty($bgref_node)) {
+        $list_items .= '<li>' . l($bgref_node->title, 'node/' . $bgref_node->nid);
+        // Append book details if they are available.
+        $book_details = array();
+        if (isset($bgref_node->custom_fields['author'])) {
+          $book_details[] = check_plain($bgref_node->custom_fields['author']);
+        }
+        if (isset($bgref_node->custom_fields['year'])) {
+          $book_details[] = check_plain($bgref_node->custom_fields['year']);
+        }
+        if (isset($bgref_node->custom_fields['publisher'])) {
+          $book_details[] = check_plain($bgref_node->custom_fields['publisher']);
+        }
+        if (count($book_details)) {
+          $list_items .= '</br>' . implode('. ', $book_details) . '.';
+        }
+        $list_items .= '</li>';
+      }
+    }
+    $list_items .= '</ol>';
+    $build['bgpage_citations'][0]['#markup'] = $list_items;
+  }
+  else {
+    unset($build['bgpage_citations']);
+  }
 }

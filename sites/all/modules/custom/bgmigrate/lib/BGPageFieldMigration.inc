@@ -102,7 +102,6 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
       'body:format',
       'body:language',
       'field_bgimage_image',
-      'field_citations',
       'field_common_name',
       'field_representative_images',
       'comment',
