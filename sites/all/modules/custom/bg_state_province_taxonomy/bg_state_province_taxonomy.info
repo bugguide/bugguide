@@ -1,9 +1,0 @@
-name = BG State-Province Taxonomy
-core = 7.x
-package = Features
-version = 7.x-1.0
-project = bg_state_province_taxonomy
-dependencies[] = features
-dependencies[] = taxonomy
-features[features_api][] = api:2
-features[taxonomy][] = state_province

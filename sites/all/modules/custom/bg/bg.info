@@ -7,7 +7,6 @@ project = bg
 dependencies[] = admin_menu
 dependencies[] = apachesolr
 dependencies[] = bg
-dependencies[] = bg_state_province_taxonomy
 dependencies[] = bgimage
 dependencies[] = bgpage
 dependencies[] = bgref
