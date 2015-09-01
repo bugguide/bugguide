@@ -106,7 +106,7 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
       $row->gender[] = 'male';
     }
 
-    // Prepare values for field_bgimage_life_stage
+    // Prepare values for field_bgimage_life_stage.
     $row->life_stage = array();
     if ($row->adult == 1) {
       $row->life_stage[] = 'adult';
@@ -114,6 +114,33 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
     if ($row->immature == 1) {
       $row->life_stage[] = 'immature';
     }
+
     return parent::prepareRow($row);
+  }
+
+  /**
+   * Acts after a node has been saved.
+   *
+   * Attaches the image to the node.
+   */
+  public function complete($node, stdClass $row) {
+    // Find out the image path.
+    $obfuscate = image_obfuscate($row->base . $node->nid);
+    $prefix = bgimage_get_prefix($obfuscate);
+    $directory = 'public://raw/' . $prefix;
+    $uri = $directory . $obfuscate . '.jpg';
+
+    // If the image was found save it to Drupal and attach it to the node.
+    if (file_exists($uri)) {
+      $file = array(
+        'filename' => basename($directory),
+        'uri' => $uri,
+        'status' => FILE_STATUS_PERMANENT,
+        'filemime' => file_get_mimetype($uri),
+      );
+      $file_entity = file_save((object) $file);
+      $node->field_bgimage_image[LANGUAGE_NONE][0] = (array) $file_entity;
+      node_save($node);
+    }
   }
 }
