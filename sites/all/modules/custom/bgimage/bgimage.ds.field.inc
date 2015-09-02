@@ -3,6 +3,18 @@
  * @file
  * Display suite callbacks for bgimage module.
  */
+
+/**
+ * Callback to render photo number.
+ */
+function _bgimage_field_tag($field) {
+  if ($field['view_mode'] != 'full') {
+    return;
+  }
+
+  $node = $field['entity'];
+  return l('Add to clipboard', 'bgimage/tag/' . $node->nid, array('query' => array('destination' => current_path())));
+}
 /**
  * Callback to render photo number.
  */
@@ -109,6 +121,8 @@ function _bgimage_field_related_images($field) {
 
   // Render as a list of image teasers.
   $output = '<div class="field-label">Images of this individual:</div>';
+
+  // Render image thumbnails.
   $output .= '<div class="image-container">';
   $nodes = node_load_multiple($nids);
   foreach ($nodes as $related_node) {
