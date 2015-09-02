@@ -131,7 +131,7 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
     $uri = $directory . $obfuscate . '.jpg';
 
     // If the image was found save it to Drupal and attach it to the node.
-    if (file_exists($uri)) {
+    if (file_exists(DRUPAL_ROOT . '/files/raw/' . $prefix . $obfuscate . '.jpg')) {
       $file = array(
         'filename' => basename($directory),
         'uri' => $uri,
