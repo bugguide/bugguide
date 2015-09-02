@@ -37,9 +37,10 @@ function bgimage_menu() {
     'file' => 'bgimage.pages.inc',
   );
 
-  $items['bgimage/move'] = array(
-    'title' => 'Moves tagged images to the current page',
+  $items['bgimage/move/%node'] = array(
+    'title' => 'Moves images in the clipboard to the current page',
     'page callback' => 'bgimage_move_tagged',
+    'page arguments' => array(2),
     'access arguments' => array('tag bgimages'),
     'type' => MENU_CALLBACK,
     'file' => 'bgimage.pages.inc',
@@ -557,6 +558,13 @@ function bgimage_block_view($delta = '') {
     $links[] = l(t('link'), 'bgimage/link', array(
       'attributes' => array('title' => t('Link together these images of the same specimen.')),
       'query' => array('destination' => current_path()),
+    ));
+  }
+
+  $current_node = menu_get_object('node');
+  if (!empty($current_node) && in_array($current_node->type, array('bgpage', 'bgimage'))) {
+    $links[] = l(t('move'), 'bgimage/move/' . $current_node->nid, array(
+      'attributes' => array('title' => t('Move these images to the taxonomy of the current page.')),
     ));
   }
 
