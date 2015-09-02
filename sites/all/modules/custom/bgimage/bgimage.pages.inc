@@ -6,21 +6,30 @@
 
 /**
  * Puts an image into the clipboard.
+ *
+ * @param object $node
+ *   The bgimage node that the user is viewing.
+ * @param string $all
+ *   Optional parameter to specify if we should add this image or
+ *   all the images in the series to the Clipboard.
  */
-function bgimage_tag($node) {
+function bgimage_tag($node, $all = NULL) {
   global $user;
-  if ($_SESSION['tagged_images']) {
-    $tagged_images = explode(',', $_SESSION['tagged_images']);
-    if (!in_array($node->nid, $tagged_images)) {
-      // Add new image to clipboard.
-      $tagged_images[] = $node->nid;
-    }
+
+  if (!$all) {
+    $nids = array($node->nid);
   }
   else {
-    // This is the first image the user has tagged.
-    $tagged_images[] = $node->nid;
+    $nids = bgimage_get_series($node->nid);
   }
-  $_SESSION['tagged_images'] = implode(',', $tagged_images);
+
+
+  if ($_SESSION['tagged_images']) {
+    $tagged_nids = explode(',', $_SESSION['tagged_images']);
+    $nids = array_unique(array_merge($tagged_nids, $nids));
+  }
+
+  $_SESSION['tagged_images'] = implode(',', $nids);
 
   $destination = drupal_get_destination();
   drupal_goto($destination['destination']);
@@ -154,12 +163,14 @@ function bgimage_link_tagged() {
       $weight++;
     }
     watchdog('bgimage', "linked '$tagged_list'", array(), WATCHDOG_NOTICE, l(t('view post'), "node/" . $node->nid));
+    drupal_set_message(t('Images were linked together.'));
     $_SESSION['tagged_images'] = NULL;
     // Redirect to the last image in the clipboard so the series can be seen.
     drupal_goto('node/' . $node->nid);
   }
 
   // Could not link images. Return to where we were.
+  drupal_set_message(t('You must be the owner of all the images in the clipboard in order to link them.', 'warning'));
   $destination = drupal_get_destination();
   drupal_goto($destination['destination']);
 }
