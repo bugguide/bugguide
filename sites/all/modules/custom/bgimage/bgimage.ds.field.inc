@@ -3,6 +3,18 @@
  * @file
  * Display suite callbacks for bgimage module.
  */
+
+/**
+ * Callback to render photo number.
+ */
+function _bgimage_field_tag($field) {
+  if ($field['view_mode'] != 'full') {
+    return;
+  }
+
+  $node = $field['entity'];
+  return l('Add to clipboard', 'bgimage/tag/' . $node->nid, array('query' => array('destination' => current_path())));
+}
 /**
  * Callback to render photo number.
  */
@@ -92,23 +104,15 @@ function _bgimage_field_related_images($field) {
 
   $node = $field['entity'];
 
-  // First, check if there are related images.
-  $result = db_query('SELECT nid, series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $node->nid))->fetchAssoc();
-  if (!count($result)) {
+  $nids = bgimage_get_series($node->nid);
+  if (!count($nids)) {
     return;
   }
 
-  // Then, find out if the series is based on this nid or a different one.
-  $nid = $result['nid'];
-  if ($nid != $result['series']) {
-    $nid = $result['series'];
-  }
-
-  // Next, extract the whole series of nids.
-  $nids = db_query('SELECT nid FROM {bgimage_series} WHERE series = :nid', array(':nid' => $nid))->fetchCol();
-
   // Render as a list of image teasers.
   $output = '<div class="field-label">Images of this individual:</div>';
+
+  // Render image thumbnails.
   $output .= '<div class="image-container">';
   $nodes = node_load_multiple($nids);
   foreach ($nodes as $related_node) {
@@ -129,5 +133,7 @@ function _bgimage_field_related_images($field) {
       $output .= '<div style="float:left"><a href="' . url('node/' . $related_node->nid) . '" title="' . $node_wrapper->title->value(array('sanitize' => TRUE)) . '">' . $image . '</a></div>';
     }
   }
-  return $output . '</div><div style="clear:both;">';
+  $output .= '</div><div style="clear:both;">';
+  $output .= l('Add all images to clipboard', 'bgimage/tag/' . $node->nid . '/all', array('query' => array('destination' => current_path())));
+  return $output;
 }
