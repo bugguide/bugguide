@@ -567,3 +567,30 @@ function bgimage_block_view($delta = '') {
     'content' => $content,
   );
 }
+
+/**
+ * Returns a series of images given an nid.
+ *
+ * @param int $nid
+ *   The nid of a node that belongs to the series.
+ * return array|NULL
+ *   An array of nids or NULL if the nid does not belong to a series.
+ */
+function bgimage_get_series($nid) {
+  // First, check if there are related images.
+  $result = db_query('SELECT nid, series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $nid))->fetchAssoc();
+  if (!count($result)) {
+    return;
+  }
+
+  // Then, find out if the series is based on this nid or a different one.
+  $nid = $result['nid'];
+  if ($nid != $result['series']) {
+    $nid = $result['series'];
+  }
+
+  // Next, extract the whole series of nids.
+  $nids = db_query('SELECT nid FROM {bgimage_series} WHERE series = :nid', array(':nid' => $nid))->fetchCol();
+
+  return $nids;
+}
