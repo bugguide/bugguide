@@ -357,7 +357,7 @@ function _bgimage_prepare($node) {
 
   $fields = array(
     'nid' => $node->nid,
-    'parent' => $wrapper->field_parent->value(),
+    'parent' => $wrapper->field_parent->value() ? $wrapper->field_parent->value() : 0,
     'parent_idx' => $wrapper->field_parent->value() . ',',
     'id' => $wrapper->field_bgimage_id->value(),
     'date_taken' => $wrapper->field_bgimage_date->value(),
