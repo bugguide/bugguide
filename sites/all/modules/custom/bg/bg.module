@@ -18,8 +18,9 @@ define('BG_FRASS_NID', 9410);
  */
 function bg_theme() {
   return array(
-    'guidemap' => array(
-      'arguments' => array(),
+    'bg_guidemap' => array(
+      'template' => 'guidemap',
+      'path' => drupal_get_path('module', 'bg') . '/templates',
     ),
     'bugguide_fixup_locations_table' => array(),
   );
@@ -133,7 +134,7 @@ function bg_block_view($delta = '') {
     case 'bg_guide':
       $block['subject'] = t('Clickable Guide');
       $block['content'] = array(
-        '#theme' => 'bg_guide',
+        '#theme' => 'bg_guidemap',
         '#title' => t('Clickable Guide'),
       );
       break;
