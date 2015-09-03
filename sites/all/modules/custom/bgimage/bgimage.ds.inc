@@ -60,6 +60,45 @@ function bgimage_ds_field_settings_info() {
   );
   $export['node|bgimage|default'] = $ds_fieldsetting;
 
+  $ds_fieldsetting = new stdClass();
+  $ds_fieldsetting->api_version = 1;
+  $ds_fieldsetting->id = 'node|bgimage|homepage';
+  $ds_fieldsetting->entity_type = 'node';
+  $ds_fieldsetting->bundle = 'bgimage';
+  $ds_fieldsetting->view_mode = 'homepage';
+  $ds_fieldsetting->settings = array(
+    'bgimage_field_placed_by' => array(
+      'weight' => '1',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+  );
+  $export['node|bgimage|homepage'] = $ds_fieldsetting;
+
+  return $export;
+}
+
+/**
+ * Implements hook_ds_custom_fields_info().
+ */
+function bgimage_ds_custom_fields_info() {
+  $export = array();
+
+  $ds_field = new stdClass();
+  $ds_field->api_version = 1;
+  $ds_field->field = 'recent_images';
+  $ds_field->label = 'Recent images';
+  $ds_field->field_type = 6;
+  $ds_field->entities = array(
+    'node' => 'node',
+  );
+  $ds_field->ui_limit = '';
+  $ds_field->properties = array(
+    'block' => 'views|recent_images-block',
+    'block_render' => '1',
+  );
+  $export['recent_images'] = $ds_field;
+
   return $export;
 }
 
@@ -120,6 +159,36 @@ function bgimage_ds_layout_settings_info() {
     'layout_link_custom' => '',
   );
   $export['node|bgimage|default'] = $ds_layout;
+
+  $ds_layout = new stdClass();
+  $ds_layout->api_version = 1;
+  $ds_layout->id = 'node|bgimage|homepage';
+  $ds_layout->entity_type = 'node';
+  $ds_layout->bundle = 'bgimage';
+  $ds_layout->view_mode = 'homepage';
+  $ds_layout->layout = 'ds_1col';
+  $ds_layout->settings = array(
+    'regions' => array(
+      'ds_content' => array(
+        0 => 'field_bgimage_image',
+        1 => 'bgimage_field_placed_by',
+      ),
+    ),
+    'fields' => array(
+      'field_bgimage_image' => 'ds_content',
+      'bgimage_field_placed_by' => 'ds_content',
+    ),
+    'classes' => array(),
+    'wrappers' => array(
+      'ds_content' => 'div',
+    ),
+    'layout_wrapper' => 'div',
+    'layout_attributes' => '',
+    'layout_attributes_merge' => 1,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
+  );
+  $export['node|bgimage|homepage'] = $ds_layout;
 
   $ds_layout = new stdClass();
   $ds_layout->api_version = 1;
