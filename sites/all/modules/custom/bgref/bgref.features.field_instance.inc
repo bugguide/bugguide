@@ -24,6 +24,12 @@ function bgref_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 4,
       ),
+      'homepage' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'teaser' => array(
         'label' => 'hidden',
         'module' => 'text',
@@ -68,6 +74,12 @@ function bgref_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 0,
       ),
+      'homepage' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -108,6 +120,12 @@ function bgref_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 3,
       ),
+      'homepage' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -147,6 +165,12 @@ function bgref_field_default_field_instances() {
         'settings' => array(),
         'type' => 'text_default',
         'weight' => 1,
+      ),
+      'homepage' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -191,6 +215,12 @@ function bgref_field_default_field_instances() {
         'type' => 'hidden',
         'weight' => 10,
       ),
+      'homepage' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -228,6 +258,12 @@ function bgref_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 9,
+      ),
+      'homepage' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -275,6 +311,12 @@ function bgref_field_default_field_instances() {
         'type' => 'number_integer',
         'weight' => 2,
       ),
+      'homepage' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
@@ -314,6 +356,12 @@ function bgref_field_default_field_instances() {
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 8,
+      ),
+      'homepage' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
