@@ -435,3 +435,13 @@ function bg_node_view_alter(&$build) {
     unset($build['bgpage_citations']);
   }
 }
+
+/**
+* Implements hook_entity_info_alter().
+*/
+function bg_entity_info_alter(&$entity_info) {
+  $entity_info['node']['view modes']['homepage'] = array(
+    'label' => t('Homepage'),
+    'custom settings' => TRUE,
+  );
+}

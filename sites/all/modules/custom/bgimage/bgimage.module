@@ -150,6 +150,14 @@ function bgimage_ds_fields_info($entity_type) {
       'file' => drupal_get_path('module', 'bgimage') . '/bgimage.ds.field.inc',
     );
 
+    $fields['bgimage_field_placed_by'] = array(
+      'title' => t('Placed by'),
+      'description' => t('Shows who uploaded an image.'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bgimage_field_placed_by',
+      'file' => drupal_get_path('module', 'bgimage') . '/bgimage.ds.field.inc',
+    );
+
     return array($entity_type => $fields);
   }
   return;
