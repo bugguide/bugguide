@@ -15,6 +15,7 @@ dependencies[] = ctools
 dependencies[] = date_popup
 dependencies[] = diff
 dependencies[] = ds
+dependencies[] = ds_ui
 dependencies[] = entity
 dependencies[] = entitycache
 dependencies[] = fe_block
