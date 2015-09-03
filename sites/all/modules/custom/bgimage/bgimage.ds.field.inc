@@ -48,13 +48,8 @@ function _bgimage_field_copyright($field) {
 
   // Extract the user's name.
   $user_wrapper = entity_metadata_wrapper('user', $node->uid);
-  if ($user_wrapper) {
-    $user_name = $user_wrapper->field_user_full_name->value();
-    if (empty($user_name)) {
-      $user_name = $user_wrapper->name->value();
-    }
-  }
-  return 'Copyright &copy; ' . $year . ' ' . l($user_name, 'user/' . $node->uid);
+  $user_name = bguserfields_get_name($user_wrapper);
+    return 'Copyright &copy; ' . $year . ' ' . l($user_name, 'user/' . $node->uid);
 }
 
 /**
@@ -135,5 +130,29 @@ function _bgimage_field_related_images($field) {
   }
   $output .= '</div><div style="clear:both;">';
   $output .= l('Add all images to clipboard', 'bgimage/tag/' . $node->nid . '/all', array('query' => array('destination' => current_path())));
+  return $output;
+}
+
+/**
+ * Callback to render who placed an image.
+ */
+function _bgimage_field_placed_by($field) {
+  if ($field['view_mode'] != 'homepage') {
+    return;
+  }
+
+  $node = $field['entity'];
+
+  $user_wrapper = entity_metadata_wrapper('user', $node->uid);
+  $user_name = bguserfields_get_name($user_wrapper);
+  $time_ago = format_interval((time() - $node->changed) , 2) . ' ago';
+  $output = 'Placed by <a href="/user/' . $node->uid . '" title="View user profile.">' . $user_name . '</a> ' . $time_ago;
+
+  $parent_nid = bg_get_parent_nid($node);
+  if ($parent_nid) {
+    $parent_node = node_load($parent_nid);
+    $output .= ' in<br/><a href="/node/' . $parent_nid . '" title="' . check_plain($parent_node->title) . '">' . check_plain($parent_node->title) . '</a>';
+  }
+
   return $output;
 }
