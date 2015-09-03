@@ -39,3 +39,24 @@ function bguserfields_views_pre_render($view) {
     }
   }
 }
+
+/**
+ * Returns the user's full name or its username.
+ *
+ * @param object $user_wrapper
+ *   An EntityMetadataWrapper for the user.
+ * @return
+ *   String the user's full name or it's username.
+ *   Empty string if the wrapper is empty.
+ */
+function bguserfields_get_name($user_wrapper) {
+  $user_name = '';
+  if ($user_wrapper) {
+    $user_name = $user_wrapper->field_user_full_name->value();
+    if (empty($user_name)) {
+      $user_name = $user_wrapper->name->value();
+    }
+  }
+  return $user_name;
+}
+
