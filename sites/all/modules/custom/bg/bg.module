@@ -19,6 +19,7 @@ define('BG_FRASS_NID', 9410);
 function bg_theme() {
   return array(
     'bg_guidemap' => array(
+      'variables' => array(),
       'template' => 'guidemap',
       'path' => drupal_get_path('module', 'bg') . '/templates',
     ),
