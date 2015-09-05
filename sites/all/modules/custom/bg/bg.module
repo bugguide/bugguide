@@ -76,7 +76,12 @@ function bg_menu() {
 /**
  * Access callback for BugGuide tabs.
  */
-function bg_menu_access($node) {
+function bg_menu_access($nid) {
+  $node = node_load($nid);
+  if (empty($node)) {
+    return FALSE;
+  }
+
   $pid = bg_get_parent_nid($node);
   // No tabs on ID Request (6) or Frass (9410).
   if (user_access('access content') && ($pid != BG_ID_REQUEST_NID) && ($pid != BG_FRASS_NID)) {
@@ -417,8 +422,8 @@ function bg_node_view_alter(&$build) {
 }
 
 /**
-* Implements hook_entity_info_alter().
-*/
+ * Implements hook_entity_info_alter().
+ */
 function bg_entity_info_alter(&$entity_info) {
   $entity_info['node']['view modes']['homepage'] = array(
     'label' => t('Homepage'),
