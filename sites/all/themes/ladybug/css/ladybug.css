@@ -2,3 +2,9 @@ div.bgpage-bullet {
   display: list-item;
   margin-left: 20px;
 }
+
+li.horizontal {
+  display: inline;
+  list-style-type: none;
+  padding-right: 20px;
+}

@@ -104,6 +104,50 @@ function bgimage_permission() {
 }
 
 /**
+ * Implements hook_apachesolr_index_document_build_node().
+ */
+function bgimage_apachesolr_index_document_build_node($document, $entity, $env_id) {
+  if ($entity->type !== 'bgimage') {
+    return;
+  }
+
+  // Image thumbnail.
+  $node_wrapper = entity_metadata_wrapper('node', $entity);
+  if (!empty($node_wrapper->field_bgimage_image->value())) {
+    $image_properties = array(
+      'style_name' => 'thumbnail',
+      'path' => $node_wrapper->field_bgimage_image->file->value()->uri,
+      'alt' => $node_wrapper->title->value(array('sanitize' => TRUE)),
+      'title' => $node_wrapper->title->value(array('sanitize' => TRUE)),
+      'attributes' => array('style' => 'margin: 10px;'),
+    );
+    $image = theme('image_style', $image_properties);
+    $link = '<a href="' . url('node/' . $entity->nid) . '" title="' . $node_wrapper->title->value(array('sanitize' => TRUE)) . '">' . $image . '</a>';
+    $document->addField('ss_bgimage_thumbnail', $link);
+  }
+
+  // Rating.
+  $rating_avg = 0;
+  $rating_count = 0;
+  // Rating cannot be accessed through an EMW :-(
+  if (!empty($entity->field_bgimage_representative[LANGUAGE_NONE][0])) {
+    $rating_avg = $entity->field_bgimage_representative[LANGUAGE_NONE][0]['average'];
+    $rating_count = $entity->field_bgimage_representative[LANGUAGE_NONE][0]['count'];
+  }
+  $document->addField('is_bgimage_rating_avg', $rating_avg);
+  $document->addField('is_bgimage_rating_count', $rating_count);
+
+  // Parents field used for searching for descendants.
+  $parents = array();
+  if (!empty($entity->field_parent[LANGUAGE_NONE][0]['value'])) {
+    $parents = explode(',', $entity->field_parent[LANGUAGE_NONE][0]['value']);
+  }
+  foreach ($parents as $parent) {
+    $document->addField('sm_bgpage_parents', $parent);
+  }
+}
+
+/**
  * Implements hook_ds_fields_info().
  */
 function bgimage_ds_fields_info($entity_type) {

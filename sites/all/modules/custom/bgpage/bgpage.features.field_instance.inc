@@ -17,6 +17,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => '',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'hidden',
         'settings' => array(),
@@ -68,6 +74,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Try to find a unique common name. Otherwise use the scientific name for the taxon. If no common name is available for a species page, use the genus and species together, but do not capitalize the species. Preferred common name sources include:<br/><a href="http://www.entsoc.org/common-names" target="blank">ESA: Common Names of Insects &amp; Related Organisms</a><br/><a href="http://www.esc-sec.ca/commonnames.html" target="blank">ESC: Common Names of Insects in Canada</a><br/><a href="http://www.naba.org/pubs/enames.html" target="blank">NABA: English Names of North American Butterflies Occuring North of Mexico</a><br/><a href="http://www.pugetsound.edu/academics/academic-resources/slater-museum/biodiversity-resources/dragonflies/north-american-odonata/" target="blank">DSA: The Odonata of North America</a><br/><a href="http://www.americanarachnology.org/AAS_information.html" target="blank">AAS: Common and Scientific Names of Arachnids</a>',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'settings' => array(),
@@ -113,6 +125,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Examples here might be number of orders, families, species and/or subspecies for particular regions (or worldwide). One count per line.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -159,6 +177,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => '',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'settings' => array(),
@@ -204,6 +228,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Notes on the meaning of the scientific and common names.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -250,6 +280,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Indicate any particular food preferences. You may want to note different food requirements for larvae versus adults.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -296,6 +332,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Where generally found. In or around water? In the ground? On trees or low bushes?',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -342,6 +384,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Only available for species of Lepidoptera.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -388,6 +436,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Typical identification marks, especially diagnostic or distinguishing features. You may want to note variability or regional differences.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -434,6 +488,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Notable references on the internet. Create links with HTML or BBCode, e.g., [url=http://www.bugguide.net]BugGuide.Net[/url]',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -480,6 +540,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Details about the various stages of development and information about reproduction.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -526,6 +592,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => '',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'settings' => array(),
@@ -571,6 +643,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Additional common names; one per line. Note that larvae sometimes have different common names than adults.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -617,6 +695,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => '',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'settings' => array(),
@@ -662,6 +746,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Notable references in print. Use citations as explained above for publication information to appear in a Works Cited section.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -708,6 +798,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'A simple guide to pronunciation showing syllables and emphasis. For example, lepidoptera might be leh-pih-DOP-ter-ra. Particularly useful for scientific names and those with unexpected pronunciations.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'settings' => array(),
@@ -753,6 +849,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Just a simple and general text description of the limits of the range.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -799,6 +901,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Any general remarks or notes of interest.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -845,6 +953,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'It is probably best to leave this blank and let the system randomly choose from among all images marked as representative. If you want to eliminate a particular image just edit the image and uncheck representative. This will be most useful for guide pages high up in the taxonomy. In that case we may wish to select the most common representatives from the multitude of candidates. To specify, enter the image node numbers in a comma delimited list (e.g., 5234,1243,4534).',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'settings' => array(),
@@ -890,6 +1004,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => '',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'settings' => array(),
@@ -935,6 +1055,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'When typically found. For butterflies, moths, and dragonflies, when do they fly? You may want to note separately when the larvae are found (caterpillars, for example).',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -981,6 +1107,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Similar creatures or those easily confused with or having a significant relationship to this one. Consider providing links to other guide pages.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -1027,6 +1159,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Typical specimen dimensions may be specified here. Metric is preferred, but English units may additionally be specified. Be sure to indicate what the measure applies to (wingspan, perhaps, or body length). It may also be appropriate to include sizes for larvae (caterpillars, for example).',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -1073,6 +1211,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => 'Classification changes can be noted here.',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'module' => 'text',
@@ -1119,6 +1263,12 @@ function bgpage_field_default_field_instances() {
     'deleted' => 0,
     'description' => '',
     'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
       'default' => array(
         'label' => 'above',
         'settings' => array(),
