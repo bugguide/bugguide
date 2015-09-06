@@ -13,7 +13,7 @@
  *   down.
  */
 function bgpage_tree($nid, $mode = 'collapsed') {
-  $node = node_load($node);
+  $node = node_load($nid);
   // Prepare the query filter depending on whether we want the collapsed or
   // full taxonomy tree.
   $parent_filter = new SolrFilterSubQuery('AND');
@@ -24,8 +24,16 @@ function bgpage_tree($nid, $mode = 'collapsed') {
     $parent_filter->addFilter('sm_bgpage_parents', $node->nid);
   }
 
+  // List only bgpage nodes.
+  $bundle_filter = new SolrFilterSubQuery('AND');
+  $bundle_filter->addFilter('bundle', 'bgpage');
+
+  $main_filter = new SolrFilterSubQuery('AND');
+  $main_filter->addFilterSubQuery($parent_filter);
+  $main_filter->addFilterSubQuery($bundle_filter);
+
   // Fetch the tree from Apache Solr.
-  $classified_results = bgpage_fetch_classification($node->nid, $parent_filter);
+  $classified_results = bgpage_fetch_classification($node->nid, $main_filter);
 
   // Render the results.
   if (empty($classified_results)) {
