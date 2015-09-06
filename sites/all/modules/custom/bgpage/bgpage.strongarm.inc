@@ -80,6 +80,12 @@ function bgpage_strongarm() {
       'revision' => array(
         'custom_settings' => FALSE,
       ),
+      'homepage' => array(
+        'custom_settings' => TRUE,
+      ),
+      'browse' => array(
+        'custom_settings' => TRUE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(

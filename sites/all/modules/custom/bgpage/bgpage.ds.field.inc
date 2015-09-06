@@ -8,13 +8,20 @@
  * Callback to render a guide page's classification tree.
  */
 function _bgpage_classification($field) {
-  if ($field['view_mode'] != 'full') {
+  if (!in_array($field['view_mode'], array('full', 'browse'))) {
     return;
   }
 
   $node = $field['entity'];
+
   // Extract parent nids.
-  $nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
+  if (!empty($node->field_parent[LANGUAGE_NONE])) {
+    $nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
+  }
+  else {
+    $nids = array();
+  }
+
   // Append current node at the end.
   $nids[] = $node->nid;
 
@@ -34,4 +41,91 @@ function _bgpage_classification($field) {
  */
 function _bgpage_citations($field) {
   return 'This is a placeholder to list citations.';
+}
+
+
+/**
+ * Callback to render images from immediate children.
+ */
+function _bgpage_browse($field) {
+  if ($field['view_mode'] != 'browse') {
+    return;
+  }
+
+  $output = '';
+  $node = $field['entity'];
+
+  // Fetch immediate children nids.
+  $filter = new SolrFilterSubQuery('AND');
+  $filter->addFilter('ss_bgpage_immediate_parent', $node->nid);
+  try {
+    $query = apachesolr_drupal_query('browse_children', array());
+    // Configure query.
+    $query->addFilterSubQuery($filter);
+    $query->addParam('fl', 'entity_id,label');
+    $query->addParam('rows', 10000000);
+    $sort_field = 'sort_label';
+    $sort_direction = 'asc';
+    $query->setAvailableSort($sort_field, $sort_direction);
+    $query->setSolrsort($sort_field, $sort_direction);
+
+    // Run query and render results if matches are found.
+    $children_nids = array();
+    list($final_query, $response) = apachesolr_do_query($query, pager_find_page());
+    if ($response->code == '200' && $response->response->numFound > 0) {
+      $children_docs  = $response->response->docs;
+    }
+    else {
+      watchdog('bgpage', 'No results found for nid !nid', array('!nid' => $nid));
+    }
+
+    // Fetch best rated images for each child.
+    if (count($children_docs)) {
+      foreach ($children_docs as $child_doc) {
+        // Filter images with this child nid as their parent.
+        $filter_parent = new SolrFilterSubQuery('AND');
+        $filter_parent->addFilter('sm_bgpage_parents', $child_doc->entity_id);
+        $filter_bundle = new SolrFilterSubQuery('AND');
+        $filter_bundle->addFilter('bundle', 'bgimage');
+        $main_filter = new SolrFilterSubQuery('AND');
+        $main_filter->addFilterSubQuery($filter_bundle);
+        $main_filter->addFilterSubQuery($filter_parent);
+
+        $query = apachesolr_drupal_query('browse_images_' . $child_doc->entity_id, array());
+        $query->addFilterSubQuery($main_filter);
+        $query->addParam('fl', 'ss_bgimage_thumbnail');
+        $query->addParam('rows', 5);
+        $query->addParam('sort', 'is_bgimage_rating_avg desc');
+        $query->addParam('sort', 'is_bgimage_rating_count desc');
+
+        // Query Solr and attach images to the child's document.
+        list($final_query, $response) = apachesolr_do_query($query, pager_find_page());
+
+        $child_doc->matches = array();
+        if ($response->code == '200' && $response->response->numFound > 0) {
+          $child_doc->matches = $response->response->docs;
+        }
+      }
+    }
+  }
+  catch (Exception $e) {
+    watchdog('bgpage', 'Could not connect to Solr to fetch data for !nid. Error was %error.', array(
+      '!nid' => $nid,
+      '%error' => $e->getMessage(),
+    ), WATCHDOG_ERROR);
+  }
+
+  // Render results.
+  foreach ($children_docs as $child_doc) {
+    $output .= '<h3><a href="' . url('node/' . $child_doc->entity_id) . '" title="' . $child_doc->label . '">' . $child_doc->label . '</a></h3>';
+    if (!empty($child_doc->matches)) {
+      $output .= '<ul>';
+      foreach ($child_doc->matches as $image_doc) {
+        $output .= '<li class="horizontal">' . $image_doc->ss_bgimage_thumbnail . '</li>';
+      }
+      $output .= '</ul>';
+    }
+  }
+
+  return $output;
 }

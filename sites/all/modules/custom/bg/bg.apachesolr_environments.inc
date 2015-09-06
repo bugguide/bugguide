@@ -16,10 +16,15 @@ function bg_apachesolr_environments() {
   $environment->name = 'localhost server';
   $environment->url = 'http://localhost:8983/solr';
   $environment->service_class = '';
-  $environment->conf = array();
+  $environment->conf = array(
+    'apachesolr_direct_commit' => 0,
+    'apachesolr_read_only' => '0',
+    'apachesolr_soft_commit' => 0,
+  );
   $environment->index_bundles = array(
     'node' => array(
-      0 => 'bgpage',
+      0 => 'bgimage',
+      1 => 'bgpage',
     ),
   );
   $export['solr'] = $environment;

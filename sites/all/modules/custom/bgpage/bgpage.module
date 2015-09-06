@@ -7,7 +7,7 @@ include_once 'bgpage.features.inc';
  */
 function bgpage_menu() {
   // Add the Taxonomy tab.
-  $items['node/%bg_node/tree'] = array(
+  $items['node/%bgpage_node/tree'] = array(
     'title' => 'Taxonomy',
     'page callback' => 'bgpage_tree',
     'page arguments' => array(1),
@@ -18,7 +18,7 @@ function bgpage_menu() {
     'file' => 'bgpage.pages.inc',
   );
   // Add the Browse tab.
-  $items['node/%bg_node/bgpage'] = array(
+  $items['node/%bgpage_node/bgpage'] = array(
     'title' => 'Browse',
     'page callback' => 'bgpage_browse',
     'page arguments' => array(1),
@@ -26,9 +26,35 @@ function bgpage_menu() {
     'access arguments' => array(1),
     'weight' => 1,
     'type' => MENU_LOCAL_TASK,
+    'file' => 'bgpage.pages.inc',
   );
 
   return $items;
+}
+
+/**
+ * Wildcard resolver for Browse tab.
+ *
+ * For bgpage we return the nid, while for bgmage we return the immediate parent.
+ */
+function bgpage_node_to_arg($arg, $map, $index) {
+  if ($arg == '%') {
+    return NULL;
+  }
+
+  $node = node_load($arg);
+  if (empty($node)) {
+    return NULL;
+  }
+
+  if ($node->type == 'bgpage') {
+    return $arg;
+  }
+  elseif ($node->type == 'bgimage') {
+    return bg_get_parent_nid($node);
+  }
+
+  return NULL;
 }
 
 /**
@@ -50,6 +76,13 @@ function bgpage_ds_fields_info($entity_type) {
       'title' => t('Works cited'),
       'field_type' => DS_FIELD_TYPE_FUNCTION,
       'function' => '_bgpage_citations',
+      'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
+    );
+
+    $fields['bgpage_browse'] = array(
+      'title' => t('Browse images per children'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bgpage_browse',
       'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
     );
 
@@ -250,7 +283,7 @@ function bgpage_apachesolr_index_document_build_node($document, $entity, $env_id
   $classification .= $entity->nid;
   $document->addField('ss_bgpage_classification', $classification);
 
-  // Parents field used for searching all descendants.
+  // Parents field used for searching for descendants.
   $parents = array();
   if (!empty($entity->field_parent[LANGUAGE_NONE][0]['value'])) {
     $parents = explode(',', $entity->field_parent[LANGUAGE_NONE][0]['value']);
@@ -265,7 +298,6 @@ function bgpage_apachesolr_index_document_build_node($document, $entity, $env_id
     $document->addField('ss_bgpage_immediate_parent', $parent_nid);
   }
 }
-
 
 /**
  * Builds a hierarchy tree for a set of related nodes.
@@ -344,72 +376,6 @@ function bgpage_tree_child($result) {
   }
   $output .= "$child_count</span><br />\n";
 
-  return $output;
-}
-
-/**
- * Menu callback for the Browse tab.
- */
-function bgpage_browse($nid) {
-  $node = node_load($nid);
-  $PER_PAGE = 5;
-  $node->comment = 0;
-  $path = bgpage_get_path($node);
-  $output = '';
-
-  $stage_filter_sql = bgimage_get_stage_filter_sql();
-
-  if (!$stage_filter_sql) {
-    $result = pager_query("SELECT n.nid FROM {node} n, {bgpage} p WHERE p.nid = n.nid AND parent = '$path' AND status = '1' ORDER BY p.sequence, p.nid", $PER_PAGE);
-  }
-  else {
-    //$result = pager_query("SELECT p.nid, count(*) FROM {node} n, {bgpage} p, {bgimage} i WHERE p.nid = n.nid AND p.parent = '$path' AND concat(i.parent,',') LIKE concat(p.parent,',',p.nid,',%') AND status = '1' AND representative = 1 AND $stage_filter GROUP BY p.nid ORDER BY p.sequence, p.nid", $PER_PAGE, 0, "SELECT count(distinct p.nid) FROM {node} n, {bgpage} p, {bgimage} i WHERE p.nid = n.nid AND p.parent = '$path' AND concat(i.parent,',') LIKE concat(p.parent,',',p.nid,',%') AND representative = 1 AND status = '1' AND $stage_filter");
-    // now with parent_idx
-    $result = pager_query("SELECT p.nid, COUNT(*) FROM {node} n, {bgpage} p, {bgimage} i WHERE p.nid = n.nid AND p.parent = '$path' AND i.parent_idx LIKE concat(p.parent,',',p.nid,',%') AND status = '1' AND representative = 1 $stage_filter_sql GROUP BY p.nid ORDER BY p.sequence, p.nid", $PER_PAGE, 0, "SELECT COUNT(distinct p.nid) FROM {node} n, {bgpage} p, {bgimage} i WHERE p.nid = n.nid AND p.parent = '$path' AND i.parent_idx LIKE concat(p.parent,',',p.nid,',%') AND representative = 1 AND status = '1' $stage_filter_sql");
-  }
-
-  while ($child = db_fetch_object($result)) {
-    $count++;
-    $child = node_load(array('nid' => $child->nid, 'type' => 'bgpage'));
-    if (!$child) {
-      watchdog('bgpage', "bgpage_browse() cannot load node nid '%nid'", array('%nid' => $nid), WATCHDOG_ERROR);
-    }
-    if ($child->status == 1) {
-      $children[] = $child;
-    }
-  }
-
-  if ($children) {
-    $pager = theme('pager');
-    $output .= $pager;
-    foreach ($children as $child) {
-      $child_links[] = l($child->title, "node/$child->nid/bgpage");
-    }
-    if (count($child_links) > 1) {
-      $output .= "<div class=\"node-links\">" . implode(' | ', $child_links) . "</div>";
-    }
-    $output .= bgimage_stage_filter_selector($node);
-    $output .= '<br />';
-
-    foreach ($children as $child) {
-      $child->comment = 0;
-      $child->teaser = bgimage_representative_images($child, 0);
-
-      // TODO: check_markup() is stripping the images out.
-      // This ugly hack sets the node format to Full HTML.
-      // We should Do It Right instead of doing this.
-      $child->format = 2;
-      $output .= node_view($child, 1);
-    }
-    if ($pager) {
-      $output .= $pager;
-    }
-  } else {
-    $output .= bgimage_representative_images($node, $main);
-    $output .= "<br /><br />";
-    $output .= bgimage_stage_filter_selector($node);
-    $output .= "<br /><br /><p>There are no guide pages below this one.</p>";
-  }
   return $output;
 }
 
