@@ -108,7 +108,7 @@ function _bgpage_browse($field) {
       if ($response->code == '200' && $response->response->numFound > 0) {
         $output .= '<ul>';
         foreach ($response->response->docs as $doc) {
-          $output .= '<li>' . $doc->ss_bgimage_thumbnail . '</li>';
+          $output .= '<li class="horizontal">' . $doc->ss_bgimage_thumbnail . '</li>';
         }
         $output .= '</ul>';
       }
