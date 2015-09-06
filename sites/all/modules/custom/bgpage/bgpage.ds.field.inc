@@ -62,9 +62,9 @@ function _bgpage_browse($field) {
     $query = apachesolr_drupal_query('browse_children', array());
     // Configure query.
     $query->addFilterSubQuery($filter);
-    $query->addParam('fl', 'entity_id');
+    $query->addParam('fl', 'entity_id,label');
     $query->addParam('rows', 10000000);
-    $sort_field = 'sort_bgpage_classification';
+    $sort_field = 'sort_label';
     $sort_direction = 'asc';
     $query->setAvailableSort($sort_field, $sort_direction);
     $query->setSolrsort($sort_field, $sort_direction);
@@ -73,47 +73,38 @@ function _bgpage_browse($field) {
     $children_nids = array();
     list($final_query, $response) = apachesolr_do_query($query, pager_find_page());
     if ($response->code == '200' && $response->response->numFound > 0) {
-      foreach ($response->response->docs as $doc) {
-        $children_nids[] = $doc->entity_id;
-      }
+      $children_docs  = $response->response->docs;
     }
     else {
       watchdog('bgpage', 'No results found for nid !nid', array('!nid' => $nid));
     }
 
     // Fetch best rated images for each child.
-    if (count($children_nids)) {
-      $filter_parent = new SolrFilterSubQuery('OR');
-      foreach ($children_nids as $child_nid) {
-        $filter_parent->addFilter('sm_bgpage_parents', $child_nid);
-      }
-      $filter_bundle = new SolrFilterSubQuery('AND');
-      $filter_bundle->addFilter('bundle', 'bgimage');
-      $main_filter = new SolrFilterSubQuery('AND');
-      $main_filter->addFilterSubQuery($filter_bundle);
-      $main_filter->addFilterSubQuery($filter_parent);
+    if (count($children_docs)) {
+      foreach ($children_docs as $child_doc) {
+        // Filter images with this child nid as their parent.
+        $filter_parent = new SolrFilterSubQuery('AND');
+        $filter_parent->addFilter('sm_bgpage_parents', $child_doc->entity_id);
+        $filter_bundle = new SolrFilterSubQuery('AND');
+        $filter_bundle->addFilter('bundle', 'bgimage');
+        $main_filter = new SolrFilterSubQuery('AND');
+        $main_filter->addFilterSubQuery($filter_bundle);
+        $main_filter->addFilterSubQuery($filter_parent);
 
-      $query = apachesolr_drupal_query('browse_images', array());
-      // Configure query.
-      $query->addFilterSubQuery($main_filter);
-      $query->addParam('fl', 'ss_bgimage_thumbnail');
-      $query->addParam('rows', 10);
-      $query->addParam('sort', 'is_bgimage_rating_avg desc');
-      $query->addParam('sort', 'is_bgimage_rating_count desc');
+        $query = apachesolr_drupal_query('browse_images_' . $child_doc->entity_id, array());
+        $query->addFilterSubQuery($main_filter);
+        $query->addParam('fl', 'ss_bgimage_thumbnail');
+        $query->addParam('rows', 5);
+        $query->addParam('sort', 'is_bgimage_rating_avg desc');
+        $query->addParam('sort', 'is_bgimage_rating_count desc');
 
-      // Run query and render results if matches are found.
-      $children_nids = array();
-      list($final_query, $response) = apachesolr_do_query($query, pager_find_page());
+        // Query Solr and attach images to the child's document.
+        list($final_query, $response) = apachesolr_do_query($query, pager_find_page());
 
-      if ($response->code == '200' && $response->response->numFound > 0) {
-        $output .= '<ul>';
-        foreach ($response->response->docs as $doc) {
-          $output .= '<li class="horizontal">' . $doc->ss_bgimage_thumbnail . '</li>';
+        $child_doc->matches = array();
+        if ($response->code == '200' && $response->response->numFound > 0) {
+          $child_doc->matches = $response->response->docs;
         }
-        $output .= '</ul>';
-      }
-      else {
-        watchdog('bgpage', 'No results found for nid !nid', array('!nid' => $node->nid));
       }
     }
   }
@@ -124,8 +115,17 @@ function _bgpage_browse($field) {
     ), WATCHDOG_ERROR);
   }
 
-  if (empty($output)) {
-    $output = 'No results found';
+  // Render results.
+  foreach ($children_docs as $child_doc) {
+    $output .= '<h3><a href="' . url('node/' . $child_doc->entity_id) . '" title="' . $child_doc->label . '">' . $child_doc->label . '</a></h3>';
+    if (!empty($child_doc->matches)) {
+      $output .= '<ul>';
+      foreach ($child_doc->matches as $image_doc) {
+        $output .= '<li class="horizontal">' . $image_doc->ss_bgimage_thumbnail . '</li>';
+      }
+      $output .= '</ul>';
+    }
   }
+
   return $output;
 }
