@@ -425,7 +425,7 @@ function bgpage_fetch_classification($nid, $filter) {
     $query->setSolrsort($sort_field, $sort_direction);
 
     // Run query and render results if matches are found.
-    list($final_query, $response) = apachesolr_do_query($query, pager_find_page());
+    list($final_query, $response) = apachesolr_do_query($query);
     if ($response->code == '200' && $response->response->numFound > 0) {
       $results = $response->response->docs;
     }

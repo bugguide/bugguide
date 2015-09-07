@@ -71,7 +71,7 @@ function _bgpage_browse($field) {
 
     // Run query and render results if matches are found.
     $children_nids = array();
-    list($final_query, $response) = apachesolr_do_query($query, pager_find_page());
+    list($final_query, $response) = apachesolr_do_query($query);
     if ($response->code == '200' && $response->response->numFound > 0) {
       $children_docs  = $response->response->docs;
     }
@@ -94,7 +94,7 @@ function _bgpage_browse($field) {
         $query->addParam('sort', 'is_bgimage_rating_count desc');
 
         // Query Solr and attach images to the child's document.
-        list($final_query, $response) = apachesolr_do_query($query, pager_find_page());
+        list($final_query, $response) = apachesolr_do_query($query);
 
         $child_doc->matches = array();
         if ($response->code == '200' && $response->response->numFound > 0) {
@@ -134,6 +134,7 @@ function _bgpage_images($field) {
   }
 
   $output = '';
+  $results_per_page = 25;
   $node = $field['entity'];
 
   // Fetch images who have this node as an ancestor.
@@ -144,15 +145,17 @@ function _bgpage_images($field) {
     // Configure query.
     $query->addFilterSubQuery($filter);
     $query->addParam('fl', 'entity_id,label,ss_bgimage_thumbnail,ss_bgimage_classification,is_bgimage_immediate_parent,ss_bgimage_immediate_parent_title');
-    $query->addParam('rows', 10000000);
     // Sort by classification (full list of parents including bgimage nid at the end),
     // and then by rating.
     $query->addParam('sort', 'ss_bgimage_classification desc');
     $query->addParam('sort', 'is_bgimage_rating_avg desc');
     $query->addParam('sort', 'is_bgimage_rating_count desc');
+    // Set paging and results per page.
+    $query->page = pager_find_page();
+    $query->addParam('rows', $results_per_page);
 
     // Run query and render results if matches are found.
-    list($final_query, $response) = apachesolr_do_query($query, pager_find_page());
+    list($final_query, $response) = apachesolr_do_query($query);
     if ($response->code == '200' && $response->response->numFound > 0) {
       // Group resuls by parent.
       $docs_by_parent = array();
@@ -181,6 +184,10 @@ function _bgpage_images($field) {
       }
       $output .= '</ul>';
     }
+
+    // Print pager.
+    pager_default_initialize($response->response->numFound, $results_per_page);
+    $output .= '<p>' . theme('pager') . '</p>';
   }
   else {
     $output = 'No images found for this classification.';
