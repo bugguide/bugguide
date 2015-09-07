@@ -6,7 +6,9 @@ include_once 'bgpage.features.inc';
  * Implementation of hook_menu().
  */
 function bgpage_menu() {
-  // Add the Taxonomy tab.
+  $items = array();
+
+  // Taxonomy tab.
   $items['node/%bgpage_node/tree'] = array(
     'title' => 'Taxonomy',
     'page callback' => 'bgpage_tree',
@@ -17,10 +19,23 @@ function bgpage_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'bgpage.pages.inc',
   );
-  // Add the Browse tab.
+
+  // Browse tab.
   $items['node/%bgpage_node/bgpage'] = array(
     'title' => 'Browse',
     'page callback' => 'bgpage_browse',
+    'page arguments' => array(1),
+    'access callback' => 'bg_menu_access',
+    'access arguments' => array(1),
+    'weight' => 1,
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'bgpage.pages.inc',
+  );
+
+  // Browse tab.
+  $items['node/%bgpage_node/bgimage'] = array(
+    'title' => 'Images',
+    'page callback' => 'bgpage_images',
     'page arguments' => array(1),
     'access callback' => 'bg_menu_access',
     'access arguments' => array(1),
@@ -83,6 +98,13 @@ function bgpage_ds_fields_info($entity_type) {
       'title' => t('Browse images per children'),
       'field_type' => DS_FIELD_TYPE_FUNCTION,
       'function' => '_bgpage_browse',
+      'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
+    );
+
+    $fields['bgpage_images'] = array(
+      'title' => t('Browse all images'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bgpage_images',
       'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
     );
 
