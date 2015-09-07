@@ -123,24 +123,31 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
    *
    * Attaches the image to the node.
    */
-  public function complete($node, stdClass $row) {
-    // Find out the image path.
-    $obfuscate = image_obfuscate($row->base . $node->nid);
+  public function complete($entity, stdClass $row) {
+    $obfuscate = image_obfuscate($row->base . $entity->nid);
     $prefix = bgimage_get_prefix($obfuscate);
     $directory = 'public://raw/' . $prefix;
-    $uri = $directory . $obfuscate . '.jpg';
+    $filename = $obfuscate . '.jpg';
+    $uri = $directory . $filename;
 
     // If the image was found save it to Drupal and attach it to the node.
-    if (file_exists(DRUPAL_ROOT . '/files/raw/' . $prefix . $obfuscate . '.jpg')) {
+    if (file_exists($uri)) {
+      // First, save the image as a file entity.
       $file = array(
-        'filename' => basename($directory),
+        'filename' => $filename,
         'uri' => $uri,
         'status' => FILE_STATUS_PERMANENT,
         'filemime' => file_get_mimetype($uri),
       );
       $file_entity = file_save((object) $file);
-      $node->field_bgimage_image[LANGUAGE_NONE][0] = (array) $file_entity;
-      node_save($node);
+
+      // Then, attache the file to the node.
+      $node = new stdClass();
+      $node->nid = $entity->nid;
+      $node->type = 'bgimage';
+      $node->field_bgimage_image[LANGUAGE_NONE][0]['fid'] = $file_entity->fid;
+      field_attach_update('node', $node);
+      entity_get_controller('node')->resetCache(array($node->nid));
     }
   }
 }
