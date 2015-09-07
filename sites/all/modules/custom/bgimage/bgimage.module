@@ -111,6 +111,33 @@ function bgimage_apachesolr_index_document_build_node($document, $entity, $env_i
     return;
   }
 
+  // Parents field used for searching for descendants.
+  $parents = array();
+  if (!empty($entity->field_parent[LANGUAGE_NONE][0]['value'])) {
+    $parents = explode(',', $entity->field_parent[LANGUAGE_NONE][0]['value']);
+  }
+  foreach ($parents as $parent) {
+    $document->addField('sm_bgimage_parents', $parent);
+  }
+
+  // Immediate parent's nid and title used for grouping results.
+  $parent_nid = bg_get_parent_nid($entity);
+  if ($parent_nid != NULL) {
+    $parent_node = node_load($parent_nid);
+    if (!empty($parent_node)) {
+      $document->addField('is_bgimage_immediate_parent', $parent_nid);
+      $document->addField('ss_bgimage_immediate_parent_title', $parent_node->title);
+    }
+  }
+
+  // Classification field used for sorting.
+  $classification = '';
+  if (!empty($entity->field_parent[LANGUAGE_NONE][0]['value'])) {
+    $classification = $entity->field_parent[LANGUAGE_NONE][0]['value'] . ',';
+  }
+  $classification .= $entity->nid;
+  $document->addField('ss_bgimage_classification', $classification);
+
   // Image thumbnail.
   $node_wrapper = entity_metadata_wrapper('node', $entity);
   if (!empty($node_wrapper->field_bgimage_image->value())) {
@@ -126,7 +153,7 @@ function bgimage_apachesolr_index_document_build_node($document, $entity, $env_i
     $document->addField('ss_bgimage_thumbnail', $link);
   }
 
-  // Rating.
+  // Rating field used for sorting.
   $rating_avg = 0;
   $rating_count = 0;
   // Rating cannot be accessed through an EMW :-(
@@ -136,15 +163,6 @@ function bgimage_apachesolr_index_document_build_node($document, $entity, $env_i
   }
   $document->addField('is_bgimage_rating_avg', $rating_avg);
   $document->addField('is_bgimage_rating_count', $rating_count);
-
-  // Parents field used for searching for descendants.
-  $parents = array();
-  if (!empty($entity->field_parent[LANGUAGE_NONE][0]['value'])) {
-    $parents = explode(',', $entity->field_parent[LANGUAGE_NONE][0]['value']);
-  }
-  foreach ($parents as $parent) {
-    $document->addField('sm_bgpage_parents', $parent);
-  }
 }
 
 /**

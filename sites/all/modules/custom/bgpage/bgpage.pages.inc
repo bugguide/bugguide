@@ -56,3 +56,16 @@ function bgpage_browse($nid) {
   $node = node_load($nid);
   return node_view($node, 'browse');
 }
+
+/**
+ * Shows images for a bgpage node.
+ *
+ * Traverses the tree in a Breadth-first way showing images for each leaf.
+ *
+ * @param int $nid
+ *   The nid of the bgpage node.
+ */
+function bgpage_images($nid) {
+  $node = node_load($nid);
+  return node_view($node, 'images');
+}

@@ -86,6 +86,9 @@ function bgpage_strongarm() {
       'browse' => array(
         'custom_settings' => TRUE,
       ),
+      'images' => array(
+        'custom_settings' => TRUE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
