@@ -145,7 +145,7 @@ function bgimage_apachesolr_index_document_build_node($document, $entity, $env_i
   if (!empty($field_bgimage)) {
     $image_properties = array(
       'style_name' => 'thumbnail',
-      'path' => $field_bgimage->file->value()->uri,
+      'path' => $field_bgimage['uri'],
       'alt' => $node_wrapper->title->value(array('sanitize' => TRUE)),
       'title' => $node_wrapper->title->value(array('sanitize' => TRUE)),
       'attributes' => array('style' => 'margin: 10px;'),
