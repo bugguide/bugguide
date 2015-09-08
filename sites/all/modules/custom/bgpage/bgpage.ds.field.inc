@@ -136,6 +136,7 @@ function _bgpage_images($field) {
   $output = '';
   $results_per_page = 25;
   $node = $field['entity'];
+  $node_wrapper = entity_metadata_wrapper('node', $node);
 
   // Fetch images who have this node as an ancestor.
   $filter = new SolrFilterSubQuery('AND');
@@ -144,7 +145,7 @@ function _bgpage_images($field) {
     $query = apachesolr_drupal_query('images', array());
     // Configure query.
     $query->addFilterSubQuery($filter);
-    $query->addParam('fl', 'entity_id,label,ss_bgimage_thumbnail,ss_bgimage_classification,is_bgimage_immediate_parent,ss_bgimage_immediate_parent_title');
+    $query->addParam('fl', 'entity_id,label,ss_bgimage_thumbnail,ss_bgimage_classification,is_bgimage_immediate_parent,sm_bgimage_parents,sm_bgimage_breadcrumbs');
     // Sort by classification (full list of parents including bgimage nid at the end),
     // and then by rating.
     $query->addParam('sort', 'ss_bgimage_classification desc');
@@ -177,7 +178,16 @@ function _bgpage_images($field) {
   // Render results.
   if (isset($docs_by_parent)) {
     foreach ($docs_by_parent as $parent_nid => $docs) {
-      $output .= '<h3><a href="' . url('node/' . $docs[0]->is_bgimage_immediate_parent) . '">' . $docs[0]->ss_bgimage_immediate_parent_title . '</a></h3>';
+      // Build a breadcrumb list for this taxon.
+      $breadcrumbs = $docs[0]->sm_bgimage_breadcrumbs;
+      $node_parents = $node_wrapper->field_parent->value();
+      if (!empty($node_parents)) {
+        $node_parent_nids = explode(',', $node_parents);
+        array_splice($breadcrumbs, 0, count($node_parent_nids) +1 );
+      }
+      $output .= implode(' &raquo; ', $breadcrumbs);
+
+      // Render a list of images for this group.
       $output .= '<ul>';
       foreach ($docs as $doc) {
         $output .= '<li class="horizontal">' . $doc->ss_bgimage_thumbnail . '</li>';

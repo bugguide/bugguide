@@ -369,17 +369,6 @@ function bgpage_tree_child($result) {
     $scientific_name = $result->sm_field_scientific_name[0];
   }
 
-  $child_count = '';
-  /*if (!empty($node->field_parent)) {
-    $search_path = $node->field_parent[LANGUAGE_NONE][0]['value'] . ','. $node->nid;
-    $query = new EntityFieldQuery;
-    $query->entityCondition('entity_type', 'node')
-          ->entityCondition('bundle', 'bgpage')
-          ->fieldCondition('field_parent', 'value', $search_path, 'CONTAINS');
-    $count = $query->count()->execute();
-    $child_count = ' ('. $count .')';
-  }*/
-
   $output = "<span class=\"bgpage-taxon-title\">$taxon_name </span>";
   $italics = $taxon_id >= $TAXON_IDS["Genus"];
   $output .= "<span class=\"bgpage-taxon-desc\">";
@@ -396,7 +385,6 @@ function bgpage_tree_child($result) {
   if (!empty($result->sm_field_hodges_number)) {
     $output .= " - Hodges#" . $result->sm_field_hodges_number[0];
   }
-  $output .= "$child_count</span><br />\n";
 
   return $output;
 }
