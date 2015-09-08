@@ -197,15 +197,17 @@ function bg_get_current_path($path) {
 /**
  * Build a one-line taxonomic linked breadcrumb.
  *
- * @param $node
+ * @param object $node
+ *   A bgpage node.
+ * @param string $guidebc
+ *   Defines which format to use to render each taxon name (common, scientific or both).
  * @param integer $from
  *   If the breadcrumb should not start at Home / Guide then specify which
  *   the nid of the taxon it should start from.
  * @return array of links with title and href.
  */
-function bg_create_taxonomic_breadcrumb($node, $from = NULL){
+function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Common name)', $from = NULL) {
   global $TAXON_NAMES;
-  global $user;
 
   $bc = array();
   if (!$from ) {
@@ -220,8 +222,8 @@ function bg_create_taxonomic_breadcrumb($node, $from = NULL){
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'bgpage')
-    ->propertyCondition('nid', $nids, 'IN');
-    //->fieldOrderBy('field_taxon', 'value', 'ASC');
+    ->propertyCondition('nid', $nids, 'IN')
+    ->fieldOrderBy('field_taxon', 'value', 'ASC');
   $result = $query->execute();
   if (isset($result['node'])) {
     $nids = array_keys($result['node']);
@@ -249,11 +251,9 @@ function bg_create_taxonomic_breadcrumb($node, $from = NULL){
         $taxon = t('No Taxon');
       }
 
-      // We only look at the user preferences when there is a scientific name present
-      if (user_is_logged_in()) {
-        $account = user_load($user->uid);
-        $guidebc = $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'];
-        $scientific_name = !empty($parent_node->field_scientific_name) ? $parent_node->field_scientific_name[LANGUAGE_NONE][0]['value'] : '';
+      // We only look at the format when the node has a scientific name.
+      $scientific_name = !empty($parent_node->field_scientific_name) ? $parent_node->field_scientific_name[LANGUAGE_NONE][0]['value'] : '';
+      if (!empty($scientific_name)) {
         if ($guidebc == 'Scientific name') {
           $linktext = $scientific_name;
         }
@@ -281,10 +281,39 @@ function bg_create_taxonomic_breadcrumb($node, $from = NULL){
  * Implements hook_preprocess_page().
  */
 function bg_preprocess_page(&$vars) {
-  // Set breadcrumb for bgpage and bgimage nodes.
-  $node = menu_get_object();
-  if (!empty($node) && isset($node->type) && in_array($node->type, array('bgpage', 'bgimage'))) {
-    drupal_set_breadcrumb(bg_create_taxonomic_breadcrumb($node));
+  global $user;
+
+  // Don't change the path in administrative pages.
+  if (path_is_admin(current_path())) {
+    return;
+  }
+
+  // Check that we have an nid in the path.
+  $nid = arg(1);
+  if (is_numeric($nid)) {
+    $node = node_load($nid);
+    // Set breadcrumb for bgpage and bgimage nodes.
+    if (!empty($node) && isset($node->type) && in_array($node->type, array('bgpage', 'bgimage'))) {
+      if ($node->type == 'bgimage') {
+        // For bgimage nodes we load the bgpage parent.
+        $parent_nid = bg_get_parent_nid($node);
+        $node = node_load($parent_nid);
+        if (empty($node)) {
+          return;
+        }
+      }
+      // Adjust the format of each crumb if we are logged in.
+      if (user_is_logged_in()) {
+        $account = user_load($user->uid);
+        $guidebc = $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'];
+        $breadcrumbs = bg_create_taxonomic_breadcrumb($node, $guidebc);
+      }
+      else {
+        $breadcrumbs = bg_create_taxonomic_breadcrumb($node);
+      }
+
+      drupal_set_breadcrumb($breadcrumbs);
+    }
   }
 }
 
