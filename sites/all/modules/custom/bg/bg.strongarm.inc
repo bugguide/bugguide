@@ -84,7 +84,7 @@ function bg_strongarm() {
     'logo_path' => 'sites/all/themes/suitcase/icon_16518/icon_16518.png',
     'logo_upload' => '',
     'default_favicon' => 0,
-    'favicon_path' => 'sites/all/themes/suitcase/images/favicon.ico',
+    'favicon_path' => 'sites/all/themes/ladybug/images/favicon.ico',
     'favicon_upload' => '',
     'alpha_grid' => 'alpha_fluid',
     'alpha_responsive' => 1,
