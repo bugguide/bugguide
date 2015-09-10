@@ -25,10 +25,10 @@ function bg_ctools_plugin_api($module = NULL, $api = NULL) {
 function bg_image_default_styles() {
   $styles = array();
 
-  // Exported image style: bugguide_large.
-  $styles['bugguide_large'] = array(
-    'name' => 'bugguide_large',
-    'label' => 'BugGuide large',
+  // Exported image style: bg_large.
+  $styles['bg_large'] = array(
+    'name' => 'bg_large',
+    'label' => 'BG large',
     'effects' => array(
       7 => array(
         'label' => 'Scale',
@@ -49,10 +49,10 @@ function bg_image_default_styles() {
     ),
   );
 
-  // Exported image style: bugguide_small.
-  $styles['bugguide_small'] = array(
-    'name' => 'bugguide_small',
-    'label' => 'BugGuide small',
+  // Exported image style: bg_small.
+  $styles['bg_small'] = array(
+    'name' => 'bg_small',
+    'label' => 'BG small',
     'effects' => array(
       6 => array(
         'label' => 'Scale',
