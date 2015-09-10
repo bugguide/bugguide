@@ -114,7 +114,7 @@ function _bgimage_field_related_images($field) {
     $node_wrapper = entity_metadata_wrapper('node', $related_node);
     if (isset($node_wrapper) && $node_wrapper->field_bgimage_image->value()) {
       $image_properties = array(
-        'style_name' => 'thumbnail',
+        'style_name' => 'bugguide_small',
         'path' => $node_wrapper->field_bgimage_image->file->value()->uri,
         'alt' => $node_wrapper->title->value(array('sanitize' => TRUE)),
         'title' => $node_wrapper->title->value(array('sanitize' => TRUE)),
