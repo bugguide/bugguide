@@ -228,6 +228,14 @@ function bgimage_ds_fields_info($entity_type) {
       'file' => drupal_get_path('module', 'bgimage') . '/bgimage.ds.field.inc',
     );
 
+    $fields['bgimage_field_taxonomy_path'] = array(
+      'title' => t('Taxonomy path'),
+      'description' => t('Renders a list of taxonomy links for this image.'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bgimage_field_taxonomy_path',
+      'file' => drupal_get_path('module', 'bgimage') . '/bgimage.ds.field.inc',
+    );
+
     return array($entity_type => $fields);
   }
   return;

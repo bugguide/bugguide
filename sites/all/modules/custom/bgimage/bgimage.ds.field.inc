@@ -31,7 +31,7 @@ function _bgimage_field_photo_number($field) {
  * Callback to render a copyright statement.
  */
 function _bgimage_field_copyright($field) {
-  if ($field['view_mode'] != 'full') {
+  if (!in_array($field['view_mode'], array('full', 'recent'))) {
     return;
   }
 
@@ -155,4 +155,27 @@ function _bgimage_field_placed_by($field) {
   }
 
   return $output;
+}
+
+/**
+ * Callback to render the taxonomy path of a bgimage node.
+ */
+function _bgimage_field_taxonomy_path($field) {
+  if ($field['view_mode'] != 'recent') {
+    return;
+  }
+
+  $node = $field['entity'];
+
+  // Extract parent links of this image.
+  $parent_node_nid = bg_get_parent_nid($node);
+  $parent_node = node_load($parent_node_nid);
+  $breadcrumbs = bg_create_taxonomic_breadcrumb($parent_node);
+  array_shift($breadcrumbs);
+  if (empty($breadcrumbs)) {
+    return;
+  }
+
+  // Render links.
+  return implode(' &raquo; ', $breadcrumbs);
 }
