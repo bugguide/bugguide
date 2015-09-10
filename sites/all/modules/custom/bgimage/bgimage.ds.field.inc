@@ -169,6 +169,9 @@ function _bgimage_field_taxonomy_path($field) {
 
   // Extract parent links of this image.
   $parent_node_nid = bg_get_parent_nid($node);
+  if (empty($parent_node_nid)) {
+    return;
+  }
   $parent_node = node_load($parent_node_nid);
   $breadcrumbs = bg_create_taxonomic_breadcrumb($parent_node);
   array_shift($breadcrumbs);
