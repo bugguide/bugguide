@@ -150,7 +150,7 @@ function bgimage_apachesolr_index_document_build_node($document, $entity, $env_i
   $field_bgimage = $node_wrapper->field_bgimage_image->value();
   if (!empty($field_bgimage)) {
     $image_properties = array(
-      'style_name' => 'thumbnail',
+      'style_name' => 'bugguide_small',
       'path' => $field_bgimage['uri'],
       'alt' => $node_wrapper->title->value(array('sanitize' => TRUE)),
       'title' => $node_wrapper->title->value(array('sanitize' => TRUE)),
@@ -615,7 +615,7 @@ function bgimage_block_view($delta = '') {
     }
 
     // Render a thumbnail of the image.
-    $rendered_image = theme('image_style', array('path' => $node->field_bgimage_image[LANGUAGE_NONE][0]['uri'], 'style_name' => 'thumbnail'));
+    $rendered_image = theme('image_style', array('path' => $node->field_bgimage_image[LANGUAGE_NONE][0]['uri'], 'style_name' => 'bugguide_small'));
     $content .= '<li style="margin:10px">';
     $content .= '<a href="' . url('node/' . $node->nid) . '" title="' . check_plain($node->title) . '">' . $rendered_image  . '</a>';
     $content .= l(t('remove'), 'bgimage/untag/' . $node->nid, array(
