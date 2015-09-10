@@ -30,4 +30,25 @@ function bg_install() {
     ->condition('theme', 'seven')
     ->condition('delta', array('management', 'navigation'), 'IN')
     ->execute();
+
+  // Create menu links
+  $main_menu_links = array(
+    array('title' => 'Home', 'path' => '<front>'),
+    array('title' => 'Guide', 'path' => 'node/3/bgpage'),
+    array('title' => 'ID Request', 'path' => 'node/6'),
+    array('title' => 'Frass', 'path' => 'node/9410/bgimage'),
+    array('title' => 'Forums', 'path' => 'forum'),
+    array('title' => 'Donate', 'path' => 'node/17109'),
+    array('title' => 'Help', 'path' => 'help'),
+  );
+  foreach ($main_menu_links as $weight => $link) {
+    $item = array (
+      'link_title' => $link['title'],
+      'link_path' => $link['path'],
+      'menu_name' => 'main-menu',
+      'weight' => $weight,
+      'plid' => 0,
+    );
+    menu_link_save($item);
+  }
 }
