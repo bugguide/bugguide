@@ -83,6 +83,12 @@ function bgimage_strongarm() {
       'homepage' => array(
         'custom_settings' => TRUE,
       ),
+      'browse' => array(
+        'custom_settings' => FALSE,
+      ),
+      'images' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
