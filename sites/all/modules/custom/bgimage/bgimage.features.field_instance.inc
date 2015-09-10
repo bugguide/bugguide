@@ -351,7 +351,7 @@ function bgimage_field_default_field_instances() {
         'module' => 'image',
         'settings' => array(
           'image_link' => '',
-          'image_style' => 'bugguide_large',
+          'image_style' => 'bg_large',
         ),
         'type' => 'image',
         'weight' => 2,
@@ -361,7 +361,7 @@ function bgimage_field_default_field_instances() {
         'module' => 'image',
         'settings' => array(
           'image_link' => 'content',
-          'image_style' => 'bugguide_small',
+          'image_style' => 'bg_small',
         ),
         'type' => 'image',
         'weight' => 0,
@@ -371,7 +371,7 @@ function bgimage_field_default_field_instances() {
         'module' => 'image',
         'settings' => array(
           'image_link' => 'content',
-          'image_style' => 'bugguide_small',
+          'image_style' => 'bg_small',
         ),
         'type' => 'image',
         'weight' => 0,
