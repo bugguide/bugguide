@@ -241,6 +241,9 @@ function bgimage_ds_fields_info($entity_type) {
   return;
 }
 
+/**
+ * Implements hook_node_validate().
+ */
 function bgimage_node_validate($node, $form, &$form_state) {
   if ($node->type != 'bgimage') {
     return;
@@ -357,6 +360,57 @@ function bgimage_node_update($node) {
     ->fields($fields)
     ->condition('nid', $node->nid)
     ->execute();
+}
+
+/**
+ * Implements hook_filter_info().
+ */
+function bgimage_filter_info() {
+  $filters['bg_thumb'] = array(
+    'title' => t('Image thumb filter'),
+    'description' => t('Changes the [:thumb] pseudo-BBCode tag into an image thumbnail.'),
+    'process callback'  => '_bgimage_filter_thumb_process',
+  );
+  return $filters;
+}
+
+/**
+ * [:thumb] filter callback.
+ *
+ * @param text $text
+ * @return filtered text.
+ */
+function _bgimage_filter_thumb_process($text, $filter, $format) {
+  if (preg_match_all("/\[thumb:(\d+)\]/i", $text, $match)) {
+    // then we make the HTML
+    foreach ($match[1] as $key => $value) {
+      $map[$value] = $key;
+    }
+    $nids = $match[1];
+    $result = db_query('SELECT n.nid, n.title, i.height, i.width, i.base
+                        FROM {node} n, {bgimage} i
+                        WHERE i.nid = n.nid AND n.nid IN (:nids)', array(':nids' => $nids));
+    foreach ($result as $img) {
+      $n = $map[$img->nid];
+      $obfuscate = image_obfuscate($img->base . $img->nid);
+      $prefix = bgimage_get_prefix($obfuscate);
+      $uri = 'public://raw/' . $prefix . $obfuscate  .'.jpg';
+      $rendered_image = theme('image_style', array('path' => $uri, 'style_name' => 'bg_small'));
+      $match[10][$n] = '<a href="' . url('node/' . $img->nid) . '" title="' . check_plain($img->title) . '">' . $rendered_image  . '</a>';
+    }
+
+    // PHP (4.3.2) str_replace appears to use some internal order
+    // rather than array index when finding replace elements
+    // corresponding to search elements.  To make sure that the
+    // order of the arrays correspond, we make new copies here.
+    // TODO: see if this is still necessary now that we are on PHP 5.2.
+    foreach ($match[1] as $key => $value) {
+      $mtch[] = $match[0][$key];
+      $repl[] = $match[10][$key];
+    }
+    $text = str_replace($mtch, $repl, $text);
+  }
+  return $text;
 }
 
 /**
