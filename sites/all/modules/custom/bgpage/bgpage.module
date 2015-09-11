@@ -228,13 +228,13 @@ function bgpage_node_form_validate(&$form, &$form_state) {
     elseif (preg_match("/[^A-Za-z-]/", $scientific_name) > 0) {
       form_set_error('field_scientific_name', t("Only the letters 'a' to 'z' are allowed."));
     }
-    elseif (($taxon_name == "Superfamily") && !bugguide_str_ends_with($values['field_scientific_name'][LANGUAGE_NONE][0]['value'], "oidea")) {
+    elseif (($taxon_name == "Superfamily") && !bg_str_ends_with($values['field_scientific_name'][LANGUAGE_NONE][0]['value'], "oidea")) {
       form_set_error('field_scientific_name', t("A superfamily name should end with 'oidea'."));
     }
-    elseif (($taxon_name == "Family") && !bugguide_str_ends_with($scientific_name, "idae")) {
+    elseif (($taxon_name == "Family") && !bg_str_ends_with($scientific_name, "idae")) {
       form_set_error('field_scientific_name', t("A family name should end with 'idae'."));
     }
-    elseif (($taxon_name == "Subfamily") && !bugguide_str_ends_with($scientific_name, "inae")) {
+    elseif (($taxon_name == "Subfamily") && !bg_str_ends_with($scientific_name, "inae")) {
       form_set_error('field_scientific_name', t("A subfamily name should end with 'inae'."));
     }
     elseif (($taxon_name == "Species") || ($taxon_name == "Subspecies")) {
