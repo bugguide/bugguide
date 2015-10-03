@@ -24,7 +24,7 @@ function bgimage_menu() {
     'title' => 'Adds an image to the Clipboard',
     'page callback' => 'bgimage_tag',
     'page arguments' => array(2),
-    'access arguments' => array('use clipboard'),
+    'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
     'file' => 'bgimage.pages.inc',
   );
@@ -33,7 +33,7 @@ function bgimage_menu() {
     'title' => 'Removes an image from the clipboard',
     'page callback' => 'bgimage_untag',
     'page arguments' => array(2),
-    'access arguments' => array('use clipboard'),
+    'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
     'file' => 'bgimage.pages.inc',
   );
@@ -42,7 +42,7 @@ function bgimage_menu() {
     'title' => 'Moves images in the clipboard to the current page',
     'page callback' => 'bgimage_move_tagged',
     'page arguments' => array(2),
-    'access arguments' => array('use clipboard'),
+    'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
     'file' => 'bgimage.pages.inc',
   );
@@ -50,7 +50,7 @@ function bgimage_menu() {
   $items['bgimage/link'] = array(
     'title' => 'Image tagging',
     'page callback' => 'bgimage_link_tagged',
-    'access arguments' => array('use clipboard'),
+    'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
     'file' => 'bgimage.pages.inc',
   );
@@ -58,14 +58,14 @@ function bgimage_menu() {
   $items['bgimage/unlink'] = array(
     'title' => 'Image tagging',
     'page callback' => 'bgimage_unlink_tagged',
-    'access arguments' => array('use clipboard'),
+    'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
   );
 
   $items['bgimage/untag_all'] = array(
     'title' => 'Removes images from the Clipboard',
     'page callback' => 'bgimage_untag_all',
-    'access arguments' => array('use clipboard'),
+    'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
     'file' => 'bgimage.pages.inc',
   );
@@ -92,7 +92,7 @@ function bgimage_permission() {
     'view fullsize bgimages' => array(
       'title' => 'View full size images',
     ),
-    'use clipboard' => array(
+    'use image clipboard' => array(
       'title' => 'Use image clipboard',
     ),
     'move all bgimages' => array(
