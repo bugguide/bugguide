@@ -11,6 +11,10 @@ function _bgimage_field_tag($field) {
   if ($field['view_mode'] != 'full') {
     return;
   }
+  
+  if (!user_access('use image clipboard')) {
+    return;
+  }
 
   $node = $field['entity'];
   return l('Add to clipboard', 'bgimage/tag/' . $node->nid, array('query' => array('destination' => current_path())));
@@ -129,7 +133,9 @@ function _bgimage_field_related_images($field) {
     }
   }
   $output .= '</div><div style="clear:both;">';
-  $output .= l('Add all images to clipboard', 'bgimage/tag/' . $node->nid . '/all', array('query' => array('destination' => current_path())));
+  if (user_access('use image clipboard')) {
+    $output .= l('Add all images to clipboard', 'bgimage/tag/' . $node->nid . '/all', array('query' => array('destination' => current_path())));
+  }
   return $output;
 }
 
