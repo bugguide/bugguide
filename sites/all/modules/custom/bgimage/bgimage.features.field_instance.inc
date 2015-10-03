@@ -22,7 +22,7 @@ function bgimage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 9,
+        'weight' => 10,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -234,7 +234,7 @@ function bgimage_field_default_field_instances() {
           'multiple_to' => '',
         ),
         'type' => 'date_default',
-        'weight' => 7,
+        'weight' => 8,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -403,7 +403,7 @@ function bgimage_field_default_field_instances() {
           'image_style' => 'bg_large',
         ),
         'type' => 'image',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'homepage' => array(
         'label' => 'hidden',
@@ -523,7 +523,7 @@ function bgimage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -623,10 +623,18 @@ function bgimage_field_default_field_instances() {
     'description' => 'Quality of image.<br>1: blurry, taken on a cheap camera phone;<br>5: professional-quality image, great depth of field, excellent lighting.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 26,
+        'label' => 'inline',
+        'module' => 'fivestar',
+        'settings' => array(
+          'expose' => 1,
+          'style' => 'average',
+          'text' => 'average',
+          'widget' => array(
+            'fivestar_widget' => 'sites/all/modules/fivestar/widgets/outline/outline.css',
+          ),
+        ),
+        'type' => 'fivestar_formatter_default',
+        'weight' => 4,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -673,21 +681,21 @@ function bgimage_field_default_field_instances() {
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'How representative of this taxon is this specimen?<br>1: can hardly recognize it as a member of this taxon;<br>5: I would show someone this picture to introduce them to this taxon',
+    'description' => 'How representative of this taxon is this specimen?<br>1: I can hardly recognize it as a member of this taxon;<br>5: I would show someone this picture to introduce them to this taxon',
     'display' => array(
       'default' => array(
-        'label' => 'hidden',
+        'label' => 'inline',
         'module' => 'fivestar',
         'settings' => array(
           'expose' => 1,
           'style' => 'average',
           'text' => 'average',
           'widget' => array(
-            'fivestar_widget' => 'default',
+            'fivestar_widget' => 'sites/all/modules/fivestar/widgets/outline/outline.css',
           ),
         ),
         'type' => 'fivestar_formatter_default',
-        'weight' => 1,
+        'weight' => 3,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -710,7 +718,7 @@ function bgimage_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_bgimage_representative',
-    'label' => 'Representative Image',
+    'label' => 'Representative of Taxon',
     'required' => 0,
     'settings' => array(
       'allow_clear' => 0,
@@ -741,7 +749,7 @@ function bgimage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -843,7 +851,7 @@ function bgimage_field_default_field_instances() {
   t('Date taken, if known (mm/dd/yy). Only specify this for wild specimens.');
   t('Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).');
   t('Gender');
-  t('How representative of this taxon is this specimen?<br>1: can hardly recognize it as a member of this taxon;<br>5: I would show someone this picture to introduce them to this taxon');
+  t('How representative of this taxon is this specimen?<br>1: I can hardly recognize it as a member of this taxon;<br>5: I would show someone this picture to introduce them to this taxon');
   t('ID');
   t('If known, otherwise leave blank. Do not include the word \'County\' or \'Parish\' here as the system will provide that as needed.');
   t('If you don\'t know for sure, don\'t check it. For example: for caterpillars check immature and for butterflies and moths check adult. If an image shows more than one life stage, check each one.');
@@ -858,7 +866,7 @@ function bgimage_field_default_field_instances() {
   t('Photographic Quality');
   t('Quality of image.<br>1: blurry, taken on a cheap camera phone;<br>5: professional-quality image, great depth of field, excellent lighting.');
   t('Remarks');
-  t('Representative Image');
+  t('Representative of Taxon');
   t('Size');
 
   return $field_instances;
