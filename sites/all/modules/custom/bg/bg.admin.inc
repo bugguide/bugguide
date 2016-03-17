@@ -23,59 +23,68 @@ function bg_utilities() {
  * Show orphaned nodes; i.e., nodes whose parent has been deleted.
  */
 function bg_orphans() {
-  $output = '<h1>' . t('Orphan Report') . '</h1>';
-  $result = db_query("SELECT n.nid, t.parent FROM {node} n, {bgpage} t WHERE t.nid = n.nid AND n.type = 'bgpage' AND n.status = '1'");
-  while ($bgpage = db_fetch_object($result)) {
-    $parents = explode(',', $bgpage->parent);
+  $output = '';
+
+  // Create array of immediate parents for each bgpage node.
+  $result = db_query("SELECT n.nid, p.field_parent_value FROM {field_data_field_parent} p JOIN {node} n ON p.revision_id = n.vid WHERE n.type = 'bgpage' AND p.deleted = 0");
+  
+  foreach ($result as $bgpage) {
+    $parents = explode(',', $bgpage->field_parent_value);
     if (count($parents) > 0) {
       $bgpage->last_parent = $parents[count($parents) - 1];
     }
     $bgpages[$bgpage->nid] = $bgpage;
   }
 
-  $child_tables[] = 'bgpage';
-  $child_tables[] = 'bgimage';
-  $child_tables[] = 'content_type_bglink';
-  $child_tables[] = 'bgref';
-  foreach ($child_tables as $table) {
-    if ($table == 'content_type_bglink') {
-      // CCK field.
-      $count = db_result(db_query("SELECT COUNT(n.nid) FROM {node} n, {$table} t WHERE t.nid = n.nid AND n.type = 'bglink' AND n.status = '1'"));      
+  // Create an array of known parentless nodes.
+  $result = db_query("SELECT n.type, n.nid, n.title FROM {node} n LEFT OUTER JOIN {field_data_field_parent} p ON (n.vid = p.revision_id) WHERE field_parent_value IS NULL AND n.type != 'bglink' AND n.type != 'page' AND n.type !='forum' AND n.type !='bgimage'");
+  foreach ($result as $node) {
+    $parentless_but_ok[$node->nid] = $node->title;
+  }
+  
+  $result = db_query("SELECT n.nid, n.status, n.title, p.field_parent_value, p.bundle FROM {field_data_field_parent} p JOIN {node} n ON p.revision_id = n.vid WHERE p.deleted = 0 AND n.type != 'forum' AND n.type != 'page' AND n.type != 'bglink'");
+  // TODO: remove bglink from above query exclusion when it gets parents.
+  $counter = 1;
+  foreach ($result as $node) {
+    if ($counter % 10000 == 0) {
+      watchdog('bg', 'Checked %count nodes', array('%count' => $counter));
     }
-    else {
-      $count = db_result(db_query("SELECT COUNT(n.nid) FROM {node} n, {$table} t WHERE t.nid = n.nid AND n.type = '$table' AND n.status = '1'"));
+    unset($child);
+    // Some nodes do not have parents.
+    if (!$node->field_parent_value) {
+      continue;
     }
-    $output .= '<p>' . t('Examined !count from !table', array('!count' => $count, '!table' => $table));
-    $result = db_query("SELECT n.nid, n.title, t.parent FROM {node} n, {$table} t WHERE t.nid = n.nid AND n.type = '$table' AND n.status = '1'");
-
-    while ($node = db_fetch_object($result)) {
-      unset($child);
-      if (!$node->parent) {
-        continue;
+    
+    $parents = explode(',', $node->field_parent_value);
+    $parents = array_reverse($parents);
+    foreach ($parents as $nid) {
+      $parent = isset($bgpages[$nid]) ? $bgpages[$nid] : NULL;
+      if (!$parent && !isset($parentless_but_ok[$nid])) {
+        $output .= "<ul><li>$node->bundle ";
+        $output .= l($node->nid . ' ' . t($node->title), "node/$node->nid");
+        $output .= " has missing parent ";
+        $output .= " $nid" . ' ' . $node->title;
+        $output .= "</li></ul>\n";
       }
-      $parents = explode(',', $node->parent);
-      $parents = array_reverse($parents);
-      foreach ($parents as $nid) {
-        $parent = $bgpages[$nid];
-        if (!$parent) {
-          $output .= "<ul><li>$table ";
-          $output .= l($node->nid, "node/$node->nid");
-          $output .= " has missing parent ";
-          $output .= " $nid" . ' ' . $node->title;
+      else {
+        if (isset($child) && ($child->last_parent != $nid)) {
+          $output .= "<ul><li>$node->bundle ";
+          $output .= l($node->nid . ' ' . t($node->title), "node/$node->nid");
+          $output .= " has path problem ";
+          $output .= " $child->nid's parent $nid != $child->last_parent";
           $output .= "</li></ul>\n";
         }
-        else {
-          if ($child && ($child->last_parent != $nid)) {
-            $output .= "<ul><li>$table ";
-            $output .= l($node->nid, "node/view/$node->nid");
-            $output .= " has path problem ";
-            $output .= " $child->nid's parent $nid != $child->last_parent";
-            $output .= "</li></ul>\n";
-          }
-          $child = $parent;
-        }
+        $child = $parent;
       }
     }
+    $counter++;
+  }
+  $output .= '<p>';
+  $output .= 'Checked ' . $counter . ' nodes.';
+  $output .= '<p>';
+  $output .= 'The following nodes are orphaned purposely: ';
+  foreach ($parentless_but_ok as $nid => $title) {
+    $output .= '<p>' . l($title, "node/$nid");
   }
   return $output;
 }
