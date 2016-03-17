@@ -185,8 +185,8 @@ function bg_fixup_locations_form() {
   // avoiding false matches like Dusachen.
   $result = db_query("SELECT base, location, location_code, county, COUNT(*) AS count FROM {bgimage} WHERE ((county COLLATE utf8_bin LIKE '%USA%') OR (UPPER(county) LIKE '%CANADA%')) GROUP BY location ORDER BY RAND() LIMIT 10");
   $ids = array();
-  while ($location = db_fetch_object($result)) {
 
+  foreach ($result as $location) {
     // Unique identifier.
     $base = $location->base;
     $ids[] = $base;
@@ -318,6 +318,7 @@ function bg_fixup_locations_form() {
     $form[$base]['location'] = array(
       '#type' => 'textfield',
       '#default_value' => $location,
+      '#description' => t('Proposed Location'),
     );
     $form[$base]['original_county'] = array(
       '#type' => 'value',
@@ -326,6 +327,7 @@ function bg_fixup_locations_form() {
     $form[$base]['county'] = array(
       '#type' => 'textfield',
       '#default_value' => $county,
+      '#description' => t('Proposed County'),
     );
     $form[$base]['original_location_code'] = array(
       '#type' => 'value',
@@ -377,8 +379,10 @@ function bg_fixup_locations_form_submit($form, &$form_state) {
 /**
  * Theme function for the location fixup form.
  */
-function theme_bg_fixup_locations_table($form) {
-  $headers = array(
+function theme_bg_fixup_locations_table(&$variables) {
+  $form = $variables['form'];
+  $table['#theme'] = 'table';
+  $table['#header'] = array(
     t('Fix'),
     t('Count'),
     t('Original Location'),
@@ -403,7 +407,8 @@ function theme_bg_fixup_locations_table($form) {
     );
   }
   
-  $output = theme_table($headers, $rows);
-  $output .= drupal_render($form);
+  $table['#rows'] = $rows; 
+  $output = drupal_render($table);
+  //$output .= drupal_render($form);
   return $output;
 }

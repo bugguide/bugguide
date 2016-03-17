@@ -23,7 +23,9 @@ function bg_theme() {
       'template' => 'guidemap',
       'path' => drupal_get_path('module', 'bg') . '/templates',
     ),
-    'bugguide_fixup_locations_table' => array(),
+    'bg_fixup_locations_table' => array(
+      'render element' => 'form',
+    ),
   );
 }
 
@@ -62,8 +64,8 @@ function bg_menu() {
     'file' => 'bg.admin.inc',
   );
   $items['bg/badlocations'] = array(
-    'title' => 'Fix image locations',
-    'description' => 'Shows images that have county names in county field',
+    'title' => 'Fix image locations that have country names in county field',
+    'description' => 'Shows images that have country names in county field',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('bg_fixup_locations_form'),
     'access arguments' => array('administer BG utilities'),
