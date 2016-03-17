@@ -57,7 +57,7 @@ function bg_menu() {
     'file' => 'bg.admin.inc',
   );
   $items['bg/blankhodges'] = array(
-    'title' => 'Show Leps without Hodges #',
+    'title' => 'Show Lepitopterans without Hodges #',
     'description' => 'Shows Lepidoptera that have not been assigned a Hodges number',
     'page callback' => 'bg_blank_hodges',
     'access arguments' => array('administer BG utilities'),
