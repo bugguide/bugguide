@@ -96,21 +96,29 @@ function bg_orphans() {
 function bg_stageless_leps() {
   $form = array();
   $nids = array();
-  $result = db_query("SELECT n.nid FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' AND t.parent_idx like '%,57,%' AND t.adult != 1 AND t.immature != 1 LIMIT 25");
-  while ($bgimage = db_fetch_object($result)) {
-    $bgimage = node_load(array(
-      'nid' => $bgimage->nid,
-      'type' => 'bgimage')
-      );
+  $result = db_query("SELECT n.nid
+FROM {node} n
+JOIN {field_data_field_parent} p ON (n.vid = p.revision_id)
+LEFT OUTER JOIN {field_data_field_bgimage_life_stage} s ON (n.vid = s.revision_id) 
+WHERE 
+n.status = 1 AND
+n.type = 'bgimage' AND 
+(p.field_parent_value LIKE '%,57' OR p.field_parent_value LIKE '%,57,%') AND
+field_bgimage_life_stage_value IS NULL
+LIMIT 200");
+
+  foreach ($result as $bgimage) {
+    $node = node_load($bgimage->nid);
     $form[$bgimage->nid] = array(
-      '#title' => $bgimage->title,
+      '#title' => $node->title,
       '#type' => 'checkboxes',
       '#options' => array(
         'adult' => t('adult'),
         'immature' => t('immature'),
       ),
       '#return_value' => 1,
-      '#description' => bgimage_get_thumb_link($bgimage) . '<hr>',
+      '#description' => '<hr>',
+      //'#description' => bgimage_get_thumb_link($node) . '<hr>',
       
     );
     $nids[] = $bgimage->nid;
