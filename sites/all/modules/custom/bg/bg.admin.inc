@@ -156,15 +156,26 @@ function bg_stageless_leps_submit($form, &$form_state) {
  *
  * @return HTML
  */
-function bg_blank_hodges() {
-  $output = '<h1>' . t('Lepidoptera Without Hodges Number') . '</h1>';
-  $result = db_query("SELECT n.nid FROM {node} n, {bgpage} t WHERE t.nid = n.nid AND n.type = 'bgpage' AND n.status = '1' AND (t.parent like '%,57' OR t.parent like '%,57,%') and (n.title regexp '[0-9][0-9]' OR t.names REGEXP '[0-9][0-9]') AND taxon = 3400 AND hodges_number IS NULL LIMIT 25");
-
-  while ($bgpage = db_fetch_object($result)) {
-    $bgpage = node_load(array('nid' => $bgpage->nid, 'type' => 'bgpage'));
-    $output .= '<p>' . l($bgpage->nid, "node/$bgpage->nid/edit");
-    $output .= " $bgpage->title_node";
-    $output .= "<br />";
+function bg_blank_hodges() {  
+  $output = '<p>' . t('The following are Lepidoptera with Hodges numbers in the title but the submitter forgot to fill out Hodges number field.');
+  
+  $result = db_query("SELECT n.type, n.nid, h.field_hodges_number_value, p.field_parent_value, n.title 
+FROM {node} n 
+JOIN {field_data_field_parent} p ON (n.vid = p.revision_id)
+JOIN {field_data_field_taxon} t ON (n.vid = t.revision_id) 
+LEFT OUTER JOIN {field_data_field_hodges_number} h ON (n.vid = h.revision_id) 
+WHERE 
+n.status = 1 AND
+h.field_hodges_number_value IS NULL AND 
+n.type = 'bgpage' AND 
+(p.field_parent_value LIKE '%,57' OR p.field_parent_value LIKE '%,57,%') AND
+t.field_taxon_value = 3400 AND
+n.title REGEXP '[0-9][0-9]' AND 
+n.title NOT REGEXP '88'"); // Skip the butterfly called the '88 Butterfly'.
+  
+  foreach ($result as $bgpage) {
+    $node = node_load($bgpage->nid);
+    $output .= '<p>' . $bgpage->nid . ' ' . l($node->title, "node/$bgpage->nid/edit");
   }
   return $output;
 }
