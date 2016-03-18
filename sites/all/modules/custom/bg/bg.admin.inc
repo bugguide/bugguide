@@ -105,7 +105,7 @@ n.status = 1 AND
 n.type = 'bgimage' AND 
 (p.field_parent_value LIKE '%,57' OR p.field_parent_value LIKE '%,57,%') AND
 field_bgimage_life_stage_value IS NULL
-LIMIT 200");
+LIMIT 5");
 
   foreach ($result as $bgimage) {
     $node = node_load($bgimage->nid);
@@ -117,9 +117,7 @@ LIMIT 200");
         'immature' => t('immature'),
       ),
       '#return_value' => 1,
-      '#description' => '<hr>',
-      //'#description' => bgimage_get_thumb_link($node) . '<hr>',
-      
+      '#description' => bgimage_thumb_link($node) . '<hr>',      
     );
     $nids[] = $bgimage->nid;
   }
