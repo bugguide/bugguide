@@ -146,11 +146,17 @@ function bg_stageless_leps_submit($form, &$form_state) {
       $immatures[] = $nid;
     }
   }
-  if ($adults) {
-    db_query('UPDATE {bgimage} SET adult = 1 WHERE nid IN (%s)', implode(',', $adults));
+  foreach ($adults as $nid) {
+    $node = node_load($nid);
+    $node->field_bgimage_life_stage[LANGUAGE_NONE][0]['value'] = 'adult';
+    watchdog('bg', 'Setting life stage to adult for node %nid', array('%nid' => $nid));
+    node_save($node);
   }
-  if ($immatures) {
-    db_query('UPDATE {bgimage} SET immature = 1 WHERE nid IN (%s)', implode(',', $immatures));    
+  foreach ($immatures as $nid) {
+    $node = node_load($nid);
+    $node->field_bgimage_life_stage[LANGUAGE_NONE][0]['value'] = 'immature';
+    watchdog('bg', 'Setting life stage to immature for node %nid', array('%nid' => $nid));
+    node_save($node);
   }
   
   drupal_set_message('Data has been updated.');
