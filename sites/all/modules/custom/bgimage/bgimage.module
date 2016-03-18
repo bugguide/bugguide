@@ -418,6 +418,19 @@ function _bgimage_filter_thumb_process($text, $filter, $format) {
   return $text;
 }
 
+function bgimage_thumb($node) {
+  $base = $node->field_bgimage_base[LANGUAGE_NONE][0]['value'];
+  $obfuscate = image_obfuscate($base . $node->nid);
+  $prefix = bgimage_get_prefix($obfuscate);
+  $uri = 'public://raw/' . $prefix . $obfuscate  .'.jpg';
+  $rendered_image = theme('image_style', array('path' => $uri, 'style_name' => 'bg_small'));
+  return $rendered_image;
+}
+
+function bgimage_thumb_link($node) {
+  return l(bgimage_thumb($node), 'node/' . $node->nid, array('html' => TRUE));
+}
+
 /**
  * Implements hook_field_widget_form_alter().
  */
