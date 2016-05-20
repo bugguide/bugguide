@@ -419,11 +419,18 @@ function _bgimage_filter_thumb_process($text, $filter, $format) {
 }
 
 function bgimage_thumb($node) {
+  // e.g., for $node->nid = 1877
+  // $base = 665891889baf9ad4d0cb1626a5f56fb5
   $base = $node->field_bgimage_base[LANGUAGE_NONE][0]['value'];
+
+  // This is what legacy BugGuide used, before image styles:
+  // $obfuscate = image_obfuscate($base . $node->nid . "?l=125");
   $obfuscate = image_obfuscate($base . $node->nid);
   $prefix = bgimage_get_prefix($obfuscate);
+  // $uri = public://raw/MZA/LMZ/MZALMZWLLZELSRWLFL9LKRJZLZ6LYL9LRZJZHZ9L0R3Z3LDZGRTLERDLHZCLHZULXZ9LFLWLFL.jpg
   $uri = 'public://raw/' . $prefix . $obfuscate  .'.jpg';
   $rendered_image = theme('image_style', array('path' => $uri, 'style_name' => 'bg_small'));
+  // <img src="http://./files/styles/bg_small/public/108/K10/108K10LKZS3ROQHQYQY0BQY05Q10PQ9K5QC04QWKLK102QO04QA0LKB04QUKRKD00KDKWQVK9QB0UQB0GQF04QC05QC0.jpg?itok=QTeqhGF8" alt="" />
   return $rendered_image;
 }
 
