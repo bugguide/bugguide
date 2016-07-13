@@ -26,7 +26,6 @@ dependencies[] = fe_block
 dependencies[] = features
 dependencies[] = filter
 dependencies[] = image
-dependencies[] = php
 dependencies[] = strongarm
 dependencies[] = suitcase_config
 dependencies[] = views
