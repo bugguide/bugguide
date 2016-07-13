@@ -13,7 +13,7 @@ function bg_filter_default_formats() {
   // Exported format: Filtered HTML.
   $formats[1] = array(
     'format' => 1,
-    'name' => 'Filtered HTML',
+    'name' => 'Filtered HTML numeric',
     'cache' => 1,
     'status' => 1,
     'weight' => -10,
@@ -193,7 +193,7 @@ function bg_filter_default_formats() {
   // Exported format: Full HTML.
   $formats[2] = array(
     'format' => 2,
-    'name' => 'Full HTML',
+    'name' => 'Full HTML numeric',
     'cache' => 1,
     'status' => 1,
     'weight' => -9,
@@ -221,7 +221,7 @@ function bg_filter_default_formats() {
   // Exported format: PHP code.
   $formats[3] = array(
     'format' => 3,
-    'name' => 'PHP code',
+    'name' => 'PHP code numeric',
     'cache' => 0,
     'status' => 1,
     'weight' => -8,
@@ -237,7 +237,7 @@ function bg_filter_default_formats() {
   // Exported format: Plain text.
   $formats[4] = array(
     'format' => 4,
-    'name' => 'Plain text',
+    'name' => 'Plain text numeric',
     'cache' => 1,
     'status' => 1,
     'weight' => -7,

@@ -1,0 +1,97 @@
+<?php
+
+// Node ID of ID Request
+define('BG_ID_REQUEST_NID', 6);
+
+// Node ID of Frass
+define('BG_FRASS_NID', 9410);
+
+/**
+ * @file
+ * The bugguide module provides bugguide-specific functionality.
+ */
+
+/**
+ * Implementation of hook_theme().
+ */
+function bugguide_theme() {
+  return array(
+    'bugguide_guidemap' => array(
+      'variables' => array(),
+      'template' => 'guidemap',
+      'path' => drupal_get_path('module', 'bg') . '/templates',
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function bugguide_menu() {
+  $items['bugguide'] = array(
+    'title' => 'Utilities',
+    'description' => 'BugGuide system utilities',
+    'page callback' => 'bugguide_utilities',
+    'access arguments' => array('administer BG utilities'),
+    'expanded' => 1,
+    'file' => 'bugguide.admin.inc',
+  );
+  $items['bugguide/lepstage'] = array(
+    'title' => 'Show stageless Leps',
+    'description' => 'Shows Lepidoptera that have not been marked adult or immature',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('bg_stageless_leps'),
+    'access arguments' => array('administer BG utilities'),
+    'file' => 'bg.admin.inc',
+  );
+  $items['bugguide/blankhodges'] = array(
+    'title' => 'Show Lepidopterans without Hodges #',
+    'description' => 'Shows Lepidoptera that have not been assigned a Hodges number',
+    'page callback' => 'bugguide_blank_hodges',
+    'access arguments' => array('administer BG utilities'),
+    'file' => 'bugguide.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function bugguide_block_info() {
+  global $user, $base_url;
+
+  $blocks['bugguide_guide'] = array(
+    'info' => t('Clickable Guide'),
+    'cache' => DRUPAL_CACHE_GLOBAL,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function bugguide_block_view($delta = '') {
+  switch($delta) {
+    case 'bugguide_guide':
+      $block['subject'] = t('Clickable Guide');
+      $block['content'] = array(
+        '#theme' => 'bugguide_guidemap',
+        '#title' => t('Clickable Guide'),
+      );
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function bugguide_permission() {
+  return array(
+    'administer bugguide utilities' => array(
+      'title' => t('Administer bugguide utilities'),
+      'description' => t('Perform bugguide maintenance tasks'),
+    )
+  );
+}

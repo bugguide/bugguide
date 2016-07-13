@@ -1,0 +1,10 @@
+name = BugGuide Custom
+description = BugGuide-specific functions and configuration
+core = 7.x
+package = Bugguide
+version = 7.x-1.0
+project = bg
+dependencies[] = bg
+dependencies[] = bgimage
+dependencies[] = bgpage
+dependencies[] = bgref
