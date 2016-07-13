@@ -18,11 +18,6 @@ define('BG_FRASS_NID', 9410);
  */
 function bg_theme() {
   return array(
-    'bg_guidemap' => array(
-      'variables' => array(),
-      'template' => 'guidemap',
-      'path' => drupal_get_path('module', 'bg') . '/templates',
-    ),
     'bg_fixup_locations_table' => array(
       'render element' => 'form',
     ),
@@ -45,21 +40,6 @@ function bg_menu() {
     'title' => 'Show orphaned nodes',
     'description' => 'Shows pages, images, links, and references with no parent',
     'page callback' => 'bg_orphans',
-    'access arguments' => array('administer BG utilities'),
-    'file' => 'bg.admin.inc',
-  );
-  $items['bg/lepstage'] = array(
-    'title' => 'Show stageless Leps',
-    'description' => 'Shows Lepidoptera that have not been marked adult or immature',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('bg_stageless_leps'),
-    'access arguments' => array('administer BG utilities'),
-    'file' => 'bg.admin.inc',
-  );
-  $items['bg/blankhodges'] = array(
-    'title' => 'Show Lepidopterans without Hodges #',
-    'description' => 'Shows Lepidoptera that have not been assigned a Hodges number',
-    'page callback' => 'bg_blank_hodges',
     'access arguments' => array('administer BG utilities'),
     'file' => 'bg.admin.inc',
   );
@@ -119,35 +99,6 @@ function bg_date_format_types() {
   return array(
     'bg_short_F_j_Y' => t('Short: F j, Y'),
   );
-}
-
-/**
- * Implements hook_block_info().
- */
-function bg_block_info() {
-  global $user, $base_url;
-
-  $blocks['bg_guide'] = array(
-    'info' => t('Clickable Guide'),
-    'cache' => DRUPAL_CACHE_GLOBAL,
-  );
-  return $blocks;
-}
-
-/**
- * Implements hook_block_view().
- */
-function bg_block_view($delta = '') {
-  switch($delta) {
-    case 'bg_guide':
-      $block['subject'] = t('Clickable Guide');
-      $block['content'] = array(
-        '#theme' => 'bg_guidemap',
-        '#title' => t('Clickable Guide'),
-      );
-      break;
-  }
-  return $block;
 }
 
 /**
