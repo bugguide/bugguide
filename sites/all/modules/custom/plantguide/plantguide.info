@@ -1,0 +1,10 @@
+name = PlantGuide Custom
+description = PlantGuide-specific functions and configuration
+core = 7.x
+package = PlantGuide
+version = 7.x-1.0
+project = bg
+dependencies[] = bg
+dependencies[] = bgimage
+dependencies[] = bgpage
+dependencies[] = bgref

@@ -1,0 +1,13 @@
+<?php
+
+// Node ID of ID Request
+define('BG_ID_REQUEST_NID', 6);
+
+// Node ID of Frass
+define('BG_FRASS_NID', 9410);
+
+/**
+ * @file
+ * The plantguide module provides plantguide-specific functionality.
+ */
+
