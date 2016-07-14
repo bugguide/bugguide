@@ -78,7 +78,7 @@ function bgpage_field_default_field_instances() {
     'bundle' => 'bgpage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Try to find a unique common name. Otherwise use the scientific name for the taxon. If no common name is available for a species page, use the genus and species together, but do not capitalize the species. Preferred common name sources include:<br/><a href="http://www.entsoc.org/common-names" target="blank">ESA: Common Names of Insects &amp; Related Organisms</a><br/><a href="http://www.esc-sec.ca/commonnames.html" target="blank">ESC: Common Names of Insects in Canada</a><br/><a href="http://www.naba.org/pubs/enames.html" target="blank">NABA: English Names of North American Butterflies Occuring North of Mexico</a><br/><a href="http://www.pugetsound.edu/academics/academic-resources/slater-museum/biodiversity-resources/dragonflies/north-american-odonata/" target="blank">DSA: The Odonata of North America</a><br/><a href="http://www.americanarachnology.org/AAS_information.html" target="blank">AAS: Common and Scientific Names of Arachnids</a>',
+    'description' => '',
     'display' => array(
       'browse' => array(
         'label' => 'above',
