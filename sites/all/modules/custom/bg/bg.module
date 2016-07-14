@@ -2,11 +2,13 @@
 
 include_once 'bg.features.inc';
 
+// Define the following constants in the guide-specific module.
+// E.g., for bugguide, in bugguide.module.
 // Node ID of ID Request
-define('BG_ID_REQUEST_NID', 6);
+// define('BG_ID_REQUEST_NID', 6);
 
 // Node ID of Frass
-define('BG_FRASS_NID', 9410);
+// define('BG_FRASS_NID', 9410);
 
 /**
  * @file
