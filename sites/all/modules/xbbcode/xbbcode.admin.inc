@@ -138,7 +138,7 @@ function xbbcode_custom_tags($form, &$form_state, $name = NULL) {
     '#title' => t('Rendering code'),
     '#default_value' => $tag->markup,
     '#required' => $editing_tag || $adding_tag,
-    '#description' => t('The text that [tag]content[/tag] should be replaced with, or PHP code that prints/returns the text.', array('@url' => url('admin/help/xbbcode'))),
+    '#description' => t('The text that [tag]content[/tag] should be replaced with, or PHP code that prints/returns the text.'),
   );
 
   if (!$access_php) {
@@ -342,6 +342,13 @@ function xbbcode_settings_handlers_format($format = XBBCODE_GLOBAL) {
   );
 
   foreach ($handlers as $name => $handler) {
+    if(!isset($defaults[$name])) {
+      $defaults[$name] = (object) array(
+        'module' => key($handler['modules']),
+        'enabled' => FALSE,
+      );
+    }
+
     $form['_enabled']['#options'][$name] = array(
       'tag' => array(
         'data' => _xbbcode_build_descriptions($name, $handler['info'], $defaults[$name]->module),

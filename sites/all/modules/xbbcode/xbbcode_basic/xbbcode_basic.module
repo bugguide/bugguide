@@ -204,7 +204,7 @@ function xbbcode_basic_render_img($tag) {
   }
   else {
     list($width, $height) = array(0, 0);
-  }
+  }  
   $scale = $width && $height ? "style='width:{$width}px;height:{$height}px;'" : '';
   $alt = isset($tag->args['alt']) ? $tag->args['alt'] : "IMAGE($tag->content)";
 
