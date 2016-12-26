@@ -60,7 +60,6 @@ function apachesolr_index_entities($env_id, $limit) {
     $documents = array();
     foreach ($rows as $row) {
       $row_documents = apachesolr_index_entities_document($row, $entity_type, $env_id);
-      // TODO argument #1 is not an array
       $documents = array_merge($documents, $row_documents);
     }
 
@@ -123,7 +122,6 @@ function apachesolr_index_entities_document($row, $entity_type, $env_id) {
       }
     }
     if ($build_document) {
-      // TODO argument #2 is not an array
       $documents = array_merge($documents, apachesolr_index_entity_to_documents($row, $env_id));
     }
   }
@@ -497,7 +495,7 @@ function _apachesolr_index_process_entity_get_document($entity, $entity_type) {
  */
 function apachesolr_index_get_entities_to_index($env_id, $entity_type, $limit) {
   $rows = array();
-  if (apachesolr_environment_variable_get($env_id, 'apachesolr_read_only', APACHESOLR_READ_WRITE) == APACHESOLR_READ_ONLY) {
+  if (variable_get('apachesolr_read_only', 0)) {
     return $rows;
   }
   $bundles = apachesolr_get_index_bundles($env_id, $entity_type);

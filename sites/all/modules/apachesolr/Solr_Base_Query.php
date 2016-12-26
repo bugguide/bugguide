@@ -20,7 +20,6 @@ class SolrFilterSubQuery {
    */
   public $id;
   public $operator;
-  public $exclude;
 
   /**
    * A keyed array where the key is a position integer and the value
@@ -35,9 +34,8 @@ class SolrFilterSubQuery {
    */
   protected $subqueries = array();
 
-  function __construct($operator = 'OR', $exclude = FALSE) {
+  function __construct($operator = 'OR') {
     $this->operator = $operator;
-    $this->exclude = $exclude;
     $this->id = ++SolrFilterSubQuery::$idCount;
   }
 
@@ -246,8 +244,7 @@ class SolrFilterSubQuery {
       $subfq = $subquery->rebuildFq();
       if ($subfq) {
         $operator = $subquery->operator;
-        $prefix = $subquery->exclude ? '-' : '';
-        $fq[] = "$prefix(" . implode(" $operator ", $subfq) . ")";
+        $fq[] = "(" . implode(" $operator ", $subfq) . ")";
       }
     }
     return $fq;
