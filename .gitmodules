@@ -1,3 +1,0 @@
-[submodule "sites/all/modules/suitcase_config"]
-	path = sites/all/modules/suitcase_config
-	url = git@github.com:isubit/suitcase_config.git
