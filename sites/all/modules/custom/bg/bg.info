@@ -27,7 +27,6 @@ dependencies[] = features
 dependencies[] = filter
 dependencies[] = image
 dependencies[] = strongarm
-dependencies[] = suitcase_config
 dependencies[] = views
 dependencies[] = xbbcode
 dependencies[] = xbbcode_basic
