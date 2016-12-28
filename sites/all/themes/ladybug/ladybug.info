@@ -1,5 +1,5 @@
 name = 'ladybug'
-description = 'A sub-theme of Suitcase for BugGuide'
+description = 'A sub-theme of Suitcase Interim for BugGuide'
 core = '7.x'
 engine = 'phptemplate'
 screenshot = 'screenshot.jpg'
