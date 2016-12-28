@@ -19,7 +19,7 @@ function bg_utilities() {
 
 /**
  * Menu callback.
- * 
+ *
  * Show orphaned nodes; i.e., nodes whose parent has been deleted.
  */
 function bg_orphans() {
@@ -27,7 +27,7 @@ function bg_orphans() {
 
   // Create array of immediate parents for each bgpage node.
   $result = db_query("SELECT n.nid, p.field_parent_value FROM {field_data_field_parent} p JOIN {node} n ON p.revision_id = n.vid WHERE n.type = 'bgpage' AND p.deleted = 0");
-  
+
   foreach ($result as $bgpage) {
     $parents = explode(',', $bgpage->field_parent_value);
     if (count($parents) > 0) {
@@ -41,7 +41,7 @@ function bg_orphans() {
   foreach ($result as $node) {
     $parentless_but_ok[$node->nid] = $node->title;
   }
-  
+
   $result = db_query("SELECT n.nid, n.status, n.title, p.field_parent_value, p.bundle FROM {field_data_field_parent} p JOIN {node} n ON p.revision_id = n.vid WHERE p.deleted = 0 AND n.type != 'forum' AND n.type != 'page' AND n.type != 'bglink'");
   // TODO: remove bglink from above query exclusion when it gets parents.
   $counter = 1;
@@ -54,7 +54,7 @@ function bg_orphans() {
     if (!$node->field_parent_value) {
       continue;
     }
-    
+
     $parents = explode(',', $node->field_parent_value);
     $parents = array_reverse($parents);
     foreach ($parents as $nid) {
@@ -90,6 +90,109 @@ function bg_orphans() {
 }
 
 /**
+ * Menu callback. Form to fix Lepidoptera with neither adult nor
+ * immature indicated.
+ */
+function bg_stageless_leps() {
+  $form = array();
+  $nids = array();
+  $result = db_query("SELECT n.nid
+FROM {node} n
+JOIN {field_data_field_parent} p ON (n.vid = p.revision_id)
+LEFT OUTER JOIN {field_data_field_bgimage_life_stage} s ON (n.vid = s.revision_id)
+WHERE
+n.status = 1 AND
+n.type = 'bgimage' AND
+(p.field_parent_value LIKE '%,57' OR p.field_parent_value LIKE '%,57,%') AND
+field_bgimage_life_stage_value IS NULL
+LIMIT 5");
+
+  foreach ($result as $bgimage) {
+    $node = node_load($bgimage->nid);
+    $form[$bgimage->nid] = array(
+      '#title' => $node->title,
+      '#type' => 'checkboxes',
+      '#options' => array(
+        'adult' => t('adult'),
+        'immature' => t('immature'),
+      ),
+      '#return_value' => 1,
+      '#description' => bgimage_thumb_link($node) . '<hr>',
+    );
+    $nids[] = $bgimage->nid;
+  }
+  $form['nids'] = array(
+    '#type' => 'value',
+    '#value' => $nids,
+  );
+  if ($result) {
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Update'),
+    );
+  }
+
+  return $form;
+}
+
+function bg_stageless_leps_submit($form, &$form_state) {
+  $adults = array();
+  $immatures = array();
+  foreach ($form_state['values']['nids'] as $nid) {
+    if ($form_state['values'][$nid]['adult']) {
+      $adults[] = $nid;
+    }
+    if ($form_state['values'][$nid]['immature']) {
+      $immatures[] = $nid;
+    }
+  }
+  foreach ($adults as $nid) {
+    $node = node_load($nid);
+    $node->field_bgimage_life_stage[LANGUAGE_NONE][0]['value'] = 'adult';
+    watchdog('bg', 'Setting life stage to adult for node %nid', array('%nid' => $nid));
+    node_save($node);
+  }
+  foreach ($immatures as $nid) {
+    $node = node_load($nid);
+    $node->field_bgimage_life_stage[LANGUAGE_NONE][0]['value'] = 'immature';
+    watchdog('bg', 'Setting life stage to immature for node %nid', array('%nid' => $nid));
+    node_save($node);
+  }
+
+  drupal_set_message('Data has been updated.');
+}
+
+/**
+ * Menu callback.
+ * Find nodes of type bgpage in Lepidoptera without a Hodges number
+ *
+ * @return HTML
+ */
+function bg_blank_hodges() {
+  $output = '<p>' . t('The following are Lepidoptera with Hodges numbers in the title but the submitter forgot to fill out Hodges number field.');
+
+  $result = db_query("SELECT n.type, n.nid, h.field_hodges_number_value, p.field_parent_value, n.title
+FROM {node} n
+JOIN {field_data_field_parent} p ON (n.vid = p.revision_id)
+JOIN {field_data_field_taxon} t ON (n.vid = t.revision_id)
+LEFT OUTER JOIN {field_data_field_hodges_number} h ON (n.vid = h.revision_id)
+WHERE
+n.status = 1 AND
+h.field_hodges_number_value IS NULL AND
+n.type = 'bgpage' AND
+(p.field_parent_value LIKE '%,57' OR p.field_parent_value LIKE '%,57,%') AND
+t.field_taxon_value = 3400 AND
+n.title REGEXP '[0-9][0-9]' AND
+n.title NOT REGEXP '88'"); // Skip the butterfly called the '88 Butterfly'.
+
+  foreach ($result as $bgpage) {
+    $node = node_load($bgpage->nid);
+    $output .= '<p>' . $bgpage->nid . ' ' . l($node->title, "node/$bgpage->nid/edit");
+  }
+  return $output;
+}
+
+/**
  * Menu callback.
  * Find images where county field erroneously contains USA or Canada.
  * Suggest corrected fields.
@@ -98,7 +201,7 @@ function bg_orphans() {
  */
 function bg_fixup_locations_form() {
   global $LOCATION_CODES;
-  
+
   // In order to do a case-sensitive search on a column which is using
   // the utf8_general_ci (ci = case insensitive) collation, coerce
   // collation to utf8_bin first. Then we can select Foo, USA while
@@ -195,7 +298,7 @@ function bg_fixup_locations_form() {
       }
 
       $county = ltrim(substr($location, $lastComma, strlen($location) - 7 - $lastComma));
-      
+
       if ($lastComma) {
         $location = trim(substr($location, 0, $lastComma - 1));
       }
@@ -209,9 +312,9 @@ function bg_fixup_locations_form() {
       if ($lastComma) {
         $lastComma++;
       }
-      
+
       $county = ltrim(substr($location, $lastComma, strlen($location) - 4 - $lastComma));
-      
+
       if ($lastComma) {
         $location = trim(substr($location, 0, $lastComma - 1));
       }
@@ -219,11 +322,12 @@ function bg_fixup_locations_form() {
         $location = '';
       }
     }
-    
+
     $form['#tree'] = TRUE;
-    $form['#theme'] = 'bg_fixup_locations_table';
-    $form[$base] = array();
-    $form[$base]['fix'] = array(
+    $form['table'] = array();
+    $form['table']['#theme'] = 'bg_fixup_locations_table';
+    $form['table'][$base] = array();
+    $form['table'][$base]['fix'] = array(
       '#type' => 'checkbox',
       '#default_value' => $location_code && ($county || $location) ? 1 : 0,
       '#options' => array(
@@ -231,40 +335,40 @@ function bg_fixup_locations_form() {
         '1' => 1,
       ),
     );
-    $form[$base]['original_location'] = array(
+    $form['table'][$base]['original_location'] = array(
       '#type' => 'value',
       '#value' => $original,
     );
-    $form[$base]['location'] = array(
+    $form['table'][$base]['location'] = array(
       '#type' => 'textfield',
       '#default_value' => $location,
       '#description' => t('Proposed Location'),
     );
-    $form[$base]['original_county'] = array(
+    $form['table'][$base]['original_county'] = array(
       '#type' => 'value',
       '#value' => $original_county,
     );
-    $form[$base]['county'] = array(
+    $form['table'][$base]['county'] = array(
       '#type' => 'textfield',
       '#default_value' => $county,
       '#description' => t('Proposed County'),
     );
-    $form[$base]['original_location_code'] = array(
+    $form['table'][$base]['original_location_code'] = array(
       '#type' => 'value',
       '#value' => $original_location_code,
       '#size' => 4,
     );
-    $form[$base]['location_code'] = array(
+    $form['table'][$base]['location_code'] = array(
       '#type' => 'textfield',
       '#default_value' => $location_code,
       '#size' => 4,
     );
-    $form[$base]['count'] = array(
+    $form['table'][$base]['count'] = array(
       '#type' => 'value',
       '#value' => $count,
     );
   }
-  
+
   $form['ids'] = array(
     '#type' => 'value',
     '#value' => $ids,
@@ -279,9 +383,9 @@ function bg_fixup_locations_form() {
 
 function bg_fixup_locations_form_submit($form, &$form_state) {
   foreach ($form_state['values']['ids'] as $base) {
-    if ($form_state['values'][$base]['fix']) { 
-      db_query("UPDATE {bgimage} 
-        SET 
+    if ($form_state['values'][$base]['fix']) {
+      db_query("UPDATE {bgimage}
+        SET
         location = '%s',
         location_code = '%s',
         county = '%s'
@@ -290,7 +394,7 @@ function bg_fixup_locations_form_submit($form, &$form_state) {
         AND location = '%s'
         AND location_code = '%s'
         AND county = '%s'
-        ", $form_state['values'][$base]['location'], $form_state['values'][$base]['location_code'], $form_state['values'][$base]['county'], $form_state['values'][$base]['original_location'], $form_state['values'][$base]['original_location_code'], $form_state['values'][$base]['original_county']   
+        ", $form_state['values'][$base]['location'], $form_state['values'][$base]['location_code'], $form_state['values'][$base]['county'], $form_state['values'][$base]['original_location'], $form_state['values'][$base]['original_location_code'], $form_state['values'][$base]['original_county']
       );
     }
   }
@@ -316,19 +420,18 @@ function theme_bg_fixup_locations_table(&$variables) {
 
   foreach ($form['ids']['#value'] as $base) {
     $rows[] = array(
-      drupal_render($form[$base]['fix']),
+      drupal_render($form['table'][$base]['fix']),
       $form[$base]['count']['#value'],
       $form[$base]['original_location']['#value'],
-      drupal_render($form[$base]['location']),
+      drupal_render($form['table'][$base]['location']),
       $form[$base]['original_county']['#value'],
-      drupal_render($form[$base]['county']),
+      drupal_render($form['table'][$base]['county']),
       $form[$base]['original_location_code']['#value'],
-      drupal_render($form[$base]['location_code']),
+      drupal_render($form['table'][$base]['location_code']),
     );
   }
-  
-  $table['#rows'] = $rows; 
+
+  $table['#rows'] = $rows;
   $output = drupal_render($table);
-  //$output .= drupal_render($form);
   return $output;
 }
