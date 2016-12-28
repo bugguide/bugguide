@@ -72,6 +72,7 @@ function bugguide_block_info() {
  * Implements hook_block_view().
  */
 function bugguide_block_view($delta = '') {
+  $block = array();
   switch($delta) {
     case 'bugguide_guide':
       $block['subject'] = t('Clickable Guide');
