@@ -281,7 +281,7 @@ function bg_preprocess_page(&$vars) {
       // Adjust the format of each crumb if we are logged in.
       if (user_is_logged_in()) {
         $account = user_load($user->uid);
-        $guidebc = $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'];
+        $guidebc = isset($account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value']) ? $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'] : 'Scientific name (Common name)';
         $breadcrumbs = bg_create_taxonomic_breadcrumb($node, $guidebc);
       }
       else {
