@@ -42,7 +42,11 @@ define('NODE_STICKY', 1);
  * Nodes changed after this time may be marked new, updated, or read, depending
  * on their state for the current user. Defaults to 30 days ago.
  */
+/**
+ * Core hack! Drupal gives us no way to redefine NODE_NEW_LIMIT. -JV
 define('NODE_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
+*/
+define('NODE_NEW_LIMIT', REQUEST_TIME - 365 * 24 * 60 * 60);
 
 /**
  * Modules should return this value from hook_node_access() to allow access to a node.
