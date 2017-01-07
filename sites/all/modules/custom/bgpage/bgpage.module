@@ -387,7 +387,14 @@ function bgpage_tree_child($result) {
   if (!empty($result->sm_field_hodges_number)) {
     $output .= " - Hodges#" . $result->sm_field_hodges_number[0];
   }
-
+  
+  // Add number of children for this taxon in parentheses if nonzero.
+  // TODO add caching here as LIKE queries are expensive. 
+  //$search_path = $child->parent . ','. $child->nid;
+  $search_path = $result->ss_bgpage_classification; // 3,456,789
+  $child_count = db_query("SELECT COUNT(nid) FROM {bgimage} WHERE parent_idx LIKE '$search_path,%'")->fetchField();
+  $child_count_string = $child_count ? ' ('. $child_count .')' : '';
+  $output .= "$child_count_string</span><br />\n";
   return $output;
 }
 
