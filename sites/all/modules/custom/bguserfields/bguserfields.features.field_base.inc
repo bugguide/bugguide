@@ -10,14 +10,13 @@
 function bguserfields_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_email'
+  // Exported field_base: 'field_email'.
   $field_bases['field_email'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_email',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'email',
@@ -26,21 +25,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'email',
   );
 
-  // Exported field_base: 'field_user_bg_homepage'
+  // Exported field_base: 'field_user_bg_homepage'.
   $field_bases['field_user_bg_homepage'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_user_bg_homepage',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -55,21 +46,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_user_biography'
+  // Exported field_base: 'field_user_biography'.
   $field_bases['field_user_biography'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_user_biography',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -82,14 +65,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_user_breadcrumb_format'
+  // Exported field_base: 'field_user_breadcrumb_format'.
   $field_bases['field_user_breadcrumb_format'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_user_breadcrumb_format',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -110,21 +92,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_user_city_state_country'
+  // Exported field_base: 'field_user_city_state_country'.
   $field_bases['field_user_city_state_country'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_user_city_state_country',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -139,21 +113,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_user_contact_info'
+  // Exported field_base: 'field_user_contact_info'.
   $field_bases['field_user_contact_info'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_user_contact_info',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -166,14 +132,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_user_content_license'
+  // Exported field_base: 'field_user_content_license'.
   $field_bases['field_user_content_license'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_user_content_license',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -200,21 +165,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_user_content_license_add'
+  // Exported field_base: 'field_user_content_license_add'.
   $field_bases['field_user_content_license_add'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_user_content_license_add',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -227,21 +184,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_user_default_county'
+  // Exported field_base: 'field_user_default_county'.
   $field_bases['field_user_default_county'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_user_default_county',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -256,21 +205,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_user_full_name'
+  // Exported field_base: 'field_user_full_name'.
   $field_bases['field_user_full_name'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_user_full_name',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -285,21 +226,13 @@ function bguserfields_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_user_homepage'
+  // Exported field_base: 'field_user_homepage'.
   $field_bases['field_user_homepage'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_user_homepage',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -312,32 +245,6 @@ function bguserfields_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'text',
-  );
-
-  // Exported field_base: 'field_user_scientific_use'
-  $field_bases['field_user_scientific_use'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_user_scientific_use',
-    'foreign keys' => array(),
-    'indexes' => array(
-      'value' => array(
-        0 => 'value',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'list',
-    'settings' => array(
-      'allowed_values' => array(
-        0 => '',
-        1 => '',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => 0,
-    'type' => 'list_boolean',
   );
 
   return $field_bases;
