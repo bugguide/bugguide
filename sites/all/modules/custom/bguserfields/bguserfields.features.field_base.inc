@@ -25,6 +25,27 @@ function bguserfields_field_default_field_bases() {
     'type' => 'email',
   );
 
+  // Exported field_base: 'field_user_api_key'.
+  $field_bases['field_user_api_key'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_user_api_key',
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
+  );
+
   // Exported field_base: 'field_user_bg_homepage'.
   $field_bases['field_user_bg_homepage'] = array(
     'active' => 1,
