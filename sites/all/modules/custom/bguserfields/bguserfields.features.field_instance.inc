@@ -43,6 +43,74 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_user_api_key'.
+  $field_instances['user-user-field_user_api_key'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Useful for software developers interacting with the system programmatically.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 14,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_user_api_key',
+    'label' => 'API Key',
+    'required' => 0,
+    'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          1 => 1,
+          2 => 2,
+          3 => 3,
+          4 => 4,
+          'php_code' => 'php_code',
+          'xbbcode' => 'xbbcode',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            1 => array(
+              'weight' => -10,
+            ),
+            2 => array(
+              'weight' => -9,
+            ),
+            3 => array(
+              'weight' => -8,
+            ),
+            4 => array(
+              'weight' => -7,
+            ),
+            'php_code' => array(
+              'weight' => 11,
+            ),
+            'xbbcode' => array(
+              'weight' => -6,
+            ),
+          ),
+        ),
+      ),
+      'text_processing' => 0,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 14,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_user_bg_homepage'.
   $field_instances['user-user-field_user_bg_homepage'] = array(
     'bundle' => 'user',
@@ -353,6 +421,7 @@ function bguserfields_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('API Key');
   t('Additional license information');
   t('Biography');
   t('BugGuide Homepage');
@@ -370,6 +439,7 @@ function bguserfields_field_default_field_instances() {
   t('Optional. If you enter a URL here, you will be taken to that URL each time you log in. For example, to be taken to the most recent additions enter bgimage/recent');
   t('Public e-mail address');
   t('Show me Guide breadcrumbs using');
+  t('Useful for software developers interacting with the system programmatically.');
   t('You may provide additional contact details if, for example, someone wants to license an image you have contributed.');
 
   return $field_instances;
