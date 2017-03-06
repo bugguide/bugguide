@@ -1,0 +1,422 @@
+/* COLORS */
+
+#f1eee7; /* very light tan */
+#E7DBC1; /* tan */
+#dad5c3; /* middle tan */
+#c6be9e; /* dark tan */
+#44402e; /* very dark brown */
+#76684a; /* brown */
+#407629; /* green */
+
+/* ---------------------- */
+/* ## GENERAL */
+/* ---------------------- */
+
+.page { background: #f1eee7; /* very light tan */ }
+
+a,
+a:link {
+    color: #76684a; /* brown */
+}
+
+a:hover,
+a:visited  {
+    color: #407629; /* green */
+}
+
+blockquote {
+    border-color: #E7DBC1; /* tan */
+}
+
+/* ---------------------- */
+/* ## COMPONENTS */
+/* ---------------------- */
+
+.more-link, .read-more {
+    background: #76684a; /* brown */
+}
+
+.more-link:hover, .read-more:hover {
+    background: #44402e; /* very dark brown */
+}
+
+.more-link > a,
+.read-more > a {
+    color: #ffffff;
+}
+
+/* ---------------------- */
+/* ## HEADER */
+/* ---------------------- */
+
+.zone-branding-wrapper {
+    color: #000000;
+    background: #E7DBC1; /* tan */
+    border-bottom: 0;
+}
+
+.region-branding hr {
+    background: #000000;
+}
+
+#region-branding .site-name-level-2 a {
+    color: #000000;
+}
+
+#region-branding .site-name-slogan a {
+    color: #000000;
+    line-height: 1;
+}
+
+#isu_header_wordmark { width: 200px; }
+
+/* ---------------------- */
+/* ## SEARCH */
+/* ---------------------- */
+
+@media (min-width: 740px) {
+
+.zone-branding {
+    position: relative;
+}
+
+#region-search {
+    position: absolute;
+    right: 0;
+    bottom: 15px;
+}
+}
+
+/* ---------------------- */
+/* ## MAIN MENU */
+/* ---------------------- */
+
+.zone-menu-wrapper {
+    background: #c6be9e; /* dark tan */
+}
+
+#main-menu a,
+#main-menu a:hover,
+#main-menu a:focus,
+#main-menu a:active { 
+    color: #000000; 
+    border-bottom: 5px solid transparent;
+}
+
+#main-menu a:hover, 
+#main-menu a:focus, 
+#main-menu a:active, 
+#main-menu a.highlighted, 
+#main-menu a.active-trail, 
+#main-menu a.active {
+    color: #ffffff;
+    background: #44402e; /* very dark brown */
+    border-bottom: 5px solid  #E7DBC1; /* tan */
+}
+
+@media (min-width: 740px) {
+
+    
+    #main-menu a span.sub-arrow {
+    	border-color: #000000;
+    }
+    
+    #main-menu a.active-trail span.sub-arrow,
+    #main-menu a.active span.sub-arrow {
+    	border-color: #ffffff;
+    }
+
+    #main-menu ul a span.sub-arrow {
+        border-color: #76684a; /* brown */
+    }
+
+    #main-menu a:hover span.sub-arrow,
+    #main-menu a.highlighted span.sub-arrow {
+        border-color: #ffffff;
+    }
+
+    #main-menu ul a.has-submenu:hover span.sub-arrow,
+    #main-menu ul a.has-submenu.highlighted span.sub-arrow {
+        border-color: #76684a; /* brown */
+    }
+    
+}
+
+#main-menu ul a:hover,
+#main-menu ul a:focus,
+#main-menu ul a:active,
+#main-menu ul a.highlighted,
+#main-menu ul a.active-trail,
+#main-menu ul a.active {
+    color: #76684a; /* brown */
+}
+
+#zone-menu.sticky-top {
+    background: #c6be9e; /* dark tan */
+}
+
+/* ---------------------- */
+/* ## MOBILE MENU */
+/* ---------------------- */
+
+#main-menu-nav .sm-menu-btn {
+    color: #000000;
+}
+
+.sm-menu-btn-icon,
+.sm-menu-btn-icon:before,
+.sm-menu-btn-icon:after {
+    background: #000000;
+}
+
+@media (max-width: 739px) {
+    
+#main-menu a,
+#main-menu a:hover,
+#main-menu a:focus,
+#main-menu a:active { 
+    color: #000000; 
+    border-bottom: 0;
+}
+
+#main-menu a:hover, 
+#main-menu a:focus, 
+#main-menu a:active, 
+#main-menu a.highlighted, 
+#main-menu a.active-trail, 
+#main-menu a.active {
+    color: #ffffff;
+    border-bottom: 0;
+}
+}
+
+/* ---------------------- */
+/* ## MEGA PANELS */
+/* ---------------------- */
+
+.panel-display .panel-panel.grid-3 {
+    background: #ffffff;
+}
+
+/* ---------------------- */
+/* ## SECONDARY MENY & BREADCRUMBS */
+
+.region-inner.region-secondary-menu-inner {
+    background: #dad5c3; /* middle tan */
+}
+
+.region-secondary-menu .links > li > a:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.breadcrumb a:hover {
+    color: #407629; /* green */
+}
+/* ---------------------- */
+
+/* ---------------------- */
+/* ## VIEW CATEGORIES */
+/* ---------------------- */
+
+.view-categories {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #ddd;
+}
+
+/* ---------------------- */
+/* ## ANNOUNCEMENTS */
+/* ---------------------- */
+
+.node.node-page {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #ddd;
+}
+
+.views-row > .node-page {
+    background: #ffffff;
+}
+
+/* ---------------------- */
+/* ## PAGES */
+/* ---------------------- */
+
+.node.node-announcement {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #ddd;
+}
+
+.views-row > .node-announcement {
+    background: #ffffff;
+}
+
+/* ---------------------- */
+/* ## NEWS */
+/* ---------------------- */
+
+.node.node-news {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #ddd;
+}
+
+.views-row > .node-news {
+    background: #ffffff;
+}
+
+/* ---------------------- */
+/* ## EVENTS */
+/* ---------------------- */
+
+.node.node-event {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #ddd;
+}
+
+.views-row > .node-event {
+    background: #ffffff;
+}
+
+/* ---------------------- */
+/* ## PEOPLE */
+/* ---------------------- */
+
+.node.node-people {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #ddd;
+}
+
+.views-row > .node-people {
+    background: #ffffff;
+}
+
+.views-field.views-field-field-people-position > div {
+    color: #777 !important;
+}
+
+/* ---------------------- */
+/* ## RESOURCES */
+/* ---------------------- */
+
+.node.node-resource {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #ddd;
+}
+
+.views-row > .node-resource {
+    background: #ffffff;
+}
+
+.views-field.views-field-field-uri-1 > div > a {
+    color: #407629 !important; /* green */
+}
+
+/* ---------------------- */
+/* ## RESOURCES */
+/* ---------------------- */
+
+.node.node-project {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #ddd;
+}
+
+/* ---------------------- */
+/* ## FAQ */
+/* ---------------------- */
+
+.node.node-qa {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #ddd;
+}
+
+/* ---------------------- */
+/* ## HORTNEWS */
+/* ---------------------- */
+
+.node.node-hortnews-article {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #ddd;
+}
+
+.view-recent-hhpn-articles .views-row {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #ddd;
+}
+
+.view-recent-hhpn-articles .view-footer a {
+    background: #ffffff;
+}
+
+/* ---------------------- */
+/* ## ENCYLOPEDIA */
+/* ---------------------- */
+
+.view-pidc-info-articles .views-row {
+    background: #ffffff;
+}
+
+.node.node-article {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #ddd;
+}
+
+/* ---------------------- */
+/* ## SIDEBARS */
+/* ---------------------- */
+
+.region-sidebar-first-inner .block,
+.region-sidebar-second-inner .block {
+    background: #ffffff;
+}
+
+/* ---------------------- */
+/* ## FACETS */
+/* ---------------------- */
+
+.block-facetapi .content .item-list .facetapi-facet-im-field-tags li a.facetapi-active, 
+.block-facetapi .content .item-list li a.facetapi-active {
+    background: #76684a; /* brown */
+    border-color: #76684a; /* brown */
+}
+
+.block-facetapi .content .item-list li a:hover {
+    background: #76684a; /* brown */
+    border-color: #76684a; /* brown */
+}
+
+/* ---------------------- */
+/* ## FOOTER */
+/* ---------------------- */
+
+#section-footer {
+    background: #ffffff;
+}
+
+#section-footer a,
+#section-footer a:link {
+    color: #76684a; /* brown */
+}
+
+#section-footer a:hover,
+#section-footer a:link:hover,
+#section-footer a:visited {
+    color: #407629; /* green */
+}
+
+#section-footer ul.menu a {
+    color: #76684a; /* brown */
+    text-decoration: underline;
+}
+
+
+
