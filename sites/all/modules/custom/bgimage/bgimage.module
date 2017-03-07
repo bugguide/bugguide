@@ -381,15 +381,21 @@ function bgimage_filter_info() {
  * @return filtered text.
  */
 function _bgimage_filter_thumb_process($text, $filter, $format) {
+  // Extract all the nids referenced by [thumb:124], [thumb:83], etc.
   if (preg_match_all("/\[thumb:(\d+)\]/i", $text, $matches)) {
     $nids = $matches[1];
     
     // In $map, nid is the key and match occurrence number is the value.
+    // Thus we have keys of every match:
+    // array( 83 => 2, 124 => 1, ...)
     $map = array_flip($matches[1]);
     
+    // Retrieve information about each nid.
     $result = db_query('SELECT n.nid, n.title, i.height, i.width, i.base
                         FROM {node} n, {bgimage} i
                         WHERE i.nid = n.nid AND n.nid IN (:nids)', array(':nids' => $nids));
+    $expanded = array();
+    $img = array();
     foreach ($result as $img) {
       // $n is the occurrence number
       $n = $map[$img->nid];
@@ -400,20 +406,22 @@ function _bgimage_filter_thumb_process($text, $filter, $format) {
       $expanded[$n] = '<a href="' . url('node/' . $img->nid) . '" title="' . check_plain($img->title) . '">' . $rendered_image  . '</a>';
     }
 
-    // PHP (4.3.2) str_replace appears to use some internal order
-    // rather than array index when finding replace elements
-    // corresponding to search elements.  To make sure that the
-    // order of the arrays correspond, we make new copies here.
-    // TODO: see if this is still necessary now that we are on PHP 5.2.
+    // Create two arrays, $search and $replace, with corresponding
+    // positional elements.
     foreach ($matches[1] as $key => $value) {
       //        [thumb:144595]
-      $match[] = $matches[0][$key];
+      $search[] = $matches[0][$key];
       //        <img src="http://bugguide.net/files/styles/bg_small/public/0L3/H0L/0L3H0LDHXL8RHZOZFL4L6ZQLPZLL6ZKL6Z8HVH5HVHZL6ZQLDHUHYH8LBZML1Z2HFH9HFHXLUZ6HFH9HZRNHRRGL9ZEHVHKL.jpg" alt="" />
-      // If the target image node has been deleted, the value will
-      // be NULL. In that case, our markup should indicate that.
-      $repl[] = is_null($expanded[$key]) ? '<!--image ' . $value . ' deleted-->' : $expanded[$key];
+      if (isset($expanded[$key])) {
+        $replace[] = $expanded[$key];
+      }
+      else {
+        // [thumb:55] references nid 55 but nid 55 was deleted.
+        // Leave a hint in markup. TODO: make this survive later text filters.
+        $replace[] = '<!--image ' . $value . ' deleted-->';
+      }
     }
-    $text = str_replace($match, $repl, $text);
+    $text = str_replace($search, $replace, $text);
   }
   return $text;
 }
