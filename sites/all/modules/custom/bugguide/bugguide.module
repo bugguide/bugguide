@@ -113,6 +113,6 @@ function bugguide_preprocess_html(&$vars) {
 	// Override suitcase_interim styles for this site.
 	global $theme;
 	if ($theme == 'suitcase_interim') {
-		drupal_add_css(drupal_get_path('module', 'bg') . '/bg.css', array('group' => 200));
+	  drupal_add_css(drupal_get_path('module', 'bugguide') . '/bugguide.css', array('group' => 200));
 	}
 }
