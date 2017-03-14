@@ -304,6 +304,11 @@ function taxonomy_update_7002() {
   $vids = db_query('SELECT vid FROM {taxonomy_vocabulary}')->fetchCol();
   foreach ($vids as $vid) {
     $machine_name = 'vocabulary_' . $vid;
+    // Begin core hack to name first vocabulary machine name forums -JV
+    if ($vid == 1) {
+      $machine_name = 'forums';
+    }
+    // End core hack -JV
     db_update('taxonomy_vocabulary')
       ->fields(array('machine_name' => $machine_name))
       ->condition('vid', $vid)
