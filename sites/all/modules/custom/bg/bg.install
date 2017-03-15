@@ -6,7 +6,7 @@
 function bg_install() {
   // Set seven as admin theme and suitcase as default theme.
   $enable = array(
-    'theme_default' => 'ladybug',
+    'theme_default' => 'suitcase_interim',
     'admin_theme' => 'seven',
   );
   theme_enable($enable);
