@@ -190,7 +190,8 @@ function _bgpage_images($field) {
       // Render a list of images for this group.
       $output .= '<ul>';
       foreach ($docs as $doc) {
-        $output .= '<li class="horizontal">' . $doc->ss_bgimage_thumbnail . '</li>';
+        $thumbnail = isset($doc->ss_bgimage_thumbnail) ? $doc->ss_bgimage_thumbnail : '<!-- missing thumbnail for ' . $doc->entity_id . ' -->';
+        $output .= '<li class="horizontal">' . $thumbnail . '</li>';
       }
       $output .= '</ul>';
     }
