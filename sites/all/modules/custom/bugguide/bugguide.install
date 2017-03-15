@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * The bugguide install file provides bugguide-specific functionality.
+ */
+
+/**
  * Implements hook_install().
  */
 
