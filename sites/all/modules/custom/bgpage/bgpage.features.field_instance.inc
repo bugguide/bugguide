@@ -10,7 +10,7 @@
 function bgpage_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-bgpage-body'
+  // Exported field_instance: 'node-bgpage-body'.
   $field_instances['node-bgpage-body'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -73,7 +73,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_common_name'
+  // Exported field_instance: 'node-bgpage-field_common_name'.
   $field_instances['node-bgpage-field_common_name'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -130,7 +130,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_counts'
+  // Exported field_instance: 'node-bgpage-field_counts'.
   $field_instances['node-bgpage-field_counts'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -188,7 +188,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_editors'
+  // Exported field_instance: 'node-bgpage-field_editors'.
   $field_instances['node-bgpage-field_editors'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -245,7 +245,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_etymology'
+  // Exported field_instance: 'node-bgpage-field_etymology'.
   $field_instances['node-bgpage-field_etymology'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -303,7 +303,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_food'
+  // Exported field_instance: 'node-bgpage-field_food'.
   $field_instances['node-bgpage-field_food'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -361,7 +361,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_habitat'
+  // Exported field_instance: 'node-bgpage-field_habitat'.
   $field_instances['node-bgpage-field_habitat'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -419,7 +419,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_hodges_number'
+  // Exported field_instance: 'node-bgpage-field_hodges_number'.
   $field_instances['node-bgpage-field_hodges_number'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -477,7 +477,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_id'
+  // Exported field_instance: 'node-bgpage-field_id'.
   $field_instances['node-bgpage-field_id'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -535,7 +535,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_internet_references'
+  // Exported field_instance: 'node-bgpage-field_internet_references'.
   $field_instances['node-bgpage-field_internet_references'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -593,7 +593,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_life_cycle'
+  // Exported field_instance: 'node-bgpage-field_life_cycle'.
   $field_instances['node-bgpage-field_life_cycle'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -651,7 +651,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_location_codes'
+  // Exported field_instance: 'node-bgpage-field_location_codes'.
   $field_instances['node-bgpage-field_location_codes'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -708,7 +708,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_other_common_names'
+  // Exported field_instance: 'node-bgpage-field_other_common_names'.
   $field_instances['node-bgpage-field_other_common_names'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -766,7 +766,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_parent'
+  // Exported field_instance: 'node-bgpage-field_parent'.
   $field_instances['node-bgpage-field_parent'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -823,7 +823,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_print_references'
+  // Exported field_instance: 'node-bgpage-field_print_references'.
   $field_instances['node-bgpage-field_print_references'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -881,7 +881,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_pronunciation'
+  // Exported field_instance: 'node-bgpage-field_pronunciation'.
   $field_instances['node-bgpage-field_pronunciation'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -938,7 +938,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_range'
+  // Exported field_instance: 'node-bgpage-field_range'.
   $field_instances['node-bgpage-field_range'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -996,7 +996,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_remarks'
+  // Exported field_instance: 'node-bgpage-field_remarks'.
   $field_instances['node-bgpage-field_remarks'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -1054,7 +1054,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_representative_images'
+  // Exported field_instance: 'node-bgpage-field_representative_images'.
   $field_instances['node-bgpage-field_representative_images'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -1111,7 +1111,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_scientific_name'
+  // Exported field_instance: 'node-bgpage-field_scientific_name'.
   $field_instances['node-bgpage-field_scientific_name'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -1168,7 +1168,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_season'
+  // Exported field_instance: 'node-bgpage-field_season'.
   $field_instances['node-bgpage-field_season'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -1226,7 +1226,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_see_also'
+  // Exported field_instance: 'node-bgpage-field_see_also'.
   $field_instances['node-bgpage-field_see_also'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -1284,7 +1284,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_size'
+  // Exported field_instance: 'node-bgpage-field_size'.
   $field_instances['node-bgpage-field_size'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -1342,7 +1342,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_synonyms'
+  // Exported field_instance: 'node-bgpage-field_synonyms'.
   $field_instances['node-bgpage-field_synonyms'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
@@ -1400,7 +1400,7 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_taxon'
+  // Exported field_instance: 'node-bgpage-field_taxon'.
   $field_instances['node-bgpage-field_taxon'] = array(
     'bundle' => 'bgpage',
     'default_value' => NULL,
