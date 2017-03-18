@@ -32,7 +32,7 @@ function bgpage_menu() {
     'file' => 'bgpage.pages.inc',
   );
 
-  // Browse tab.
+  // Images tab.
   $items['node/%bgpage_node/bgimage'] = array(
     'title' => 'Images',
     'page callback' => 'bgpage_images',
