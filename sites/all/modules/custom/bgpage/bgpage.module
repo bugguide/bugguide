@@ -120,6 +120,23 @@ function bgpage_menu_alter(&$items) {
   $items['node/%node/view']['title'] = t('Info');
 }
 
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function bgpage_menu_local_tasks_alter(&$data, $route_name) {
+  // When looking at a bgimage node, the Info tab should not link
+  // to the nid of the bgimage node, but to its parent (which will
+  // be a bgpage node).
+  if ($route_name['path'] == 'node/%' && isset($route_name['page_arguments'][0]->type) && $route_name['page_arguments'][0]->type == 'bgimage') {
+    $parentpath = $route_name['page_arguments'][0]->field_parent[LANGUAGE_NONE][0]['value'];
+    $parents = explode(',', $parentpath);
+    if (count($parents) > 0) {
+      $parent_nid = $parents[count($parents) - 1];
+      $data['tabs'][0]['output'][0]['#link']['href'] = 'node/' . $parent_nid;
+    }
+  }
+}
+
 function bgpage_permission() {
   return array(
     'view taxon ID field' => array(
