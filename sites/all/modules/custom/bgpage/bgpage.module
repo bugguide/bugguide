@@ -133,6 +133,9 @@ function bgpage_menu_local_tasks_alter(&$data, $route_name) {
     if (count($parents) > 0) {
       $parent_nid = $parents[count($parents) - 1];
       $data['tabs'][0]['output'][0]['#link']['href'] = 'node/' . $parent_nid;
+      
+      // Also, the Info tab should not look like it is selected.
+      unset($data['tabs'][0]['output'][0]['#active']);
     }
   }
 }
