@@ -115,6 +115,8 @@ function bgpage_ds_fields_info($entity_type) {
 
 /**
  * Change "View" tab to say "Info".
+ * This is reverted to "View" in bgpage_menu_local_tasks_alter() for some
+ * content types.
  */
 function bgpage_menu_alter(&$items) {
   $items['node/%node/view']['title'] = t('Info');
@@ -127,16 +129,25 @@ function bgpage_menu_local_tasks_alter(&$data, $route_name) {
   // When looking at a bgimage node, the Info tab should not link
   // to the nid of the bgimage node, but to its parent (which will
   // be a bgpage node).
-  if ($route_name['path'] == 'node/%' && isset($route_name['page_arguments'][0]->type) && $route_name['page_arguments'][0]->type == 'bgimage') {
-    $parentpath = $route_name['page_arguments'][0]->field_parent[LANGUAGE_NONE][0]['value'];
-    $parents = explode(',', $parentpath);
-    if (count($parents) > 0) {
-      $parent_nid = $parents[count($parents) - 1];
-      $data['tabs'][0]['output'][0]['#link']['href'] = 'node/' . $parent_nid;
+  if ($route_name['path'] == 'node/%' && isset($route_name['page_arguments'][0]->type)) {
+    switch($route_name['page_arguments'][0]->type) {
+
+      case 'forum':
+      case 'page':
+        $data['tabs'][0]['output'][0]['#link']['title'] = 'View';
+        break;
+
+      case 'bgimage':
+        $parentpath = $route_name['page_arguments'][0]->field_parent[LANGUAGE_NONE][0]['value'];
+        $parents = explode(',', $parentpath);
+        if (count($parents) > 0) {
+          $parent_nid = $parents[count($parents) - 1];
+          $data['tabs'][0]['output'][0]['#link']['href'] = 'node/' . $parent_nid;
       
-      // Also, the Info tab should not look like it is selected.
-      unset($data['tabs'][0]['output'][0]['#active']);
-    }
+          // Also, the Info tab should not look like it is selected.
+          unset($data['tabs'][0]['output'][0]['#active']);
+        }
+      }
   }
 }
 
