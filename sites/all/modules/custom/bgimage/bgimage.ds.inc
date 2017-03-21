@@ -27,6 +27,11 @@ function bgimage_ds_field_settings_info() {
       'label' => 'hidden',
       'format' => 'ds_time_ago',
     ),
+    'bgimage_tag' => array(
+      'weight' => '3',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
     'bgimage_photo_number' => array(
       'weight' => '1',
       'label' => 'hidden',
@@ -34,6 +39,11 @@ function bgimage_ds_field_settings_info() {
     ),
     'bgimage_copyright' => array(
       'weight' => '2',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'bgimage_title_classification' => array(
+      'weight' => '14',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -124,48 +134,57 @@ function bgimage_ds_layout_settings_info() {
   $ds_layout->entity_type = 'node';
   $ds_layout->bundle = 'bgimage';
   $ds_layout->view_mode = 'default';
-  $ds_layout->layout = 'ds_2col_stacked';
+  $ds_layout->layout = 'ds_3col_stacked_fluid';
   $ds_layout->settings = array(
     'regions' => array(
-      'left' => array(
+      'middle' => array(
         0 => 'field_bgimage_image',
         1 => 'bgimage_photo_number',
         2 => 'bgimage_copyright',
+        3 => 'bgimage_tag',
       ),
       'right' => array(
-        3 => 'field_bgimage_location',
-        4 => 'field_bgimage_date',
-        5 => 'field_bgimage_size',
-        6 => 'field_bgimage_gender',
-        7 => 'field_bgimage_life_stage',
-        8 => 'field_bgimage_photo_quality',
-        9 => 'field_bgimage_representative',
-        12 => 'submitted_by',
+        4 => 'field_bgimage_location_code',
+        5 => 'field_bgimage_location',
+        6 => 'field_bgimage_county',
+        7 => 'field_bgimage_date',
+        8 => 'field_bgimage_gender',
+        9 => 'field_bgimage_life_stage',
+        10 => 'field_bgimage_representative',
+        11 => 'field_bgimage_photo_quality',
+        12 => 'field_bgimage_size',
+        13 => 'submitted_by',
       ),
       'footer' => array(
-        10 => 'body',
-        11 => 'comments',
+        14 => 'bgimage_title_classification',
+        15 => 'body',
+        16 => 'comments',
       ),
     ),
     'fields' => array(
-      'field_bgimage_image' => 'left',
-      'bgimage_photo_number' => 'left',
-      'bgimage_copyright' => 'left',
+      'field_bgimage_image' => 'middle',
+      'bgimage_photo_number' => 'middle',
+      'bgimage_copyright' => 'middle',
+      'bgimage_tag' => 'middle',
+      'field_bgimage_location_code' => 'right',
       'field_bgimage_location' => 'right',
+      'field_bgimage_county' => 'right',
       'field_bgimage_date' => 'right',
-      'field_bgimage_size' => 'right',
       'field_bgimage_gender' => 'right',
       'field_bgimage_life_stage' => 'right',
-      'field_bgimage_photo_quality' => 'right',
       'field_bgimage_representative' => 'right',
+      'field_bgimage_photo_quality' => 'right',
+      'field_bgimage_size' => 'right',
+      'submitted_by' => 'right',
+      'bgimage_title_classification' => 'footer',
       'body' => 'footer',
       'comments' => 'footer',
-      'submitted_by' => 'right',
     ),
     'classes' => array(),
     'wrappers' => array(
       'header' => 'div',
       'left' => 'div',
+      'middle' => 'div',
       'right' => 'div',
       'footer' => 'div',
     ),
