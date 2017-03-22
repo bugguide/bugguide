@@ -18,17 +18,17 @@ function bgimage_ds_field_settings_info() {
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
     'comments' => array(
-      'weight' => '17',
+      'weight' => '18',
       'label' => 'hidden',
       'format' => 'default',
     ),
     'changed_date' => array(
-      'weight' => '14',
-      'label' => 'hidden',
+      'weight' => '15',
+      'label' => 'inline',
       'format' => 'ds_post_date_bg_short_F_j_Y',
     ),
     'submitted_by' => array(
-      'weight' => '13',
+      'weight' => '14',
       'label' => 'hidden',
       'format' => 'ds_time_ago',
     ),
@@ -47,8 +47,13 @@ function bgimage_ds_field_settings_info() {
       'label' => 'hidden',
       'format' => 'default',
     ),
+    'bgimage_related' => array(
+      'weight' => '4',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
     'bgimage_title_classification' => array(
-      'weight' => '15',
+      'weight' => '16',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -147,24 +152,25 @@ function bgimage_ds_layout_settings_info() {
         1 => 'bgimage_photo_number',
         2 => 'bgimage_copyright',
         3 => 'bgimage_tag',
+        4 => 'bgimage_related',
       ),
       'right' => array(
-        4 => 'field_bgimage_location',
-        5 => 'field_bgimage_county',
-        6 => 'field_bgimage_location_code',
-        7 => 'field_bgimage_date',
-        8 => 'field_bgimage_life_stage',
-        9 => 'field_bgimage_gender',
-        10 => 'field_bgimage_size',
-        11 => 'field_bgimage_representative',
-        12 => 'field_bgimage_photo_quality',
-        13 => 'submitted_by',
-        14 => 'changed_date',
+        5 => 'field_bgimage_location',
+        6 => 'field_bgimage_county',
+        7 => 'field_bgimage_location_code',
+        8 => 'field_bgimage_date',
+        9 => 'field_bgimage_life_stage',
+        10 => 'field_bgimage_gender',
+        11 => 'field_bgimage_size',
+        12 => 'field_bgimage_representative',
+        13 => 'field_bgimage_photo_quality',
+        14 => 'submitted_by',
+        15 => 'changed_date',
       ),
       'footer' => array(
-        15 => 'bgimage_title_classification',
-        16 => 'body',
-        17 => 'comments',
+        16 => 'bgimage_title_classification',
+        17 => 'body',
+        18 => 'comments',
       ),
     ),
     'fields' => array(
@@ -172,6 +178,7 @@ function bgimage_ds_layout_settings_info() {
       'bgimage_photo_number' => 'middle',
       'bgimage_copyright' => 'middle',
       'bgimage_tag' => 'middle',
+      'bgimage_related' => 'middle',
       'field_bgimage_location' => 'right',
       'field_bgimage_county' => 'right',
       'field_bgimage_location_code' => 'right',
@@ -201,8 +208,6 @@ function bgimage_ds_layout_settings_info() {
     'layout_link_attribute' => '',
     'layout_link_custom' => '',
     'layout_disable_css' => 0,
-    'hide_page_title' => '0',
-    'page_option_title' => '',
   );
   $export['node|bgimage|default'] = $ds_layout;
 

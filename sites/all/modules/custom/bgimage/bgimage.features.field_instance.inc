@@ -10,7 +10,7 @@
 function bgimage_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-bgimage-body'
+  // Exported field_instance: 'node-bgimage-body'.
   $field_instances['node-bgimage-body'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -22,7 +22,7 @@ function bgimage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 10,
+        'weight' => 17,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -64,7 +64,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_base'
+  // Exported field_instance: 'node-bgimage-field_bgimage_base'.
   $field_instances['node-bgimage-field_bgimage_base'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -75,7 +75,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 31,
+        'weight' => 34,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -115,7 +115,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_copyright_owner'
+  // Exported field_instance: 'node-bgimage-field_bgimage_copyright_owner'.
   $field_instances['node-bgimage-field_bgimage_copyright_owner'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -126,7 +126,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 30,
+        'weight' => 33,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -166,7 +166,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_county'
+  // Exported field_instance: 'node-bgimage-field_bgimage_county'.
   $field_instances['node-bgimage-field_bgimage_county'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -174,10 +174,11 @@ function bgimage_field_default_field_instances() {
     'description' => 'If known, otherwise leave blank. Do not include the word \'County\' or \'Parish\' here as the system will provide that as needed.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 32,
+        'type' => 'text_default',
+        'weight' => 6,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -217,7 +218,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_date'
+  // Exported field_instance: 'node-bgimage-field_bgimage_date'.
   $field_instances['node-bgimage-field_bgimage_date'] = array(
     'bundle' => 'bgimage',
     'deleted' => 0,
@@ -232,6 +233,7 @@ function bgimage_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 8,
@@ -251,6 +253,7 @@ function bgimage_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 4,
@@ -289,7 +292,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_gender'
+  // Exported field_instance: 'node-bgimage-field_bgimage_gender'.
   $field_instances['node-bgimage-field_bgimage_gender'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -297,10 +300,11 @@ function bgimage_field_default_field_instances() {
     'description' => 'If you don\'t know for sure, don\'t check it. If the photo shows mating behavior, check both male and female.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
+        'module' => 'list',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 33,
+        'type' => 'list_default',
+        'weight' => 10,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -337,7 +341,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_id'
+  // Exported field_instance: 'node-bgimage-field_bgimage_id'.
   $field_instances['node-bgimage-field_bgimage_id'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -348,7 +352,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 27,
+        'weight' => 31,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -388,7 +392,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_image'
+  // Exported field_instance: 'node-bgimage-field_bgimage_image'.
   $field_instances['node-bgimage-field_bgimage_image'] = array(
     'bundle' => 'bgimage',
     'deleted' => 0,
@@ -403,7 +407,7 @@ function bgimage_field_default_field_instances() {
           'image_style' => 'bg_large',
         ),
         'type' => 'image',
-        'weight' => 1,
+        'weight' => 0,
       ),
       'homepage' => array(
         'label' => 'hidden',
@@ -463,7 +467,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_life_stage'
+  // Exported field_instance: 'node-bgimage-field_bgimage_life_stage'.
   $field_instances['node-bgimage-field_bgimage_life_stage'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -472,9 +476,10 @@ function bgimage_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
+        'module' => 'list',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 34,
+        'type' => 'list_default',
+        'weight' => 9,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -511,7 +516,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_location'
+  // Exported field_instance: 'node-bgimage-field_bgimage_location'.
   $field_instances['node-bgimage-field_bgimage_location'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -523,7 +528,7 @@ function bgimage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 7,
+        'weight' => 5,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -564,7 +569,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_location_code'
+  // Exported field_instance: 'node-bgimage-field_bgimage_location_code'.
   $field_instances['node-bgimage-field_bgimage_location_code'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -572,10 +577,11 @@ function bgimage_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 28,
+        'type' => 'text_default',
+        'weight' => 7,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -615,7 +621,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_photo_quality'
+  // Exported field_instance: 'node-bgimage-field_bgimage_photo_quality'.
   $field_instances['node-bgimage-field_bgimage_photo_quality'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -634,7 +640,7 @@ function bgimage_field_default_field_instances() {
           ),
         ),
         'type' => 'fivestar_formatter_default',
-        'weight' => 4,
+        'weight' => 13,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -676,7 +682,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_representative'
+  // Exported field_instance: 'node-bgimage-field_bgimage_representative'.
   $field_instances['node-bgimage-field_bgimage_representative'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -695,7 +701,7 @@ function bgimage_field_default_field_instances() {
           ),
         ),
         'type' => 'fivestar_formatter_default',
-        'weight' => 3,
+        'weight' => 12,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -737,7 +743,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_bgimage_size'
+  // Exported field_instance: 'node-bgimage-field_bgimage_size'.
   $field_instances['node-bgimage-field_bgimage_size'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -749,7 +755,7 @@ function bgimage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 9,
+        'weight' => 11,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -790,7 +796,7 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgimage-field_parent'
+  // Exported field_instance: 'node-bgimage-field_parent'.
   $field_instances['node-bgimage-field_parent'] = array(
     'bundle' => 'bgimage',
     'default_value' => NULL,
@@ -801,7 +807,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 29,
+        'weight' => 32,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -851,7 +857,6 @@ function bgimage_field_default_field_instances() {
   t('Date taken, if known (mm/dd/yy). Only specify this for wild specimens.');
   t('Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).');
   t('Gender');
-  t('How representative of this taxon is this specimen?<br>1: I can hardly recognize it as a member of this taxon;<br>5: I would show someone this picture to introduce them to this taxon');
   t('ID');
   t('If known, otherwise leave blank. Do not include the word \'County\' or \'Parish\' here as the system will provide that as needed.');
   t('If you don\'t know for sure, don\'t check it. For example: for caterpillars check immature and for butterflies and moths check adult. If an image shows more than one life stage, check each one.');
@@ -864,7 +869,6 @@ function bgimage_field_default_field_instances() {
   t('Location code');
   t('Parent');
   t('Photographic Quality');
-  t('Quality of image.<br>1: blurry, taken on a cheap camera phone;<br>5: professional-quality image, great depth of field, excellent lighting.');
   t('Remarks');
   t('Representative of Taxon');
   t('Size');
