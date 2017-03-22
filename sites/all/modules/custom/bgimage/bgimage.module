@@ -713,7 +713,7 @@ function bgimage_block_view($delta = '') {
     $rendered_image = theme('image_style', array('path' => $node->field_bgimage_image[LANGUAGE_NONE][0]['uri'], 'style_name' => 'bg_small'));
     $content .= '<li style="margin:10px">';
     $content .= '<a href="' . url('node/' . $node->nid) . '" title="' . check_plain($node->title) . '">' . $rendered_image  . '</a>';
-    $content .= l(t('remove'), 'bgimage/untag/' . $node->nid, array(
+    $content .= l(t('Remove'), 'bgimage/untag/' . $node->nid, array(
       'attributes' => array('title' => t('Remove this image from the clipboard')),
       'query' => array('destination' => current_path()),
     ));
@@ -722,13 +722,13 @@ function bgimage_block_view($delta = '') {
   $content .= '</ul>';
 
   $links = array();
-  $links[] = l(t('remove'), 'bgimage/untag_all', array(
+  $links[] = l(t('Remove all'), 'bgimage/untag_all', array(
     'attributes' => array('title' => t('Remove these images from the clipboard')),
     'query' => array('destination' => current_path()),
   ));
 
   if ($same_uid || user_access('link all bgimages')) {
-    $links[] = l(t('link'), 'bgimage/link', array(
+    $links[] = l(t('Link'), 'bgimage/link', array(
       'attributes' => array('title' => t('Link together these images of the same specimen.')),
       'query' => array('destination' => current_path()),
     ));
@@ -736,7 +736,7 @@ function bgimage_block_view($delta = '') {
 
   $current_node = menu_get_object('node');
   if (!empty($current_node) && in_array($current_node->type, array('bgpage', 'bgimage'))) {
-    $links[] = l(t('move'), 'bgimage/move/' . $current_node->nid, array(
+    $links[] = l(t('Move'), 'bgimage/move/' . $current_node->nid, array(
       'attributes' => array('title' => t('Move these images to the taxonomy of the current page.')),
     ));
   }
