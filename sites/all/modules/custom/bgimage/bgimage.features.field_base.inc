@@ -10,7 +10,7 @@
 function bgimage_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'body'
+  // Exported field_base: 'body'.
   $field_bases['body'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -19,14 +19,6 @@ function bgimage_field_default_field_bases() {
       0 => 'node',
     ),
     'field_name' => 'body',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -39,21 +31,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'text_with_summary',
   );
 
-  // Exported field_base: 'field_bgimage_base'
+  // Exported field_base: 'field_bgimage_base'.
   $field_bases['field_bgimage_base'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_base',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -68,21 +52,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_bgimage_copyright_owner'
+  // Exported field_base: 'field_bgimage_copyright_owner'.
   $field_bases['field_bgimage_copyright_owner'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_copyright_owner',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -97,21 +73,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_bgimage_county'
+  // Exported field_base: 'field_bgimage_county'.
   $field_bases['field_bgimage_county'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_county',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -126,14 +94,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_bgimage_date'
+  // Exported field_base: 'field_bgimage_date'.
   $field_bases['field_bgimage_date'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_date',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'date',
@@ -156,14 +123,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'field_bgimage_gender'
+  // Exported field_base: 'field_bgimage_gender'.
   $field_bases['field_bgimage_gender'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_gender',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -182,21 +148,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_bgimage_id'
+  // Exported field_base: 'field_bgimage_id'.
   $field_bases['field_bgimage_id'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_id',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -211,21 +169,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_bgimage_image'
+  // Exported field_base: 'field_bgimage_image'.
   $field_bases['field_bgimage_image'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_image',
-    'foreign keys' => array(
-      'fid' => array(
-        'columns' => array(
-          'fid' => 'fid',
-        ),
-        'table' => 'file_managed',
-      ),
-    ),
     'indexes' => array(
       'fid' => array(
         0 => 'fid',
@@ -241,14 +191,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'field_bgimage_life_stage'
+  // Exported field_base: 'field_bgimage_life_stage'.
   $field_bases['field_bgimage_life_stage'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_life_stage',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -269,21 +218,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_bgimage_location'
+  // Exported field_base: 'field_bgimage_location'.
   $field_bases['field_bgimage_location'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_location',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -298,21 +239,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_bgimage_location_code'
+  // Exported field_base: 'field_bgimage_location_code'.
   $field_bases['field_bgimage_location_code'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_location_code',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -327,14 +260,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_bgimage_photo_quality'
+  // Exported field_base: 'field_bgimage_photo_quality'.
   $field_bases['field_bgimage_photo_quality'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_photo_quality',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'fivestar',
@@ -345,14 +277,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'fivestar',
   );
 
-  // Exported field_base: 'field_bgimage_representative'
+  // Exported field_base: 'field_bgimage_representative'.
   $field_bases['field_bgimage_representative'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_representative',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'fivestar',
@@ -363,21 +294,13 @@ function bgimage_field_default_field_bases() {
     'type' => 'fivestar',
   );
 
-  // Exported field_base: 'field_bgimage_size'
+  // Exported field_base: 'field_bgimage_size'.
   $field_bases['field_bgimage_size'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_bgimage_size',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
