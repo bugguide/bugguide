@@ -122,11 +122,11 @@ function _bgimage_field_related_images($field) {
         'path' => $node_wrapper->field_bgimage_image->file->value()->uri,
         'alt' => $node_wrapper->title->value(array('sanitize' => TRUE)),
         'title' => $node_wrapper->title->value(array('sanitize' => TRUE)),
-        'attributes' => array('class' => 'bgimage-related-thumb;'),
+        'attributes' => array('class' => 'bgimage-related-thumb'),
       );
       // Add a border to the thumbnail of the current image.
       if ($related_node->nid == $node->nid) {
-        $image_properties['attributes']['class'] .= 'bgimage-related-thumb-current';
+        $image_properties['attributes']['class'] .= ' bgimage-related-thumb-current';
       }
       $image = theme('image_style', $image_properties);
       $output .= '<div class="bgimage-related"><a href="' . url('node/' . $related_node->nid) . '" title="' . $node_wrapper->title->value(array('sanitize' => TRUE)) . '">' . $image . '</a></div>';
