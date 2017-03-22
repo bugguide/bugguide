@@ -756,7 +756,7 @@ function bgimage_block_view($delta = '') {
     ));
   }
 
-  $content .= implode(' | ', $links);
+  $content .= implode(' ', $links);
 
   return array(
     'subject' => t('Clipboard'),
