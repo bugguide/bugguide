@@ -620,7 +620,7 @@ function bgimage_field_default_field_instances() {
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Quality of image.<br>1: blurry, taken on a cheap camera phone;<br>5: professional-quality image, great depth of field, excellent lighting.',
+    'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'inline',
@@ -681,7 +681,7 @@ function bgimage_field_default_field_instances() {
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'How representative of this taxon is this specimen?<br>1: I can hardly recognize it as a member of this taxon;<br>5: I would show someone this picture to introduce them to this taxon',
+    'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'inline',
