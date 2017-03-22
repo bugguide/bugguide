@@ -716,7 +716,7 @@ function bgimage_block_view($delta = '') {
     $content .= l(t('Remove'), 'bgimage/untag/' . $node->nid, array(
       'attributes' => array(
         'title' => t('Remove this image from the clipboard'),
-        'class' => '.clip-remove',
+        'class' => 'clip-remove',
         ),
       'query' => array('destination' => current_path()),
     ));
