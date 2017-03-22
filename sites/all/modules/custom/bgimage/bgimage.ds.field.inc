@@ -112,7 +112,7 @@ function _bgimage_field_related_images($field) {
   $output = '<div class="field-label">Images of this individual:</div>';
 
   // Render image thumbnails.
-  $output .= '<div class="image-container">';
+  $output .= '<div class="bgimage-related-container">';
   $nodes = node_load_multiple($nids);
   foreach ($nodes as $related_node) {
     $node_wrapper = entity_metadata_wrapper('node', $related_node);
@@ -122,20 +122,21 @@ function _bgimage_field_related_images($field) {
         'path' => $node_wrapper->field_bgimage_image->file->value()->uri,
         'alt' => $node_wrapper->title->value(array('sanitize' => TRUE)),
         'title' => $node_wrapper->title->value(array('sanitize' => TRUE)),
-        'attributes' => array('style' => 'margin: 10px;'),
+        'attributes' => array('class' => 'bgimage-related-thumb;'),
       );
       // Add a border to the thumbnail of the current image.
       if ($related_node->nid == $node->nid) {
-        $image_properties['attributes']['style'] .= 'border: 2px solid black;';
+        $image_properties['attributes']['class'] .= 'bgimage-related-thumb-current';
       }
       $image = theme('image_style', $image_properties);
-      $output .= '<div style="float:left"><a href="' . url('node/' . $related_node->nid) . '" title="' . $node_wrapper->title->value(array('sanitize' => TRUE)) . '">' . $image . '</a></div>';
+      $output .= '<div class="bgimage-related"><a href="' . url('node/' . $related_node->nid) . '" title="' . $node_wrapper->title->value(array('sanitize' => TRUE)) . '">' . $image . '</a></div>';
     }
   }
-  $output .= '</div><div style="clear:both;">';
+  $output .= '</div><div class="bgimage-related-actions">';
   if (user_access('use image clipboard')) {
     $output .= l('Add all images to clipboard', 'bgimage/tag/' . $node->nid . '/all', array('query' => array('destination' => current_path())));
   }
+  $output .= '</div>';
   return $output;
 }
 
