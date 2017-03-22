@@ -16,7 +16,7 @@
 /* ## GENERAL */
 /* ---------------------- */
 
-.page { background: #f1eee7; /* very light tan */ }
+.page { background: #ffffff; }
 
 a,
 a:link {
@@ -62,6 +62,14 @@ blockquote {
 .read-more > a {
     color: #ffffff;
 }
+
+/* -------------------- */
+/* ## PAGER */
+
+.pager li.pager-current {
+    background: #ddd;
+}
+
 
 /* ---------------------- */
 /* ## HEADER */
@@ -556,12 +564,12 @@ blockquote {
     margin-bottom: 1rem;
 }
 
-.bgimage-related img {
+.bgimage-related-thumb {
     border: 1px solid transparent;
 }
     
-.bgimage-related-current img,
-.bgimage-related img:hover {
+.bgimage-related-thumb-current,
+.bgimage-related-thumb:hover {
     border-color: #ffffff;
     outline: 3px solid #44402e;
 }
