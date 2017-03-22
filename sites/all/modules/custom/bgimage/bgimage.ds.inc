@@ -18,9 +18,14 @@ function bgimage_ds_field_settings_info() {
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
     'comments' => array(
-      'weight' => '16',
+      'weight' => '17',
       'label' => 'hidden',
       'format' => 'default',
+    ),
+    'changed_date' => array(
+      'weight' => '14',
+      'label' => 'hidden',
+      'format' => 'ds_post_date_bg_short_F_j_Y',
     ),
     'submitted_by' => array(
       'weight' => '13',
@@ -148,8 +153,8 @@ function bgimage_ds_layout_settings_info() {
         5 => 'field_bgimage_county',
         6 => 'field_bgimage_location_code',
         7 => 'field_bgimage_date',
-        8 => 'field_bgimage_gender',
-        9 => 'field_bgimage_life_stage',
+        8 => 'field_bgimage_life_stage',
+        9 => 'field_bgimage_gender',
         10 => 'field_bgimage_size',
         11 => 'field_bgimage_representative',
         12 => 'field_bgimage_photo_quality',
@@ -171,8 +176,8 @@ function bgimage_ds_layout_settings_info() {
       'field_bgimage_county' => 'right',
       'field_bgimage_location_code' => 'right',
       'field_bgimage_date' => 'right',
-      'field_bgimage_gender' => 'right',
       'field_bgimage_life_stage' => 'right',
+      'field_bgimage_gender' => 'right',
       'field_bgimage_size' => 'right',
       'field_bgimage_representative' => 'right',
       'field_bgimage_photo_quality' => 'right',
