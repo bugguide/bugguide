@@ -699,7 +699,7 @@ function bgimage_block_view($delta = '') {
   global $user;
   $content = '';
   $nids = explode(',', $_SESSION['tagged_images']);
-  $tagged_count = 0;
+  $clip_count = 0;
   $same_uid = TRUE;
   $nodes = node_load_multiple($nids);
   $content = '<ul class="item-list">';
@@ -721,17 +721,20 @@ function bgimage_block_view($delta = '') {
       'query' => array('destination' => current_path()),
     ));
     $content .= '</li>';
+    $clip_count++;
   }
   $content .= '</ul>';
 
   $links = array();
-  $links[] = l(t('Remove all'), 'bgimage/untag_all', array(
-    'attributes' => array(
-      'title' => t('Remove these images from the clipboard'),
-      'class' => 'clip-remove-all',
-      ),
-    'query' => array('destination' => current_path()),
-  ));
+  if ($clip_count > 1) {
+    $links[] = l(t('Remove all'), 'bgimage/untag_all', array(
+      'attributes' => array(
+        'title' => t('Remove these images from the clipboard'),
+        'class' => 'clip-remove-all',
+        ),
+      'query' => array('destination' => current_path()),
+    ));
+  }
 
   if ($same_uid || user_access('link all bgimages')) {
     $links[] = l(t('Link'), 'bgimage/link', array(
