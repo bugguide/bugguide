@@ -806,3 +806,78 @@ article.comment .comment-submitted {
 .view-recently-placed .field-name-title h2 {
     margin-top: 0;
 }
+
+
+/* -------------------- */
+/* ## TEMPORARY HOMEPAGE */
+/* -------------------- */
+
+.container {
+    width: 100%;
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.bghome-hero {
+    justify-content: center;
+    height: 50vh;
+    background-color: #eee;
+    background-image: url(/files/styles/bg_large/public/WR5/0UR/WR50UR10LKLS2KPQ9KCR3KDRKQTR0QDR0QR0W0FR60R020K0W0Z020S00QOR0Q00P0Z07QTRMQTRXQR090FQ90L0MQJR7Q00MQ.jpg?itok=-vbXVfpW);
+    background-size: cover;
+    background-position: center right;
+}
+
+.bghome-hero .container {
+    display: flex;
+    align-items: flex-end;
+    height: 100%;
+}
+
+.bghome-hero-caption {
+    padding: 1rem;
+    color: #44402e;
+    font-size: calc(1rem + 3vw);
+    background: #E7DBC1;
+    border-radius: 3px;
+}
+
+.bghome-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.bghome-quicklink {
+    flex: 1 1 auto;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.bghome-quicklink a {
+    font-size: 2rem;
+    text-decoration: none;
+}
+
+.bghome-quicklink-img {
+    height: 200px; width: 200px;
+    margin: 0 auto;
+    border-radius: 200px;
+    border: 1px solid #ddd;
+    background-size: cover;
+    background-position: center;
+}
+
+.bghome-quicklink-1 .bghome-quicklink-img {
+    background-image: url(/files/styles/bg_large/public/OL5/RDL/OL5RDLZR5LVHBZPH9Z9LJLELJLWLYL6LFLTZZZULZZDZZZTZJLWLZZYZKRNLMZRHPRDLKZKHXZALMZVL8RLHERQHPR0H2RZH6R.jpg?itok=0iNM8Yg6);
+}
+
+.bghome-quicklink-2 .bghome-quicklink-img {
+    background-image: url(/files/styles/bg_large/public/9ZU/HNZ/9ZUHNZHHSZFZVL2ROL8ZLLPZZL6ZQL2Z0L5ZHL6ZGLYHMHEZZLOH4HBHSL5ZLLAHGH4ZQL8Z5HBH0LAHXHOHNHOHRL1HXH6ZLL.jpg?itok=9vEDQyuA);
+}
+
+.bghome-quicklink-3 .bghome-quicklink-img {
+    background-image: url(/files/styles/bg_large/public/P0J/R60/P0JR60IKJ0QK9QOKBQ70DQ50Q0P0Z0P0Z0MQ3R0QTR20ORXQBRM0BRX0URJKWRKQH0603RIQFR7QQ090K050DQ3KWRI0JQJKCQ.jpg?itok=JoP_noik);
+}
