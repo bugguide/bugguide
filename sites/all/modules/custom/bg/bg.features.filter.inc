@@ -10,7 +10,7 @@
 function bg_filter_default_formats() {
   $formats = array();
 
-  // Exported format: Filtered HTML.
+  // Exported format: Filtered HTML numeric.
   $formats[1] = array(
     'format' => 1,
     'name' => 'Filtered HTML numeric',
@@ -190,7 +190,7 @@ function bg_filter_default_formats() {
     ),
   );
 
-  // Exported format: Full HTML.
+  // Exported format: Full HTML numeric.
   $formats[2] = array(
     'format' => 2,
     'name' => 'Full HTML numeric',
@@ -218,7 +218,7 @@ function bg_filter_default_formats() {
     ),
   );
 
-  // Exported format: PHP code.
+  // Exported format: PHP code numeric.
   $formats[3] = array(
     'format' => 3,
     'name' => 'PHP code numeric',
@@ -228,34 +228,6 @@ function bg_filter_default_formats() {
     'filters' => array(
       'php_code' => array(
         'weight' => 0,
-        'status' => 1,
-        'settings' => array(),
-      ),
-    ),
-  );
-
-  // Exported format: Plain text.
-  $formats[4] = array(
-    'format' => 4,
-    'name' => 'Plain text numeric',
-    'cache' => 1,
-    'status' => 1,
-    'weight' => -7,
-    'filters' => array(
-      'filter_html_escape' => array(
-        'weight' => 0,
-        'status' => 1,
-        'settings' => array(),
-      ),
-      'filter_url' => array(
-        'weight' => 1,
-        'status' => 1,
-        'settings' => array(
-          'filter_url_length' => 72,
-        ),
-      ),
-      'filter_autop' => array(
-        'weight' => 2,
         'status' => 1,
         'settings' => array(),
       ),

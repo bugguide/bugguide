@@ -14,17 +14,16 @@ function bg_apachesolr_environments() {
   $environment->api_version = 1;
   $environment->env_id = 'solr';
   $environment->name = 'localhost server';
-  $environment->url = 'http://localhost:8983/solr';
+  $environment->url = 'http://db1.ent.iastate.edu:8983/solr/bg';
   $environment->service_class = '';
   $environment->conf = array(
-    'apachesolr_direct_commit' => 0,
-    'apachesolr_read_only' => '0',
-    'apachesolr_soft_commit' => 0,
+    'apachesolr_search_facet_pages' => '',
   );
   $environment->index_bundles = array(
     'node' => array(
       0 => 'bgimage',
       1 => 'bgpage',
+      2 => 'forum',
     ),
   );
   $export['solr'] = $environment;

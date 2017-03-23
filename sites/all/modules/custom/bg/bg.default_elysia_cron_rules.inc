@@ -23,16 +23,6 @@ function bg_default_elysia_cron_rules() {
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
   $cron_rule->api_version = 1;
-  $cron_rule->name = 'apachesolr_cron';
-  $cron_rule->disable = TRUE;
-  $cron_rule->rule = NULL;
-  $cron_rule->weight = NULL;
-  $cron_rule->context = NULL;
-  $cron_rules['apachesolr_cron'] = $cron_rule;
-
-  $cron_rule = new stdClass;
-  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
-  $cron_rule->api_version = 1;
   $cron_rule->name = 'apachesolr_parallel_cron';
   $cron_rule->disable = NULL;
   $cron_rule->rule = '* * * * *';
@@ -113,22 +103,32 @@ function bg_default_elysia_cron_rules() {
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
   $cron_rule->api_version = 1;
-  $cron_rule->name = 'views_bulk_operations_cron';
-  $cron_rule->disable = NULL;
-  $cron_rule->rule = NULL;
-  $cron_rule->weight = NULL;
-  $cron_rule->context = NULL;
-  $cron_rules['views_bulk_operations_cron'] = $cron_rule;
-
-  $cron_rule = new stdClass;
-  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
-  $cron_rule->api_version = 1;
   $cron_rule->name = 'votingapi_cron';
   $cron_rule->disable = NULL;
   $cron_rule->rule = NULL;
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
   $cron_rules['votingapi_cron'] = $cron_rule;
+
+  $cron_rule = new stdClass;
+  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
+  $cron_rule->api_version = 1;
+  $cron_rule->name = 'apachesolr_cron';
+  $cron_rule->disable = TRUE;
+  $cron_rule->rule = NULL;
+  $cron_rule->weight = NULL;
+  $cron_rule->context = NULL;
+  $cron_rules['apachesolr_cron'] = $cron_rule;
+
+  $cron_rule = new stdClass;
+  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
+  $cron_rule->api_version = 1;
+  $cron_rule->name = 'views_bulk_operations_cron';
+  $cron_rule->disable = NULL;
+  $cron_rule->rule = NULL;
+  $cron_rule->weight = NULL;
+  $cron_rule->context = NULL;
+  $cron_rules['views_bulk_operations_cron'] = $cron_rule;
 
   return $cron_rules;
 
