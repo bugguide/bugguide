@@ -435,7 +435,14 @@ blockquote {
 /* ## INDIVIDUAL IMAGE VIEW */
 /* ---------------------- */
 
-.node-type-bgimage #page-title { display: none; }
+.node-type-bgimage #page-title {     
+    /* Hide visibility, show to screenreaders */
+    position: absolute;
+    top: auto;
+    left: -10000px;
+    height: 1px; width: 1px;
+    overflow: hidden;
+}
 
 /* -------------------- */
 /* --- LAYOUT --- */
