@@ -756,3 +756,53 @@ article.comment .comment-submitted {
     border-color: #000 !important;
 }
 
+/* -------------------- */
+/* ## RECENT */
+/* -------------------- */
+
+.view-recently-placed .node {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+}
+
+.view-recently-placed .node .group-header {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.view-recently-placed .node .group-left {
+    width: auto;
+    flex-shrink: 0;
+    margin-right: 1rem;
+}
+
+.view-recently-placed .node .group-right {
+    width: auto;
+    flex-grow: 1;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+.view-recently-placed .field-name-title {
+    margin-bottom: 1rem;
+    padding: 0;
+    border: 0;
+}
+
+.view-recently-placed .node .group-right .field {
+    padding: 0;
+    border: 0;
+}
+
+.view-recently-placed .node .group-footer {
+    width: 100%;
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+
+.view-recently-placed .field-name-title h2 {
+    margin-top: 0;
+}
