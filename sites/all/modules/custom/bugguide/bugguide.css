@@ -702,7 +702,8 @@ article.comment .comment-submitted {
 
 .block-tagged-images a.clip-remove,
 .block-tagged-images a.clip-remove-all,
-.block-tagged-images a.clip-move {
+.block-tagged-images a.clip-move,
+.block-tagged-images a.clip-link {
     display: inline-block !important;
     margin-top: 0.5rem;
     margin-right: 0.5rem;
@@ -720,7 +721,8 @@ article.comment .comment-submitted {
 
 .block-tagged-images a.clip-remove:before,
 .block-tagged-images a.clip-remove-all:before,
-.block-tagged-images a.clip-move:before {
+.block-tagged-images a.clip-move:before,
+.block-tagged-images a.clip-link:before {
     content: '\f00d';
     font-family: 'FontAwesome';
     display: inline-block;
@@ -732,10 +734,15 @@ article.comment .comment-submitted {
     content: '\f178';
 }
 
+.block-tagged-images a.clip-link:before {
+    content: '\f0c1';
+    transform: rotate(-45deg);
+}
 
 .block-tagged-images a.clip-remove:hover,
 .block-tagged-images a.clip-remove-all:hover,
-.block-tagged-images a.clip-move:hover {
+.block-tagged-images a.clip-move:hover,
+.block-tagged-images a.clip-link:hover {
     color: #ffffff;
     text-decoration: none;
     background: #44402e;
