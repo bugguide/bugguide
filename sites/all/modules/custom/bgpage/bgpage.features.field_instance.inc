@@ -10,6 +10,58 @@
 function bgpage_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'node-bgimage-field_tags'.
+  $field_instances['node-bgimage-field_tags'] = array(
+    'bundle' => 'bgimage',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Enter terms separated by commas. Do not prefix terms with a hash (#). Terms should describe and can be used to group content. Examples: green, feathery, mating, gathering2017, subterranean.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 5,
+      ),
+      'homepage' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'recent' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tags',
+    'label' => 'Tags',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 16,
+    ),
+  );
+
   // Exported field_instance: 'node-bgpage-body'.
   $field_instances['node-bgpage-body'] = array(
     'bundle' => 'bgpage',
@@ -25,8 +77,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'hidden',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
+        'type' => 'text_default',
         'weight' => 30,
       ),
       'homepage' => array(
@@ -88,8 +141,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
+        'type' => 'text_default',
         'weight' => 38,
       ),
       'homepage' => array(
@@ -203,8 +257,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
+        'type' => 'text_default',
         'weight' => 35,
       ),
       'homepage' => array(
@@ -666,8 +721,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
+        'type' => 'text_default',
         'weight' => 36,
       ),
       'homepage' => array(
@@ -781,8 +837,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
+        'type' => 'text_default',
         'weight' => 37,
       ),
       'homepage' => array(
@@ -896,8 +953,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
+        'type' => 'text_default',
         'weight' => 33,
       ),
       'homepage' => array(
@@ -1069,8 +1127,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
+        'type' => 'text_default',
         'weight' => 32,
       ),
       'homepage' => array(
@@ -1126,8 +1185,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
+        'type' => 'text_default',
         'weight' => 31,
       ),
       'homepage' => array(
@@ -1415,8 +1475,14 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_integer',
         'weight' => 34,
       ),
       'homepage' => array(
@@ -1469,6 +1535,7 @@ function bgpage_field_default_field_instances() {
   t('Counts');
   t('Details about the various stages of development and information about reproduction.');
   t('Editors');
+  t('Enter terms separated by commas. Do not prefix terms with a hash (#). Terms should describe and can be used to group content. Examples: green, feathery, mating, gathering2017, subterranean.');
   t('Examples here might be number of orders, families, species and/or subspecies for particular regions (or worldwide). One count per line.');
   t('Explanation of Names');
   t('Food');
@@ -1498,8 +1565,8 @@ function bgpage_field_default_field_instances() {
   t('Similar creatures or those easily confused with or having a significant relationship to this one. Consider providing links to other guide pages.');
   t('Size');
   t('Synonyms and other taxonomic changes');
+  t('Tags');
   t('Taxon');
-  t('Try to find a unique common name. Otherwise use the scientific name for the taxon. If no common name is available for a species page, use the genus and species together, but do not capitalize the species. Preferred common name sources include:<br/><a href="http://www.entsoc.org/common-names" target="blank">ESA: Common Names of Insects &amp; Related Organisms</a><br/><a href="http://www.esc-sec.ca/commonnames.html" target="blank">ESC: Common Names of Insects in Canada</a><br/><a href="http://www.naba.org/pubs/enames.html" target="blank">NABA: English Names of North American Butterflies Occuring North of Mexico</a><br/><a href="http://www.pugetsound.edu/academics/academic-resources/slater-museum/biodiversity-resources/dragonflies/north-american-odonata/" target="blank">DSA: The Odonata of North America</a><br/><a href="http://www.americanarachnology.org/AAS_information.html" target="blank">AAS: Common and Scientific Names of Arachnids</a>');
   t('Typical identification marks, especially diagnostic or distinguishing features. You may want to note variability or regional differences.');
   t('Typical specimen dimensions may be specified here. Metric is preferred, but English units may additionally be specified. Be sure to indicate what the measure applies to (wingspan, perhaps, or body length). It may also be appropriate to include sizes for larvae (caterpillars, for example).');
   t('When typically found. For butterflies, moths, and dragonflies, when do they fly? You may want to note separately when the larvae are found (caterpillars, for example).');
