@@ -458,6 +458,28 @@ function bgimage_preprocess_image_widget(&$variables) {
 }
 
 /**
+ * Generate a unique hash.
+ *
+ * @return string
+ *   A string that will be placed in the field_data_field_bgimage_base field
+ *   and the bgimage.base field. 
+ */
+function bgimage_generate_uuid() {
+  $unique_base_created = FALSE;
+  while (!$unique_base_created) {
+    $uuid = md5(drupal_random_bytes());
+    $already_exists = db_query("SELECT field_bgimage_base_value FROM {field_data_field_bgimage_base} WHERE field_bgimage_base_value = :uuid", array(':uuid' => $uuid))->fetchField();
+    if ($already_exists) {
+      watchdog('image', 'md5 hash collision, regenerating (' . $uuid . ')');      
+    }
+    else {
+      $unique_base_created = TRUE;  
+    }
+  }
+  return $uuid;
+}
+
+/**
  * Obfuscates an uploaded image for a bgimage node.
  *
  * @param object @node
@@ -466,7 +488,7 @@ function _bgimage_obfuscate_uploaded_image($node) {
   // Even though the image field is required, during migration it may not be
   // present.
   if (isset($node->field_bgimage_image[LANGUAGE_NONE])) {
-    $node->bgimage_uuid = md5(rand());
+    $node->bgimage_uuid = bgimage_generate_uuid();
     $obfuscate = image_obfuscate($node->bgimage_uuid);
     $prefix = bgimage_get_prefix($obfuscate);
     $directory = 'public://raw/' . $prefix;
