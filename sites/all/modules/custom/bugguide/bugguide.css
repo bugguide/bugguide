@@ -16,7 +16,9 @@
 /* ## GENERAL */
 /* ---------------------- */
 
-.page { background: #ffffff; }
+#page { background: #ffffff; }
+
+main.region { margin-top: 0; }
 
 a,
 a:link {
@@ -50,16 +52,15 @@ blockquote {
 /* ## COMPONENTS */
 /* ---------------------- */
 
-.more-link, .read-more {
+.more-link {
     background: #76684a; /* brown */
 }
 
-.more-link:hover, .read-more:hover {
+.more-link:hover {
     background: #44402e; /* very dark brown */
 }
 
-.more-link > a,
-.read-more > a {
+.more-link > a {
     color: #ffffff;
 }
 
@@ -102,15 +103,15 @@ blockquote {
 
 @media (min-width: 740px) {
 
-.zone-branding {
-    position: relative;
-}
+    .zone-branding {
+        position: relative;
+    }
 
-#region-search {
-    position: absolute;
-    right: 0;
-    bottom: 15px;
-}
+    #region-search {
+        position: absolute;
+        right: 0;
+        bottom: 15px;
+    }
 }
 
 /* ---------------------- */
@@ -197,23 +198,47 @@ blockquote {
 
 @media (max-width: 739px) {
     
-#main-menu a,
-#main-menu a:hover,
-#main-menu a:focus,
-#main-menu a:active { 
-    color: #000000; 
-    border-bottom: 0;
+    #main-menu a,
+    #main-menu a:hover,
+    #main-menu a:focus,
+    #main-menu a:active { 
+        color: #000000; 
+        border-bottom: 0;
+    }
+
+    #main-menu a:hover, 
+    #main-menu a:focus, 
+    #main-menu a:active, 
+    #main-menu a.highlighted, 
+    #main-menu a.active-trail, 
+    #main-menu a.active {
+        color: #ffffff;
+        border-bottom: 0;
+    }
 }
 
-#main-menu a:hover, 
-#main-menu a:focus, 
-#main-menu a:active, 
-#main-menu a.highlighted, 
-#main-menu a.active-trail, 
-#main-menu a.active {
-    color: #ffffff;
-    border-bottom: 0;
+/* ---------------------- */
+/* ## ## SECONDARY MENU  */
+/* ---------------------- */
+
+.region-inner.region-secondary-menu-inner {
+    background: #dad5c3; /* middle tan */
 }
+
+.region-secondary-menu .links > li > a:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* ---------------------- */
+/* ## BREADCRUMBS */
+/* ---------------------- */
+
+.breadcrumb {
+    margin-bottom: 1rem;
+}
+
+.breadcrumb a:hover {
+    color: #407629; /* green */
 }
 
 /* ---------------------- */
@@ -225,25 +250,6 @@ blockquote {
 }
 
 /* ---------------------- */
-/* ## SECONDARY MENY & BREADCRUMBS */
-
-.region-inner.region-secondary-menu-inner {
-    background: #dad5c3; /* middle tan */
-}
-
-.region-secondary-menu .links > li > a:hover {
-    background: rgba(0, 0, 0, 0.1);
-}
-
-.breadcrumb {
-    margin-bottom: 1rem;
-}
-
-.breadcrumb a:hover {
-    color: #407629; /* green */
-}
-
-/* ---------------------- */
 /* ## VIEW CATEGORIES */
 /* ---------------------- */
 
@@ -251,20 +257,6 @@ blockquote {
     padding: 1rem;
     background: #ffffff;
     border: 1px solid #ddd;
-}
-
-/* ---------------------- */
-/* ## ANNOUNCEMENTS */
-/* ---------------------- */
-
-.node.node-page {
-    padding: 1rem;
-    background: #ffffff;
-    border: 1px solid #ddd;
-}
-
-.views-row > .node-page {
-    background: #ffffff;
 }
 
 /* ---------------------- */
@@ -282,114 +274,16 @@ blockquote {
 }
 
 /* ---------------------- */
-/* ## NEWS */
-/* ---------------------- */
-
-.node.node-news {
-    padding: 1rem;
-    background: #ffffff;
-    border: 1px solid #ddd;
-}
-
-.views-row > .node-news {
-    background: #ffffff;
-}
-
-/* ---------------------- */
-/* ## EVENTS */
-/* ---------------------- */
-
-.node.node-event {
-    padding: 1rem;
-    background: #ffffff;
-    border: 1px solid #ddd;
-}
-
-.views-row > .node-event {
-    background: #ffffff;
-}
-
-/* ---------------------- */
-/* ## PEOPLE */
-/* ---------------------- */
-
-.node.node-people {
-    padding: 1rem;
-    background: #ffffff;
-    border: 1px solid #ddd;
-}
-
-.views-row > .node-people {
-    background: #ffffff;
-}
-
-.views-field.views-field-field-people-position > div {
-    color: #777 !important;
-}
-
-/* ---------------------- */
-/* ## RESOURCES */
-/* ---------------------- */
-
-.node.node-resource {
-    padding: 1rem;
-    background: #ffffff;
-    border: 1px solid #ddd;
-}
-
-.views-row > .node-resource {
-    background: #ffffff;
-}
-
-.views-field.views-field-field-uri-1 > div > a {
-    color: #407629 !important; /* green */
-}
-
-/* ---------------------- */
-/* ## RESOURCES */
-/* ---------------------- */
-
-.node.node-project {
-    padding: 1rem;
-    background: #ffffff;
-    border: 1px solid #ddd;
-}
-
-/* ---------------------- */
-/* ## FAQ */
-/* ---------------------- */
-
-.node.node-qa {
-    padding: 1rem;
-    background: #ffffff;
-    border: 1px solid #ddd;
-}
-
-
-/* ---------------------- */
-/* ## ENCYLOPEDIA */
-/* ---------------------- */
-
-.view-pidc-info-articles .views-row {
-    background: #ffffff;
-}
-
-.node.node-article {
-    padding: 1rem;
-    background: #ffffff;
-    border: 1px solid #ddd;
-}
-
-/* ---------------------- */
 /* ## SIDEBARS */
 /* ---------------------- */
 
 .region-sidebar-first-inner .block,
-.region-sidebar-second-inner .block {
+.region-sidebar-second-inner .block,
+.js-suitcase-facet.block  {
     margin-bottom: 1rem;
-    padding: 1rem;
+    padding: 0;
     background: #ffffff;
-    border: 1px solid #ddd;
+    border: 0;
 }
 
 /* ---------------------- */
@@ -410,10 +304,6 @@ blockquote {
 /* ---------------------- */
 /* ## FOOTER */
 /* ---------------------- */
-
-#section-footer {
-    background: #ffffff;
-}
 
 #section-footer a,
 #section-footer a:link {
@@ -465,7 +355,6 @@ blockquote {
 
 .region-content-inner > .tabs > .tabs.primary > li {
     display: inline-block;
-    margin-bottom: 2px;
 }
 
 .region-content-inner > .tabs > .tabs.primary > li:not(.active):hover > a,
@@ -473,6 +362,7 @@ blockquote {
     background: #fff;
     border-bottom: 1px solid #fff;
 }
+
 
 @media ( max-width: 979px) {
     
@@ -523,10 +413,19 @@ blockquote {
 /* -------------------- */
 /* --- IMAGE ACTIONS --- */
 
+
 .field-name-bgimage-tag {
     clear: both;
 }
 
+.action-links {
+    margin: 0;
+    margin-bottom: 1rem;
+    padding: 0;
+    list-style-type: none;
+}
+
+.action-links a,
 .field-name-bgimage-tag a,
 .bgimage-related-actions a {
     display: inline-block;
@@ -549,6 +448,12 @@ blockquote {
     margin-right: 10px;
 }
 
+.action-links a:before {
+    content: '\f067';
+    font-family: 'FontAwesome';
+    display: inline-block;
+    margin-right: 10px;
+}
 
 .field-name-bgimage-tag a:hover,
 .bgimage-related-actions a:hover {
@@ -617,6 +522,13 @@ blockquote {
 }
 
 /* -------------------- */
+/* --- CLASSIFICATION --- */
+
+.field-name-bgimage-title-classification h2 {
+    margin-top: 1rem;
+}
+
+/* -------------------- */
 /* --- COMMENTS --- */
 
 .comment-wrapper .title {
@@ -665,6 +577,14 @@ article.comment .comment-submitted {
     margin: 0;
 }
 
+/* ---------------------- */
+/* ## ID REQUEST */
+/* ---------------------- */
+
+.field-name-bgpage-images ul:first-of-type:last-of-type {
+    border: 0;
+    padding: 0;
+}
 
 /* ---------------------- */
 /* ## BROWSE */
@@ -805,6 +725,33 @@ article.comment .comment-submitted {
 
 .view-recently-placed .field-name-title h2 {
     margin-top: 0;
+}
+
+/* -------------------- */
+/* ## RECENT HOMEPAGE */
+/* -------------------- */
+
+.view-recent-images .view-mode-homepage {
+    display: flex;
+}
+
+.view-recent-images .view-mode-homepage .field-name-field-bgimage-field-placed-by {
+    flex: 1 1 200px;
+}
+
+.view-recent-images .view-mode-homepage .field-name-field-bgimage-image {
+    width: 100px;
+    margin-right: 1rem;
+    margin-bottom: 0;
+    padding: 0.5rem;
+}
+
+.view-recent-images .view-mode-homepage br {
+    display: none;
+}
+
+.view-recent-images .view-mode-homepage .field-name-bgimage-field-placed-by a:last-child {
+    margin-left: 5px;
 }
 
 
