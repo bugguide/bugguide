@@ -5,43 +5,6 @@
  * Global variables for BugGuide.
  */
 
-global $base_url;
-global $image_dir;
-$image_dir = DRUPAL_ROOT .'/images/';
-
-global $image_url;
-$image_url = $base_url . '/images/';
-
-global $amazon_image_dir;
-$amazon_image_dir = $image_dir . 'amazon/';
-
-global $tmp_image_dir;
-$tmp_image_dir = $image_dir . 'tmp/';
-
-global $upload_image_dir;
-$upload_image_dir = $image_dir . 'upload/';
-
-global $raw_image_dir;
-$raw_image_dir = $image_dir . 'raw/';
-
-global $cache_image_dir;
-$cache_image_dir = $image_dir . 'cache/';
-
-global $tmp_image_url;
-$tmp_image_url = $image_url . 'tmp/';
-
-global $raw_image_url;
-$raw_image_url = $image_url . 'raw/';
-
-global $cache_image_url;
-$cache_image_url = $image_url . 'cache/';
-
-global $amazon_image_url;
-$amazon_image_url = $image_url . 'amazon/';
-
-global $maps_dir;
-$maps_dir = DRUPAL_ROOT .'/maps/';
-
 global $AMAZON_DEVELOPER_KEY;
 $AMAZON_DEVELOPER_KEY = 'D35T4PG1MPY9AV';
 
