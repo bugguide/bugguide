@@ -1,5 +1,8 @@
 <?php
 
+
+error_reporting(E_ERROR);
+
 // BISON export script, modified to dump only species, not records of species.
 // Exports BugGuide data for a given tree node on down in tab-delimited format.
 //
@@ -11,13 +14,17 @@
 $debug_logging = FALSE;
 // Which node is the top of the tree? (Arthropods is node 3).
 // Retrieve only records that are children of this node in the tree.
-$treetop = '3';
-$treetop = '57'; // Lepidoptera
+$treetop = getenv('TREETOP', TRUE);
+
+if (!isset($treetop)) {
+  $treetop = '3';
+}
+
 // Limit. This is the number of nodes we will retrieve.
 // For debugging, use LIMIT 3
 // Otherwise, use a blank string.
 $limit = '';
-//$limit = 'LIMIT 5';
+//$limit = 'LIMIT 3';
 
 // END CONFIGURATION
 
@@ -27,6 +34,7 @@ function bison_log($message) {
 }
 
 bison_log("Beginning");
+bison_log($treetop);
 
 define('DRUPAL_ROOT', getcwd());
 require_once DRUPAL_ROOT . '/sites/all/modules/custom/bg/bg_globals.inc';
@@ -179,10 +187,10 @@ foreach ($result as $record) {
     'revision_id' => $record->revision_id,
     'entity_id' => $record->entity_id,
     'parent' => $record->field_parent_value,
-    'immediate_parent' => end(explode(',', $record->field_parent_value)),
+    //'immediate_parent' => end(explode(',', $record->field_parent_value)),
     'specific_epithet' => $specific_epithet,
     'common_name' => $record->title,
-    'children' => array(),
+    //'children' => array(),
   );
 }
 
@@ -204,6 +212,80 @@ function bison_export_is_genus($nid) {
   if (isset($cache[$nid])) {
     $obj = new stdClass();
     $obj->field_taxon_value = 3300;
+    $obj->field_scientific_name_value = $cache[$nid];
+    return $obj;
+  }
+  
+  $result = db_query("
+    SELECT n.title, n.nid, n.vid, tx.field_taxon_value, sn.field_scientific_name_value
+    FROM node n
+    JOIN field_data_field_taxon tx ON n.vid = tx.revision_id
+    LEFT JOIN field_data_field_scientific_name sn ON n.vid = sn.revision_id
+    WHERE n.nid = :nid", 
+  array(':nid' => $nid) 
+  )->fetchObject();
+  //bison_log("WARNING: cache miss on $result->nid $result->title $result->field_scientific_name_value");
+  return $result;
+}
+
+function bison_export_is_family($nid) {
+  $cache = &drupal_static(__FUNCTION__);
+  if (!isset($cache)) {
+    bison_log("prefilling cache");
+    $result = db_query("
+    SELECT n.title, n.nid, n.vid, tx.field_taxon_value, sn.field_scientific_name_value
+    FROM node n
+    JOIN field_data_field_taxon tx ON n.vid = tx.revision_id
+    LEFT JOIN field_data_field_scientific_name sn ON n.vid = sn.revision_id
+    WHERE tx.field_taxon_value = 2700");
+    foreach ($result as $record) {
+      $cache[$record->nid] = $record->field_scientific_name_value;
+      bison_log('cached ' . $record->nid . ' -> ' . $record->field_scientific_name_value);
+    }  
+  }
+  bison_log('searching family cache for nid ' . $nid);
+  
+  if (isset($cache[$nid])) {
+    bison_log('cache hit on nid ' . $nid . ' -> ' . $cache[$nid]);
+    $obj = new stdClass();
+    $obj->field_taxon_value = 2700;
+    $obj->field_scientific_name_value = $cache[$nid];
+    return $obj;
+  }
+  
+  $result = db_query("
+    SELECT n.title, n.nid, n.vid, tx.field_taxon_value, sn.field_scientific_name_value
+    FROM node n
+    JOIN field_data_field_taxon tx ON n.vid = tx.revision_id
+    LEFT JOIN field_data_field_scientific_name sn ON n.vid = sn.revision_id
+    WHERE n.nid = :nid", 
+  array(':nid' => $nid) 
+  )->fetchObject();
+  //bison_log("WARNING: cache miss on $result->nid $result->title $result->field_scientific_name_value");
+  return $result;
+}
+
+function bison_export_is_order($nid) {
+  $cache = &drupal_static(__FUNCTION__);
+  if (!isset($cache)) {
+    bison_log("prefilling cache");
+    $result = db_query("
+    SELECT n.title, n.nid, n.vid, tx.field_taxon_value, sn.field_scientific_name_value
+    FROM node n
+    JOIN field_data_field_taxon tx ON n.vid = tx.revision_id
+    LEFT JOIN field_data_field_scientific_name sn ON n.vid = sn.revision_id
+    WHERE tx.field_taxon_value = 2300");
+    foreach ($result as $record) {
+      $cache[$record->nid] = $record->field_scientific_name_value;
+      bison_log('cached ' . $record->nid . ' -> ' . $record->field_scientific_name_value);
+    }  
+  }
+  bison_log('searching order cache for nid ' . $nid);
+  
+  if (isset($cache[$nid])) {
+    bison_log('cache hit on nid ' . $nid . ' -> ' . $cache[$nid]);
+    $obj = new stdClass();
+    $obj->field_taxon_value = 2300;
     $obj->field_scientific_name_value = $cache[$nid];
     return $obj;
   }
@@ -248,6 +330,66 @@ foreach ($r as $taxon) {
   $counter++;
 }
 
+bison_log("Finding family names");
+// Find name of immediate parent. Continue up the tree til we find a parent
+// that is a family.
+$counter = 1;
+foreach ($r as $taxon) {
+  if ($counter % 100 == 0) {
+    bison_log("$counter records");
+  }
+  $found_family = FALSE;
+  $parents = array_reverse(explode(',', $taxon['parent']));
+  foreach ($parents as $nid) {
+    // echo "Checking if nid $nid is a family...";
+    $result = bison_export_is_family($nid);
+    //echo $result->field_taxon_value . "...";
+    if ($result->field_taxon_value == 2700) {
+      $found_family = TRUE;
+      break;
+    }
+  }
+  if (!$found_family) {
+    bison_log("WARNING: did not find family name for revision_id " . $taxon['revision_id']);
+  }
+  bison_log('found family ' . $result->field_scientific_name_value);
+  $r[$taxon['revision_id']]['family_name'] = $result->field_scientific_name_value;
+  # if taxon number is 2700 we are ok, otherwise need to go up the tree til we find a 2700
+  // echo $taxon['revision_id'] . " $result->field_taxon_value for $result->nid $result->field_scientific_name_value \n";
+  $counter++;
+}
+
+
+bison_log("Finding order names");
+// Find name of immediate parent. Continue up the tree til we find a parent
+// that is a family.
+$counter = 1;
+foreach ($r as $taxon) {
+  if ($counter % 100 == 0) {
+    bison_log("$counter records");
+  }
+  $found_order = FALSE;
+  $parents = array_reverse(explode(',', $taxon['parent']));
+  foreach ($parents as $nid) {
+    // echo "Checking if nid $nid is a order...";
+    $result = bison_export_is_order($nid);
+    //echo $result->field_taxon_value . "...";
+    if ($result->field_taxon_value == 2300) {
+      $found_order = TRUE;
+      break;
+    }
+  }
+  if (!$found_order) {
+    bison_log("WARNING: did not find order name for revision_id " . $taxon['revision_id']);
+  }
+  bison_log('found order ' . $result->field_scientific_name_value);
+  $r[$taxon['revision_id']]['order_name'] = $result->field_scientific_name_value;
+  # if taxon number is 2300 we are ok, otherwise need to go up the tree til we find a 2300
+  //echo $taxon['revision_id'] . " $result->field_taxon_value for $result->nid $result->field_scientific_name_value \n";
+  $counter++;
+}
+
+
 // We now have a complete array including generic names.
 // We can proceed through each taxon and find records beneath each.
 
@@ -265,20 +407,24 @@ function dump($s, $last = FALSE) {
 
 // Headers
 function dump_headers() {
-  echo "ID\t";
-  echo "URL\t";
   echo "Genus\t";
   echo "Species\t";
+  echo "Family\t";
+  echo "Order\t";
+  echo "BugGuideID\t";
+  echo "URL\t";
   echo  "Common Name";
   echo "\n";
 }
 
 function dump_record($taxon) {
-  dump($taxon['entity_id']);
-  dump('http://bugguide.net/node/view/' . $taxon['entity_id']);
   dump($taxon['genus_name']);
   dump($taxon['specific_epithet']);
-  dump($taxon['common_name']);
+  dump($taxon['family_name']);
+  dump($taxon['order_name']);
+  dump($taxon['entity_id']);
+  dump('http://bugguide.net/node/view/' . $taxon['entity_id']);
+  dump($taxon['common_name'], TRUE);
 }
 
 dump_headers();
