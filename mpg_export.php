@@ -14,7 +14,11 @@ error_reporting(E_ERROR);
 $debug_logging = FALSE;
 // Which node is the top of the tree? (Arthropods is node 3).
 // Retrieve only records that are children of this node in the tree.
+
+// Can be set in environment variable e.g., TREETOP=3
 $treetop = getenv('TREETOP', TRUE);
+// If we want hodges numbers too, set HODGES env: HODGES=1
+$hodges = getenv('HODGES', TRUE);
 
 if (!isset($treetop)) {
   $treetop = '3';
@@ -192,6 +196,9 @@ foreach ($result as $record) {
     'common_name' => $record->title,
     //'children' => array(),
   );
+  if (isset($hodges)) {
+    $r[$record->revision_id]['hodges_number'] = $record->field_hodges_number_value;
+  }
 }
 
 function bison_export_is_genus($nid) {
@@ -411,6 +418,9 @@ function dump_headers() {
   echo "Species\t";
   echo "Family\t";
   echo "Order\t";
+  if (isset($hodges)) {
+    echo "Hodges\t";
+  }
   echo "BugGuideID\t";
   echo "URL\t";
   echo  "Common Name";
@@ -422,6 +432,9 @@ function dump_record($taxon) {
   dump($taxon['specific_epithet']);
   dump($taxon['family_name']);
   dump($taxon['order_name']);
+  if (isset($hodges)) {
+    dump($taxon['hodges_number']);  
+  }
   dump($taxon['entity_id']);
   dump('http://bugguide.net/node/view/' . $taxon['entity_id']);
   dump($taxon['common_name'], TRUE);

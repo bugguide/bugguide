@@ -6,6 +6,7 @@
 # Genus	Species	Family	Order	BugGuideID	URL	Common Name
 # Cryptocercus	punctulatus	Cryptocercidae	Blattodea	574	http://bugguide.net/node/view/574	Brown-hooded Cockroach
 
+REMOTE_ADDR=127.0.0.1 TREETOP=57 HODGES=1 php -f ./mpg_export.php > Lepidoptera_hodges.txt
 REMOTE_ADDR=127.0.0.1 TREETOP=79 php -f ./mpg_export.php > Zygentoma.txt
 REMOTE_ADDR=127.0.0.1 TREETOP=55 php -f ./mpg_export.php > Diptera.txt
 REMOTE_ADDR=127.0.0.1 TREETOP=56 php -f ./mpg_export.php > Mecoptera.txt
