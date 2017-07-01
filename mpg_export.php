@@ -18,6 +18,7 @@ $debug_logging = FALSE;
 // Can be set in environment variable e.g., TREETOP=3
 $treetop = getenv('TREETOP', TRUE);
 // If we want hodges numbers too, set HODGES env: HODGES=1
+global $hodges;
 $hodges = getenv('HODGES', TRUE);
 
 if (!isset($treetop)) {
@@ -39,6 +40,7 @@ function bison_log($message) {
 
 bison_log("Beginning");
 bison_log($treetop);
+bison_log($hodges);
 
 define('DRUPAL_ROOT', getcwd());
 require_once DRUPAL_ROOT . '/sites/all/modules/custom/bg/bg_globals.inc';
@@ -154,7 +156,7 @@ $query = "
   JOIN field_data_field_parent p ON tx.revision_id = p.revision_id
   JOIN node n ON tx.revision_id = n.vid
   LEFT JOIN field_data_field_scientific_name sn ON sn.revision_id = p.revision_id
-  LEFT JOIN field_data_field_hodges_number hn ON sn.revision_id = p.revision_id
+  LEFT JOIN field_data_field_hodges_number hn ON hn.revision_id = p.revision_id
   WHERE tx.field_taxon_value = 3400 AND tx.bundle = 'bgpage' AND p.field_parent_value REGEXP '$treetop_parent(\,|$)'
   $limit
 ";
@@ -414,13 +416,14 @@ function dump($s, $last = FALSE) {
 
 // Headers
 function dump_headers() {
+  global $hodges;
+  if (isset($hodges)) {
+    echo "Hodges\t";
+  }
   echo "Genus\t";
   echo "Species\t";
   echo "Family\t";
   echo "Order\t";
-  if (isset($hodges)) {
-    echo "Hodges\t";
-  }
   echo "BugGuideID\t";
   echo "URL\t";
   echo  "Common Name";
@@ -428,13 +431,14 @@ function dump_headers() {
 }
 
 function dump_record($taxon) {
+  global $hodges;
+  if (isset($hodges)) {
+    dump($taxon['hodges_number']);  
+  }
   dump($taxon['genus_name']);
   dump($taxon['specific_epithet']);
   dump($taxon['family_name']);
   dump($taxon['order_name']);
-  if (isset($hodges)) {
-    dump($taxon['hodges_number']);  
-  }
   dump($taxon['entity_id']);
   dump('http://bugguide.net/node/view/' . $taxon['entity_id']);
   dump($taxon['common_name'], TRUE);
