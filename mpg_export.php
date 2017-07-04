@@ -19,7 +19,7 @@ $debug_logging = FALSE;
 $treetop = getenv('TREETOP', TRUE);
 // If we want hodges numbers too, set HODGES env: HODGES=1
 global $hodges;
-$hodges = getenv('HODGES', TRUE);
+$hodges = getenv('HODGES', TRUE) == 1;
 
 if (!isset($treetop)) {
   $treetop = '3';
@@ -198,7 +198,7 @@ foreach ($result as $record) {
     'common_name' => $record->title,
     //'children' => array(),
   );
-  if (isset($hodges)) {
+  if ($hodges) {
     $r[$record->revision_id]['hodges_number'] = $record->field_hodges_number_value;
   }
 }
@@ -417,7 +417,7 @@ function dump($s, $last = FALSE) {
 // Headers
 function dump_headers() {
   global $hodges;
-  if (isset($hodges)) {
+  if ($hodges) {
     echo "Hodges\t";
   }
   echo "Genus\t";
@@ -432,7 +432,7 @@ function dump_headers() {
 
 function dump_record($taxon) {
   global $hodges;
-  if (isset($hodges)) {
+  if ($hodges) {
     dump($taxon['hodges_number']);  
   }
   dump($taxon['genus_name']);
