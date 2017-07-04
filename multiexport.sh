@@ -6,7 +6,6 @@
 # Genus	Species	Family	Order	BugGuideID	URL	Common Name
 # Cryptocercus	punctulatus	Cryptocercidae	Blattodea	574	http://bugguide.net/node/view/574	Brown-hooded Cockroach
 
-REMOTE_ADDR=127.0.0.1 TREETOP=57 HODGES=1 php -f ./mpg_export.php > /var/www/html/beta.bugguide.net/bugguide/bgapi/taxonomy/Lepidoptera_hodges.txt
 REMOTE_ADDR=127.0.0.1 TREETOP=79 php -f ./mpg_export.php > /var/www/html/beta.bugguide.net/bugguide/bgapi/taxonomy/Zygentoma.txt
 REMOTE_ADDR=127.0.0.1 TREETOP=55 php -f ./mpg_export.php > /var/www/html/beta.bugguide.net/bugguide/bgapi/taxonomy/Diptera.txt
 REMOTE_ADDR=127.0.0.1 TREETOP=56 php -f ./mpg_export.php > /var/www/html/beta.bugguide.net/bugguide/bgapi/taxonomy/Mecoptera.txt
@@ -35,3 +34,6 @@ REMOTE_ADDR=127.0.0.1 TREETOP=244862 php -f ./mpg_export.php > /var/www/html/bet
 REMOTE_ADDR=127.0.0.1 TREETOP=317568 php -f ./mpg_export.php > /var/www/html/beta.bugguide.net/bugguide/bgapi/taxonomy/Protorthoptera.txt
 REMOTE_ADDR=127.0.0.1 TREETOP=342386 php -f ./mpg_export.php > /var/www/html/beta.bugguide.net/bugguide/bgapi/taxonomy/Blattodea.txt
 REMOTE_ADDR=127.0.0.1 TREETOP=342391 php -f ./mpg_export.php > /var/www/html/beta.bugguide.net/bugguide/bgapi/taxonomy/Mantodea.txt
+REMOTE_ADDR=127.0.0.1 TREETOP=57 HODGES=1 php -f ./mpg_export.php > /var/www/html/beta.bugguide.net/bugguide/bgapi/taxonomy/Lepidoptera_hodges.txt
+unset HODGES
+unset TREETOP
