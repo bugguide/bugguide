@@ -14,8 +14,13 @@
 $debug_logging = FALSE;
 // Which node is the top of the tree? (Arthropods is node 3).
 // Retrieve only records that are children of this node in the tree.
-$treetop = '3';
-$treetop = '483711';
+// Can be set in environment variable e.g., TREETOP=3
+$treetop = getenv('TREETOP', TRUE);
+if (!isset($treetop)) {
+  $treetop = '3';
+  // or hardcode it here
+  //$treetop = 1234
+}
 // Limit. This is the number of nodes we will retrieve.
 // For debugging, use LIMIT 3
 // Otherwise, use a blank string.
