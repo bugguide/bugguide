@@ -3,21 +3,28 @@
 // BISON export script.
 // Exports BugGuide data for a given tree node on down in BISON format.
 //
+// Run it like this, from the command line in the root of a bugguide7 install:
+// REMOTE_ADDR=127.0.0.1 php -f ./bison_export.php
+//
 // John VanDyk
 
 // START CONFIGURATION
 
 // logging
-$debug_logging = FALSE;
+$debug_logging = TRUE;
 // Which node is the top of the tree? (Arthropods is node 3).
 // Retrieve only records that are children of this node in the tree.
 $treetop = '3';
-$treetop = '8267';
+$treetop = '483711';
 // Limit. This is the number of nodes we will retrieve.
 // For debugging, use LIMIT 3
 // Otherwise, use a blank string.
 $limit = '';
 //$limit = 'LIMIT 4';
+
+// There will be a link to a thumbnail image in the output. How wide of an image
+// will this be? 125 is thumbnail width; 560 is regular image width.
+$width_of_thumbnail = 560;
 
 // END CONFIGURATION
 
@@ -625,7 +632,8 @@ foreach ($r as $t) {
     //bison_log("obfuscated base: " . image_obfuscate($base));
     //bison_log("url: http://bugguide.net/node/view/$node->nid");
     //bison_log("base: $base");
-    $to_obfuscate = $base . "?l=125";
+    // 
+    $to_obfuscate = $base . "?l=" . $width_of_thumbnail;
     $obfuscate = image_obfuscate($to_obfuscate);
     $prefix = bgimage_get_prefix($obfuscate);
     $absolute_thumbnail = 'http://bugguide.net/images/cache/' . $prefix . $obfuscate  .'.jpg';
