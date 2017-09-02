@@ -11,7 +11,7 @@
 // START CONFIGURATION
 
 // logging
-$debug_logging = TRUE;
+$debug_logging = FALSE;
 // Which node is the top of the tree? (Arthropods is node 3).
 // Retrieve only records that are children of this node in the tree.
 $treetop = '3';
