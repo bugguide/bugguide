@@ -21,6 +21,12 @@ if (!isset($treetop)) {
   // or hardcode it here
   //$treetop = 1234
 }
+
+$laterthan = getenv('LATERTHAN', 0);
+if (!isset($laterthan)) {
+  $laterthan = 0;
+}
+
 // Limit. This is the number of nodes we will retrieve.
 // For debugging, use LIMIT 3
 // Otherwise, use a blank string.
@@ -552,6 +558,17 @@ foreach ($r as $t) {
   
   // Load each image and mine for data.
   foreach ($result as $image) {
+    // If LATERTHAN was specified, select only records later than this.
+    if ($laterthan) {
+      bison_log('entity id ' . $image->entity_id);
+      $recent_result = db_query('SELECT created FROM {node} WHERE nid = :nid', array(':nid' => $image->entity_id));
+      bison_log('finished query');
+      bison_log($recent_result->created);
+      if ($recent_result->created < $laterthan) {
+        continue;
+      }
+    }
+
     // Only export one image from a series of images of the same individual.
     $series = db_query('SELECT nid, series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $image->entity_id))->fetchAssoc();
     if ($series) {
@@ -564,7 +581,7 @@ foreach ($r as $t) {
         continue;
       }
     }
-  
+      
     $node = node_load($image->entity_id, array(), TRUE);
     // Exclude non-US records.
     if (in_array($node->{'field_bgimage_location_code'}[LANGUAGE_NONE][0]['value'], $US_STATES)) {
