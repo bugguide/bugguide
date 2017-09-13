@@ -91,13 +91,71 @@ function bgstat_comments_by_user($limit = 50) {
     return '';
   }
 
-  $result = db_query_range("SELECT u.name, COUNT(c.cid) AS comments FROM {comments} c JOIN {users_current} u ON c.uid = u.uid GROUP BY c.uid ORDER BY comments DESC", 0, $limit);
+  $users = array();
 
-  $output = "User\tCount\r";
-  while ($data = db_fetch_object($result)) {
+  // All time
+  $result = db_query_range("SELECT u.name, u.uid, COUNT(c.cid) AS comments FROM {comment} c JOIN {users} u ON c.uid = u.uid GROUP BY c.uid ORDER BY comments DESC", 0, $limit);
+
+  $output = "All Time:\r";
+  $output .= "User\tCount\r";
+  foreach ($result as $data) {
     $output .= $data->name . "\t" . $data->comments . "\r";
+    $users[$data->uid] = array(
+      'all' => $data->comments,
+      'name' => $data->name,
+    );
   }
-  drupal_set_header('Content-Type: text/ascii; utf-8');
+
+  $five_years_ago = strtotime('-5 years');
+  $result = db_query_range("SELECT u.name, u.uid, COUNT(c.cid) AS comments FROM {comment} c JOIN {users} u ON c.uid = u.uid WHERE c.created > $five_years_ago GROUP BY c.uid ORDER BY comments DESC", 0, $limit);
+  $output .= "\rLast Five Years:\r";
+  $output .= "User\tCount\r";
+  foreach ($result as $data) {
+    $output .= $data->name . "\t" . $data->comments . "\r";
+    $users[$data->uid]['five'] = $data->comments;
+    if (!isset($users[$data->uid]['name'])) {
+      $users[$data->uid]['name'] = $data->name;
+    }
+  }
+
+  $one_year_ago = strtotime('-1 years');
+  $result = db_query_range("SELECT u.name, u.uid, COUNT(c.cid) AS comments FROM {comment} c JOIN {users} u ON c.uid = u.uid WHERE c.created > $one_year_ago GROUP BY c.uid ORDER BY comments DESC", 0, $limit);
+  $output .= "\rLast One Year:\r";
+  $output .= "User\tCount\r";
+  foreach ($result as $data) {
+    $output .= $data->name . "\t" . $data->comments . "\r";
+    $users[$data->uid]['one'] = $data->comments;
+    if (!isset($users[$data->uid]['name'])) {
+      $users[$data->uid]['name'] = $data->name;
+    }
+  }
+  
+  $output .= "\rUser History";
+  // Now a report for all users that made the top 50 in all, last 5, or last 1 year
+  foreach ($users as $uid => $u) {
+    $years = array(5,4,3,2,1);
+    foreach ($years as $years_ago ) {
+      $low = strtotime('-' . $years_ago . ' years');
+      $high = strtotime('-' . $years_ago + 1 . ' years');
+      //print "SELECT COUNT(c.cid) as comments from comment c WHERE c.uid = $uid AND c.created > $low AND c.created < $high)\r";
+      $result = db_query("SELECT COUNT(c.cid) AS comments FROM {comment} c WHERE c.uid = :uid AND c.created > :low AND c.created < :high", array(':uid' => $uid, ':low' => $low, ':high' => $high))->fetchObject();
+      //print "$low $high $result->comments \r";
+      $users[$uid][$years_ago] =  $result->comments;      
+    }
+    
+    $result = db_query("SELECT ur.uid, ur.rid, r.name FROM {users_roles} ur JOIN {role} r ON ur.rid = r.rid WHERE ur.uid = :uid", array(':uid' => $uid))->fetchObject();
+    $users[$uid]['role'] = $result->name;
+  }
+  
+  foreach ($users as $uid => $u) {
+    $output .= $uid . "," . $u['role'] . "," . $u['name'];
+    foreach ($years as $years_ago) {
+      $output .= "," . $u[$years_ago];
+    }
+    $output .= "\r";
+  }
+  
+  drupal_add_http_header('Content-Type: text/ascii; utf-8');
   print $output;
   module_invoke_all('exit');
 }
