@@ -259,7 +259,7 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
     }
   }
 
-  return $bc;
+  return $json ? $json_array : $bc;
 }
 
 /**
