@@ -182,12 +182,16 @@ function bg_get_current_path($path) {
  *   the nid of the taxon it should start from.
  * @return array of links with title and href.
  */
-function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Common name)', $from = NULL) {
+function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Common name)', $from = NULL, $json = FALSE) {
   global $TAXON_NAMES;
 
   $bc = array();
   if (!$from ) {
     $bc[] = l('Home', '');
+  }
+  
+  if ($json) {
+    $json_array = array();
   }
 
   $nids = array($node->nid);
@@ -246,11 +250,16 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
       else {
         $linktext = $common;
       }
-      $bc[] = l($linktext, 'node/' . $parent_node->nid);
+      if ($json) {
+        $json_array[$taxon] = empty($scientific_name) ? $common : $scientific_name;
+      }
+      else {
+        $bc[] = l($linktext, 'node/' . $parent_node->nid);
+      }
     }
   }
 
-  return $bc;
+  return $json ? $json_array : $bc;
 }
 
 /**
