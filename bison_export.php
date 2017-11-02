@@ -384,7 +384,7 @@ function dump_record($taxon) {
     dump('http://bison.ornl.gov/ipt/resource.do?r=bugguide');
 
     // occurrence_url (Unique URL pointing to species page specific to a single occurrence record.)
-    // http://bugguide.net/node/view/580134	
+    // https://bugguide.net/node/view/580134	
     dump($record['occurrence_url']);
 
     // catalog_number (Unique specimen/number or record unique-identifier. Usually persistent, unique within and among datasets.)
@@ -460,11 +460,11 @@ function dump_record($taxon) {
     dump($record['provided_state_name']);
     
     // thumb_url (A VERY SPECIFIC SYNTAX field for associating thumbnail images or media icons with original(size) associated_media items.*The description section is not required. e.g. [{\\"url\\":\\"BugGuideThumbNailImageURL\\",\\"description\\":\\"WhateverYouWantforImageCaption\\"}]    Multiple thumbnails are each enclosed in curly brackets and separated in the syntax string by a comma e.g.   [{\\"url\\":\\"BugGuideThumbNailImageURL_1\\",\\"description\\":\\"ImageCaption_1\\"},{\\"url\\":\\"BugGuideThumbNailImageURL_2\\",\\"description\\":\\"ImageCaption_2\\"}])
-    // [{\\"url\\":\\"http://bugguide.net/images/cache/HKU/KQK/HKUKQKNKMKO09QHS1QLSVQT08QT0ZKUKSKWK8KAKNQ1KNQHSWQV0WQ30AQY0XKRS8KDKSKCKMKCKGK1KBQZSMKDKMK.jpg\\",\\"description\\":\\"Whitebanded Crab Spider (Misumenoides formosipes)\\"}]	
+    // [{\\"url\\":\\"https://bugguide.net/images/cache/HKU/KQK/HKUKQKNKMKO09QHS1QLSVQT08QT0ZKUKSKWK8KAKNQ1KNQHSWQV0WQ30AQY0XKRS8KDKSKCKMKCKGK1KBQZSMKDKMK.jpg\\",\\"description\\":\\"Whitebanded Crab Spider (Misumenoides formosipes)\\"}]	
     dump($record['thumb_url']);
 
     // associated_media (A VERY SPECIFIC SYNTAX field for defining and linking thumbnail images or icons referenced in thumb_url field with with associated_media (e.g. original(sized) images, video, audio) NOTE that the order of the thumbnail images must match the order of the original images e.g.  [{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"BugGuideRecordSpecificORIGINALImageURL\\"}]  *Multiple Original Image URLs are each surrounded by curly brackets and separated by a comma e.g.  [{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"BugGuideRecordSpecificORIGINALImageURL_1\\"},{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"BugGuideRecordSpecificORIGINALImageURL_2\\"}])
-    // [{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"http://bugguide.net/images/raw/VRY/KUR/VRYKUR3K9R0QFR0QS0E0Z020DQ50AR40ARYKBRXQBRLQNRHQYQJKDQM0Z0I0FQI0TQ40WRFKFQM0FQ.jpg\\"}]	
+    // [{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"https://bugguide.net/images/raw/VRY/KUR/VRYKUR3K9R0QFR0QS0E0Z020DQ50AR40ARYKBRXQBRLQNRHQYQJKDQM0Z0I0FQI0TQ40WRFKFQM0FQ.jpg\\"}]	
     dump($record['associated_media']);
 	
 	// associated_references (A VERY SPECIFIC SYNTAX field for defining and linking (usually bibliographic) citations for publication or Web resources. Can be dataset-specific or individual record-specific e.g.   [{\\"url\\":\\"http://dx.doi.org/10.15560/11.3.1665\\",\\"description\\":\\"Sellers, E. and D. McCarthy. 2015. Distribution and floral hosts of Anthophorula micheneri (Timberlake, 1947) and Hylaeus sparsus (Cresson, 1869), (Insecta: Hymenoptera: Apoidea: Anthophila), with new state records in Giles and Loudoun counties, Virginia, eastern USA. Check List 11(3):1665. doi:10.15560/11.3.1665\\"}]  OR  [{\\"url\\":\\"yourURLgoesHere\\",\\"description\\":\\"TextOfYourCitationGoesHere_CanIncludeURLatEnd\\"}])
@@ -485,7 +485,7 @@ function dump_record($taxon) {
     
     // resource_id (Unique identifier for the dataset. [Inserted by BISON])
     //
-    dump();
+    dump('100061');
     
     // provided_common_name (Common name as it appears in original raw dataset.)
     //
@@ -585,7 +585,7 @@ foreach ($r as $t) {
     $node = node_load($image->entity_id, array(), TRUE);
     // Exclude non-US records.
     if (in_array($node->{'field_bgimage_location_code'}[LANGUAGE_NONE][0]['value'], $US_STATES)) {
-      //bison_log("Excluding non-US record http://bugguide.net/node/view/" . $node->nid);
+      //bison_log("Excluding non-US record https://bugguide.net/node/view/" . $node->nid);
       $taxon['children'][$image->entity_id]['iso_country_code'] = 'US';
     }
     elseif (in_array($node->{'field_bgimage_location_code'}[LANGUAGE_NONE][0]['value'], $CANADA_CODES)) {
@@ -640,7 +640,7 @@ foreach ($r as $t) {
     //bison_log("drupal 7 thumbnail: $absolute_thumbnail");
     // The URL generated from Drupal 7 for node 1877 is:
     // 
-    // http://bugguide.net/images/cache/108/K10/108K10LKZS3ROQHQYQY0BQY05Q10PQ9K5QC04QWKLK102QO04QA0LKB04QUKRKD00KDKWQVK9QB0UQB0GQF04QC05QC0.jpg
+    // https://bugguide.net/images/cache/108/K10/108K10LKZS3ROQHQYQY0BQY05Q10PQ9K5QC04QWKLK102QO04QA0LKB04QUKRKD00KDKWQVK9QB0UQB0GQF04QC05QC0.jpg
     // which deobfuscates to:
     // 665891889baf9ad4d0cb1626a5f56fb51877,bg_small
     // That is, $base . $node->nid . ',bg_small'
@@ -652,7 +652,7 @@ foreach ($r as $t) {
     $absolute_thumbnail = str_replace('https://bugguide.net/files/styles/bg_small/public/', 'https://bugguide.net/images/cache/', $absolute_thumbnail);
     $base = $node->field_bgimage_base[LANGUAGE_NONE][0]['value'] . $node->nid;
     //bison_log("obfuscated base: " . image_obfuscate($base));
-    //bison_log("url: http://bugguide.net/node/view/$node->nid");
+    //bison_log("url: https://bugguide.net/node/view/$node->nid");
     //bison_log("base: $base");
     // 
     $to_obfuscate = $base . "?l=" . $width_of_thumbnail;
