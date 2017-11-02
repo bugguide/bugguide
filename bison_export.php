@@ -270,7 +270,7 @@ foreach ($r as $taxon) {
 // We can proceed through each taxon and find records beneath each.
 
 // Echo string to output, appending tab.
-function dump($s, $last = FALSE) {
+function dump($s = '', $last = FALSE) {
   // Translate specific entities
   $s = str_ireplace('&#039;', "'", $s);
   $s = str_ireplace('&quot;', '"', $s);
@@ -615,6 +615,9 @@ foreach ($r as $t) {
     $taxon['children'][$image->entity_id]['catalog_number'] = $node->nid;
     // Use full name if set, otherwise username.
     $u = user_load($node->uid, TRUE);
+    if (!isset($u->{'field_user_full_name'}[LANGUAGE_NONE])) {
+      watchdog('bison', 'NOUND: ' . print_r($u, TRUE));
+    }
     $collector = $u->{'field_user_full_name'}[LANGUAGE_NONE][0]['value'];
     if (!$collector) {
       $collector = $u->name;
