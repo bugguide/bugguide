@@ -616,19 +616,24 @@ foreach ($r as $t) {
     // Use full name if set, otherwise username.
     $u = user_load($node->uid, TRUE);
     if (!isset($u->{'field_user_full_name'}[LANGUAGE_NONE])) {
-      watchdog('bison', 'NOUND: ' . print_r($u, TRUE));
+      $collector = $u->name;
     }
-    $collector = $u->{'field_user_full_name'}[LANGUAGE_NONE][0]['value'];
+    else {
+      $collector = $u->{'field_user_full_name'}[LANGUAGE_NONE][0]['value'];
+    }
     if (!$collector) {
       $collector = $u->name;
     }
     $taxon['children'][$image->entity_id]['collector'] = $collector;
     $taxon['children'][$image->entity_id]['collector_number'] = '';
     $taxon['children'][$image->entity_id]['provided_tsn'] = '';
-    
-    $county = trim($node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['safe_value']);
-    if (substr(strtolower($county), -7) == ' county') {
-      $county = substr($county, 0, -7);
+    if (!isset($node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['safe_value'])) {
+      $county = '';
+    } else {
+      $county = trim($node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['safe_value']);
+      if (substr(strtolower($county), -7) == ' county') {
+        $county = substr($county, 0, -7);
+      }
     }
     $taxon['children'][$image->entity_id]['provided_county_name'] = $county;
     $taxon['children'][$image->entity_id]['provided_state_name'] = $LOCATION_CODES[$node->{'field_bgimage_location_code'}[LANGUAGE_NONE][0]['safe_value']];
