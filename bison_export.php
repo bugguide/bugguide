@@ -287,7 +287,7 @@ function dump_headers() {
   echo "itis_common_name \t";
   echo "itis_tsn \t";
   echo "basis_of_record \t";
-  echo "verbatimEventDate \t";
+  echo "verbatim_event_date \t";
   echo "occurrence_date \t";
   echo "year \t";
   echo "provider \t";
@@ -321,12 +321,15 @@ function dump_headers() {
   echo "provider_id \t";
   echo "resource_id \t";
   echo "provided_common_name \t";
-  echo "provided_kingdom \t";
+  echo "kingdom \t";
   echo "geodetic_datum \t";
   echo "coordinate_precision \t";
   echo "coordinate_uncertainty \t";
   echo "verbatim_locality \t";
+  echo "mrgid \t";
+  echo "calculated_waterbody \t";
   echo "iso_country_code \t";
+  echo "license \t";
   echo "AdditionalDarwinCore \t";
   echo "lifeStage \t";
   echo "Sex \t";
@@ -356,9 +359,9 @@ function dump_record($taxon) {
     // observation	
     dump('observation');
   
-    // verbatimEventDate (Date as it appears in original raw dataset.)
+    // verbatim_event_date (Date as it appears in original raw dataset.)
     // September 10, 2011	
-    dump($record['verbatimeEventDate']);
+    dump($record['verbatim_event_date']);
 
     // occurrence_date (ISO 8601 Standard Formatted date generated or derived from verbatimEventDate. Format: yyyy-mm-dd or yyyy only.)
     // 2011-09-10	
@@ -512,10 +515,19 @@ function dump_record($taxon) {
     // Banshee Reeks Nature Preserve
     dump($record['verbatim_locality']);
     
+    // mrgid (special request from Elizabeth Sellers)
+    dump();
+
+    // calculated_waterbody (special request from Elizabeth Sellers)
+    dump();
+
     // iso_country_code (Controlled vocabulary: AS = American Samoa, GU = Guam, FM = Micronesia, Federated States of, PW = Palau, Republic of, UM = United States Minor Outlying Islands, MH = Marshall Islands, Republic of, MP = Northern Mariana Islands, PR = Puerto Rico, VI = Virgin Islands, U.S.)	
     // US
     dump($record['iso_country_code']);	
     
+    // license (special request from Elizabeth Sellers)
+    dump();
+
     // Additional DarwinCore compatible data fields we can publish to GBIF (not currently accommodated in BISON. REF: http://rs.tdwg.org/dwc/terms/) -->	
     //
     dump();
@@ -597,17 +609,20 @@ foreach ($r as $t) {
       continue;
     }
     
-    $field_bgimage_date = trim($node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value']);
+    $field_bgimage_date = '';
+    if (isset($node->{'field_bgimage_date'}[LANGUAGE_NONE])) {
+      $field_bgimage_date = trim($node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value']);
+    }
     if ($field_bgimage_date != '' && $field_bgimage_date != '1969-12-31 06:00:00') {
       // 2012-06-10 05:00:00
-      $taxon['children'][$image->entity_id]['verbatimEventDate'] = $node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value'];
+      $taxon['children'][$image->entity_id]['verbatim_event_date'] = $node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value'];
       // 2012-06-10
       $taxon['children'][$image->entity_id]['occurrence_date'] = substr(date(DATE_ISO8601, strtotime($node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value'])), 0, 10);
       $taxon['children'][$image->entity_id]['year'] = date('Y', strtotime($node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value']));
     }
     else {
       // Rather than ending up with 1969-12-31 dates for "no date" we use blank.
-      $taxon['children'][$image->entity_id]['verbatimEventDate'] = '';
+      $taxon['children'][$image->entity_id]['verbatim_event_date'] = '';
       $taxon['children'][$image->entity_id]['occurrence_date'] = '';      
       $taxon['children'][$image->entity_id]['year'] = '';
     }
@@ -695,16 +710,21 @@ foreach ($r as $t) {
       $taxon['children'][$image->entity_id]['provided_common_name'] = $taxon['common_name'];
     }
 
-    $taxon['children'][$image->entity_id]['verbatim_locality'] = $node->{'field_bgimage_location'}[LANGUAGE_NONE][0]['safe_value'];
-    $taxon['children'][$image->entity_id]['lifeStage'] = $node->{'field_bgimage_life_stage'}[LANGUAGE_NONE][0]['value'];
-    
+    $taxon['children'][$image->entity_id]['verbatim_locality'] = '';
+    if (isset($node->{'field_bgimage_location'}[LANGUAGE_NONE])) {
+      $taxon['children'][$image->entity_id]['verbatim_locality'] = $node->{'field_bgimage_location'}[LANGUAGE_NONE][0]['safe_value'];
+    }
+    $taxon['children'][$image->entity_id]['lifeStage'] = '';
+    if (isset($node->{'field_bgimage_life_stage'}[LANGUAGE_NONE][0]['value'])) {
+      $taxon['children'][$image->entity_id]['lifeStage'] = $node->{'field_bgimage_life_stage'}[LANGUAGE_NONE][0]['value'];
+    }  
     $taxon['children'][$image->entity_id]['sex'] = '';
     if (isset($node->{'field_bgimage_gender'}[LANGUAGE_NONE])) {
       $taxon['children'][$image->entity_id]['sex'] = $node->{'field_bgimage_gender'}[LANGUAGE_NONE][0]['value'];    
     }
 
     $taxon['children'][$image->entity_id]['size'] = '';
-    if (isset($node->{'field_bgimage_gender'}[LANGUAGE_NONE])) {
+    if (isset($node->{'field_bgimage_gender'}[LANGUAGE_NONE]) && isset($node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value'])) {
       $taxon['children'][$image->entity_id]['size'] = $node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value'];    
     }
   }
