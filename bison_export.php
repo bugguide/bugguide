@@ -610,7 +610,7 @@ foreach ($r as $t) {
       $taxon['children'][$image->entity_id]['occurrence_date'] = '';      
       $taxon['children'][$image->entity_id]['year'] = '';
     }
-    $taxon['children'][$image->entity_id]['occurrence_url'] = 'http://bugguide.net/node/view/' . $node->nid;
+    $taxon['children'][$image->entity_id]['occurrence_url'] = 'https://bugguide.net/node/view/' . $node->nid;
     $taxon['children'][$image->entity_id]['catalog_number'] = $node->nid;
     // Use full name if set, otherwise username.
     $u = user_load($node->uid, TRUE);
@@ -636,7 +636,7 @@ foreach ($r as $t) {
     // Drupal 7 BugGuide thumbnail
     // Currently absolute_thumbnail is overwritten below so thumbnails will point to legacy site.
     // If generated from the command line, we end up with http://./files without the base url.
-    $absolute_thumbnail = str_replace('http://./files', 'http://bugguide.net/files', $tokenless_thumbnail);
+    $absolute_thumbnail = str_replace('http://./files', 'https://bugguide.net/files', $tokenless_thumbnail);
     //bison_log("drupal 7 thumbnail: $absolute_thumbnail");
     // The URL generated from Drupal 7 for node 1877 is:
     // 
@@ -649,7 +649,7 @@ foreach ($r as $t) {
 
     
     // Legacy BugGuide thumbnail. Comment out when we go to Drupal 7.
-    $absolute_thumbnail = str_replace('http://bugguide.net/files/styles/bg_small/public/', 'http://bugguide.net/images/cache/', $absolute_thumbnail);
+    $absolute_thumbnail = str_replace('https://bugguide.net/files/styles/bg_small/public/', 'https://bugguide.net/images/cache/', $absolute_thumbnail);
     $base = $node->field_bgimage_base[LANGUAGE_NONE][0]['value'] . $node->nid;
     //bison_log("obfuscated base: " . image_obfuscate($base));
     //bison_log("url: http://bugguide.net/node/view/$node->nid");
@@ -658,7 +658,7 @@ foreach ($r as $t) {
     $to_obfuscate = $base . "?l=" . $width_of_thumbnail;
     $obfuscate = image_obfuscate($to_obfuscate);
     $prefix = bgimage_get_prefix($obfuscate);
-    $absolute_thumbnail = 'http://bugguide.net/images/cache/' . $prefix . $obfuscate  .'.jpg';
+    $absolute_thumbnail = 'https://bugguide.net/images/cache/' . $prefix . $obfuscate  .'.jpg';
     //bison_log("uri: $uri");
     //bison_log("deobfuscated:" . image_deobfuscate("EHLR9HRRXHAZZL6ZZLWZIL1ZUHWZ4L9ZNHJHILAZ5L9Z7LJHXL9Z9H3HGLRRGH5ZMH4ZXLGZXLUZHL9Z4LWZ4L"));
     //bison_log("working thumbnail on 7 deobfuscated: " . image_deobfuscate("108K10LKZS3ROQHQYQY0BQY05Q10PQ9K5QC04QWKLK102QO04QA0LKB04QUKRKD00KDKWQVK9QB0UQB0GQF04QC05QC0"));
@@ -670,7 +670,7 @@ foreach ($r as $t) {
     //$taxon['children'][$image->entity_id]['thumb_url'] = '[{\\"url\\":\\"' . $absolute_thumbnail . '\\",\\"description\\":\\"\\"}]';
     // Without description
     $taxon['children'][$image->entity_id]['thumb_url'] = '[{\\"url\\":\\"' . $absolute_thumbnail . '\\"}]';
-    $taxon['children'][$image->entity_id]['associated_media'] = '[{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"' . 'http://bugguide.net/node/view/' . $node->nid . '\\"}]';
+    $taxon['children'][$image->entity_id]['associated_media'] = '[{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"' . 'https://bugguide.net/node/view/' . $node->nid . '\\"}]';
     
     $general_comments = check_plain(strip_tags($node->{'body'}[LANGUAGE_NONE][0]['safe_value']));
     $taxon['children'][$image->entity_id]['general_comments'] = $general_comments;
