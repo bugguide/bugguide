@@ -11,19 +11,19 @@
 // START CONFIGURATION
 
 // logging
-$debug_logging = FALSE;
+// $debug_logging = TRUE;
 // Which node is the top of the tree? (Arthropods is node 3).
 // Retrieve only records that are children of this node in the tree.
 // Can be set in environment variable e.g., TREETOP=3
 $treetop = getenv('TREETOP', TRUE);
-if (!isset($treetop)) {
+if (!$treetop) {
   $treetop = '3';
   // or hardcode it here
-  //$treetop = 1234
+  //$treetop = '191';
 }
 
-$laterthan = getenv('LATERTHAN', 0);
-if (!isset($laterthan)) {
+$laterthan = getenv('LATERTHAN', TRUE);
+if (!$laterthan) {
   $laterthan = 0;
 }
 
@@ -35,7 +35,7 @@ $limit = '';
 
 // There will be a link to a thumbnail image in the output. How wide of an image
 // will this be? 125 is thumbnail width; 560 is regular image width.
-$width_of_thumbnail = 560;
+$width_of_thumbnail = 125;
 
 // END CONFIGURATION
 
