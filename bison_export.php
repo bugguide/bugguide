@@ -192,11 +192,12 @@ foreach ($result as $record) {
     bison_log($specific_epithet . " -> sp.");
     $specific_epithet = 'sp.';
   }
+  $exploded_parent_value = explode(',', $record->field_parent_value);
   $r[$record->revision_id] = array(
     'revision_id' => $record->revision_id,
     'entity_id' => $record->entity_id,
     'parent' => $record->field_parent_value,
-    'immediate_parent' => end(explode(',', $record->field_parent_value)),
+    'immediate_parent' => end($exploded_parent_value),
     'specific_epithet' => $specific_epithet,
     'common_name' => $record->title,
     'children' => array(),
