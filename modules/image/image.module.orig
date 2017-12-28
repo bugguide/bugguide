@@ -826,13 +826,6 @@ function image_style_deliver($style, $scheme) {
   }
 
   $image_uri = $scheme . '://' . $target;
-  
-  // Core hack: substitute URI of derivative's original -JV
-  // If the image being requested is a derivative of a raw image,
-  // substitute the URI of the real raw image.
-  $image_uri = bgimage_original_from_derivative_path($scheme, $target);
-  // End core hack.
-  
   $derivative_uri = image_style_path($style['name'], $image_uri);
 
   // If using the private scheme, let other modules provide headers and
@@ -842,8 +835,8 @@ function image_style_deliver($style, $scheme) {
       file_download($scheme, file_uri_target($derivative_uri));
     }
     else {
-      $headers = module_invoke_all('file_download', $image_uri);
-      if (in_array(-1, $headers) || empty($headers)) {
+      $headers = file_download_headers($image_uri);
+      if (empty($headers)) {
         return MENU_ACCESS_DENIED;
       }
       if (count($headers)) {
@@ -1109,22 +1102,6 @@ function image_style_path($style_name, $uri) {
     $path = $uri;
     $scheme = file_default_scheme();
   }
-  // Core hack: Addition of drupal_alter('image_style_path') -JV
-  // See https://www.drupal.org/node/1358896
-  // Addition of drupal_alter() allows modification of paths for
-  // derivatives. In our case we do not want guessable original paths
-  // from derivative paths.
-  $style_path = $scheme . '://styles/' . $style_name . '/' . $scheme . '/' . $path;
-  $context = array(
-    'style_name' => $style_name,
-    'uri' => $uri,
-    'scheme' => $scheme,
-    'path' => $path,
-  );
-  drupal_alter('image_style_path', $style_path, $context);
-  return $style_path;
-  // End core hack.
-  
   return $scheme . '://styles/' . $style_name . '/' . $scheme . '/' . $path;
 }
 
