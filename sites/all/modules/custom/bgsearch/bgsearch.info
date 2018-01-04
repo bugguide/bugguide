@@ -1,7 +1,7 @@
 name = BG Search
 description = Includes search and facet settings
 core = 7.x
-package = Features
+package = Bugguide
 version = 7.x-1.0
 dependencies[] = apachesolr_search
 dependencies[] = ctools
