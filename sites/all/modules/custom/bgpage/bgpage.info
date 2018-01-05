@@ -96,7 +96,6 @@ features[variable][] = menu_parent_bgpage
 features[variable][] = node_options_bgpage
 features[variable][] = node_preview_bgpage
 features[variable][] = node_submitted_bgpage
-features[views_view][] = Dashboard
 features_exclude[dependencies][bg] = bg
 features_exclude[dependencies][bgpage] = bgpage
 project path = features.out

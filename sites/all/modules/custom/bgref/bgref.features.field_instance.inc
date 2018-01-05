@@ -10,7 +10,7 @@
 function bgref_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-book_reference-body'
+  // Exported field_instance: 'node-book_reference-body'.
   $field_instances['node-book_reference-body'] = array(
     'bundle' => 'book_reference',
     'default_value' => NULL,
@@ -60,7 +60,7 @@ function bgref_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-book_reference-field_book_reference_author'
+  // Exported field_instance: 'node-book_reference-field_book_reference_author'.
   $field_instances['node-book_reference-field_book_reference_author'] = array(
     'bundle' => 'book_reference',
     'default_value' => NULL,
@@ -106,7 +106,7 @@ function bgref_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-book_reference-field_book_reference_isbn'
+  // Exported field_instance: 'node-book_reference-field_book_reference_isbn'.
   $field_instances['node-book_reference-field_book_reference_isbn'] = array(
     'bundle' => 'book_reference',
     'default_value' => NULL,
@@ -152,7 +152,8 @@ function bgref_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-book_reference-field_book_reference_publisher'
+  // Exported field_instance:
+  // 'node-book_reference-field_book_reference_publisher'.
   $field_instances['node-book_reference-field_book_reference_publisher'] = array(
     'bundle' => 'book_reference',
     'default_value' => NULL,
@@ -198,7 +199,8 @@ function bgref_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-book_reference-field_book_reference_show_image'
+  // Exported field_instance:
+  // 'node-book_reference-field_book_reference_show_image'.
   $field_instances['node-book_reference-field_book_reference_show_image'] = array(
     'bundle' => 'book_reference',
     'default_value' => array(
@@ -246,7 +248,7 @@ function bgref_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-book_reference-field_book_reference_weight'
+  // Exported field_instance: 'node-book_reference-field_book_reference_weight'.
   $field_instances['node-book_reference-field_book_reference_weight'] = array(
     'bundle' => 'book_reference',
     'default_value' => NULL,
@@ -292,7 +294,7 @@ function bgref_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-book_reference-field_book_reference_year'
+  // Exported field_instance: 'node-book_reference-field_book_reference_year'.
   $field_instances['node-book_reference-field_book_reference_year'] = array(
     'bundle' => 'book_reference',
     'default_value' => NULL,
@@ -344,7 +346,7 @@ function bgref_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-book_reference-field_parent'
+  // Exported field_instance: 'node-book_reference-field_parent'.
   $field_instances['node-book_reference-field_parent'] = array(
     'bundle' => 'book_reference',
     'default_value' => NULL,
