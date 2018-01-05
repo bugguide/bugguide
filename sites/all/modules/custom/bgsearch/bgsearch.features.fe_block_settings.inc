@@ -21,12 +21,6 @@ function bgsearch_default_fe_block_settings() {
     'pages' => '',
     'roles' => array(),
     'themes' => array(
-      'ladybug' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'ladybug',
-        'weight' => 0,
-      ),
       'seven' => array(
         'region' => '',
         'status' => 0,
@@ -36,38 +30,6 @@ function bgsearch_default_fe_block_settings() {
       'suitcase_interim' => array(
         'region' => '',
         'status' => 0,
-        'theme' => 'suitcase_interim',
-        'weight' => 0,
-      ),
-    ),
-    'title' => '',
-    'visibility' => 0,
-  );
-
-  $export['facetapi-GiIy4zr9Gu0ZSa0bumw1Y9qIIpIDf1wu'] = array(
-    'cache' => -1,
-    'custom' => 0,
-    'delta' => 'GiIy4zr9Gu0ZSa0bumw1Y9qIIpIDf1wu',
-    'module' => 'facetapi',
-    'node_types' => array(),
-    'pages' => '',
-    'roles' => array(),
-    'themes' => array(
-      'ladybug' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'ladybug',
-        'weight' => 0,
-      ),
-      'seven' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'seven',
-        'weight' => 0,
-      ),
-      'suitcase_interim' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
         'theme' => 'suitcase_interim',
         'weight' => 0,
       ),
@@ -85,12 +47,6 @@ function bgsearch_default_fe_block_settings() {
     'pages' => '',
     'roles' => array(),
     'themes' => array(
-      'ladybug' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'ladybug',
-        'weight' => 0,
-      ),
       'seven' => array(
         'region' => '',
         'status' => 0,
@@ -117,12 +73,6 @@ function bgsearch_default_fe_block_settings() {
     'pages' => '',
     'roles' => array(),
     'themes' => array(
-      'ladybug' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'ladybug',
-        'weight' => 0,
-      ),
       'seven' => array(
         'region' => '',
         'status' => 0,
