@@ -218,8 +218,7 @@ function apachesolr_parallel_index_entities($env_id, $limit) {
         }
         else {
           // Display the error message of only the first one
-          $values = array_values($response);
-          $result = array_shift($values);
+          $result = array_shift(array_values($response));
           watchdog('Apache Solr Parallel', $result->error , NULL, WATCHDOG_ERROR);
         }
       }
