@@ -12,7 +12,7 @@ function bgapi_menu() {
     'description' => 'BugGuide system utilities',
     'page callback' => 'drupal_goto',
     'access arguments' => array('access content'),
-    'page arguments' => array('http://bugguide.net/node/view/1401565'),
+    'page arguments' => array('https://bugguide.net/node/view/1401565'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['bgapitree'] = array(
