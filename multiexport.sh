@@ -4,7 +4,7 @@
 # Export will be tab-delimited files with a header, like so:
 #
 # Genus	Species	Family	Order	BugGuideID	URL	Common Name
-# Cryptocercus	punctulatus	Cryptocercidae	Blattodea	574	http://bugguide.net/node/view/574	Brown-hooded Cockroach
+# Cryptocercus	punctulatus	Cryptocercidae	Blattodea	574	https://bugguide.net/node/view/574	Brown-hooded Cockroach
 
 REMOTE_ADDR=127.0.0.1 TREETOP=79 php -f ./mpg_export.php > /var/www/html/beta.bugguide.net/bugguide/bgapi/taxonomy/Zygentoma.txt
 REMOTE_ADDR=127.0.0.1 TREETOP=55 php -f ./mpg_export.php > /var/www/html/beta.bugguide.net/bugguide/bgapi/taxonomy/Diptera.txt
