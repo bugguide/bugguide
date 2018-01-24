@@ -112,6 +112,11 @@ function bgimage_apachesolr_index_document_build_node($document, $entity, $env_i
     return;
   }
 
+  // Internal image's identifier (so authors can search and find their images).
+  if (!empty($entity->field_bgimage_id[LANGUAGE_NONE][0]['value'])) {
+    $document->addField('ts_field_bgimage_id', $entity->field_bgimage_id[LANGUAGE_NONE][0]['value']);
+  }
+
   // Parents field used for searching for descendants.
   $parents = array();
   if (!empty($entity->field_parent[LANGUAGE_NONE][0]['value'])) {
@@ -171,6 +176,13 @@ function bgimage_apachesolr_index_document_build_node($document, $entity, $env_i
   }
   $document->addField('is_bgimage_rating_avg', $rating_avg);
   $document->addField('is_bgimage_rating_count', $rating_count);
+}
+
+/**
+ * Implements hook_apachesolr_field_name_map_alter().
+ */
+function bgimage_apachesolr_field_name_map_alter(&$map) {
+  $map['ts_field_bgimage_id'] = t('Image ID (used by authors for private tagging)');
 }
 
 /**
