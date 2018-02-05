@@ -141,7 +141,7 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
       );
       $file_entity = file_save((object) $file);
 
-      // Then, attache the file to the node.
+      // Then, attach the file to the node.
       $node = new stdClass();
       $node->nid = $entity->nid;
       $node->type = 'bgimage';
