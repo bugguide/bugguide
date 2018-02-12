@@ -403,7 +403,7 @@ function _bgimage_filter_thumb_process($text, $filter, $format) {
     $map = array_flip($matches[1]);
     
     // Retrieve information about each nid.
-    $result = db_query('SELECT n.nid, n.title, i.height, i.width, i.base
+    $result = db_query('SELECT n.nid, n.title, i.base
                         FROM {node} n, {bgimage} i
                         WHERE i.nid = n.nid AND n.nid IN (:nids)', array(':nids' => $nids));
     $expanded = array();
