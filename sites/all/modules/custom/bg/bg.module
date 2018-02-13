@@ -149,27 +149,6 @@ function bg_str_ends_with($str, $sub) {
   return substr( $str, strlen( $str ) - strlen( $sub ) ) == $sub;
 }
 
-function bg_fixup_parent(&$node) {
-  $node->parent = bg_get_current_path($node->parent);
-}
-
-function bg_get_current_path($path) {
-  $parents = explode(',', $path);
-  if (count($parents) > 0) {
-    // Load the node of the next-to-last parent.
-    $parent = node_load(array(
-      'nid' => $parents[count($parents) - 1],
-      'type' => 'bgpage')
-      );
-    if ($parent) { // There exists a next-to-last parent.
-      return bgpage_get_path($parent);
-    }
-  }
-
-  // No parent or no next-to-last parent.
-  return $path;
-}
-
 /**
  * Build a one-line taxonomic linked breadcrumb.
  *
