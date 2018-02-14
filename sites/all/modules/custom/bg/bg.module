@@ -256,8 +256,8 @@ function bg_preprocess_page(&$vars) {
   $nid = arg(1);
   if (is_numeric($nid)) {
     $node = node_load($nid);
-    // Set breadcrumb for bgpage and bgimage nodes.
-    if (!empty($node) && isset($node->type) && in_array($node->type, array('bgpage', 'bgimage'))) {
+    // Set breadcrumb for bgpage, bgimage and book reference nodes.
+    if (!empty($node) && isset($node->type) && in_array($node->type, array('bgpage', 'bgimage', 'book_reference'))) {
       if ($node->type == 'bgimage') {
         // For bgimage nodes we load the bgpage parent.
         $parent_nid = bg_get_parent_nid($node);
