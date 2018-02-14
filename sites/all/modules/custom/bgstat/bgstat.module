@@ -60,7 +60,7 @@ function bgstat_permission() {
 
 function bgstat_nodes_by_user($node_type = 'all', $limit = 50) {
   // Sanitize input.
-  if (!in_array($node_type, array('bgimage', 'bgpage', 'forum', 'bglink', 'bgref'))) {
+  if (!in_array($node_type, array('bgimage', 'bgpage', 'forum', 'bglink', 'book_reference'))) {
     $node_type = 'all';
   }
   $limit = (int) $limit;
@@ -69,7 +69,7 @@ function bgstat_nodes_by_user($node_type = 'all', $limit = 50) {
   }
 
   if ($node_type == 'all') {
-    $result = db_query_range("SELECT u.name, COUNT(n.nid) AS nodes FROM {node} n JOIN {users_current} u ON n.uid = u.uid WHERE n.type IN ('bgimage', 'bgpage', 'forum', 'bglink', 'bgref') GROUP BY n.uid ORDER BY nodes DESC", $node_type, 0, $limit);
+    $result = db_query_range("SELECT u.name, COUNT(n.nid) AS nodes FROM {node} n JOIN {users_current} u ON n.uid = u.uid WHERE n.type IN ('bgimage', 'bgpage', 'forum', 'bglink', 'book_reference') GROUP BY n.uid ORDER BY nodes DESC", $node_type, 0, $limit);
   }
   else {
     $result = db_query_range("SELECT u.name, COUNT(n.nid) AS nodes FROM {node} n JOIN {users_current} u ON n.uid = u.uid WHERE type='%s' GROUP BY n.uid ORDER BY nodes DESC", $node_type, 0, $limit);
