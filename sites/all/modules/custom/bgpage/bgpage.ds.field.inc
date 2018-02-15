@@ -14,8 +14,8 @@ function _bgpage_classification($field) {
 
   $node = $field['entity'];
 
-  $nids_filter = _bgpage_tree_filter($node);
-  $classified_results = bgpage_fetch_classification($node->nid, $nids_filter);
+  $classification_filter = _bgpage_create_solr_filter_for($node);
+  $classified_results = bgpage_fetch_classification($node->nid, $classification_filter);
   return bgpage_tree_build($classified_results);
 }
 
