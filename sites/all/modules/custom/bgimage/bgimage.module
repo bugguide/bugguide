@@ -112,6 +112,11 @@ function bgimage_apachesolr_index_document_build_node($document, $entity, $env_i
     return;
   }
 
+  // Internal image's identifier (so authors can search and find their images).
+  if (!empty($entity->field_bgimage_id[LANGUAGE_NONE][0]['value'])) {
+    $document->addField('ts_field_bgimage_id', $entity->field_bgimage_id[LANGUAGE_NONE][0]['value']);
+  }
+
   // Parents field used for searching for descendants.
   $parents = array();
   if (!empty($entity->field_parent[LANGUAGE_NONE][0]['value'])) {
@@ -171,6 +176,13 @@ function bgimage_apachesolr_index_document_build_node($document, $entity, $env_i
   }
   $document->addField('is_bgimage_rating_avg', $rating_avg);
   $document->addField('is_bgimage_rating_count', $rating_count);
+}
+
+/**
+ * Implements hook_apachesolr_field_name_map_alter().
+ */
+function bgimage_apachesolr_field_name_map_alter(&$map) {
+  $map['ts_field_bgimage_id'] = t('Image ID (used by authors for private tagging)');
 }
 
 /**
@@ -391,7 +403,7 @@ function _bgimage_filter_thumb_process($text, $filter, $format) {
     $map = array_flip($matches[1]);
     
     // Retrieve information about each nid.
-    $result = db_query('SELECT n.nid, n.title, i.height, i.width, i.base
+    $result = db_query('SELECT n.nid, n.title, i.base
                         FROM {node} n, {bgimage} i
                         WHERE i.nid = n.nid AND n.nid IN (:nids)', array(':nids' => $nids));
     $expanded = array();
@@ -411,7 +423,7 @@ function _bgimage_filter_thumb_process($text, $filter, $format) {
     foreach ($matches[1] as $key => $value) {
       //        [thumb:144595]
       $search[] = $matches[0][$key];
-      //        <img src="http://bugguide.net/files/styles/bg_small/public/0L3/H0L/0L3H0LDHXL8RHZOZFL4L6ZQLPZLL6ZKL6Z8HVH5HVHZL6ZQLDHUHYH8LBZML1Z2HFH9HFHXLUZ6HFH9HZRNHRRGL9ZEHVHKL.jpg" alt="" />
+      //        <img src="https://bugguide.net/files/styles/bg_small/public/0L3/H0L/0L3H0LDHXL8RHZOZFL4L6ZQLPZLL6ZKL6Z8HVH5HVHZL6ZQLDHUHYH8LBZML1Z2HFH9HFHXLUZ6HFH9HZRNHRRGL9ZEHVHKL.jpg" alt="" />
       if (isset($expanded[$key])) {
         $replace[] = $expanded[$key];
       }
@@ -467,7 +479,7 @@ function bgimage_preprocess_image_widget(&$variables) {
 function bgimage_generate_uuid() {
   $unique_base_created = FALSE;
   while (!$unique_base_created) {
-    $uuid = md5(drupal_random_bytes());
+    $uuid = md5(drupal_random_bytes(32));
     $already_exists = db_query("SELECT field_bgimage_base_value FROM {field_data_field_bgimage_base} WHERE field_bgimage_base_value = :uuid", array(':uuid' => $uuid))->fetchField();
     if ($already_exists) {
       watchdog('image', 'md5 hash collision, regenerating (' . $uuid . ')');      

@@ -14,22 +14,7 @@ function _bgpage_classification($field) {
 
   $node = $field['entity'];
 
-  // Extract parent nids.
-  if (!empty($node->field_parent[LANGUAGE_NONE])) {
-    $nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
-  }
-  else {
-    $nids = array();
-  }
-
-  // Append current node at the end.
-  $nids[] = $node->nid;
-
-  // Build classification tree.
-  $nids_filter = new SolrFilterSubQuery('OR');
-  foreach ($nids as $nid) {
-    $nids_filter->addFilter('entity_id', $nid);
-  }
+  $nids_filter = _bgpage_tree_filter($node);
   $classified_results = bgpage_fetch_classification($node->nid, $nids_filter);
   return bgpage_tree_build($classified_results);
 }
