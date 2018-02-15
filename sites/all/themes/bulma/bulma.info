@@ -1,0 +1,30 @@
+name = Bulma
+core = 7.x
+description = Base theme using Bulma
+
+stylesheets[all][] = css/bulma.css
+stylesheets[all][] = css/bulma-custom.css
+
+scripts[] = js/mobile-menu.js
+
+regions[brand] = Brand
+regions[slogan] = Slogan
+regions[navbar] = Navbar
+regions[featured] = Featured
+regions[highlighted] = Highlighted
+regions[content] = Content
+regions[page_top] = Page Top
+regions[page_bottom] = Page Bottom
+regions[sidebar_first] = Sidebar First
+regions[sidebar_second] = Sidebar Second
+regions[footer_first] = Footer First
+regions[footer_second] = Footer Second
+regions[footer_third] = Footer Third
+regions[footer_fourth] = Footer Fourth
+
+settings[container_width_navbar] = 0
+settings[container_width_content] = 0
+settings[container_width_footer] = 0
+settings[navbar1_classes] = is-primary
+settings[navbar2_classes] = is-light
+settings[tabs_primary_classes] = tabs is-boxed
