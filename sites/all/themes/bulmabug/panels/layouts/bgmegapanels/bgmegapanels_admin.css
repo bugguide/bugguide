@@ -1,0 +1,9 @@
+.megapanels-row {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.megapanels-pane {
+  min-width: 0;
+  padding: 0;
+}

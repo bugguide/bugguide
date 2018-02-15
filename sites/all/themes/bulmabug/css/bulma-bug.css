@@ -1,0 +1,338 @@
+/* 
+ * Styles for a BugGuide subtheme of the Bulma base theme.
+ */
+
+/* --------------------- */
+/* VARIABLES
+/* --------------------- */
+
+:root {
+
+
+  --tan-light: #e7dbc1;
+  --tan: #c6be9e;
+  --brown: #76684a;
+  --brown-dark: #444023;
+  --green: #229c4d;
+  --green-dark: #217c41;
+
+  --link: #76684a;
+  --primary: var(--green);
+  --primary-dark: var(--green-dark);
+}
+
+/* --------------------- */
+/* ## LINKS & BUTTONS
+/* --------------------- */
+
+a, a:link,
+.breadcrumb a {
+  color: var(--brown);
+  text-decoration-color: var(--tan);
+}
+
+a:hover,
+.breadcrumb a:hover {
+  color: var(--green);
+  text-decoration-color: var(--green);
+}
+
+.button.is-tan { color: var(--brown); background: var(--tan); }
+.button.is-tan:hover { color: var(--brown-dark); border-color: var(--tan); }
+
+.button.is-primary { background-color: var(--green); }
+.button.is-primary:hover { background-color: var(--green-dark); }
+
+/* Search Page */
+
+.search-form input[type=submit] { background-color: var(--green); }
+.search-form input[type=submit]:hover { background-color: var(--green-dark); }
+
+/* --------------------- */
+/* ## NAVBAR
+/* --------------------- */
+/* Create new color options for the Bulma.io navbar element. */
+
+.navbar.is-tan-light {
+  color: #000000;
+  background-color: var(--tan-light);
+}
+
+@media screen and (min-width: 1024px) {
+  .navbar.is-tan-light .navbar-start > a.navbar-item:hover, 
+  .navbar.is-tan-light .navbar-start > a.navbar-item.is-active, 
+  .navbar.is-tan-light .navbar-start .navbar-link:hover, 
+  .navbar.is-tan-light .navbar-start .navbar-link.is-active, 
+  .navbar.is-tan-light .navbar-end > a.navbar-item:hover, 
+  .navbar.is-tan-light .navbar-end > a.navbar-item.is-active, 
+  .navbar.is-tan-light .navbar-end .navbar-link:hover, 
+  .navbar.is-tan-light .navbar-end .navbar-link.is-active,
+
+  .navbar.is-tan-light .navbar-links > li > a:hover,
+  .navbar.is-tan-light .navbar-links > li.active > a,
+  .navbar.is-tan-light .navbar-links > li.active-trail > a,
+  .navbar.is-tan-light .expanded:hover > a {
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+}
+
+.navbar.is-tan {
+  color: #000000;
+  background-color: var(--tan);
+}
+
+@media screen and (min-width: 1024px) {
+  .navbar.is-tan .navbar-start > a.navbar-item:hover, 
+  .navbar.is-tan .navbar-start > a.navbar-item.is-active, 
+  .navbar.is-tan .navbar-start .navbar-link:hover, 
+  .navbar.is-tan .navbar-start .navbar-link.is-active, 
+  .navbar.is-tan .navbar-end > a.navbar-item:hover, 
+  .navbar.is-tan .navbar-end > a.navbar-item.is-active, 
+  .navbar.is-tan .navbar-end .navbar-link:hover, 
+  .navbar.is-tan .navbar-end .navbar-link.is-active,
+
+  .navbar.is-tan .navbar-links > li > a:hover,
+  .navbar.is-tan .navbar-links > li.active > a,
+  .navbar.is-tan .navbar-links > li.active-trail > a,
+  .navbar.is-tan .expanded:hover > a  {
+    color: white;
+    background-color: var(--brown-dark);
+  }
+}
+
+.navbar-links .expanded > a:after {
+  border-color: inherit;
+}
+
+/* --------------------- */
+/* ## HERO
+/* --------------------- */
+
+.home-hero {
+  background-image: url(../images/bg_caterpillar.jpg);
+  background-size: cover;
+  background-position: center;
+}
+
+/* --------------------- */
+/* ## TAGS
+/* --------------------- */
+
+.field-name-field-tags .field-itemsn {
+  -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+}
+
+.field-name-field-tags .field-item {
+  -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background-color: whitesmoke;
+    border-radius: 3px;
+    color: #4a4a4a;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    font-size: 0.75rem;
+    height: 2em;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    line-height: 1.5;
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    white-space: nowrap;
+}
+
+.field-name-field-tags .field-item:not(:last-child) {
+  margin-right: 0.5rem;
+}
+
+/* --------------------- */
+/* ## BUG CARD
+/* --------------------- */
+
+.node-bgimage.view-mode-homepage .field-name-field-bgimage-image .field-item img {
+  border: 1px solid #ddd;
+}
+
+/* --------------------- */
+/* ## BUG PAGE
+/* --------------------- */
+
+.node-bgimage.view-mode-full .megapanels-row_top .megapanels-pane_grow {
+  padding: 0;
+}
+
+.node-bgimage.view-mode-full .field-name-field-bgimage-image .field-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background: #eee;
+}
+
+.node-bgimage.view-mode-full .field-name-bgimage-photo-number {
+  float: left;
+  font-size: 0.9rem;
+}
+
+.node-bgimage.view-mode-full .field-name-bgimage-copyright {
+  float: right;
+  font-size: 0.9rem;
+}
+
+.node-bgimage.view-mode-full .field-name-bgimage-tag {
+  clear: both;
+}
+
+/* --- Related Images --- */
+
+.node-bgimage.view-mode-full .field-name-bgimage-related .field-label {
+  margin-bottom: 0.5rem;
+}
+
+.bgimage-related-container {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.bgimage-related a {
+  display: block;
+  margin-right: 1rem;
+}
+
+  .bgimage-related a:hover,
+  .bgimage-related a:focus {
+    box-shadow: 0px 0px 3px 2px var(--green-dark);
+  }
+
+.bgimage-related img {
+  display: block;
+  border: 1px solid #ddd;
+}
+
+/* --- Bug Page Buttons --- */
+
+.field-name-bgimage-tag a,
+.bgimage-related-actions a,
+.node-type-bgimage .action-links a {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 0 3px 3px 0;
+  box-shadow: none;
+  display: inline-flex;
+  font-size: 1rem;
+  height: 2.25em;
+  justify-content: flex-start;
+  line-height: 1.5;
+  padding-bottom: calc(0.375em - 1px);
+  padding-left: calc(0.625em - 1px);
+  padding-right: calc(0.625em - 1px);
+  padding-top: calc(0.375em - 1px);
+  position: relative;
+  vertical-align: top;
+  user-select: none;
+  background-color: white;
+  border-color: #dbdbdb;
+  color: #363636;
+  cursor: pointer;
+  justify-content: center;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  text-align: center;
+  white-space: nowrap;
+
+  /* is-small */
+  border-radius: 2px;
+  font-size: 0.75rem;
+}
+
+  .field-name-bgimage-tag a:hover,
+  .bgimage-related-actions a:hover,
+  .node-type-bgimage .action-links a:hover {
+    border-color: #b5b5b5;
+    color: #363636;
+  }
+
+.field-name-bgimage-tag a:before,
+.bgimage-related-actions a:before {
+  content: '\f0ea';
+  font-family: 'FontAwesome';
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.node-type-bgimage .action-links a:before {
+  content: '\f067';
+  font-family: 'FontAwesome';
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+/* --------------------- */
+/* ## MEGAPANELS
+/* --------------------- */
+
+.megapanels-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -0.5rem;
+  margin-left: -0.5rem;
+}
+
+  @media (max-width: 740px) {
+    .megapanels-row {
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+    }
+  }
+
+.megapanels-pane {
+  flex: 1 1 250px;
+  min-width: 250px;
+  margin: 0 0.5rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.megapanels-pane_grow {
+  flex-grow: 4;
+}
+
+.megapanels-wrapper:not(.megapanels-wrapper_full_top) {
+  margin-top: 1rem;
+}
+
+.megapanels-wrapper ~ .megapanels-wrapper {
+  margin-top: 0;
+}
+
+.megapanels-wrapper_full_top {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 1139px) and (min-width: 600px) {
+  .megapanels-pane:first-child:nth-last-child(4),
+  .megapanels-pane:first-child:nth-last-child(4) ~ .megapanels-pane {
+    width: calc(50% - 1rem);
+    flex: 0 1 auto;
+  } 
+}
+
+@media (max-width: 829px) {
+  .megapanels-pane:first-child:nth-last-child(3),
+  .megapanels-pane:first-child:nth-last-child(3) ~ .megapanels-pane {
+    width: calc(50% - 1rem);
+    flex: 0 1 auto;
+  }
+}
