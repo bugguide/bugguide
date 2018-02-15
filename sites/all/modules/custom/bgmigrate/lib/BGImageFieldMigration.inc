@@ -33,10 +33,10 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
     );
 
     $query = db_select('bgimage', 'bgi');
-    $query->fields('bgi', array('nid', 'parent', 'base', 'id', 'location', 'size', 'date_taken', 'owner', 'county', 'location_code', 'male', 'female', 'adult', 'immature'));
+    $query->fields('bgi', array('nid', 'parent', 'base', 'id', 'location', 'size', 'date_taken', 'width', 'height', 'owner', 'county', 'location_code', 'male', 'female', 'adult', 'immature'));
     $this->source = new MigrateSourceSQL($query, array());
 
-    // Set up our destination - nodes of type bgpage
+    // Set up our destination - nodes of type bgimage
     $this->destination = new MigrateDestinationNode('bgimage');
 
     // Mapped fields
@@ -52,6 +52,7 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
     $this->addFieldMapping('field_bgimage_location_code', 'location_code');
     $this->addFieldMapping('field_bgimage_gender', 'gender');
     $this->addFieldMapping('field_bgimage_life_stage', 'life_stage');
+
 
     $this->addUnmigratedDestinations(array(
       'title',
@@ -90,6 +91,8 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
       'field_bgimage_image:urlencode',
       'field_bgimage_image:alt',
       'field_bgimage_image:title',
+      'field_bgimage_image:width',
+      'field_bgimage_image:height',
     ));
   }
 
@@ -141,11 +144,13 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
       );
       $file_entity = file_save((object) $file);
 
-      // Then, attache the file to the node.
+      // Then, attach the file to the node.
       $node = new stdClass();
       $node->nid = $entity->nid;
       $node->type = 'bgimage';
       $node->field_bgimage_image[LANGUAGE_NONE][0]['fid'] = $file_entity->fid;
+      $node->field_bgimage_image[LANGUAGE_NONE][0]['width'] = $row->width;
+      $node->field_bgimage_image[LANGUAGE_NONE][0]['height'] = $row->height;
       field_attach_update('node', $node);
       entity_get_controller('node')->resetCache(array($node->nid));
     }
