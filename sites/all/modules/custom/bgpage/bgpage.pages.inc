@@ -8,24 +8,48 @@
  *
  * @param int $nid
  *   The nid of the bgpage node.
- * @param $mode
- *   If true, show all the children from this point in the taxonomic tree on
- *   down.
  */
-function bgpage_tree($nid, $mode = 'collapsed') {
+function bgpage_tree($nid) {
+  $query = drupal_get_query_parameters();
   $node = node_load($nid);
+  $output = '';
 
-  $nids_filter = _bgpage_tree_filter($node);
+  // First, create the filter that loads parent taxons plus the current one.
+  $main_filter = new SolrFilterSubQuery('OR');
+  $main_filter->addFilterSubQuery(_bgpage_create_solr_filter_for($node));
+
+  // Next, decide whether we want to list immediate children or the full tree.
+  if (!isset($query['expand'])) {
+    $immediate_parent_filter = new SolrFilterSubQuery('AND');
+    $immediate_parent_filter->addFilter('ss_bgpage_immediate_parent', $nid);
+    $main_filter->addFilterSubQuery($immediate_parent_filter);
+
+    // Add a link to expand the tree.
+    $link = l(t('view all'), 'node/' . $node->nid . '/tree', array(
+      'title' => t('Show everything below this guide page.'),
+      'query' => array('expand' => NULL),
+    ));
+  }
+  else {
+    $parent_filter = new SolrFilterSubQuery('AND');
+    $parent_filter->addFilter('sm_bgpage_parents', $nid);
+    $main_filter->addFilterSubQuery($parent_filter);
+
+    // Add a link to collapse the tree.
+    $link = l(t('normal view'), 'node/' . $node->nid . '/tree', array(
+      'title' => t('Show the normal view.'),
+    ));
+  }
 
   // Fetch the tree from Apache Solr.
-  $classified_results = bgpage_fetch_classification($node->nid, $nids_filter);
+  $classified_results = bgpage_fetch_classification($node->nid, $main_filter);
 
   // Render the results.
   if (empty($classified_results)) {
     $output = '<p>No results found.</p>';
   }
   else {
-    $output = bgpage_tree_build($classified_results);
+    $output = '<p>' . $link . '</p>' . bgpage_tree_build($classified_results);
   }
 
   return $output;
