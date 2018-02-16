@@ -103,7 +103,8 @@ function bg_apachesolr_environments() {
     'node' => array(
       0 => 'bgimage',
       1 => 'bgpage',
-      2 => 'forum',
+      2 => 'book_reference',
+      3 => 'forum',
     ),
   );
   $export['solr'] = $environment;
