@@ -391,14 +391,14 @@ function bg_node_view_alter(&$build) {
         $list_items .= '<li>' . l($bgref_node->title, 'node/' . $bgref_node->nid);
         // Append book details if they are available.
         $book_details = array();
-        if (isset($bgref_node->custom_fields['author'])) {
-          $book_details[] = check_plain($bgref_node->custom_fields['author']);
+        if (!empty($bgref_node->field_book_reference_author['und'][0])) {
+          $book_details[] = $bgref_node->field_book_reference_author['und'][0]['safe_value'];
         }
-        if (isset($bgref_node->custom_fields['year'])) {
-          $book_details[] = check_plain($bgref_node->custom_fields['year']);
+        if (!empty($bgref_node->field_book_reference_year['und'][0])) {
+          $book_details[] = $bgref_node->field_book_reference_year['und'][0]['value'];
         }
-        if (isset($bgref_node->custom_fields['publisher'])) {
-          $book_details[] = check_plain($bgref_node->custom_fields['publisher']);
+        if (!empty($bgref_node->field_book_reference_publisher['und'][0])) {
+          $book_details[] = $bgref_node->field_book_reference_publisher['und'][0]['safe_value'];
         }
         if (count($book_details)) {
           $list_items .= '</br>' . implode('. ', $book_details) . '.';
