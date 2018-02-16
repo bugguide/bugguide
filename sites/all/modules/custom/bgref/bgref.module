@@ -5,27 +5,3 @@
  */
 
 include_once 'bgref.features.inc';
-/**
- * @file
- * bgref module hook implementations.
- */
-
-/**
- * Implements hook_node_load().
- *
- * Attaches bgref metadata to bgref nodes.
- */
-function bgref_node_load($nodes, $types) {
-  if (!in_array('bgref', $types)) {
-    return;
-  }
-
-  foreach ($nodes as $nid => $node) {
-    if ($node->type == 'bgref') {
-      $custom_fields = db_query('SELECT * FROM {bgref} WHERE nid = :nid', array(':nid' => $nid))->fetchAssoc();
-      if ($custom_fields) {
-        $node->custom_fields = $custom_fields;
-      }
-    }
-  }
-}
