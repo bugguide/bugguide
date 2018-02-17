@@ -360,10 +360,8 @@ function bgpage_apachesolr_index_document_build_node($document, $entity, $env_id
  *
  * @returns SolrFilterSubQuery
  *   The filter query.
- *
- * @see bgpage_fetch_classification().
  */
-function _bgpage_tree_filter($node) {
+function _bgpage_create_solr_filter_for($node) {
   // Extract parent nids.
   if (!empty($node->field_parent[LANGUAGE_NONE])) {
     $nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
