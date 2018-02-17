@@ -50,7 +50,7 @@ function bgpage_menu() {
 /**
  * Wildcard resolver for Browse tab.
  *
- * For bgpage we return the nid, while for bgmage we return the immediate parent.
+ * For bgpage we return the nid, while for bgimage we return the immediate parent.
  */
 function bgpage_node_to_arg($arg, $map, $index) {
   if ($arg == '%') {
