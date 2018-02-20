@@ -5,3 +5,50 @@
  */
 
 include_once 'bgsearch.features.inc';
+
+/**
+ * Implements hook_node_insert().
+ */
+function bgsearch_node_insert($node) {
+  if ($node->type == 'bgimage') {
+    _bgsearch_update_bgpage_totals($node);
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function bgsearch_node_update($node) {
+  if ($node->type == 'bgimage') {
+    _bgsearch_update_bgpage_totals($node);
+  }
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function bgsearch_node_delete($node) {
+  if ($node->type == 'bgimage') {
+    _bgsearch_update_bgpage_totals($node);
+  }
+}
+
+/**
+ * Marks bgpage parent nodes of a bgimage node to be reindexed.
+ *
+ * This is so the total amount of images under a bgpage is
+ * recalculated when an image is created, unpublished or
+ * deleted.
+ *
+ * @param $node
+ *   A BGImage node.
+ */
+function _bgsearch_update_bgpage_totals($node) {
+  if (!empty($node->field_parent[LANGUAGE_NONE][0]['value'])) {
+    $nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
+    $parent_nodes = node_load_multiple($nids);
+    foreach ($parent_nodes as $parent) {
+      apachesolr_entity_update($parent, 'node');
+    }
+  }
+}
