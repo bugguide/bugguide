@@ -26,7 +26,6 @@ function bg_apachesolr_environments() {
     'apachesolr_search_promote_boost' => '0',
     'apachesolr_search_sticky_boost' => '0',
     'apachesolr_search_type_boosts' => array(
-      'bgref' => '0',
       'book_reference' => '0',
       'forum' => '0',
       'bgpage' => '0',
