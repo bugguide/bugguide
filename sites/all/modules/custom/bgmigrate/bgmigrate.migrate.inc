@@ -35,6 +35,10 @@ function bgmigrate_migrate_api() {
         'class_name' => 'BGImageFieldMigration',
         'group_name' => 'bugguide',
       ),
+      'bglinkfields' => array(
+        'class_name' => 'BGLinkFieldMigration',
+        'group_name' => 'bugguide',
+      ),
     ),
   );
   return $api;
