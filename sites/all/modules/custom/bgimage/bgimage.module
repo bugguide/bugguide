@@ -375,6 +375,20 @@ function bgimage_node_update($node) {
 }
 
 /**
+ * Implements hook_node_delete().
+ */
+function bgimage_node_delete($node) {
+  if ($node->type != 'bgimage') {
+    return;
+  }
+
+  // Delete row from bgimage table.
+  db_delete('bgimage')
+    ->condition('nid', $node->nid)
+    ->execute();
+}
+
+/**
  * Implements hook_filter_info().
  */
 function bgimage_filter_info() {
