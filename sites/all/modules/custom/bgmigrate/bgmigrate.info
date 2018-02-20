@@ -10,3 +10,4 @@ files[] = lib/BasicBugGuideMigration.inc
 files[] = lib/BGPageFieldMigration.inc
 files[] = lib/BGRefFieldMigration.inc
 files[] = lib/BGImageFieldMigration.inc
+files[] = lib/BGLinkFieldMigration.inc
