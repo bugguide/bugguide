@@ -50,7 +50,8 @@ function bgpage_menu() {
 /**
  * Wildcard resolver for Browse tab.
  *
- * For bgpage we return the nid, while for bgmage we return the immediate parent.
+ * For bgpage we return the nid, while for other content types with a parent field
+ * we return the immediate parent.
  */
 function bgpage_node_to_arg($arg, $map, $index) {
   if ($arg == '%') {
@@ -65,7 +66,7 @@ function bgpage_node_to_arg($arg, $map, $index) {
   if ($node->type == 'bgpage') {
     return $arg;
   }
-  elseif ($node->type == 'bgimage') {
+  elseif (isset($node->field_parent)) {
     return bg_get_parent_nid($node);
   }
 

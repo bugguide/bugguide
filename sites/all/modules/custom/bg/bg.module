@@ -72,7 +72,6 @@ function bg_menu_access($nid) {
     $show = array(
       'bgpage' => TRUE,
       'bgimage' => TRUE,
-      'bgref' => TRUE,
       'bglink' => TRUE,
     );
     if (isset($show[$node->type])) {
