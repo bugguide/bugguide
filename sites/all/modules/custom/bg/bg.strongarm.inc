@@ -69,13 +69,6 @@ function bg_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'theme_default';
-  $strongarm->value = 'bulmabug';
-  $export['theme_default'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'theme_bulmabug_settings';
   $strongarm->value = array(
     'toggle_logo' => 1,
@@ -102,5 +95,13 @@ function bg_strongarm() {
     'tabs_primary_classes' => 'tabs is-boxed',
   );
   $export['theme_bulmabug_settings'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'theme_default';
+  $strongarm->value = 'bulmabug';
+  $export['theme_default'] = $strongarm;
+
   return $export;
 }
