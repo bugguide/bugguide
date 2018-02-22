@@ -31,6 +31,12 @@ function _bgpage_citations($field) {
 
 /**
  * Callback to render images from immediate children.
+ *
+ * @param array $field
+ *   A Display Suite field.
+ *
+ * @return string
+ *   HTML output containing the listing.
  */
 function _bgpage_browse($field) {
   if ($field['view_mode'] != 'browse') {
@@ -39,33 +45,38 @@ function _bgpage_browse($field) {
 
   $output = '';
   $node = $field['entity'];
+  $results_per_page = 5;
 
-  // Fetch immediate children nids.
-  $filter = new SolrFilterSubQuery('AND');
-  $filter->addFilter('ss_bgpage_immediate_parent', $node->nid);
   try {
-    $query = apachesolr_drupal_query('browse_children', array());
+    // Fetch immediate children bgpage nids plus current bgpage.
+    $immediate_children = new SolrFilterSubQuery('AND');
+    $immediate_children->addFilter('ss_bgpage_immediate_parent', $node->nid);
+    $current_bgpage = new SolrFilterSubQuery('AND');
+    $current_bgpage->addFilter('entity_id', $node->nid);
+    $main_filter = new SolrFilterSubQuery('OR');
+    $main_filter->addFilterSubQuery($immediate_children);
+    $main_filter->addFilterSubQuery($current_bgpage);
+
+    $query = apachesolr_drupal_query('browse_images', array());
+
     // Configure query.
-    $query->addFilterSubQuery($filter);
+    $query->addFilterSubQuery($main_filter);
     $query->addParam('fl', 'entity_id,label');
-    $query->addParam('rows', 10000000);
     $sort_field = 'sort_label';
     $sort_direction = 'asc';
     $query->setAvailableSort($sort_field, $sort_direction);
     $query->setSolrsort($sort_field, $sort_direction);
+    // Set paging and results per page.
+    $query->page = pager_find_page();
+    $query->addParam('rows', $results_per_page);
 
-    // Run query and render results if matches are found.
-    $children_nids = array();
-    list($final_query, $response) = apachesolr_do_query($query);
-    if ($response->code == '200' && $response->response->numFound > 0) {
-      $children_docs  = $response->response->docs;
-    }
-    else {
-      watchdog('bgpage', 'No results found for nid !nid', array('!nid' => $node->nid));
-    }
+    // Run query.
+    list(, $response) = apachesolr_do_query($query);
+    $children_docs  = $response->response->docs;
+    pager_default_initialize($response->response->numFound, $results_per_page);
 
-    // Fetch best rated images for each child.
-    if (count($children_docs)) {
+    // Fetch best rated images for each bgpage.
+    if (!empty($children_docs)) {
       foreach ($children_docs as $child_doc) {
         // Filter images with this child nid as their parent.
         $filter_parent = new SolrFilterSubQuery('AND');
@@ -79,32 +90,37 @@ function _bgpage_browse($field) {
         $query->addParam('sort', 'is_bgimage_rating_count desc');
 
         // Query Solr and attach images to the child's document.
-        list($final_query, $response) = apachesolr_do_query($query);
+        list(, $response) = apachesolr_do_query($query);
 
         $child_doc->matches = array();
-        if ($response->code == '200' && $response->response->numFound > 0) {
-          $child_doc->matches = $response->response->docs;
-        }
+        $child_doc->matches = $response->response->docs;
       }
     }
+
+    // Render results.
+    foreach ($children_docs as $child_doc) {
+      $output .= '<h3><a href="' . url('node/' . $child_doc->entity_id) . '" title="' . $child_doc->label . '">' . $child_doc->label . '</a></h3>';
+      if (!empty($child_doc->matches)) {
+        $output .= '<ul>';
+        foreach ($child_doc->matches as $image_doc) {
+          $output .= '<li class="horizontal">' . $image_doc->ss_bgimage_thumbnail . '</li>';
+        }
+        $output .= '</ul>';
+      }
+      else {
+        $output .= '<p>No images found for this taxon.</p>';
+      }
+    }
+
+    // Print pager.
+    $output .= '<p>' . theme('pager') . '</p>';
   }
   catch (Exception $e) {
     watchdog('bgpage', 'Could not connect to Solr to fetch data for !nid. Error was %error.', array(
       '!nid' => $node->nid,
       '%error' => $e->getMessage(),
     ), WATCHDOG_ERROR);
-  }
-
-  // Render results.
-  foreach ($children_docs as $child_doc) {
-    $output .= '<h3><a href="' . url('node/' . $child_doc->entity_id) . '" title="' . $child_doc->label . '">' . $child_doc->label . '</a></h3>';
-    if (!empty($child_doc->matches)) {
-      $output .= '<ul>';
-      foreach ($child_doc->matches as $image_doc) {
-        $output .= '<li class="horizontal">' . $image_doc->ss_bgimage_thumbnail . '</li>';
-      }
-      $output .= '</ul>';
-    }
+    $output = 'An unexpected error ocurred while fetching images. Try again later or contact the administrator';
   }
 
   return $output;
