@@ -19,10 +19,9 @@ function bgpage_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 5,
+        'type' => 'hidden',
+        'weight' => 32,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -77,10 +76,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'hidden',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 30,
+        'type' => 'hidden',
+        'weight' => 37,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -141,10 +139,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 38,
+        'type' => 'hidden',
+        'weight' => 45,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -257,10 +254,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 35,
+        'type' => 'hidden',
+        'weight' => 42,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -721,10 +717,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 36,
+        'type' => 'hidden',
+        'weight' => 43,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -837,10 +832,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 37,
+        'type' => 'hidden',
+        'weight' => 44,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -953,10 +947,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 33,
+        'type' => 'hidden',
+        'weight' => 40,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -1127,10 +1120,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 32,
+        'type' => 'hidden',
+        'weight' => 39,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -1185,10 +1177,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 31,
+        'type' => 'hidden',
+        'weight' => 38,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -1475,15 +1466,9 @@ function bgpage_field_default_field_instances() {
       ),
       'default' => array(
         'label' => 'above',
-        'module' => 'number',
-        'settings' => array(
-          'decimal_separator' => '.',
-          'prefix_suffix' => TRUE,
-          'scale' => 0,
-          'thousand_separator' => '',
-        ),
-        'type' => 'number_integer',
-        'weight' => 34,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 41,
       ),
       'homepage' => array(
         'label' => 'above',
