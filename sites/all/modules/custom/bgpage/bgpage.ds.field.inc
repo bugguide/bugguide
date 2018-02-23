@@ -48,23 +48,20 @@ function _bgpage_browse($field) {
   $results_per_page = 5;
 
   try {
-    // Fetch immediate children bgpage nids plus current bgpage.
+    // Fetch immediate children for this bgpage node.
     $immediate_children = new SolrFilterSubQuery('AND');
     $immediate_children->addFilter('ss_bgpage_immediate_parent', $node->nid);
-    $current_bgpage = new SolrFilterSubQuery('AND');
-    $current_bgpage->addFilter('entity_id', $node->nid);
-    $main_filter = new SolrFilterSubQuery('OR');
-    $main_filter->addFilterSubQuery($immediate_children);
-    $main_filter->addFilterSubQuery($current_bgpage);
-
     $query = apachesolr_drupal_query('browse_images', array());
 
     // Configure query.
-    $query->addFilterSubQuery($main_filter);
+    $query->addFilterSubQuery($immediate_children);
     $query->addParam('fl', 'entity_id,label');
     $sort_field = 'sort_label';
     $sort_direction = 'asc';
-    $query->setAvailableSort($sort_field, $sort_direction);
+    $query->setAvailableSort($sort_field, array(
+      'title' => t('Label'),
+      'default' => $sort_direction,
+    ));
     $query->setSolrsort($sort_field, $sort_direction);
     // Set paging and results per page.
     $query->page = pager_find_page();
@@ -75,26 +72,32 @@ function _bgpage_browse($field) {
     $children_docs  = $response->response->docs;
     pager_default_initialize($response->response->numFound, $results_per_page);
 
-    // Fetch best rated images for each bgpage.
-    if (!empty($children_docs)) {
-      foreach ($children_docs as $child_doc) {
-        // Filter images with this child nid as their parent.
-        $filter_parent = new SolrFilterSubQuery('AND');
-        $filter_parent->addFilter('sm_bgimage_parents', $child_doc->entity_id);
+    // If this bgpage node has no children, then create an array with a dummy
+    // document containing the current bgpage.
+    if (empty($children_docs)) {
+      $document = new ApacheSolrDocument();
+      $document->entity_id = $node->nid;
+      $document->label = check_plain($node->title);
+      $children_docs[] = $document;
+    }
 
-        $query = apachesolr_drupal_query('browse_images_' . $child_doc->entity_id, array());
-        $query->addFilterSubQuery($filter_parent);
-        $query->addParam('fl', 'ss_bgimage_thumbnail');
-        $query->addParam('rows', 5);
-        $query->addParam('sort', 'is_bgimage_rating_avg desc');
-        $query->addParam('sort', 'is_bgimage_rating_count desc');
+    // Find the top rated 5 images for each bgpage.
+    foreach ($children_docs as $child_doc) {
+      // Filter images with this child nid as their parent.
+      $filter_parent = new SolrFilterSubQuery('AND');
+      $filter_parent->addFilter('sm_bgimage_parents', $child_doc->entity_id);
 
-        // Query Solr and attach images to the child's document.
-        list(, $response) = apachesolr_do_query($query);
+      $query = apachesolr_drupal_query('browse_images_' . $child_doc->entity_id, array());
+      $query->addFilterSubQuery($filter_parent);
+      $query->addParam('fl', 'ss_bgimage_thumbnail');
+      $query->addParam('rows', 5);
+      $query->addParam('sort', 'is_bgimage_rating_avg desc');
+      $query->addParam('sort', 'is_bgimage_rating_count desc');
 
-        $child_doc->matches = array();
-        $child_doc->matches = $response->response->docs;
-      }
+      // Query Solr and attach images to the child's document.
+      list(, $response) = apachesolr_do_query($query);
+      $child_doc->matches = array();
+      $child_doc->matches = $response->response->docs;
     }
 
     // Render results.
