@@ -17,8 +17,13 @@ function bgref_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'book_reference';
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
-    'comments' => array(
+    'subscriptions' => array(
       'weight' => '7',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'comments' => array(
+      'weight' => '8',
       'label' => 'above',
       'format' => 'default',
     ),
@@ -61,7 +66,8 @@ function bgref_ds_layout_settings_info() {
         4 => 'body',
         5 => 'submitted_by',
         6 => 'changed_date',
-        7 => 'comments',
+        7 => 'subscriptions',
+        8 => 'comments',
       ),
     ),
     'fields' => array(
@@ -72,6 +78,7 @@ function bgref_ds_layout_settings_info() {
       'body' => 'ds_content',
       'submitted_by' => 'ds_content',
       'changed_date' => 'ds_content',
+      'subscriptions' => 'ds_content',
       'comments' => 'ds_content',
     ),
     'classes' => array(),
@@ -83,6 +90,9 @@ function bgref_ds_layout_settings_info() {
     'layout_attributes_merge' => 1,
     'layout_link_attribute' => '',
     'layout_link_custom' => '',
+    'layout_disable_css' => FALSE,
+    'hide_page_title' => '0',
+    'page_option_title' => '',
   );
   $export['node|book_reference|default'] = $ds_layout;
 

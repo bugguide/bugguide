@@ -32,6 +32,11 @@ function bgpage_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'bgpage';
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
+    'subscriptions' => array(
+      'weight' => '18',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
     'bgpage_classification' => array(
       'weight' => '0',
       'label' => 'above',
@@ -145,6 +150,7 @@ function bgpage_ds_layout_settings_info() {
         15 => 'field_print_references',
         16 => 'field_internet_references',
         17 => 'bgpage_citations',
+        18 => 'subscriptions',
       ),
     ),
     'fields' => array(
@@ -166,6 +172,7 @@ function bgpage_ds_layout_settings_info() {
       'field_print_references' => 'ds_content',
       'field_internet_references' => 'ds_content',
       'bgpage_citations' => 'ds_content',
+      'subscriptions' => 'ds_content',
     ),
     'classes' => array(),
     'wrappers' => array(
@@ -176,6 +183,9 @@ function bgpage_ds_layout_settings_info() {
     'layout_attributes_merge' => 1,
     'layout_link_attribute' => '',
     'layout_link_custom' => '',
+    'layout_disable_css' => FALSE,
+    'hide_page_title' => '0',
+    'page_option_title' => '',
   );
   $export['node|bgpage|default'] = $ds_layout;
 
