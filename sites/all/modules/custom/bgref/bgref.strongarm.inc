@@ -80,6 +80,30 @@ function bgref_strongarm() {
       'revision' => array(
         'custom_settings' => FALSE,
       ),
+      'homepage' => array(
+        'custom_settings' => TRUE,
+      ),
+      'search_index' => array(
+        'custom_settings' => FALSE,
+      ),
+      'search_result' => array(
+        'custom_settings' => FALSE,
+      ),
+      'subscriptions' => array(
+        'custom_settings' => FALSE,
+      ),
+      'token' => array(
+        'custom_settings' => FALSE,
+      ),
+      'browse' => array(
+        'custom_settings' => FALSE,
+      ),
+      'images' => array(
+        'custom_settings' => FALSE,
+      ),
+      'recent' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -87,7 +111,14 @@ function bgref_strongarm() {
           'weight' => '-5',
         ),
       ),
-      'display' => array(),
+      'display' => array(
+        'subscriptions_ui' => array(
+          'default' => array(
+            'weight' => '29',
+            'visible' => FALSE,
+          ),
+        ),
+      ),
     ),
   );
   $export['field_bundle_settings_node__book_reference'] = $strongarm;
