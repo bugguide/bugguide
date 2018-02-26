@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the BG Subscriptions feature.
+ */
+
+include_once 'bgsubscriptions.features.inc';
