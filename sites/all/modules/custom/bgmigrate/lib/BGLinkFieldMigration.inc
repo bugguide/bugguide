@@ -41,7 +41,7 @@ class BGLinkFieldMigration extends BasicBugGuideMigration {
     $this->addFieldMapping('nid', 'nid');
     $this->addFieldMapping('field_parent', 'parent')
          ->description(t('Parent'));
-    $this->addFieldMapping('field_link', 'link')
+    $this->addFieldMapping('field_bglink_link', 'link')
          ->description(t('Link'));
   }
 }
