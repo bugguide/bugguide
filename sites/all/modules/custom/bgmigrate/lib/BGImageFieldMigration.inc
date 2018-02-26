@@ -50,7 +50,7 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
     $this->addFieldMapping('field_bgimage_copyright_owner', 'owner');
     $this->addFieldMapping('field_bgimage_county', 'county');
     $this->addFieldMapping('field_bgimage_location_code', 'location_code');
-    $this->addFieldMapping('field_bgimage_gender', 'gender');
+    $this->addFieldMapping('field_bgimage_sex', 'sex');
     $this->addFieldMapping('field_bgimage_life_stage', 'life_stage');
 
 
@@ -100,13 +100,13 @@ class BGImageFieldMigration extends BasicBugGuideMigration {
    * Called from the source plugin upon first pulling the raw data from the source.
    */
   public function prepareRow($row) {
-    // Prepare values for field_bgimage_gender.
-    $row->gender = array();
+    // Prepare values for field_bgimage_sex.
+    $row->sex = array();
     if ($row->female == 1) {
-      $row->gender[] = 'female';
+      $row->sex[] = 'female';
     }
     if ($row->male == 1) {
-      $row->gender[] = 'male';
+      $row->sex[] = 'male';
     }
 
     // Prepare values for field_bgimage_life_stage.
