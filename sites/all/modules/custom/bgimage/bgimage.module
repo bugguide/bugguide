@@ -510,7 +510,7 @@ function bgimage_generate_uuid() {
  *
  * @param object @node
  */
-function _bgimage_obfuscate_uploaded_image($node) {
+function _bgimage_obfuscate_uploaded_image(&$node) {
   // Even though the image field is required, during migration it may not be
   // present.
   if (isset($node->field_bgimage_image[LANGUAGE_NONE])) {
@@ -543,7 +543,7 @@ function _bgimage_prepare($node) {
 
   $male = 0;
   $female = 0;
-  foreach ($wrapper->field_bgimage_gender->value() as $selected_value) {
+  foreach ($wrapper->field_bgimage_sex->value() as $selected_value) {
     if ($selected_value == 'female') {
       $female = 1;
     }
