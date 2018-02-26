@@ -61,8 +61,8 @@ function bglink_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bglink-field_link'.
-  $field_instances['node-bglink-field_link'] = array(
+  // Exported field_instance: 'node-bglink-field_bglink_link'.
+  $field_instances['node-bglink-field_bglink_link'] = array(
     'bundle' => 'bglink',
     'default_value' => NULL,
     'deleted' => 0,
@@ -89,7 +89,7 @@ function bglink_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_link',
+    'field_name' => 'field_bglink_link',
     'label' => 'Link',
     'required' => 1,
     'settings' => array(
