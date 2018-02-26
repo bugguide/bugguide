@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * bg_subscriptions.features.user_permission.inc
+ * bgsubscriptions.features.user_permission.inc
  */
 
 /**
  * Implements hook_user_default_permissions().
  */
-function bg_subscriptions_user_default_permissions() {
+function bgsubscriptions_user_default_permissions() {
   $permissions = array();
 
   // Exported permission: 'subscribe to content'.
