@@ -1,7 +1,7 @@
 name = BG Link
 description = Contains BG Link components
 core = 7.x
-package = Features
+package = Bugguide
 dependencies[] = bgimage
 dependencies[] = bgpage
 dependencies[] = ctools
