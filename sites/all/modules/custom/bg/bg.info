@@ -67,7 +67,6 @@ features[variable][] = node_admin_theme
 features[variable][] = theme_bulmabug_settings
 features[variable][] = theme_default
 features_exclude[filter][] = 4
-features_exclude[filter][] = 3
 features_exclude[dependencies][php] = php
 files[] = bg.views.inc
 files[] = bg_views_handler_filter_parent.inc
