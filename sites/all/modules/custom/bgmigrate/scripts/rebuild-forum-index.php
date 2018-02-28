@@ -39,3 +39,13 @@ db_insert('forum_index')
 ))
   ->from($select)
   ->execute();
+
+// forum_update_7011()
+$select = db_select('node', 'n')
+    ->fields('n', array(
+    'nid',
+  ))
+    ->condition('status', 0);
+  db_delete('forum_index')
+    ->condition('nid', $select, 'IN')
+    ->execute();
