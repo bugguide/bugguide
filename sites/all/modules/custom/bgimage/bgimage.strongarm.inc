@@ -114,7 +114,15 @@ function bgimage_strongarm() {
       'display' => array(
         'subscriptions_ui' => array(
           'default' => array(
-            'weight' => '37',
+            'weight' => '41',
+            'visible' => FALSE,
+          ),
+          'homepage' => array(
+            'weight' => '40',
+            'visible' => FALSE,
+          ),
+          'recent' => array(
+            'weight' => '40',
             'visible' => FALSE,
           ),
         ),

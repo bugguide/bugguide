@@ -17,23 +17,43 @@ function bgimage_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'bgimage';
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
-    'subscriptions' => array(
+    'divider_1' => array(
+      'weight' => '11',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'divider_2' => array(
+      'weight' => '15',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'divider_3' => array(
       'weight' => '18',
       'label' => 'hidden',
       'format' => 'default',
     ),
+    'location_combined' => array(
+      'weight' => '9',
+      'label' => 'above',
+      'format' => 'default',
+    ),
+    'subscriptions' => array(
+      'weight' => '7',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
     'comments' => array(
-      'weight' => '19',
+      'weight' => '8',
       'label' => 'hidden',
       'format' => 'default',
     ),
     'changed_date' => array(
-      'weight' => '15',
+      'weight' => '20',
       'label' => 'inline',
       'format' => 'ds_post_date_bg_short_F_j_Y',
     ),
     'submitted_by' => array(
-      'weight' => '14',
+      'weight' => '19',
       'label' => 'hidden',
       'format' => 'ds_time_ago',
     ),
@@ -58,7 +78,7 @@ function bgimage_ds_field_settings_info() {
       'format' => 'default',
     ),
     'bgimage_title_classification' => array(
-      'weight' => '16',
+      'weight' => '5',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -72,8 +92,13 @@ function bgimage_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'bgimage';
   $ds_fieldsetting->view_mode = 'homepage';
   $ds_fieldsetting->settings = array(
-    'bgimage_field_placed_by' => array(
+    'title' => array(
       'weight' => '1',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'bgimage_field_placed_by' => array(
+      'weight' => '2',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -87,8 +112,13 @@ function bgimage_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'bgimage';
   $ds_fieldsetting->view_mode = 'recent';
   $ds_fieldsetting->settings = array(
-    'title' => array(
+    'location_combined' => array(
       'weight' => '2',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'title' => array(
+      'weight' => '1',
       'label' => 'hidden',
       'format' => 'default',
       'formatter_settings' => array(
@@ -98,12 +128,12 @@ function bgimage_ds_field_settings_info() {
       ),
     ),
     'submitted_by' => array(
-      'weight' => '6',
+      'weight' => '3',
       'label' => 'hidden',
       'format' => 'ds_time_ago',
     ),
     'bgimage_field_taxonomy_path' => array(
-      'weight' => '0',
+      'weight' => '4',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -149,72 +179,89 @@ function bgimage_ds_layout_settings_info() {
   $ds_layout->entity_type = 'node';
   $ds_layout->bundle = 'bgimage';
   $ds_layout->view_mode = 'default';
-  $ds_layout->layout = 'ds_3col_stacked_fluid';
+  $ds_layout->layout = 'megapanels';
   $ds_layout->settings = array(
     'regions' => array(
-      'middle' => array(
+      'top_grow_first' => array(
         0 => 'field_bgimage_image',
         1 => 'bgimage_photo_number',
         2 => 'bgimage_copyright',
         3 => 'bgimage_tag',
         4 => 'bgimage_related',
+        5 => 'bgimage_title_classification',
+        6 => 'body',
       ),
-      'right' => array(
-        5 => 'field_bgimage_location',
-        6 => 'field_bgimage_county',
-        7 => 'field_bgimage_location_code',
-        8 => 'field_bgimage_date',
-        9 => 'field_bgimage_life_stage',
-        10 => 'field_bgimage_sex',
-        11 => 'field_bgimage_size',
-        12 => 'field_bgimage_representative',
-        13 => 'field_bgimage_photo_quality',
-        14 => 'submitted_by',
-        15 => 'changed_date',
+      'bottom_full' => array(
+        7 => 'subscriptions',
+        8 => 'comments',
       ),
-      'footer' => array(
-        16 => 'bgimage_title_classification',
-        17 => 'body',
-        18 => 'subscriptions',
-        19 => 'comments',
+      'top_1' => array(
+        9 => 'location_combined',
+        10 => 'field_bgimage_date',
+        11 => 'divider_1',
+        12 => 'field_bgimage_life_stage',
+        13 => 'field_bgimage_sex',
+        14 => 'field_bgimage_size',
+        15 => 'divider_2',
+        16 => 'field_bgimage_representative',
+        17 => 'field_bgimage_photo_quality',
+        18 => 'divider_3',
+        19 => 'submitted_by',
+        20 => 'changed_date',
       ),
     ),
     'fields' => array(
-      'field_bgimage_image' => 'middle',
-      'bgimage_photo_number' => 'middle',
-      'bgimage_copyright' => 'middle',
-      'bgimage_tag' => 'middle',
-      'bgimage_related' => 'middle',
-      'field_bgimage_location' => 'right',
-      'field_bgimage_county' => 'right',
-      'field_bgimage_location_code' => 'right',
-      'field_bgimage_date' => 'right',
-      'field_bgimage_life_stage' => 'right',
-      'field_bgimage_sex' => 'right',
-      'field_bgimage_size' => 'right',
-      'field_bgimage_representative' => 'right',
-      'field_bgimage_photo_quality' => 'right',
-      'submitted_by' => 'right',
-      'changed_date' => 'right',
-      'bgimage_title_classification' => 'footer',
-      'body' => 'footer',
-      'subscriptions' => 'footer',
-      'comments' => 'footer',
+      'field_bgimage_image' => 'top_grow_first',
+      'bgimage_photo_number' => 'top_grow_first',
+      'bgimage_copyright' => 'top_grow_first',
+      'bgimage_tag' => 'top_grow_first',
+      'bgimage_related' => 'top_grow_first',
+      'bgimage_title_classification' => 'top_grow_first',
+      'body' => 'top_grow_first',
+      'subscriptions' => 'bottom_full',
+      'comments' => 'bottom_full',
+      'location_combined' => 'top_1',
+      'field_bgimage_date' => 'top_1',
+      'divider_1' => 'top_1',
+      'field_bgimage_life_stage' => 'top_1',
+      'field_bgimage_sex' => 'top_1',
+      'field_bgimage_size' => 'top_1',
+      'divider_2' => 'top_1',
+      'field_bgimage_representative' => 'top_1',
+      'field_bgimage_photo_quality' => 'top_1',
+      'divider_3' => 'top_1',
+      'submitted_by' => 'top_1',
+      'changed_date' => 'top_1',
     ),
     'classes' => array(),
     'wrappers' => array(
-      'header' => 'div',
-      'left' => 'div',
-      'middle' => 'div',
-      'right' => 'div',
-      'footer' => 'div',
+      'top_full' => 'div',
+      'top_grow_first' => 'div',
+      'top_1' => 'div',
+      'top_2' => 'div',
+      'top_3' => 'div',
+      'top_4' => 'div',
+      'top_grow_last' => 'div',
+      'middle_grow_first' => 'div',
+      'middle_1' => 'div',
+      'middle_2' => 'div',
+      'middle_3' => 'div',
+      'middle_4' => 'div',
+      'middle_grow_last' => 'div',
+      'bottom_grow_first' => 'div',
+      'bottom_1' => 'div',
+      'bottom_2' => 'div',
+      'bottom_3' => 'div',
+      'bottom_4' => 'div',
+      'bottom_grow_last' => 'div',
+      'bottom_full' => 'div',
     ),
     'layout_wrapper' => 'div',
     'layout_attributes' => '',
     'layout_attributes_merge' => 1,
     'layout_link_attribute' => '',
     'layout_link_custom' => '',
-    'layout_disable_css' => 0,
+    'layout_disable_css' => FALSE,
     'hide_page_title' => '0',
     'page_option_title' => '',
   );
@@ -226,27 +273,36 @@ function bgimage_ds_layout_settings_info() {
   $ds_layout->entity_type = 'node';
   $ds_layout->bundle = 'bgimage';
   $ds_layout->view_mode = 'homepage';
-  $ds_layout->layout = 'ds_1col';
+  $ds_layout->layout = 'horizontalcard';
   $ds_layout->settings = array(
     'regions' => array(
-      'ds_content' => array(
+      'left' => array(
         0 => 'field_bgimage_image',
-        1 => 'bgimage_field_placed_by',
+      ),
+      'body' => array(
+        1 => 'title',
+        2 => 'bgimage_field_placed_by',
       ),
     ),
     'fields' => array(
-      'field_bgimage_image' => 'ds_content',
-      'bgimage_field_placed_by' => 'ds_content',
+      'field_bgimage_image' => 'left',
+      'title' => 'body',
+      'bgimage_field_placed_by' => 'body',
     ),
     'classes' => array(),
     'wrappers' => array(
-      'ds_content' => 'div',
+      'left' => 'div',
+      'body' => 'div',
+      'right' => 'div',
     ),
     'layout_wrapper' => 'div',
     'layout_attributes' => '',
     'layout_attributes_merge' => 1,
     'layout_link_attribute' => '',
     'layout_link_custom' => '',
+    'layout_disable_css' => FALSE,
+    'hide_page_title' => '0',
+    'page_option_title' => '',
   );
   $export['node|bgimage|homepage'] = $ds_layout;
 
@@ -256,46 +312,40 @@ function bgimage_ds_layout_settings_info() {
   $ds_layout->entity_type = 'node';
   $ds_layout->bundle = 'bgimage';
   $ds_layout->view_mode = 'recent';
-  $ds_layout->layout = 'ds_2col_stacked_fluid';
+  $ds_layout->layout = 'horizontalcard';
   $ds_layout->settings = array(
     'regions' => array(
-      'header' => array(
-        0 => 'bgimage_field_taxonomy_path',
-      ),
       'left' => array(
-        1 => 'field_bgimage_image',
+        0 => 'field_bgimage_image',
       ),
-      'right' => array(
-        2 => 'title',
-        3 => 'field_bgimage_location',
-        4 => 'field_bgimage_date',
-        5 => 'field_bgimage_size',
-      ),
-      'footer' => array(
-        6 => 'submitted_by',
+      'body' => array(
+        1 => 'title',
+        2 => 'location_combined',
+        3 => 'submitted_by',
+        4 => 'bgimage_field_taxonomy_path',
       ),
     ),
     'fields' => array(
-      'bgimage_field_taxonomy_path' => 'header',
       'field_bgimage_image' => 'left',
-      'title' => 'right',
-      'field_bgimage_location' => 'right',
-      'field_bgimage_date' => 'right',
-      'field_bgimage_size' => 'right',
-      'submitted_by' => 'footer',
+      'title' => 'body',
+      'location_combined' => 'body',
+      'submitted_by' => 'body',
+      'bgimage_field_taxonomy_path' => 'body',
     ),
     'classes' => array(),
     'wrappers' => array(
-      'header' => 'div',
       'left' => 'div',
+      'body' => 'div',
       'right' => 'div',
-      'footer' => 'div',
     ),
     'layout_wrapper' => 'div',
     'layout_attributes' => '',
     'layout_attributes_merge' => 1,
     'layout_link_attribute' => '',
     'layout_link_custom' => '',
+    'layout_disable_css' => FALSE,
+    'hide_page_title' => '0',
+    'page_option_title' => '',
   );
   $export['node|bgimage|recent'] = $ds_layout;
 
