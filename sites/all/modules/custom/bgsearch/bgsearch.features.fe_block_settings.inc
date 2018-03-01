@@ -21,16 +21,22 @@ function bgsearch_default_fe_block_settings() {
     'pages' => '',
     'roles' => array(),
     'themes' => array(
-      'seven' => array(
+      'bulma' => array(
         'region' => '',
         'status' => 0,
-        'theme' => 'seven',
+        'theme' => 'bulma',
         'weight' => 0,
       ),
-      'suitcase_interim' => array(
+      'bulmabug' => array(
         'region' => '',
         'status' => 0,
-        'theme' => 'suitcase_interim',
+        'theme' => 'bulmabug',
+        'weight' => 0,
+      ),
+      'shiny' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'shiny',
         'weight' => 0,
       ),
     ),
@@ -47,16 +53,22 @@ function bgsearch_default_fe_block_settings() {
     'pages' => '',
     'roles' => array(),
     'themes' => array(
-      'seven' => array(
+      'bulma' => array(
         'region' => '',
         'status' => 0,
-        'theme' => 'seven',
+        'theme' => 'bulma',
         'weight' => 0,
       ),
-      'suitcase_interim' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
-        'theme' => 'suitcase_interim',
+      'bulmabug' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'bulmabug',
+        'weight' => 0,
+      ),
+      'shiny' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'shiny',
         'weight' => 0,
       ),
     ),
@@ -73,16 +85,22 @@ function bgsearch_default_fe_block_settings() {
     'pages' => '',
     'roles' => array(),
     'themes' => array(
-      'seven' => array(
+      'bulma' => array(
         'region' => '',
         'status' => 0,
-        'theme' => 'seven',
+        'theme' => 'bulma',
         'weight' => 0,
       ),
-      'suitcase_interim' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
-        'theme' => 'suitcase_interim',
+      'bulmabug' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'bulmabug',
+        'weight' => 0,
+      ),
+      'shiny' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'shiny',
         'weight' => 0,
       ),
     ),
