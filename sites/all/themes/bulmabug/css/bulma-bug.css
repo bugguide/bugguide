@@ -115,42 +115,59 @@ a:hover,
 }
 
 /* --------------------- */
+/* ## BREADCRUMB
+/* --------------------- */
+
+.breadcrumb ul, .breadcrumb ol {
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.breadcrumb a {
+  padding: 0.25em 0.75em;
+}
+
+@media (max-width: 1023px) {
+  .breadcrumb { padding: 0 1rem; }
+}
+
+/* --------------------- */
 /* ## TAGS
 /* --------------------- */
 
-.field-name-field-tags .field-itemsn {
+.field-name-field-tags .field-items {
   -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    -webkit-box-pack: start;
-    -ms-flex-pack: start;
-    justify-content: flex-start;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .field-name-field-tags .field-item {
   -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    background-color: whitesmoke;
-    border-radius: 3px;
-    color: #4a4a4a;
-    display: -webkit-inline-box;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    font-size: 0.75rem;
-    height: 2em;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    line-height: 1.5;
-    padding-left: 0.75em;
-    padding-right: 0.75em;
-    white-space: nowrap;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: whitesmoke;
+  border-radius: 3px;
+  color: #4a4a4a;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  font-size: 0.75rem;
+  height: 2em;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  line-height: 1.5;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  white-space: nowrap;
 }
 
 .field-name-field-tags .field-item:not(:last-child) {
