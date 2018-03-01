@@ -4,31 +4,22 @@
  * Implements hook_install().
  */
 function bg_install() {
-  // Set seven as admin theme and suitcase as default theme.
+  // Install Bulma theme.
+  theme_enable('bulma');
+
+  // Set shiny as admin theme and bulmabug as default theme.
   $enable = array(
-    'theme_default' => 'suitcase_interim',
-    'admin_theme' => 'seven',
+    'theme_default' => 'bulmabug',
+    'admin_theme' => 'shiny',
   );
   theme_enable($enable);
-
   foreach ($enable as $var => $theme) {
     if (!is_numeric($var)) {
       variable_set($var, $theme);
     }
   }
 
-  // Disable Bartik theme.
+  // Disable Bartik and Seven themes.
   theme_disable(array('bartik'));
-
-  // Remove navigation and management blocks from Seven theme:
-  db_update('block')
-    ->fields(array(
-      'region' => -1,
-      'status' => 0,
-    ))
-    ->condition('module', 'system')
-    ->condition('theme', 'seven')
-    ->condition('delta', array('management', 'navigation'), 'IN')
-    ->execute();
-
+  theme_disable(array('seven'));
 }
