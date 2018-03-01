@@ -646,7 +646,7 @@ function _features_export_build($feature, &$form_state) {
             elseif (!empty($form_state['values']) &&
                 (isset($form_state['values'][$component]['included'][$clean_key]) ||
                  empty($form_state['values'][$component]['detected'][$clean_key])) &&
-                empty($stub[$component][$key])) {
+                !in_array($key, $stub[$component])) {
               $section = 'detected';
               $default_value = FALSE;
             }
