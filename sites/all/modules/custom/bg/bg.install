@@ -19,6 +19,7 @@ function bg_install() {
     }
   }
 
-  // Disable Bartik theme.
+  // Disable Bartik and Seven themes.
   theme_disable(array('bartik'));
+  theme_disable(array('seven'));
 }
