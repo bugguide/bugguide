@@ -123,31 +123,6 @@ function bgimage_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'field_bgimage_sex'.
-  $field_bases['field_bgimage_sex'] = array(
-    'active' => 1,
-    'cardinality' => -1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_bgimage_sex',
-    'indexes' => array(
-      'value' => array(
-        0 => 'value',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'list',
-    'settings' => array(
-      'allowed_values' => array(
-        'female' => 'Female',
-        'male' => 'Male',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => 0,
-    'type' => 'list_text',
-  );
-
   // Exported field_base: 'field_bgimage_id'.
   $field_bases['field_bgimage_id'] = array(
     'active' => 1,
@@ -292,6 +267,31 @@ function bgimage_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'fivestar',
+  );
+
+  // Exported field_base: 'field_bgimage_sex'.
+  $field_bases['field_bgimage_sex'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_bgimage_sex',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'female' => 'Female',
+        'male' => 'Male',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
   );
 
   // Exported field_base: 'field_bgimage_size'.
