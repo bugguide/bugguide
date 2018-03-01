@@ -33,16 +33,10 @@ function bgsubscriptions_default_fe_block_settings() {
         'theme' => 'bulmabug',
         'weight' => 0,
       ),
-      'seven' => array(
+      'shiny' => array(
         'region' => '',
         'status' => 0,
-        'theme' => 'seven',
-        'weight' => 0,
-      ),
-      'suitcase_interim' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'suitcase_interim',
+        'theme' => 'shiny',
         'weight' => 0,
       ),
     ),
