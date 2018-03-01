@@ -1,6 +1,6 @@
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr><td align="center">
-      <img src="/sites/all/themes/ladybug/images/picker.gif" width="125" height="475" usemap="#bugmap" alt=""/>
+      <img src="/sites/all/themes/bulmabug/images/picker.gif" width="125" height="475" usemap="#bugmap" alt=""/>
       <map name="bugmap" id="bugmap">
         <area href="/node/82" title="Moths" alt="Moths" shape="rect" coords="4,4,61,38" />
         <area href="/node/81" title="Butterflies" alt="Butterflies" shape="rect" coords="62,3,121,37" />
