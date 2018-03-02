@@ -19,10 +19,15 @@ include_once 'bg.features.inc';
  * Implementation of hook_theme().
  */
 function bg_theme() {
+  $module_path = drupal_get_path('module', 'bg');
   return array(
     'bg_fixup_locations_table' => array(
       'render element' => 'form',
     ),
+    'bg_top_links' => array(
+      'template' => 'top-links',
+      'path' => $module_path . '/templates',
+    )
   );
 }
 
@@ -431,3 +436,27 @@ function bg_mail_alter(&$message) {
     $message['send'] = FALSE;
   }
 }
+
+function bg_block_info() {
+  $blocks['bg_top_links'] = array(
+    'info' => t('Top links'),
+    'cache' => DRUPAL_CACHE_PER_ROLE,
+    'status' => TRUE,
+    'region' => 'brand',
+  );
+
+  return $blocks;
+}
+
+function bg_block_view($delta = ''){
+  $block = array();
+
+  switch($delta){
+    case 'bg_top_links':
+      $block['content'] = theme('bg_top_links');
+      break;
+  }
+
+  return $block;
+}
+
