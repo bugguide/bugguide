@@ -165,6 +165,11 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
   global $TAXON_NAMES;
   global $TAXON_IDS;
 
+  // If the node has no parent field a taxonomic breadcrumb is not sane.
+  if (!isset($node->field_parent[LANGUAGE_NONE][0]['value'])) {
+    return array();
+  }
+
   $bc = array();
   if (!$from ) {
     $bc[] = l('Home', '');
@@ -175,10 +180,9 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
   }
 
   $nids = array($node->nid);
-  if (isset($node->field_parent[LANGUAGE_NONE][0]['value'])) {
-    $parent_nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
-    $nids = array_merge($parent_nids, $nids);
-  }
+  $parent_nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
+  $nids = array_merge($parent_nids, $nids);
+
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'bgpage')
@@ -292,10 +296,10 @@ function bg_preprocess_page(&$vars) {
 
   // Check that we have an nid in the path.
   $nid = arg(1);
-  if (is_numeric($nid)) {
+  if (arg(0) == 'node' && is_numeric($nid)) {
     $node = node_load($nid);
     // Set breadcrumb for bgpage, bgimage and book reference nodes.
-    if (!empty($node) && isset($node->type) && in_array($node->type, array('bgpage', 'bgimage', 'book_reference'))) {
+    if (!empty($node) && isset($node->type) && in_array($node->type, array('bgpage', 'bgimage', 'bglink', 'book_reference'))) {
       if ($node->type == 'bgimage') {
         // For bgimage nodes we load the bgpage parent.
         $parent_nid = bg_get_parent_nid($node);
