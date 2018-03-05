@@ -90,7 +90,7 @@ function _bgpage_browse($field) {
       $query = apachesolr_drupal_query('browse_images_' . $child_doc->entity_id, array());
       $query->addFilterSubQuery($filter_parent);
       $query->addParam('fl', 'ss_bgimage_thumbnail');
-      $query->addParam('rows', 5);
+      $query->addParam('rows', 8);
       $query->addParam('sort', 'is_bgimage_rating_avg desc');
       $query->addParam('sort', 'is_bgimage_rating_count desc');
 
