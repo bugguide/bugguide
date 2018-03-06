@@ -102,17 +102,18 @@ function _bgpage_browse($field) {
 
     // Render results.
     foreach ($children_docs as $child_doc) {
-      $output .= '<h3><a href="' . url('node/' . $child_doc->entity_id) . '" title="' . $child_doc->label . '">' . $child_doc->label . '</a></h3>';
+      $output .= '<div class="card mb-3"><div class="card-header"><h2 class="card-header-title"><a href="' . url('node/' . $child_doc->entity_id) . '" title="' . $child_doc->label . '">' . $child_doc->label . ' <span class="icon"><span class="fa fa-angle-right" aria-hidden="true"></span></span></a></h2></div>';
       if (!empty($child_doc->matches)) {
-        $output .= '<ul>';
+        $output .= '<div class="card-content"><ul class="columns is-mobile is-multiline">';
         foreach ($child_doc->matches as $image_doc) {
-          $output .= '<li class="horizontal">' . $image_doc->ss_bgimage_thumbnail . '</li>';
+          $output .= '<li>' . $image_doc->ss_bgimage_thumbnail . '</li>';
         }
-        $output .= '</ul>';
+        $output .= '</ul></div>';
       }
       else {
-        $output .= '<p>No images found for this taxon.</p>';
+        $output .= '<div class="card-content"><p>No images found for this taxon.</p></div>';
       }
+      $output .= '</div>';
     }
 
     // Print pager.
@@ -185,19 +186,21 @@ function _bgpage_images($field) {
       // Build a breadcrumb list for this taxon.
       $breadcrumbs = $docs[0]->sm_bgimage_breadcrumbs;
       $node_parents = $node_wrapper->field_parent->value();
+
       if (!empty($node_parents)) {
         $node_parent_nids = explode(',', $node_parents);
         array_splice($breadcrumbs, 0, count($node_parent_nids) +1 );
       }
-      $output .= implode(' &raquo; ', $breadcrumbs);
+
+      $output .= '<div class="card mb-3"><div class="card-header"><div class="card-header-title has-text-weight-normal is-block">' . implode(' &raquo; ', $breadcrumbs) .'</div></div>';
 
       // Render a list of images for this group.
-      $output .= '<ul>';
+      $output .= '<div class="card-content"><ul class="columns is-mobile is-multiline">';
       foreach ($docs as $doc) {
         $thumbnail = isset($doc->ss_bgimage_thumbnail) ? $doc->ss_bgimage_thumbnail : '<!-- missing thumbnail for ' . $doc->entity_id . ' -->';
-        $output .= '<li class="horizontal">' . $thumbnail . '</li>';
+        $output .= '<li>' . $thumbnail . '</li>';
       }
-      $output .= '</ul>';
+      $output .= '</ul></div></div>';
     }
 
     // Print pager.
