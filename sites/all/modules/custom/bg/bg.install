@@ -5,7 +5,7 @@
  */
 function bg_install() {
   // Install Bulma theme.
-  theme_enable('bulma');
+  theme_enable(array('bulma'));
 
   // Set shiny as admin theme and bulmabug as default theme.
   $enable = array(

@@ -152,9 +152,10 @@ function bg_str_ends_with($str, $sub) {
  * Build a one-line taxonomic linked breadcrumb.
  *
  * @param object $node
- *   A bgpage node.
+ *   A node.
  * @param string $guidebc
  *   Defines which format to use to render each taxon name (common, scientific or both).
+ *   This is a field on the user entity which users choose by editing their profile.
  * @param integer $from
  *   If the breadcrumb should not start at Home / Guide then specify which
  *   the nid of the taxon it should start from.
@@ -162,6 +163,12 @@ function bg_str_ends_with($str, $sub) {
  */
 function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Common name)', $from = NULL, $json = FALSE) {
   global $TAXON_NAMES;
+  global $TAXON_IDS;
+
+  // If the node has no parent field a taxonomic breadcrumb is not sane.
+  if (!isset($node->field_parent[LANGUAGE_NONE][0]['value'])) {
+    return array();
+  }
 
   $bc = array();
   if (!$from ) {
@@ -173,10 +180,9 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
   }
 
   $nids = array($node->nid);
-  if (isset($node->field_parent[LANGUAGE_NONE][0]['value'])) {
-    $parent_nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
-    $nids = array_merge($parent_nids, $nids);
-  }
+  $parent_nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
+  $nids = array_merge($parent_nids, $nids);
+
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'bgpage')
@@ -212,6 +218,30 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
       // We only look at the format when the node has a scientific name.
       $scientific_name = !empty($parent_node->field_scientific_name) ? $parent_node->field_scientific_name[LANGUAGE_NONE][0]['value'] : '';
       if (!empty($scientific_name)) {
+
+        // If we are building the name for the species, include Genus name in
+        // breadcrumb. Don't do this for $json.
+        // Do this:  ... / Muscini / Musca / Musca domestica (House Fly)
+        // Not this: ... / Muscini / Musca / domestica (House Fly)
+        if ($taxon == 'Species' && !$json) {
+          // We are rendering, e.g., domestica and we need the Musca in Musca domestica.
+          // A parent of this node has it and we already loaded it in $nodes,
+          // which we are currently looping through. Peek into the scientific
+          // name field of a parent in order to get the genus name and prepend.
+          // Caution: do not assume that the immediate parent is a genus; see node/162470
+          // Go back up the tree looking for a genus. When we find one, grab
+          // the genus name.
+          $reverse_nids = array_reverse($nids);
+          foreach ($reverse_nids as $rnid) {
+            if (!empty($nodes[$rnid]->{'field_taxon'}) &&
+                isset($nodes[$rnid]->{'field_taxon'}[LANGUAGE_NONE][0]['value']) &&
+                $nodes[$rnid]->{'field_taxon'}[LANGUAGE_NONE][0]['value'] == $TAXON_IDS['Genus']) {
+              // Found a genus.
+              $scientific_name = $nodes[$rnid]->{'field_scientific_name'}[LANGUAGE_NONE][0]['value'] . ' ' . $scientific_name;
+            }
+          }
+        }
+
         if ($guidebc == 'Scientific name') {
           $linktext = $scientific_name;
         }
@@ -219,10 +249,23 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
           $linktext = $common;
         }
         else if ($guidebc == 'Scientific name (Common name)') {
-          $linktext = $scientific_name . ' (' . $common . ')';
+          if ($scientific_name == $common) {
+            // "Musca", not "Musca (Musca)"
+            $linktext = $scientific_name;
+          }
+          else {
+            $linktext = $scientific_name . ' (' . $common . ')';
+          }
         }
-        else{
-          $linktext = $common . ' (' . $scientific_name . ')';
+        else {
+          // Common name (Scientific name)
+          if ($scientific_name == $common) {
+            // "Musca", not "Musca (Musca)"
+            $linktext = $common;
+          }
+          else {
+            $linktext = $common . ' (' . $scientific_name . ')';
+          }
         }
       }
       else {
@@ -253,10 +296,10 @@ function bg_preprocess_page(&$vars) {
 
   // Check that we have an nid in the path.
   $nid = arg(1);
-  if (is_numeric($nid)) {
+  if (arg(0) == 'node' && is_numeric($nid)) {
     $node = node_load($nid);
     // Set breadcrumb for bgpage, bgimage and book reference nodes.
-    if (!empty($node) && isset($node->type) && in_array($node->type, array('bgpage', 'bgimage', 'book_reference'))) {
+    if (!empty($node) && isset($node->type) && in_array($node->type, array('bgpage', 'bgimage', 'bglink', 'book_reference'))) {
       if ($node->type == 'bgimage') {
         // For bgimage nodes we load the bgpage parent.
         $parent_nid = bg_get_parent_nid($node);
