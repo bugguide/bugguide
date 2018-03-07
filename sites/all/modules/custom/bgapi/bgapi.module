@@ -1,1 +1,7 @@
 <?php
+/**
+ * @file
+ * Code for the BugGuide REST API feature.
+ */
+
+include_once 'bgapi.features.inc';
