@@ -3,5 +3,5 @@ description = Implements RESTful API
 core = 7.x
 package = Bugguide
 version = 7.x-1.0
-dependencies[] = restful
+dependencies[] = restful_token_auth
 registry_autoload[] = PSR-4
