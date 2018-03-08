@@ -58,6 +58,12 @@ class BgImageSearch__1_0 extends Resource implements ResourceInterface {
       'url' => array(
         'property' => 'url',
       ),
+      'url' => array(
+        'property' => 'url',
+      ),
+      'sm_bgimage_parents' => array(
+        'property' => 'sm_bgimage_parents',
+      ),
     );
   }
 
