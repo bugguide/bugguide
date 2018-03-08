@@ -44,6 +44,18 @@ function bgpage_menu() {
     'file' => 'bgpage.pages.inc',
   );
 
+  // Books tab.
+  $items['node/%bgpage_node/bgref'] = array(
+    'title' => 'Books',
+    'page callback' => 'bgpage_bgref',
+    'page arguments' => array(1),
+    'access callback' => 'bg_menu_access',
+    'access arguments' => array(1),
+    'weight' => 2,
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'bgpage.pages.inc',
+  );
+
   return $items;
 }
 
