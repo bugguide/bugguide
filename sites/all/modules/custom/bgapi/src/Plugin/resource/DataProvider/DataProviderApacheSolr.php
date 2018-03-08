@@ -32,6 +32,11 @@ class DataProviderApacheSolr extends DataProvider implements DataProviderInterfa
   protected $totalCount;
 
   /**
+   * Number of items to list per request.
+   */
+  const ITEMS_PER_LIST = 25;
+
+  /**
    * Set the total results count after executing the query.
    *
    * @param int $totalCount
@@ -92,12 +97,18 @@ class DataProviderApacheSolr extends DataProvider implements DataProviderInterfa
     if (!empty($identifier)) {
       $filter->addFilter('entity_id', $identifier);
     }
-    $query = apachesolr_drupal_query($identifier, array());
+    $query = apachesolr_drupal_query('bgimage_search', array());
     $query->addFilterSubQuery($filter);
     $query->addParam('fl', '*');
-    $query->addParam('rows', 8);
-
-
+    $sort_field = 'sort_label';
+    $sort_direction = 'asc';
+    $query->setAvailableSort($sort_field, array(
+      'title' => t('Label'),
+      'default' => $sort_direction,
+    ));
+    $query->setSolrsort($sort_field, $sort_direction);
+    $query->page = $options['offset'];
+    $query->addParam('rows', self::ITEMS_PER_LIST);
 
     // Query Solr and attach images to the child's document.
     list(, $response) = apachesolr_do_query($query);
@@ -108,7 +119,7 @@ class DataProviderApacheSolr extends DataProvider implements DataProviderInterfa
       $result[] = $this->mapSearchResultToPublicFields($document);
     }
 
-    $this->setTotalCount(count($result));
+    $this->setTotalCount($response->response->numFound);
 
     return $result;
   }
