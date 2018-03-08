@@ -7,12 +7,15 @@
 
 namespace Drupal\bgapi\Plugin\resource\DataProvider;
 
+use Drupal\restful\Exception\BadRequestException;
 use Drupal\restful\Exception\ForbiddenException;
 use Drupal\restful\Exception\ServiceUnavailableException;
+use Drupal\restful\Http\RequestInterface;
 use Drupal\restful\Plugin\resource\DataInterpreter\ArrayWrapper;
 use Drupal\restful\Plugin\resource\DataInterpreter\DataInterpreterArray;
 use Drupal\restful\Plugin\resource\DataProvider\DataProvider;
 use Drupal\restful\Plugin\resource\DataProvider\DataProviderInterface;
+use Drupal\restful\Plugin\resource\Field\ResourceFieldCollectionInterface;
 use SolrFilterSubQuery;
 
 class DataProviderApacheSolr extends DataProvider implements DataProviderInterface {
@@ -35,6 +38,21 @@ class DataProviderApacheSolr extends DataProvider implements DataProviderInterfa
    * Number of items to list per request.
    */
   const ITEMS_PER_LIST = 25;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(RequestInterface $request, ResourceFieldCollectionInterface $field_definitions, $account, $plugin_id, $resource_path = NULL, array $options = array(), $langcode = NULL) {
+    parent::__construct($request, $field_definitions, $account, $plugin_id, $resource_path, $options, $langcode);
+    if (empty($this->options['urlParams'])) {
+      $this->options['urlParams'] = array(
+        'filter' => TRUE,
+        'sort' => FALSE,
+        'fields' => TRUE,
+        'loadByFieldName' => FALSE,
+      );
+    }
+  }
 
   /**
    * Set the total results count after executing the query.
@@ -109,6 +127,8 @@ class DataProviderApacheSolr extends DataProvider implements DataProviderInterfa
     $query->setSolrsort($sort_field, $sort_direction);
     $query->page = $options['offset'];
     $query->addParam('rows', self::ITEMS_PER_LIST);
+
+    $query->addFilterSubQuery($this->getFiltersFromRequest());
 
     // Query Solr and attach images to the child's document.
     list(, $response) = apachesolr_do_query($query);
@@ -217,6 +237,51 @@ class DataProviderApacheSolr extends DataProvider implements DataProviderInterfa
     }
 
     return $resource_field_collection;
+  }
+
+  /**
+   * Parses the request and adds filters to the query.
+   *
+   * @return SolrFilterSubQuery
+   *   An Apache Solr filter.
+   *
+   * @throws \Drupal\restful\Exception\BadRequestException
+   */
+  protected function getFiltersFromRequest() {
+    $filter = new SolrFilterSubQuery('AND');
+    $input = $this->getRequest()->getParsedInput();
+    if (empty($input['filter'])) {
+      // No filtering is needed.
+      return $filter;
+    }
+    $options = $this->getOptions();
+    $url_params = empty($options['urlParams']) ? array() : $options['urlParams'];
+    if (empty($url_params['filter'])) {
+      throw new BadRequestException('Filter parameters have been disabled in server configuration.');
+    }
+
+    foreach ($input['filter'] as $public_field => $value) {
+      $resource_field = $this->fieldDefinitions->get($public_field);
+      $field = $resource_field->getProperty() ?: $public_field;
+
+      if (!is_array($value)) {
+        // Request uses the shorthand form for filter. For example
+        // filter[foo]=bar would be converted to filter[foo][value] = bar.
+        $value = array('value' => $value);
+      }
+      // Set default operator.
+      $value += array('operator' => '=');
+
+      // Clean the operator in case it came from the URL.
+      // e.g. filter[minor_version][operator]=">="
+      $value['operator'] = str_replace(array('"', "'"), '', $value['operator']);
+
+      $this->isValidOperatorsForFilter(array($value['operator']));
+
+      $filter->addFilter($field, $value['value']);
+    }
+
+    return $filter;
   }
 
 }
