@@ -31,3 +31,11 @@ function bulmabug_breadcrumb($variables) {
   }
 }
 
+/**
+ * Implements THEME_preprocess_views_view_table().
+ *
+ * Automatically add bulma CSS framework classes to all Views tables formats.
+ */
+function bulmabug_preprocess_views_view_table(&$vars) {
+  $vars['classes_array'][] = 'table is-narrow is-striped';
+}
