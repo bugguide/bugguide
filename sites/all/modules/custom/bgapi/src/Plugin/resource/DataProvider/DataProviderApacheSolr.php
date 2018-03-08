@@ -87,14 +87,17 @@ class DataProviderApacheSolr extends DataProvider implements DataProviderInterfa
     // Query SearchAPI for the results.
     $filter = new SolrFilterSubQuery('AND');
     $filter->addFilter('sm_bgimage_parents', 3);
+    $filter->addFilter('entity_type', 'node');
+    $filter->addFilter('bundle', 'bgimage');
+    if (!empty($identifier)) {
+      $filter->addFilter('entity_id', $identifier);
+    }
     $query = apachesolr_drupal_query($identifier, array());
     $query->addFilterSubQuery($filter);
     $query->addParam('fl', '*');
     $query->addParam('rows', 8);
 
-    if (!empty($identifier)) {
-      $query->addFilter('entity_id', $identifier);
-    }
+
 
     // Query Solr and attach images to the child's document.
     list(, $response) = apachesolr_do_query($query);
@@ -177,7 +180,7 @@ class DataProviderApacheSolr extends DataProvider implements DataProviderInterfa
    *   Numeric array containing the identifiers to be sent to viewMultiple.
    */
   public function getIndexIds() {
-    return array('solr');
+    return array('');
   }
 
   /**
