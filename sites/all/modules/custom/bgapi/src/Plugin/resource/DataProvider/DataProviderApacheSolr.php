@@ -92,6 +92,10 @@ class DataProviderApacheSolr extends DataProvider implements DataProviderInterfa
     $query->addParam('fl', '*');
     $query->addParam('rows', 8);
 
+    if (!empty($identifier)) {
+      $query->addFilter('entity_id', $identifier);
+    }
+
     // Query Solr and attach images to the child's document.
     list(, $response) = apachesolr_do_query($query);
 
