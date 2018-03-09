@@ -28,6 +28,7 @@ dependencies[] = features
 dependencies[] = filter
 dependencies[] = image
 dependencies[] = menu
+dependencies[] = panels
 dependencies[] = strongarm
 dependencies[] = taxonomy
 dependencies[] = views
