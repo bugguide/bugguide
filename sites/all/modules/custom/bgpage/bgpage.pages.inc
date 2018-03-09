@@ -75,3 +75,15 @@ function bgpage_images($nid) {
   $node = node_load($nid);
   return node_view($node, 'images');
 }
+
+/**
+ * Shows images for a bgpage node.
+ *
+ * Traverses the tree in a Breadth-first way showing images for each leaf.
+ *
+ * @param int $nid
+ *   The nid of the bgpage node.
+ */
+function bgpage_bgref($nid) {
+  return views_embed_view('all_books', 'by_bgpage', $nid);
+}
