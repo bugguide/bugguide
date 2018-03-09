@@ -71,10 +71,9 @@ function bulma_breadcrumb($variables) {
   if (!empty($breadcrumb)) {
     // Provide a navigational heading to give context for breadcrumb links to
     // screen-reader users. Make the heading invisible with .element-invisible.
-    $output = '<h2 class="element-invisible">' . t('You are here') . '</h2>';
     $lastitem = sizeof($breadcrumb);
     $currentpage = drupal_get_title();
-    $output .= '<ul>';
+    $output .= '<nav aria-label="Breadcrumb"><ol>';
     $a=1;
     foreach($breadcrumb as $value) {
       if ($a!=$lastitem){
@@ -85,8 +84,8 @@ function bulma_breadcrumb($variables) {
         $output .= '<li class="breadcrumb-last">'. $value .'</li>';
       }
     }
-    $output .='<li class="is-active"><a href="">'. $currentpage .'</a></li>';
-    $output .= '</ul>';
+    $output .='<li class="is-active"><a aria-current="page" href="">'. $currentpage .'</a></li>';
+    $output .= '</ol></nav>';
     return $output;
   }
 }
