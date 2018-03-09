@@ -32,6 +32,7 @@ dependencies[] = taxonomy
 dependencies[] = views
 dependencies[] = xbbcode
 dependencies[] = xbbcode_basic
+dependencies[] = panels
 files[] = bg.views.inc
 files[] = bg_views_handler_filter_parent.inc
 features[apachesolr_environment][] = solr
