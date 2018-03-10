@@ -7,7 +7,7 @@ function bulma_form_system_theme_settings_alter(&$form, &$form_state) {
   $form['bulma_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Bulma Theme Settings'),
-    '#description' => t('Theme options for the bulma basetheme'),
+    '#description' => t('Theme options for the bulma base theme'),
     );
 
   $form['bulma_settings']['container_width_navbar'] = array(
@@ -66,7 +66,7 @@ function bulma_form_system_theme_settings_alter(&$form, &$form_state) {
     );
 
   $form['bulma_settings']['divider'] = array(
-    '#markup' => '<hr>'
+    '#markup' => '<hr>',
     );
 
   $form['bulma_settings']['tabs_primary_classes'] = array(

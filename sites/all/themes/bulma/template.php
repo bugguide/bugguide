@@ -74,11 +74,11 @@ function bulma_breadcrumb($variables) {
     $lastitem = sizeof($breadcrumb);
     $currentpage = drupal_get_title();
     $output .= '<nav aria-label="Breadcrumb"><ol>';
-    $a=1;
-    foreach($breadcrumb as $value) {
-      if ($a!=$lastitem){
+    $i = 1;
+    foreach ($breadcrumb as $value) {
+      if ($i != $lastitem) {
         $output .= '<li>'. $value . '</li>';
-        $a++;
+        $i++;
       }
       else {
         $output .= '<li class="breadcrumb-last">'. $value .'</li>';
@@ -107,13 +107,13 @@ function bulma_form_alter(&$form, &$form_state, $form_id) {
 
       $form['name']['#attributes']['class'][] = 'input mb-3';
       $form['name']['#attributes']['placeholder'] = t('Login');
-      $form['name']['#description'] = Null;
+      $form['name']['#description'] = NULL;
       $form['name']['#prefix'] = '<div class="card-content">';
       $form['pass']['#attributes']['placeholder'] = t('Password');
-      $form['pass']['#description'] = Null;
+      $form['pass']['#description'] = NULL;
       $form['pass']['#attributes']['class'][] = 'input mb-3';
 
-      $form['links'] = Null;
+      $form['links'] = NULL;
 
       $form['actions']['#attributes']['class'][] = '';
       $form['actions']['submit']['#attributes']['class'][] = 'button is-primary mr-1';
@@ -126,7 +126,7 @@ function bulma_form_alter(&$form, &$form_state, $form_id) {
       $form['#attributes']['class'][] = 'card card-form';
       $form['user_icon']['#markup'] = '<div class="user-icon text-align-center"><i class="material-icons text-disabled">vpn_key</i></div>';
       $form['user_icon']['#weight'] = -15;
-      $form['name']['#title'] = Null;
+      $form['name']['#title'] = NULL;
       $form['name']['#attributes']['placeholder'] = t('Login or E-mail');
       $form['actions']['#attributes']['class'][] = 'card-item card-actions divider-top';
       $form['actions']['submit']['#attributes']['class'][] = 'btn-accent';
@@ -136,9 +136,9 @@ function bulma_form_alter(&$form, &$form_state, $form_id) {
       $form['#attributes']['class'][] = 'card card-form';
       $form['user_icon']['#markup'] = '<div class="user-icon text-align-center"><i class="material-icons text-disabled">account_circle</i></div>';
       $form['user_icon']['#weight'] = -15;
-      $form['account']['name']['#title'] = Null;
+      $form['account']['name']['#title'] = NULL;
       $form['account']['name']['#attributes']['placeholder'] = t('Login');
-      $form['account']['mail']['#title'] = Null;
+      $form['account']['mail']['#title'] = NULL;
       $form['account']['mail']['#attributes']['placeholder'] = t('E-mail');
       $form['actions']['#attributes']['class'][] = 'card-item card-actions divider-top';
       $form['actions']['submit']['#attributes']['class'][] = 'btn-accent';
