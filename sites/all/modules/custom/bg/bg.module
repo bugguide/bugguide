@@ -63,30 +63,6 @@ function bg_menu() {
 }
 
 /**
- * Access callback for BugGuide tabs.
- */
-function bg_menu_access($nid) {
-  $node = node_load($nid);
-  if (empty($node)) {
-    return FALSE;
-  }
-
-  $pid = bg_get_parent_nid($node);
-  // No tabs on ID Request (6) or Frass (9410).
-  if (user_access('access content') && ($pid != BG_ID_REQUEST_NID) && ($pid != BG_FRASS_NID)) {
-    $show = array(
-      'bgpage' => TRUE,
-      'bgimage' => TRUE,
-      'bglink' => TRUE,
-    );
-    if (isset($show[$node->type])) {
-      return TRUE;
-    }
-  }
-  return FALSE;
-}
-
-/**
  * Implements hook_date_formats().
  */
 function bg_date_formats() {
@@ -303,6 +279,13 @@ function bg_preprocess_page(&$vars) {
   $nid = arg(1);
   if (arg(0) == 'node' && is_numeric($nid)) {
     $node = node_load($nid);
+
+    // Eliminate local task tabs on these special pages or their children.
+    $pid = bg_get_first_parent_nid($node);
+    if (($nid == BG_ID_REQUEST_NID) || ($nid == BG_FRASS_NID) || ($pid == BG_ID_REQUEST_NID) || ($pid == BG_FRASS_NID)) {
+      $vars['tabs']['#primary'] = array();
+    }
+
     // Set breadcrumb for bgpage, bgimage and book reference nodes.
     if (!empty($node) && isset($node->type) && in_array($node->type, array('bgpage', 'bgimage', 'bglink', 'book_reference'))) {
       if ($node->type == 'bgimage') {
@@ -375,6 +358,7 @@ function bg_field_load_multiple($field, $entities) {
 
 /**
  * Returns a node's immediate parent nid.
+ * Given 3,878075,52,60,40606,1117170,40619,144,377483 return 377483
  *
  * @param object @node
  * @return mixed
@@ -386,6 +370,25 @@ function bg_get_parent_nid($node) {
   if (isset($node->field_parent) && !empty($node->field_parent[LANGUAGE_NONE])) {
     $parents = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
     $nid = end($parents);
+  }
+  return $nid;
+}
+
+/**
+ * Returns a node's first parent nid.
+ * Given 3,878075,52,60,40606,1117170,40619,144,377483 return 3
+ *
+ * @param object @node
+ * @return mixed
+ *   int when there is a parent nid.
+ *   NULL when there is no parent nid.
+ */
+function bg_get_first_parent_nid($node) {
+  $nid = NULL;
+  if (isset($node->field_parent) && !empty($node->field_parent[LANGUAGE_NONE])) {
+    $parents = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
+    $reverse = array_reverse($parents);
+    $nid = end($reverse);
   }
   return $nid;
 }
