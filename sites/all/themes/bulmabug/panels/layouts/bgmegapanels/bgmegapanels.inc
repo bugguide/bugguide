@@ -37,5 +37,3 @@ function bulmabug_bgmegapanels_panels_layouts() {
   );
   return $items;
 }
-
-
