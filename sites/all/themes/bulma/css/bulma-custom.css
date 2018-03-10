@@ -1,10 +1,10 @@
 /* 
- * Styles for basic Drupal 7 elements. The primary purpose for this file is to
+ * Styles for basic Drupal 7 elements. The primary purpose of this file is to
  * duplicate Bulma.io styles to work with default Drupal 7 HTML. CSS variables
  * are used so that they can be easily overridden in a subtheme.
  *
  * Additionally, this file styles some important elements Bulma.io doesn't, and
- * to set up some utility classes.
+ * sets up some utility classes.
  */
 
 /* -------------------- */
