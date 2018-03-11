@@ -63,6 +63,13 @@ function bg_menu() {
 }
 
 /**
+ * Place Forums menu exactly.
+ */
+function bg_menu_alter(&$items) {
+  $items['forum']['weight'] = 5;
+}
+
+/**
  * Implements hook_date_formats().
  */
 function bg_date_formats() {
