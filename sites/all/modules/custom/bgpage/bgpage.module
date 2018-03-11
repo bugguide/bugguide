@@ -13,6 +13,7 @@ function bgpage_menu() {
     'title' => 'Taxonomy',
     'page callback' => 'bgpage_tree',
     'page arguments' => array(1),
+    'access arguments' => array('access content'),
     'weight' => -1,
     'type' => MENU_LOCAL_TASK,
     'file' => 'bgpage.pages.inc',
