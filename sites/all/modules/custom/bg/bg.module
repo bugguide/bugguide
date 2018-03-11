@@ -289,7 +289,12 @@ function bg_preprocess_page(&$vars) {
 
     // Eliminate local task tabs on these special pages or their children.
     $pid = bg_get_first_parent_nid($node);
-    if (($nid == BG_ID_REQUEST_NID) || ($nid == BG_FRASS_NID) || ($pid == BG_ID_REQUEST_NID) || ($pid == BG_FRASS_NID)) {
+    if (($nid == BG_ID_REQUEST_NID) || // ID Request
+        ($nid == BG_FRASS_NID) ||      // Frass
+        ($pid == BG_ID_REQUEST_NID) || // Image in ID Request
+        ($pid == BG_FRASS_NID) ||      // Image in Frass
+        $vars['is_front']              // Front page
+        ) {
       $vars['tabs']['#primary'] = array();
     }
 
