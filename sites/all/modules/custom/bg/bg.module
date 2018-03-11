@@ -155,7 +155,7 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
   if (!$from ) {
     $bc[] = l('Home', '');
   }
-  
+
   if ($json) {
     $json_array = array();
   }
@@ -289,14 +289,28 @@ function bg_preprocess_page(&$vars) {
     // Set breadcrumb for bgpage, bgimage and book reference nodes.
     if (!empty($node) && isset($node->type) && in_array($node->type, array('bgpage', 'bgimage', 'bglink', 'book_reference'))) {
       if ($node->type == 'bgimage') {
-        // For bgimage nodes we load the bgpage parent.
+        // For bgimage nodes we load the bgpage parent. For example, if we are
+        // looking at an image whose parent is House Fly (Musca domestica) that
+        // is what we use for the end of the breadcrumb trail.
         $parent_nid = bg_get_parent_nid($node);
-        $node = node_load($parent_nid);
-        if (empty($node)) {
+
+        // Fast breadcrumb building for images in ID Request and Frass.
+        if ($parent_nid == BG_ID_REQUEST_NID) {
+          drupal_set_breadcrumb(array(l('Home', ''), l('ID Request', 'node/' . BG_ID_REQUEST_NID . '/bgimage')));
           return;
         }
+        elseif ($parent_nid == BG_FRASS_NID) {
+          drupal_set_breadcrumb(array(l('Home', ''), l('Frass', 'node/' . BG_FRASS_NID . '/bgimage')));
+          return;
+        }
+        else {
+          $node = node_load($parent_nid);
+          if (empty($node)) {
+            return;
+          }
+        }
       }
-      // Adjust the format of each crumb if we are logged in.
+      // Adjust the format of each crumb to respect user pref if user is logged in.
       if (user_is_logged_in()) {
         $account = user_load($user->uid);
         $guidebc = isset($account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value']) ? $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'] : 'Scientific name (Common name)';
@@ -305,7 +319,6 @@ function bg_preprocess_page(&$vars) {
       else {
         $breadcrumbs = bg_create_taxonomic_breadcrumb($node);
       }
-
       drupal_set_breadcrumb($breadcrumbs);
     }
   }
