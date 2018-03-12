@@ -126,7 +126,8 @@ function bgimage_move_tagged($node) {
     }
 
     // Notify the user.
-    drupal_set_message(t('The images in the clipboard were successfully moved.'));
+    $message = format_plural(count($tagged_images), 'The image on the clipboard was successfully moved.', 'The images on the clipboard were successfully moved.');
+    drupal_set_message($message);
 
     // Erase clipboard.
     $_SESSION['tagged_images'] = NULL;
