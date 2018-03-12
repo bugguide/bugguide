@@ -25,7 +25,7 @@ function bgpage_tree($nid) {
     $main_filter->addFilterSubQuery($immediate_parent_filter);
 
     // Add a link to expand the tree.
-    $link = l(t('view all'), 'node/' . $node->nid . '/tree', array(
+    $link = l(t('Expand Tree'), 'node/' . $node->nid . '/tree', array(
       'title' => t('Show everything below this guide page.'),
       'query' => array('expand' => NULL),
     ));
@@ -36,7 +36,7 @@ function bgpage_tree($nid) {
     $main_filter->addFilterSubQuery($parent_filter);
 
     // Add a link to collapse the tree.
-    $link = l(t('normal view'), 'node/' . $node->nid . '/tree', array(
+    $link = l(t('Collapse Tree'), 'node/' . $node->nid . '/tree', array(
       'title' => t('Show the normal view.'),
     ));
   }
@@ -49,7 +49,7 @@ function bgpage_tree($nid) {
     $output = '<p>No results found.</p>';
   }
   else {
-    $output = '<p>' . $link . '</p>' . bgpage_tree_build($classified_results);
+    $output = bgpage_tree_build($classified_results) .'<p>' . $link . '</p>';
   }
 
   return $output;
