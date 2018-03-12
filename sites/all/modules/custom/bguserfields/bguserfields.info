@@ -43,3 +43,4 @@ features[field_instance][] = user-user-field_user_default_county
 features[field_instance][] = user-user-field_user_full_name
 features[field_instance][] = user-user-field_user_homepage
 features[views_view][] = contributed_images
+features[views_view][] = my_content
