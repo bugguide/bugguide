@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function bgmap_menu() {
+  $items = array();
+
+  $items['node/%node/bgmap'] = array(
+    'title' => 'Map',
+    'page callback' => 'bgmap_page',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'bgmap.pages.inc',
+  );
+
+  return $items;
+}
