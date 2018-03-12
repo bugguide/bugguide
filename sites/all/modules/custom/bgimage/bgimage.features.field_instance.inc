@@ -18,7 +18,7 @@ function bgimage_field_default_field_instances() {
     'description' => 'Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, sex of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
