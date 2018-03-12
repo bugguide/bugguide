@@ -1,6 +1,11 @@
 <?php
 
-// Most of the work is done by RESTful; see src/Plugin/resource/
+/**
+ * @file
+ * Hook implementations for bgapi module.
+ */
+
+include_once 'bgapi.features.inc';
 
 /**
  * Implements hook_menu().
