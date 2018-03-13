@@ -39,6 +39,12 @@ function bg_default_fe_block_settings() {
         'theme' => 'suitcase_interim',
         'weight' => -13,
       ),
+      'bulmabug' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'bulmabug',
+        'weight' => -13,
+      ),
     ),
     'title' => '',
     'visibility' => 0,

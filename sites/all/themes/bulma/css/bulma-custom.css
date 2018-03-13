@@ -689,6 +689,8 @@ input#edit-submit:hover {
 .h-100 { height: 100% !important; }
 .w-100 { width: 100%; max-width: 100%; }
 
+.flex-wrap { flex-wrap: wrap; }
+
 .p-0 { padding: 0rem !important; }
 .p-1 { padding: 0.25rem !important; }
 .p-2 { padding: 0.5rem !important; }
