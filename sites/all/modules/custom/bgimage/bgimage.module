@@ -737,6 +737,8 @@ function bgimage_block_info() {
 
 /**
  * Implements hook_block_view().
+ * The changes in HTML and CSS are to allow for the bulma.io Panel Component
+ * https://bulma.io/documentation/components/panel/
  */
 function bgimage_block_view($delta = '') {
   if (empty($_SESSION['tagged_images'])) {
@@ -750,7 +752,7 @@ function bgimage_block_view($delta = '') {
   $clip_count = 0;
   $same_uid = TRUE;
   $nodes = node_load_multiple($nids);
-  $content = '<ul class="item-list">';
+  $content = '<ul class="item-list panel-block flex-wrap">';
   foreach ($nodes as $node) {
     // Check if all images belong to the same user.
     if ($user->uid != $node->uid) {
@@ -759,14 +761,15 @@ function bgimage_block_view($delta = '') {
 
     // Render a thumbnail of the image.
     $rendered_image = theme('image_style', array('path' => $node->field_bgimage_image[LANGUAGE_NONE][0]['uri'], 'style_name' => 'bg_small'));
-    $content .= '<li style="margin:10px">';
-    $content .= '<a href="' . url('node/' . $node->nid) . '" title="' . check_plain($node->title) . '">' . $rendered_image  . '</a>';
-    $content .= l(t('Remove'), 'bgimage/untag/' . $node->nid, array(
+    $content .= '<li class="mb-2 mr-2">';
+    $content .= '<a class="is-block" href="' . url('node/' . $node->nid) . '" title="' . check_plain($node->title) . '">' . $rendered_image  . '</a>';
+    $content .= l(t('<span class="icon is-small"><span class="fa fa-times" aria-hidden="true"></span></span><span>Remove</span>'), 'bgimage/untag/' . $node->nid, array(
       'attributes' => array(
         'title' => t('Remove this image from the clipboard'),
-        'class' => 'clip-remove',
+        'class' => 'clip-remove button is-small',
         ),
       'query' => array('destination' => current_path()),
+      'html' => TRUE,
     ));
     $content .= '</li>';
     $clip_count++;
@@ -775,36 +778,39 @@ function bgimage_block_view($delta = '') {
 
   $links = array();
   if ($clip_count > 1) {
-    $links[] = l(t('Remove all'), 'bgimage/untag_all', array(
+    $links[] = l(t('<span class="icon is-small"><span class="fa fa-times" aria-hidden="true"></span></span><span>Remove all</span>'), 'bgimage/untag_all', array(
       'attributes' => array(
         'title' => t('Remove these images from the clipboard'),
-        'class' => 'clip-remove-all',
+        'class' => 'clip-remove-all button is-small mr-1',
         ),
       'query' => array('destination' => current_path()),
+      'html' => TRUE,
     ));
   }
 
   if ($same_uid || user_access('link all bgimages')) {
-    $links[] = l(t('Link'), 'bgimage/link', array(
+    $links[] = l(t('<span class="icon is-small"><span class="fa fa-link" aria-hidden="true"></span></span><span>Link</span>'), 'bgimage/link', array(
       'attributes' => array(
         'title' => t('Link together these images of the same specimen.'),
-        'class' => 'clip-link',
+        'class' => 'clip-link button is-small mr-1',
         ),
       'query' => array('destination' => current_path()),
+      'html' => TRUE,
     ));
   }
 
   $current_node = menu_get_object('node');
   if (!empty($current_node) && in_array($current_node->type, array('bgpage', 'bgimage'))) {
-    $links[] = l(t('Move'), 'bgimage/move/' . $current_node->nid, array(
+    $links[] = l(t('<span class="icon is-small"><span class="fa fa-long-arrow-right" aria-hidden="true"></span></span><span>Move'), 'bgimage/move/' . $current_node->nid, array(
       'attributes' => array(
         'title' => t('Move these images to the taxonomy of the current page.'),
-        'class' => 'clip-move',
+        'class' => 'clip-move button is-small',
         ),
+      'html' => TRUE,
     ));
   }
 
-  $content .= implode(' ', $links);
+  $content .= '<div class="panel-block">'. implode(' ', $links) . '</div>';
 
   return array(
     'subject' => t('Clipboard'),
