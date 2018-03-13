@@ -14,6 +14,14 @@ function bgmap_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'bgmap.pages.inc',
   );
+  $items['node/%node/bgmap/json'] = array(
+    'title' => 'Map',
+    'page callback' => 'bgmap_json',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'bgmap.pages.inc',
+  );
 
   return $items;
 }

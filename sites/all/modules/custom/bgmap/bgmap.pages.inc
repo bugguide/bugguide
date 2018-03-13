@@ -2,10 +2,11 @@
 
 include_once 'bgmap.fips.inc';
 
-function bgmap_page($node) {
+function bgmap_json($node) {
   global $LOCATION_CODES;
   global $FIPS;
 
+  // Debugging.
   $output = '';
 
   // Sanity check.
@@ -41,12 +42,28 @@ function bgmap_page($node) {
       continue;
     }
     
-    $occurrences[] = $FIPS[$state][$image->county];
-    //  "1003": {"MyNumericData":1,"MyTextData":"us_AL_01003"}
-    $output .= '"' . $FIPS[$state][$image->county] . '": {}' . "\r";
+    $county_fips = $FIPS[$state][$image->county];
+
+    if (!isset($occurrences[$county_fips])) {
+      $occurrences[$county_fips] = array(
+        'reportCount' => 1,
+        'fmID' => 'us_' . $image->location_code . '_' . sprintf('%05d', $county_fips),
+        'negative' => 0,
+      );
+    }
+    else {
+      $occurrences[$county_fips]['reportCount']++;
+    }
   }
   
-  return $output;
+  // Format is:
+  //  "1003": {"MyNumericData":1,"MyTextData":"us_AL_01003"}
+
+  // Debugging
+  // watchdog('bgmap', $output);
+  drupal_json_output($occurrences);
 }
   
-
+function bgmap_page($node) {
+  return t('This page will have a map.');
+}
