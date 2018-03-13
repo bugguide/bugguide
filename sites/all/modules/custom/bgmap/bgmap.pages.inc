@@ -15,7 +15,10 @@ function bgmap_json($node) {
   }
     
   // Find children of this taxon.
-  $result = db_query("SELECT nid, location_code, county FROM bgimage WHERE parent_idx REGEXP :node", 
+  $result = db_query("SELECT bgi.nid, bgi.location_code, bgi.county, bis.series 
+    FROM {bgimage} bgi 
+    LEFT JOIN {bgimage_series} bis ON bgi.nid = bis.nid 
+    WHERE bgi.parent_idx REGEXP :node",
     array(':node' => '^' . $node->field_parent[LANGUAGE_NONE][0]['value'] . ',' . $node->nid . ',')
     )->fetchAll();
   
@@ -23,6 +26,12 @@ function bgmap_json($node) {
   $occurrences = array();
   
   foreach ($result as $image) {
+    // If a specimen has more than one image, only count one occurrence.
+    // Single-image specimens will have series as NULL.
+    // First specimen of a series will have nid == series.
+    if (($image->series !== NULL) && ($image->series != $image->nid)) {
+      continue;
+    }
     
     // Construct string for creating map.
     if (!isset($LOCATION_CODES[$image->location_code])) {
@@ -43,7 +52,7 @@ function bgmap_json($node) {
     }
     
     $county_fips = $FIPS[$state][$image->county];
-
+    $output .= '<p>' . $image->nid . '-' . $image->series;
     if (!isset($occurrences[$county_fips])) {
       $occurrences[$county_fips] = array(
         'reportCount' => 1,
@@ -61,6 +70,8 @@ function bgmap_json($node) {
 
   // Debugging
   // watchdog('bgmap', $output);
+  //return $output;
+
   drupal_json_output($occurrences);
 }
   
