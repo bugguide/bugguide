@@ -148,15 +148,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
   }
 
   public function getIterator() {
-    /*
-    // Begin module hack -JV
-    
     $instances = [];
-    
-    */
-    // PHP 5.3.3 does not have []
-    $instances = array();
-    // End module hack -JV
     foreach ($this->getInstanceIds() as $instance_id) {
       $instances[$instance_id] = $this->get($instance_id);
     }
