@@ -7,6 +7,13 @@
 include_once 'bguserfields.features.inc';
 
 /**
+ * Implements hook_menu_alter().
+ */
+function bguserfields_menu_alter(&$items) {
+  $items["user/%user/track"]["title"] = t('Activity');
+}
+
+/**
  * Implements hook_ds_fields_info().
  */
 function bguserfields_ds_fields_info($entity_type) {
