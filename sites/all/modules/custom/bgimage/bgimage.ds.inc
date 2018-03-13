@@ -33,7 +33,7 @@ function bgimage_ds_field_settings_info() {
       'format' => 'default',
     ),
     'location_combined' => array(
-      'weight' => '9',
+      'weight' => '0',
       'label' => 'above',
       'format' => 'default',
     ),
@@ -46,11 +46,6 @@ function bgimage_ds_field_settings_info() {
       'weight' => '8',
       'label' => 'hidden',
       'format' => 'default',
-    ),
-    'changed_date' => array(
-      'weight' => '20',
-      'label' => 'inline',
-      'format' => 'ds_post_date_bg_short_F_j_Y',
     ),
     'submitted_by' => array(
       'weight' => '19',
@@ -182,21 +177,8 @@ function bgimage_ds_layout_settings_info() {
   $ds_layout->layout = 'megapanels';
   $ds_layout->settings = array(
     'regions' => array(
-      'top_grow_first' => array(
-        0 => 'field_bgimage_image',
-        1 => 'bgimage_photo_number',
-        2 => 'bgimage_copyright',
-        3 => 'bgimage_tag',
-        4 => 'bgimage_related',
-        5 => 'bgimage_title_classification',
-        6 => 'body',
-      ),
-      'bottom_full' => array(
-        7 => 'subscriptions',
-        8 => 'comments',
-      ),
       'top_1' => array(
-        9 => 'location_combined',
+        0 => 'location_combined',
         10 => 'field_bgimage_date',
         11 => 'divider_1',
         12 => 'field_bgimage_life_stage',
@@ -207,10 +189,23 @@ function bgimage_ds_layout_settings_info() {
         17 => 'field_bgimage_photo_quality',
         18 => 'divider_3',
         19 => 'submitted_by',
-        20 => 'changed_date',
+      ),
+      'top_grow_first' => array(
+        1 => 'field_bgimage_image',
+        2 => 'bgimage_photo_number',
+        3 => 'bgimage_copyright',
+        4 => 'bgimage_tag',
+        5 => 'bgimage_related',
+        6 => 'bgimage_title_classification',
+        7 => 'body',
+      ),
+      'bottom_full' => array(
+        8 => 'subscriptions',
+        9 => 'comments',
       ),
     ),
     'fields' => array(
+      'location_combined' => 'top_1',
       'field_bgimage_image' => 'top_grow_first',
       'bgimage_photo_number' => 'top_grow_first',
       'bgimage_copyright' => 'top_grow_first',
@@ -220,7 +215,6 @@ function bgimage_ds_layout_settings_info() {
       'body' => 'top_grow_first',
       'subscriptions' => 'bottom_full',
       'comments' => 'bottom_full',
-      'location_combined' => 'top_1',
       'field_bgimage_date' => 'top_1',
       'divider_1' => 'top_1',
       'field_bgimage_life_stage' => 'top_1',
@@ -231,7 +225,6 @@ function bgimage_ds_layout_settings_info() {
       'field_bgimage_photo_quality' => 'top_1',
       'divider_3' => 'top_1',
       'submitted_by' => 'top_1',
-      'changed_date' => 'top_1',
     ),
     'classes' => array(),
     'wrappers' => array(
