@@ -223,7 +223,8 @@ a:hover,
   font-size: 0.9rem;
 }
 
-.node-bgimage.view-mode-full .field-name-bgimage-tag {
+.node-bgimage.view-mode-full .field-name-bgimage-tag,
+.node-bgimage.view-mode-full .field-name-bgimage-related {
   clear: both;
 }
 
