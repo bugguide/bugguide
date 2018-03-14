@@ -234,6 +234,10 @@ a:hover,
   padding-bottom: 1rem;
 }
 
+.bgimage-related-thumb-current {
+  box-shadow: 0px 0px 3px 2px var(--green-dark);
+}
+
 .node-bgimage.view-mode-full .field-name-bgimage-related .field-label {
   margin-bottom: 0.5rem;
 }
