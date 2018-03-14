@@ -2,12 +2,14 @@
 
 include_once 'bgmap.fips.inc';
 
+// /node/203/bgmap/json is called by maps.eddmaps.org to retrieve data to
+// populate the map.
 function bgmap_json($node) {
   global $LOCATION_CODES;
   global $FIPS;
 
   // Debugging.
-  $output = '';
+  //$output = '';
 
   // Sanity check.
   if ($node->type != 'bgpage') {
@@ -36,18 +38,21 @@ function bgmap_json($node) {
     // Construct string for creating map.
     if (!isset($LOCATION_CODES[$image->location_code])) {
       // Invalid state.
-      $output .= "<p>Invalid state $image->location_code</p>";
+      //$output .= "<p>Invalid state $image->location_code</p>";
       continue;
     }
     $state = $LOCATION_CODES[$image->location_code]; // Iowa
   
     if (!isset($FIPS[$state])) {
-      $output .= "<p>Did not find state '$state'</p>";
+      // We looked up Iowa from IA but Iowa is not defined in $FIPS['Iowa']
+      // This should never happen.
+      //$output .= "<p>Did not find state '$state'</p>";
+      continue;
     }
 
     if (!isset($FIPS[$state][$image->county])) {
       // Invalid county.
-      $output .= "<p>Invalid county $image->county when looking for FIPS[ $state ][ $image->county ]</p>";
+      //$output .= "<p>Invalid county $image->county when looking for FIPS[ $state ][ $image->county ]</p>";
       continue;
     }
     
@@ -70,13 +75,21 @@ function bgmap_json($node) {
 
   // Debugging
   // watchdog('bgmap', $output);
-  //return $output;
 
   drupal_add_http_header('Access-Control-Allow-Origin', "*");
   drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
   drupal_json_output($occurrences);
 }
-  
+
 function bgmap_page($node) {
-  return t('This page will have a map.');
+  drupal_add_js('https://calc.bugwoodcloud.org/static/js/iframe.js', 'external');
+  $output = '<div id="iframecontainer"><iframe src="https://maps.bugwoodcloud.org/bugguide/index.cfm?node=' . $node->nid . '" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" height="500" width="960" scrolling="no" seamless></iframe></div>';
+
+/*
+// Uses location services.
+$output = '<div id="iframecontainer">
+     <iframe id="frame" src="https://calc.bugwoodcloud.org/calculator.cfm" frameborder="0" style="width:100%;height:100%;"></iframe>
+</div>';
+*/
+  return $output;
 }
