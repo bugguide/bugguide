@@ -84,11 +84,7 @@
             <div class="navbar-item">
               <?php print render($page['brand']); ?>
             </div>
-            <?php endif; ?>
-
-            <div class="navbar-burger burger" data-target="MainMenu">
-            <span></span><span></span><span></span>
-          </div>
+          <?php endif; ?>
         </div>
 
         <div class="navbar-menu navbar-end">
@@ -109,10 +105,14 @@
 
     <nav class="navbar <?php print $navbar2_classes; ?>" role="navigation">
       <div class="container <?php if ($container_width_navbar == 1): ?>is-fluid<?php endif; ?>">
+
+        <button class="button is-brown menu-toggle" data-target="MainMenu" aria-pressed="false">
+          <span class="icon"><span class="fa fa-bars" aria-hidden="true"></span></span>
+          <span>Show Menu</span>
+        </button>
+
         <div id="MainMenu" class="navbar-menu">
-
           <?php print render($page['main_menu']);  ?>
-
         </div>
 
         <?php if ($page['navbar']): ?>
