@@ -217,6 +217,11 @@ a:hover,
 
 /* --- Related Images --- */
 
+.field-name-bgimage-related {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1rem;
+}
+
 .node-bgimage.view-mode-full .field-name-bgimage-related .field-label {
   margin-bottom: 0.5rem;
 }
