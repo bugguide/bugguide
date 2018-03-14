@@ -57,7 +57,7 @@ function bgmap_json($node) {
     }
     
     $county_fips = $FIPS[$state][$image->county];
-    $output .= '<p>' . $image->nid . '-' . $image->series;
+    //$output .= '<p>' . $image->nid . '-' . $image->series;
     if (!isset($occurrences[$county_fips])) {
       $occurrences[$county_fips] = array(
         'reportCount' => 1,
