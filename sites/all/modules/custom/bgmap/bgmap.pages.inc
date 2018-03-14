@@ -81,6 +81,76 @@ function bgmap_json($node) {
   drupal_json_output($occurrences);
 }
 
+function bgmap_state_json($node) {
+  global $LOCATION_CODES;
+  global $FIPS;
+  global $FIPS_STATES;
+
+  // Debugging.
+  //$output = '';
+
+  // Sanity check.
+  if ($node->type != 'bgpage') {
+    return t('Maps are only available for taxa.');
+  }
+    
+  // Find children of this taxon.
+  $result = db_query("SELECT bgi.nid, bgi.location_code, bis.series 
+    FROM {bgimage} bgi 
+    LEFT JOIN {bgimage_series} bis ON bgi.nid = bis.nid 
+    WHERE bgi.parent_idx REGEXP :node",
+    array(':node' => '^' . $node->field_parent[LANGUAGE_NONE][0]['value'] . ',' . $node->nid . ',')
+    )->fetchAll();
+  
+  // Compile a list of states for which occurrence records exist.
+  $occurrences = array();
+  
+  foreach ($result as $image) {
+    // If a specimen has more than one image, only count one occurrence.
+    // Single-image specimens will have series as NULL.
+    // First specimen of a series will have nid == series.
+    if (($image->series !== NULL) && ($image->series != $image->nid)) {
+      continue;
+    }
+    
+    // Construct string for creating map.
+    if (!isset($LOCATION_CODES[$image->location_code])) {
+      // Invalid state.
+      //$output .= "<p>Invalid state $image->location_code</p>";
+      continue;
+    }
+      
+    if (!isset($FIPS_STATES[$image->location_code])) {
+      // We looked up IA but IA is not defined in $FIPS_STATES['IA']
+      // This should never happen.
+      //$output .= "<p>Did not find state '$image->location_code'</p>";
+      continue;
+    }
+    
+    //$output .= '<p>' . $image->nid . '-' . $image->series;
+    $state_fips = $FIPS_STATES[$image->location_code];
+    if (!isset($occurrences[$state_fips])) {
+      $occurrences[$state_fips] = array(
+        'reportCount' => 1,
+      );
+    }
+    else {
+      $occurrences[$state_fips]['reportCount']++;
+    }
+  }
+  
+  // Format is:
+  //  "4": {"MyNumericData":1,"MyTextData":"us_AL_01003"}
+
+  // Debugging
+  //watchdog('bgmap', $output);
+
+  drupal_add_http_header('Access-Control-Allow-Origin', "*");
+  drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
+  drupal_json_output($occurrences);
+}
+
+
 function bgmap_page($node) {
   drupal_add_js('https://calc.bugwoodcloud.org/static/js/iframe.js', 'external');
   $output = '<div id="iframecontainer"><iframe src="https://maps.bugwoodcloud.org/bugguide/index.cfm?node=' . $node->nid . '" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" height="500" width="960" scrolling="no" seamless></iframe></div>';
