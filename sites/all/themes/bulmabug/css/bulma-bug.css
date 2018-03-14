@@ -315,6 +315,19 @@ a:hover,
 }
 
 /* --------------------- */
+/* ## COMMENTS
+/* --------------------- */
+
+/* Classes from Drupal 7 Comment module. Seen in both comments on nodes
+ * and when responding to forum topics. */
+
+.comment-form.title {
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem; /* Like bulma's .title.is-4 */
+}
+
+/* --------------------- */
 /* ## MEGAPANELS
 /* --------------------- */
 
