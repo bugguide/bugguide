@@ -40,7 +40,7 @@
  * @see template_process()
  */
 ?><!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <?php print $head; ?>
     <title><?php print $head_title; ?></title>
