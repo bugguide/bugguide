@@ -72,6 +72,8 @@ function bgmap_json($node) {
   // watchdog('bgmap', $output);
   //return $output;
 
+  drupal_add_http_header('Access-Control-Allow-Origin', "*");
+  drupal_add_http_header('Access-Control-Allow-Methods', 'GET');
   drupal_json_output($occurrences);
 }
   
