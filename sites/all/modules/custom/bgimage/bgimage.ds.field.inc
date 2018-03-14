@@ -17,7 +17,19 @@ function _bgimage_field_tag($field) {
   }
 
   $node = $field['entity'];
-  return l('Add to clipboard', 'bgimage/tag/' . $node->nid, array('query' => array('destination' => current_path())));
+  return l(
+    'Add to clipboard', 
+    'bgimage/tag/' . $node->nid, 
+    array(
+      'attributes' => array(
+        'class' => 'button is-small',
+        'role' => 'button',
+        ),
+      'query' => array(
+        'destination' => current_path()
+        )
+    )
+  );
 }
 /**
  * Callback to render photo number.
@@ -109,8 +121,27 @@ function _bgimage_field_related_images($field) {
   }
 
   // Render as a list of image teasers.
-  $output = '<div class="field-label">Images of this individual:</div>';
 
+  $output = '<div class="bgimage-related-actions mb-2">';
+  if (user_access('use image clipboard')) {
+    $output .= l(
+      'Add all images to clipboard', 
+      'bgimage/tag/' . $node->nid . '/all', 
+      array(
+        'attributes' => array(
+        'class' => 'button is-small',
+        'role' => 'button',
+        ),
+        'query' => array(
+          'destination' => current_path()
+          )
+        )
+      );
+  }
+  $output .= '</div>';
+
+  $output .= '<div class="field-label">Images of this individual:</div>';
+  
   // Render image thumbnails.
   $output .= '<div class="bgimage-related-container">';
   $nodes = node_load_multiple($nids);
@@ -132,11 +163,9 @@ function _bgimage_field_related_images($field) {
       $output .= '<div class="bgimage-related"><a href="' . url('node/' . $related_node->nid) . '" title="' . $node_wrapper->title->value(array('sanitize' => TRUE)) . '">' . $image . '</a></div>';
     }
   }
-  $output .= '</div><div class="bgimage-related-actions">';
-  if (user_access('use image clipboard')) {
-    $output .= l('Add all images to clipboard', 'bgimage/tag/' . $node->nid . '/all', array('query' => array('destination' => current_path())));
-  }
+
   $output .= '</div>';
+  
   return $output;
 }
 

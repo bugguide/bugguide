@@ -217,6 +217,11 @@ a:hover,
 
 /* --- Related Images --- */
 
+.field-name-bgimage-related {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1rem;
+}
+
 .node-bgimage.view-mode-full .field-name-bgimage-related .field-label {
   margin-bottom: 0.5rem;
 }
@@ -245,8 +250,6 @@ a:hover,
 
 /* --- Bug Page Buttons --- */
 
-.field-name-bgimage-tag a,
-.bgimage-related-actions a,
 .node-type-bgimage .action-links a {
   align-items: center;
   border: 1px solid transparent;
@@ -279,8 +282,6 @@ a:hover,
   font-size: 0.75rem;
 }
 
-  .field-name-bgimage-tag a:hover,
-  .bgimage-related-actions a:hover,
   .node-type-bgimage .action-links a:hover {
     border-color: #b5b5b5;
     color: #363636;
