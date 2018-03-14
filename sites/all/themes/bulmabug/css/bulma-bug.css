@@ -43,6 +43,9 @@ a:hover,
 .button.is-primary { background-color: var(--green); }
 .button.is-primary:hover { background-color: var(--green-dark); }
 
+.button.is-brown { color: #ffffff; background: var(--brown); }
+.button.is-brown:hover { color: #ffffff; background: var(--brown-dark); }
+
 /* Search Page */
 
 .search-form input[type=submit] { background-color: var(--green); }
