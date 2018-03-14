@@ -86,12 +86,12 @@
             <div class="navbar-item">
               <?php print render($page['brand']); ?>
             </div>
-            <?php endif; ?>
+          <?php endif; ?>
 
-            <div class="navbar-burger burger" data-target="MainMenu">
-            <span></span><span></span><span></span>
+            <button class="button is-brown menu-toggle" data-target="MainMenu" aria-pressed="false">
+              <span></span><span></span><span></span>
+            </button>
           </div>
-        </div>
 
         <div class="navbar-menu navbar-end">
           <?php if ($page['slogan']): ?>
