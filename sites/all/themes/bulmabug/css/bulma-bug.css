@@ -223,12 +223,14 @@ a:hover,
 
 .bgimage-related-container {
   display: flex;
+  flex-wrap: wrap;
   margin-bottom: 0.5rem;
 }
 
 .bgimage-related a {
   display: block;
   margin-right: 1rem;
+  margin-bottom: 1rem;
 }
 
   .bgimage-related a:hover,
