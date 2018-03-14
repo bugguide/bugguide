@@ -516,7 +516,6 @@ select {
   display: block;
   font-size: 1em;
   max-width: 100%;
-  outline: none;
 
   justify-self: flex-start;
 }
