@@ -138,7 +138,7 @@
         </div>
       <?php endif;?>
 
-  <section class="section pt-1" role="main">
+  <div class="section pt-1" role="main">
 
       <?php if ($messages) : ?>
         <div class="container <?php if ($container_width_content == 1): ?>is-fluid<?php endif; ?>">
@@ -195,7 +195,7 @@
         </div>
       </div>
 
-  </section>
+  </div>
 
   <footer class="footer" role="contentinfo">
     <div class="container <?php if ($container_width_footer == 1): ?>is-fluid<?php endif; ?>">
