@@ -66,6 +66,12 @@ function bgimage_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'bgimage' => 'bgimage',
   );
+  /* Filter criterion: Content: Parent (field_parent) */
+  $handler->display->display_options['filters']['field_parent_value']['id'] = 'field_parent_value';
+  $handler->display->display_options['filters']['field_parent_value']['table'] = 'field_data_field_parent';
+  $handler->display->display_options['filters']['field_parent_value']['field'] = 'field_parent_value';
+  $handler->display->display_options['filters']['field_parent_value']['operator'] = '!=';
+  $handler->display->display_options['filters']['field_parent_value']['value'] = '6';
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
