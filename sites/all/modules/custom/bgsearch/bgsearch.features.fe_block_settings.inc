@@ -456,5 +456,38 @@ function bgsearch_default_fe_block_settings() {
     ),
   );
 
+  $export['search_api_page-bugguide_search'] = array(
+    'cache' => 5,
+    'custom' => 0,
+    'delta' => 'bugguide_search',
+    'module' => 'search_api_page',
+    'node_types' => array(),
+    'pages' => 'search
+search/*',
+    'roles' => array(),
+    'themes' => array(
+      'bulma' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'bulma',
+        'weight' => 0,
+      ),
+      'bulmabug' => array(
+        'region' => 'navbar',
+        'status' => 1,
+        'theme' => 'bulmabug',
+        'weight' => 0,
+      ),
+      'shiny' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'shiny',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '<none>',
+    'visibility' => 0,
+  );
+
   return $export;
 }
