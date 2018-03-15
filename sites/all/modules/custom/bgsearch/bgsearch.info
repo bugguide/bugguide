@@ -70,6 +70,7 @@ features[fe_block_settings][] = facetapi-syi3y0O9NvaGv7rFg6RcXIFqsTCbyPKe
 features[fe_block_settings][] = facetapi-vzaQkN37NCQtMDpfeRN0Lwif7GY57nZR
 features[fe_block_settings][] = facetapi-y0D120Yl2rFozKNVyxnLx0dLFXpcVmRg
 features[fe_block_settings][] = facetapi-yewPnlJeRl76eNaV7ok2cnlYXsZvK8Fh
+features[fe_block_settings][] = search_api_page-bugguide_search
 features[features_api][] = api:2
 features[search_api_index][] = bugguide
 features[search_api_page][] = bugguide_search
