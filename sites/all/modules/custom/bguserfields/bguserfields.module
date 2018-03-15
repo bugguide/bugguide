@@ -66,12 +66,3 @@ function bguserfields_get_name($user_wrapper) {
   }
   return $user_name;
 }
-
-/**
- * Hide API key from regular users.
- */
-function bguserfields_form_user_profile_form_alter(&$form, $form_state) {
-  if (!user_access('administer users')) {
-    $form['field_user_api_key']['#access'] = FALSE;
-  }
-}
