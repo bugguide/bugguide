@@ -136,67 +136,68 @@
   <?php endif; ?>
 
   <?php if ($page['featured']) : ?>
-        <div>
-          <?php print render($page['featured']); ?>
-        </div>
-      <?php endif;?>
+    <div>
+      <?php print render($page['featured']); ?>
+    </div>
+  <?php endif;?>
 
   <div class="section pt-1" role="main">
     
-      <?php if ($messages) : ?>
-        <div class="container <?php if ($container_width_content == 1): ?>is-fluid<?php endif; ?>">
-          <div>
-            <?php print $messages; ?>
-          </div>
-        </div>
-      <?php endif;?>
-
+    <?php if ($messages) : ?>
       <div class="container <?php if ($container_width_content == 1): ?>is-fluid<?php endif; ?>">
-
-        <div class="columns mt-0">
-
-          <?php if ($page['sidebar_first']) :?>
-            <aside class="column is-one-quarter">
-              <?php print render($page['sidebar_first']) ?>
-            </aside>
-          <?php endif;?>
-
-          <div class="column">
-            <a id="main-content"></a>
-
-            <?php print render($title_prefix); ?>
-            <?php if ($title): ?>
-              <h1 class="title">
-                <?php print $title; ?>
-              </h1>
-            <?php endif; ?>
-
-            <?php print render($title_suffix); ?>
-            <?php if ($tabs && $logged_in): ?>
-              <div class="tabs <?php print $tabs_primary_classes; ?>">
-                <?php print render($tabs); ?>
-              </div>
-            <?php endif; ?>
-
-            <?php if ($action_links): ?>
-              <ul class="action-links">
-                <?php print render($action_links); ?>
-              </ul>
-            <?php endif; ?>
-
-            <?php print render($page['content']); ?>
-            <?php print $feed_icons; ?>
-
-          </div>
-
-           <?php if ($page['sidebar_second']) :?>
-            <aside class="column is-one-quarter">
-              <?php print render($page['sidebar_second']) ?>
-            </aside>
-          <?php endif;?>
-
+        <div>
+          <?php print $messages; ?>
         </div>
       </div>
+    <?php endif;?>
+
+    <div class="container <?php if ($container_width_content == 1): ?>is-fluid<?php endif; ?>">
+
+      <div class="columns mt-0">
+
+        <?php if ($page['sidebar_first']) :?>
+          <aside class="column is-one-quarter">
+            <?php print render($page['sidebar_first']) ?>
+          </aside>
+        <?php endif;?>
+
+        <div class="column">
+          <a id="main-content"></a>
+
+          <?php print render($title_prefix); ?>
+          <?php if ($title): ?>
+            <h1 class="title">
+              <?php print $title; ?>
+            </h1>
+          <?php endif; ?>
+
+          <?php print render($title_suffix); ?>
+          <?php if ($tabs && $logged_in): ?>
+            <div class="tabs <?php print $tabs_primary_classes; ?>">
+              <?php print render($tabs); ?>
+            </div>
+          <?php endif; ?>
+
+          <?php if ($action_links): ?>
+            <ul class="action-links">
+              <?php print render($action_links); ?>
+            </ul>
+          <?php endif; ?>
+
+          <?php print render($page['content']); ?>
+          <?php print $feed_icons; ?>
+
+        </div>
+
+         <?php if ($page['sidebar_second']) :?>
+          <aside class="column is-one-quarter">
+            <?php print render($page['sidebar_second']) ?>
+          </aside>
+        <?php endif;?>
+
+      </div>
+    </div>
+    
   </div>
 
   <footer class="footer" role="contentinfo">
