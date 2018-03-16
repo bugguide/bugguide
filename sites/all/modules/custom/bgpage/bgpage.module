@@ -52,6 +52,17 @@ function bgpage_menu() {
     'file' => 'bgpage.pages.inc',
   );
 
+  // Links tab.
+  $items['node/%bgpage_node/bglink'] = array(
+    'title' => 'Links',
+    'page callback' => 'bgpage_bglink',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'weight' => 3,
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'bgpage.pages.inc',
+  );
+
   return $items;
 }
 
