@@ -2,16 +2,16 @@
 
 /**
  * @file
- * Contains \Drupal\bgapi\Plugin\resource\bgimage_search\v1_0\BgImageSearch.
+ * Contains \Drupal\bgapi\Plugin\resource\bgimage\v1_0\BgImageSearch.
  */
 
-namespace Drupal\bgapi\Plugin\resource\bgimage_search\v1_0;
+namespace Drupal\bgapi\Plugin\resource\bgimage\v1_0;
 use Drupal\restful\Plugin\resource\ResourceInterface;
 use Drupal\restful\Plugin\resource\Resource;
 
 /**
  * Class BgImageSearch
- * @package Drupal\bgapi\Plugin\resource\bgimage_search\v1_0
+ * @package Drupal\bgapi\Plugin\resource\bgimage\v1_0
  *
  * @Resource(
  *   name = "bgimage_search:1.0",
