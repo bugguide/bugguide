@@ -133,10 +133,10 @@
   <?php endif; ?>
 
   <?php if ($page['featured']) : ?>
-        <div>
-          <?php print render($page['featured']); ?>
-        </div>
-      <?php endif;?>
+    <div>
+      <?php print render($page['featured']); ?>
+    </div>
+  <?php endif;?>
 
   <div class="section pt-1" role="main">
 

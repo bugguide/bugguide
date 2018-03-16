@@ -33,3 +33,4 @@
   <?php endif; ?>
 
 </div>
+</<?php print $layout_wrapper ?>>
