@@ -17,6 +17,17 @@
   --primary-dark: #00c4a7;
 }
 
+a, a:link,
+.breadcrumb a {
+  text-decoration: underline;
+}
+
+a.button,
+.navbar-links a,
+.tabs a {
+  text-decoration: none;
+}
+
 /* -------------------- */
 /* ## NAVBAR
 /* -------------------- */
@@ -274,7 +285,7 @@
 
 .submitted {
   margin-bottom: 1rem;
-  color: #787878;
+  color: #676767;
 }
 
 /* -------------------- */
@@ -324,6 +335,7 @@
   padding-right: 0.75em;
   text-align: center;
   white-space: nowrap;
+  text-decoration: none;
 
   /* .is-small */
   border-radius: 2px;
@@ -421,6 +433,7 @@
   text-align: center;
   border-color: #dbdbdb;
   min-width: 2.25em;
+  text-decoration: none;
 }
 
 .pager-item a:hover,
