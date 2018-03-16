@@ -137,14 +137,14 @@ function bgpage_menu_alter(&$items) {
 function bgpage_menu_local_tasks_alter(&$data, $route_name) {
   // Don't show bgpage local tasks when editing or deleting a node.
   if (in_array($route_name['path'], array('node/%/edit', 'node/%/delete'))) {
-    $local_tasks_to_remove = [];
-    foreach ($data["tabs"][0]["output"] as $index => $local_task) {
-      if (in_array($local_task["#link"]["title"], array('Taxonomy', 'Browse', 'Images', 'Books', 'Links'))) {
+    $local_tasks_to_remove = array();
+    foreach ($data['tabs'][0]['output'] as $index => $local_task) {
+      if (in_array($local_task['#link']['title'], array('Taxonomy', 'Browse', 'Images', 'Books', 'Links'))) {
         $local_tasks_to_remove[] = $index;
       }
     }
     foreach ($local_tasks_to_remove as $task_index) {
-      unset($data["tabs"][0]["output"][$task_index]);
+      unset($data['tabs'][0]['output'][$task_index]);
     }
     return;
   }
