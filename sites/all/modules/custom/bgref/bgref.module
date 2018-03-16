@@ -6,6 +6,9 @@
 
 include_once 'bgref.features.inc';
 
+/**
+ * Implements hook_views_query_alter()
+ */
 function bgref_views_query_alter(&$view, &$query) {
   // Transform bgpage nid that comes as an argument into its parents field.
   if (($view->name === 'all_books') && ($view->current_display == 'by_bgpage')) {

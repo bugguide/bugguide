@@ -5,3 +5,18 @@
  */
 
 include_once 'bglink.features.inc';
+
+/**
+ * Implements hook_views_query_alter()
+ */
+function bglink_views_query_alter(&$view, &$query) {
+  // Transform bgpage nid that comes as an argument into its parents field.
+  if (($view->name === 'links') && ($view->current_display == 'by_bgpage')) {
+    $bgpage = node_load($view->args[0]);
+    $parents = $bgpage->nid;
+    if (!empty($bgpage->field_parent['und'][0]['value'])) {
+      $parents = $bgpage->field_parent['und'][0]['value'] . ',' . $bgpage->nid;
+    }
+    $query->where[1]['conditions'][2]['value'] = $parents . '%';
+  }
+}
