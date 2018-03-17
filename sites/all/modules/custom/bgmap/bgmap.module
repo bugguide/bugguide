@@ -7,7 +7,7 @@ function bgmap_menu() {
   $items = array();
 
   $items['node/%node/bgmap'] = array(
-    'title' => 'Map',
+    'title' => 'Data',
     'page callback' => 'bgmap_page',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
