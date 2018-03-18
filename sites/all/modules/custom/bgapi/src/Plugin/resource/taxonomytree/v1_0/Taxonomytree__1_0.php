@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\bgapi\Plugin\resource\taxonomytree\Taxonomytree__1_0
+ * Contains \Drupal\bgapi\Plugin\resource\taxonomytree\v1_0\Taxonomytree__1_0
  */
 
 // built from https://github.com/RESTful-Drupal/restful/wiki/Look-up-a-URL-alias-mapping-with-DataProviderDbQuery 
@@ -17,14 +17,14 @@
 // curl https://beta.bugguide.net/api/v1.0/taxonomytree/60
 // {"type":"http:\/\/www.w3.org\/Protocols\/rfc2616\/rfc2616-sec10.html#sec10.4.5","title":"Invalid URL path.","status":404,"detail":"Not Found"}
  
-namespace Drupal\bgapi\Plugin\resource\taxonomytree;
+namespace Drupal\bgapi\Plugin\resource\taxonomytree\v1_0;
 
 use Drupal\restful\Plugin\resource\ResourceDbQuery;
 use Drupal\restful\Plugin\resource\ResourceInterface;
 
 /**
  * Class Taxonomytree__1_0
- * @package Drupal\bgapi\Plugin\resource\taxonomytree
+ * @package Drupal\bgapi\Plugin\resource\taxonomytree\v1_0
  *
  * @Resource(
  *   name = "taxonomytree:1.0",
@@ -54,15 +54,7 @@ class Taxonomytree__1_0 extends ResourceDbQuery implements ResourceInterface {
     $public_fields['entity_id'] = array(
       'property' => 'entityid'
     );
-/**
-    $public_fields['source'] = array(
-      'property' => 'source'
-    );
 
-    $public_fields['alias'] = array(
-      'property' => 'alias'
-    );
-*/
     return $public_fields;
   }
 }
