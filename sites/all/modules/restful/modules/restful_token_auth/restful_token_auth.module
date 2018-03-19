@@ -142,10 +142,19 @@ function restful_token_auth_restful_resource_alter(ResourceInterface &$resource)
  * Implements hook_user_update().
  */
 function restful_token_auth_user_update(&$edit, $account, $category) {
+  // begin hack to prevent Notice: Undefined index: status in restful_token_auth_user_update() (line 145 of restful_token_auth.module). -JV
+  if (isset($edit['status']) && $edit['status']) {
+    return;
+  }
+  // surround original code with multiline comment
+  /*
+
   if ($edit['status']) {
     return;
   }
 
+  */
+  // end hack -JV  
   $query = new EntityFieldQuery();
   $result = $query
     ->entityCondition('entity_type', 'restful_token_auth')
