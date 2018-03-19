@@ -42,6 +42,16 @@ function bgimage_ds_field_settings_info() {
       'label' => 'hidden',
       'format' => 'default',
     ),
+    'title' => array(
+      'weight' => '0',
+      'label' => 'hidden',
+      'format' => 'default',
+      'formatter_settings' => array(
+        'link' => '0',
+        'wrapper' => 'h1',
+        'class' => 'sr-only',
+      ),
+    ),
     'comments' => array(
       'weight' => '8',
       'label' => 'hidden',

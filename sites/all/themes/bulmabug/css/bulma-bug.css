@@ -5,16 +5,18 @@
 /* --------------------- */
 /* VARIABLES
 /* --------------------- */
+/* IE11 does not support CSS variables, so fallbacks
+ * are required at this time. TODO */
 
 :root {
 
-
   --tan-light: #e7dbc1;
   --tan: #c6be9e;
+  --brown-light: #7d714f;
   --brown: #76684a;
   --brown-dark: #444023;
-  --green: #229c4d;
-  --green-dark: #217c41;
+  --green: #1c8240;
+  --green-dark: #1D6D39;
 
   --link: #76684a;
   --primary: var(--green);
@@ -28,7 +30,7 @@
 a, a:link,
 .breadcrumb a {
   color: var(--brown);
-  text-decoration-color: var(--tan);
+  text-decoration-color: var(--brown-light);
 }
 
 a:hover,
@@ -37,11 +39,18 @@ a:hover,
   text-decoration-color: var(--green);
 }
 
-.button.is-tan { color: var(--brown); background: var(--tan); }
-.button.is-tan:hover { color: var(--brown-dark); border-color: var(--tan); }
+.button { border-color: var(--tan); }
+.button:hover { border-color: var(--brown); }
+
+.button.is-tan { color: var(--brown-dark); background: var(--tan); }
+.button.is-tan:hover { color: var(--brown-dark); border-color: var(--brown); }
 
 .button.is-primary { background-color: var(--green); }
 .button.is-primary:hover { background-color: var(--green-dark); }
+/* Reset to bulma.io focus style for all other buttons */
+.button.is-primary:focus:not(:active) { 
+  box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
+}
 
 .button.is-brown { color: #ffffff; background: var(--brown); }
 .button.is-brown:hover { color: #ffffff; background: var(--brown-dark); }

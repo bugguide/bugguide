@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\bgapi\Plugin\resource\bgpage\Bgpage__1_0
+ * Contains \Drupal\bgapi\Plugin\resource\bgpage\v1_0\Bgpage__1_0
  */
 
-namespace Drupal\bgapi\Plugin\resource\bgpage;
+namespace Drupal\bgapi\Plugin\resource\bgpage\v1_0;
 
 
 use Drupal\restful\Plugin\resource\ResourceEntity;
 
 /**
  * Class Bgpage__1_0
- * @package Drupal\bgapi\Plugin\resource\bgpage
+ * @package Drupal\bgapi\Plugin\resource\bgpag\v1_0
  *
  * @Resource(
  *   name = "bgpage:1.0",
