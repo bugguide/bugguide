@@ -98,9 +98,14 @@ function bgimage_ds_field_settings_info() {
   $ds_fieldsetting->view_mode = 'homepage';
   $ds_fieldsetting->settings = array(
     'title' => array(
-      'weight' => '1',
+      'weight' => '0',
       'label' => 'hidden',
       'format' => 'default',
+      'formatter_settings' => array(
+        'link' => '0',
+        'wrapper' => 'p',
+        'class' => 'card-header-title',
+      ),
     ),
     'bgimage_field_placed_by' => array(
       'weight' => '2',
@@ -153,6 +158,78 @@ function bgimage_ds_field_settings_info() {
  */
 function bgimage_ds_custom_fields_info() {
   $export = array();
+
+  $ds_field = new stdClass();
+  $ds_field->api_version = 1;
+  $ds_field->field = 'divider_1';
+  $ds_field->label = 'Divider 1';
+  $ds_field->field_type = 5;
+  $ds_field->entities = array(
+    'node' => 'node',
+  );
+  $ds_field->ui_limit = '';
+  $ds_field->properties = array(
+    'code' => array(
+      'value' => '<hr>',
+      'format' => '2',
+    ),
+    'use_token' => 0,
+  );
+  $export['divider_1'] = $ds_field;
+
+  $ds_field = new stdClass();
+  $ds_field->api_version = 1;
+  $ds_field->field = 'divider_2';
+  $ds_field->label = 'Divider 2';
+  $ds_field->field_type = 5;
+  $ds_field->entities = array(
+    'node' => 'node',
+  );
+  $ds_field->ui_limit = '';
+  $ds_field->properties = array(
+    'code' => array(
+      'value' => '<hr>',
+      'format' => '2',
+    ),
+    'use_token' => 0,
+  );
+  $export['divider_2'] = $ds_field;
+
+  $ds_field = new stdClass();
+  $ds_field->api_version = 1;
+  $ds_field->field = 'divider_3';
+  $ds_field->label = 'Divider 3';
+  $ds_field->field_type = 5;
+  $ds_field->entities = array(
+    'node' => 'node',
+  );
+  $ds_field->ui_limit = '';
+  $ds_field->properties = array(
+    'code' => array(
+      'value' => '<hr>',
+      'format' => '2',
+    ),
+    'use_token' => 0,
+  );
+  $export['divider_3'] = $ds_field;
+
+  $ds_field = new stdClass();
+  $ds_field->api_version = 1;
+  $ds_field->field = 'location_combined';
+  $ds_field->label = 'Location';
+  $ds_field->field_type = 5;
+  $ds_field->entities = array(
+    'node' => 'node',
+  );
+  $ds_field->ui_limit = 'bgimage|*';
+  $ds_field->properties = array(
+    'code' => array(
+      'value' => '[node:field_bgimage_location], [node:field_bgimage_county], [node:field_bgimage_location_code]',
+      'format' => '2',
+    ),
+    'use_token' => 1,
+  );
+  $export['location_combined'] = $ds_field;
 
   $ds_field = new stdClass();
   $ds_field->api_version = 1;
@@ -276,27 +353,30 @@ function bgimage_ds_layout_settings_info() {
   $ds_layout->entity_type = 'node';
   $ds_layout->bundle = 'bgimage';
   $ds_layout->view_mode = 'homepage';
-  $ds_layout->layout = 'horizontalcard';
+  $ds_layout->layout = 'card';
   $ds_layout->settings = array(
     'regions' => array(
-      'left' => array(
-        0 => 'field_bgimage_image',
+      'header' => array(
+        0 => 'title',
+      ),
+      'image' => array(
+        1 => 'field_bgimage_image',
       ),
       'body' => array(
-        1 => 'title',
         2 => 'bgimage_field_placed_by',
       ),
     ),
     'fields' => array(
-      'field_bgimage_image' => 'left',
-      'title' => 'body',
+      'title' => 'header',
+      'field_bgimage_image' => 'image',
       'bgimage_field_placed_by' => 'body',
     ),
     'classes' => array(),
     'wrappers' => array(
-      'left' => 'div',
+      'header' => 'div',
+      'image' => 'div',
       'body' => 'div',
-      'right' => 'div',
+      'footer' => 'div',
     ),
     'layout_wrapper' => 'div',
     'layout_attributes' => '',
