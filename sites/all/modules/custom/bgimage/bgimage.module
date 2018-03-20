@@ -732,6 +732,18 @@ function _bgimage_clone_action_link_title($node) {
 }
 
 /**
+ * Implements hook_clone_access_alter().
+ *
+ * @see clone_access_cloning()
+ */
+function bgimage_clone_access_alter(&$access, $node) {
+  // So far clone_access_cloning() has checked permissions. Deny cloning on nodes that are not bgimage nodes.
+  if ($node->type != 'bgimage') {
+    $access = FALSE;
+  }
+}
+
+/**
  * Menu callback. View all tagged images at regular size for comparison.
  * See preprocess function below.
  */
