@@ -40,8 +40,8 @@ function bgimage_default_fe_block_settings() {
         'weight' => 0,
       ),
     ),
-    'title' => '<none>',
-    'visibility' => 1,
+    'title' => '',
+    'visibility' => 0,
   );
 
   $export['views-recent_images-block'] = array(
@@ -50,7 +50,7 @@ function bgimage_default_fe_block_settings() {
     'delta' => 'recent_images-block',
     'module' => 'views',
     'node_types' => array(),
-    'pages' => '',
+    'pages' => '<front>',
     'roles' => array(),
     'themes' => array(
       'bulma' => array(
@@ -60,8 +60,8 @@ function bgimage_default_fe_block_settings() {
         'weight' => 0,
       ),
       'bulmabug' => array(
-        'region' => '',
-        'status' => 0,
+        'region' => 'content',
+        'status' => 1,
         'theme' => 'bulmabug',
         'weight' => 0,
       ),
@@ -73,7 +73,7 @@ function bgimage_default_fe_block_settings() {
       ),
     ),
     'title' => '',
-    'visibility' => 0,
+    'visibility' => 1,
   );
 
   return $export;
