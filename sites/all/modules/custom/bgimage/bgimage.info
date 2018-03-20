@@ -18,7 +18,6 @@ dependencies[] = image
 dependencies[] = list
 dependencies[] = number
 dependencies[] = options
-dependencies[] = page_manager
 dependencies[] = strongarm
 dependencies[] = text
 dependencies[] = views
