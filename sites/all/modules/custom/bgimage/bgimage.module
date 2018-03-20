@@ -8,6 +8,21 @@ include_once 'bgimage.features.inc';
 include_once './images/image_obfuscate.inc';
 
 /**
+ * Implementation of hook_theme().
+ */
+function bgimage_theme() {
+  $module_path = drupal_get_path('module', 'bgimage');
+  return array(
+    'views_view__featured_image__block' => array(
+      'variables' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+      'template' => 'views-view--featured-image--block',
+      'base hook' => 'views_view',
+      'path' => $module_path . '/templates',
+    )
+  );
+}
+
+/**
  * Implements hook_menu_alter().
  */
 function bgimage_menu_alter(&$items) {
