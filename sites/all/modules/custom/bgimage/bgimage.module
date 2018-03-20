@@ -728,7 +728,7 @@ function _bgimage_clone_action_link_title($node) {
   if (variable_get('clone_use_node_type_name', 0)) {
     return t('Clone this !type', array('!type' => drupal_strtolower(node_type_get_name($node))));
   }
-  return t('Add image');
+  return t('Add image of this individual');
 }
 
 /**
