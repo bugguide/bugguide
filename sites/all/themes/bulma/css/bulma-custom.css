@@ -24,7 +24,8 @@ a, a:link,
 
 a.button,
 .navbar-links a,
-.tabs a {
+.tabs a,
+a.card-footer-item {
   text-decoration: none;
 }
 
