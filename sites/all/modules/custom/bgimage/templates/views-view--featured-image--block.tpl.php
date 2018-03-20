@@ -65,9 +65,9 @@
   <div class="hero-foot">
     <div class="container">
       <div class="tag mb-1">
-        <?php foreach ($view->style_plugin->rendered_fields as $delta => $item): ?>
-          <?php print $item['field_bgimage_copyright_owner']; ?>
-        <?php endforeach; ?>
+        <?php // foreach ($view->style_plugin->rendered_fields as $delta => $item): ?>
+          <?php // print $item['field_bgimage_copyright_owner']; ?>
+        <?php // endforeach; ?>
       </div>
     </div>
   </div>-->
