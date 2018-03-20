@@ -13,10 +13,8 @@ function bgmap_json($node) {
 
   // Sanity check.
   if ($node->type != 'bgpage') {
-    return t('Maps are only available for taxa.');
-  }
-  if (in_array($node->nid, array(3,878075,52))) {
-    return t('Please do not try to map over a million records. Map a taxon with fewer records.');
+    // Maps are only available for taxa.
+    drupal_json_output(array());
   }
     
   // Find children of this taxon.
@@ -92,12 +90,9 @@ function bgmap_state_json($node) {
   // Debugging.
   //$output = '';
 
-  // Sanity check.
   if ($node->type != 'bgpage') {
-    return t('Maps are only available for taxa.');
-  }
-  if (in_array($node->nid, array(3,878075,52))) {
-    return t('Please do not try to map over a million records. Map a taxon with fewer records.');
+    // Maps are only available for taxa.
+    drupal_json_output(array());
   }
     
   // Find children of this taxon.
@@ -158,9 +153,14 @@ function bgmap_state_json($node) {
 
 
 function bgmap_page($nid) {
+  if (in_array($nid, array(3,878075,52))) {
+    return t('Maps are not available for taxa with more than a million records.');
+  }
+  
   $node = node_load($nid);
   drupal_add_js('https://calc.bugwoodcloud.org/static/js/iframe.js', 'external');
-  $output = '<div id="iframecontainer"><iframe src="https://maps.eddmaps.org/bugguide/?node=' . $node->nid . '" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" height="500" width="960" scrolling="no" seamless></iframe></div>';
+  $output = '<div id="iframecontainer"><iframe src="https://maps.eddmaps.org/bugguidestate/?node=' . $node->nid . '" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" height="500" width="960" scrolling="no" seamless></iframe></div>';
+  $output .= '<div id="iframecontainer"><iframe src="https://maps.eddmaps.org/bugguide/?node=' . $node->nid . '" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" height="500" width="960" scrolling="no" seamless></iframe></div>';
 
 /*
 // Uses location services.
