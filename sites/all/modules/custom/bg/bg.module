@@ -273,6 +273,8 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
 
 /**
  * Implements hook_preprocess_page().
+ *
+ * @see bgpage_menu_local_tasks_alter()
  */
 function bg_preprocess_page(&$vars) {
   global $user;
@@ -295,7 +297,20 @@ function bg_preprocess_page(&$vars) {
         ($pid == BG_FRASS_NID) ||      // Image in Frass
         $vars['is_front']              // Front page
         ) {
+      $keep = array();
+      foreach ($vars['tabs']['#primary'] as $item) {
+        if ($item['#link']['path'] == 'node/%/edit') {
+          $keep[] = $item;
+        }
+        elseif ($item['#link']['path'] == 'node/%/view') {
+          $item['#link']['title'] = t('View');
+          $keep[] = $item;
+        }
+      }
       $vars['tabs']['#primary'] = array();
+      foreach ($keep as $item) {
+        $vars['tabs']['#primary'][] = $item;
+      }
     }
 
     // Set breadcrumb for bgpage, bgimage and book reference nodes.

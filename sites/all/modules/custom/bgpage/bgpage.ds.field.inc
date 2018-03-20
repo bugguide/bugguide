@@ -124,7 +124,7 @@ function _bgpage_browse($field) {
       '!nid' => $node->nid,
       '%error' => $e->getMessage(),
     ), WATCHDOG_ERROR);
-    $output = 'An unexpected error ocurred while fetching images. Try again later or contact the administrator';
+    $output = 'An unexpected error occurred while fetching images. Try again later or contact the administrator';
   }
 
   return $output;
