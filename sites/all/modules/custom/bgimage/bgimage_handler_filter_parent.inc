@@ -30,7 +30,11 @@ class bgimage_handler_filter_parent extends views_handler_filter_string {
     if (!empty($bgpage->field_parent['und'][0]['value'])) {
       $parents = $bgpage->field_parent['und'][0]['value'] . ',' . $bgpage->nid;
     }
-    $this->query->add_where($this->options['group'], $field, $parents . '%', 'LIKE');
+
+    $this->query->add_where($this->options['group'], db_or()
+      ->condition($field, $parents, '=')
+      ->condition($field, $parents . ',%', 'LIKE')
+    );
   }
 
 }
