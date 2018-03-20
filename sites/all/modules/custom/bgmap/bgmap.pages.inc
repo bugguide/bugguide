@@ -15,6 +15,9 @@ function bgmap_json($node) {
   if ($node->type != 'bgpage') {
     return t('Maps are only available for taxa.');
   }
+  if (in_array($node->nid, array(3,878075,52)) {
+    return t('Please do not try to map over a million records. Map a taxon with fewer records.');
+  }
     
   // Find children of this taxon.
   $result = db_query("SELECT bgi.nid, bgi.location_code, bgi.county, bis.series 
@@ -92,6 +95,9 @@ function bgmap_state_json($node) {
   // Sanity check.
   if ($node->type != 'bgpage') {
     return t('Maps are only available for taxa.');
+  }
+  if (in_array($node->nid, array(3,878075,52)) {
+    return t('Please do not try to map over a million records. Map a taxon with fewer records.');
   }
     
   // Find children of this taxon.
