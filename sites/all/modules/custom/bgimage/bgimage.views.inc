@@ -20,6 +20,7 @@ function bgimage_views_data_alter(&$data) {
       'handler' => 'bgimage_handler_filter_parent',
     ),
   );
+
   // Add a custom field handler for rendering the immediate parent.
   $data['field_data_field_parent']['immediate_parent'] = array(
     'group' => 'Content',
@@ -29,6 +30,18 @@ function bgimage_views_data_alter(&$data) {
     'real field' => 'field_parent_value',
     'field' => array(
       'handler' => 'bgimage_handler_immediate_parent',
+    ),
+  );
+
+  // Add a custom filter for excluding images classified at the species level.
+  $data['field_data_field_parent']['species_level'] = array(
+    'group' => 'Content',
+    'title' => t('Is not classified at species level'),
+    'title short' => t('Species level'),
+    'help' => t('Filters images whose immediate parent is at the species level.'),
+    'real field' => 'field_parent_value',
+    'filter' => array(
+      'handler' => 'bgimage_handler_filter_species_level',
     ),
   );
 }

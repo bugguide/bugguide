@@ -87,3 +87,4 @@ features[views_view][] = advanced_search
 features[views_view][] = recent_images
 files[] = bgimage_handler_filter_parent.inc
 files[] = bgimage_handler_immediate_parent.inc
+files[] = bgimage_handler_filter_species_level.inc
