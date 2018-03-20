@@ -15,7 +15,7 @@ function bgmap_json($node) {
   if ($node->type != 'bgpage') {
     return t('Maps are only available for taxa.');
   }
-  if (in_array($node->nid, array(3,878075,52)) {
+  if (in_array($node->nid, array(3,878075,52))) {
     return t('Please do not try to map over a million records. Map a taxon with fewer records.');
   }
     
@@ -96,7 +96,7 @@ function bgmap_state_json($node) {
   if ($node->type != 'bgpage') {
     return t('Maps are only available for taxa.');
   }
-  if (in_array($node->nid, array(3,878075,52)) {
+  if (in_array($node->nid, array(3,878075,52))) {
     return t('Please do not try to map over a million records. Map a taxon with fewer records.');
   }
     
