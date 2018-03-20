@@ -151,7 +151,8 @@ function bgmap_state_json($node) {
 }
 
 
-function bgmap_page($node) {
+function bgmap_page($nid) {
+  $node = node_load($nid);
   drupal_add_js('https://calc.bugwoodcloud.org/static/js/iframe.js', 'external');
   $output = '<div id="iframecontainer"><iframe src="https://maps.bugwoodcloud.org/bugguide/index.cfm?node=' . $node->nid . '" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" height="500" width="960" scrolling="no" seamless></iframe></div>';
 
