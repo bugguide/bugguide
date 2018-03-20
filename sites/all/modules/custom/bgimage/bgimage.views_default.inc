@@ -200,10 +200,11 @@ function bgimage_views_default_views() {
   $handler->display->display_options['fields']['field_bgimage_location_code']['id'] = 'field_bgimage_location_code';
   $handler->display->display_options['fields']['field_bgimage_location_code']['table'] = 'field_data_field_bgimage_location_code';
   $handler->display->display_options['fields']['field_bgimage_location_code']['field'] = 'field_bgimage_location_code';
-  /* Field: Content: Parent */
-  $handler->display->display_options['fields']['field_parent']['id'] = 'field_parent';
-  $handler->display->display_options['fields']['field_parent']['table'] = 'field_data_field_parent';
-  $handler->display->display_options['fields']['field_parent']['field'] = 'field_parent';
+  /* Field: Content: Immediate parent */
+  $handler->display->display_options['fields']['immediate_parent']['id'] = 'immediate_parent';
+  $handler->display->display_options['fields']['immediate_parent']['table'] = 'field_data_field_parent';
+  $handler->display->display_options['fields']['immediate_parent']['field'] = 'immediate_parent';
+  $handler->display->display_options['fields']['immediate_parent']['label'] = 'Guide Placement';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
