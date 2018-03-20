@@ -20,4 +20,15 @@ function bgimage_views_data_alter(&$data) {
       'handler' => 'bgimage_handler_filter_parent',
     ),
   );
+  // Add a custom field handler for rendering the immediate parent.
+  $data['field_data_field_parent']['immediate_parent'] = array(
+    'group' => 'Content',
+    'title' => t('Immediate parent'),
+    'title short' => t('Immediate parent'),
+    'help' => t('Renders a link to the immediate parent.'),
+    'real field' => 'field_parent_value',
+    'field' => array(
+      'handler' => 'bgimage_handler_immediate_parent',
+    ),
+  );
 }
