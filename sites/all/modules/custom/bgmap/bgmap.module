@@ -6,7 +6,7 @@
 function bgmap_menu() {
   $items = array();
 
-  $items['node/%node/bgmap'] = array(
+  $items['node/%bgpage_node/bgmap'] = array(
     'title' => 'Data',
     'page callback' => 'bgmap_page',
     'page arguments' => array(1),
@@ -19,7 +19,7 @@ function bgmap_menu() {
     'page callback' => 'bgmap_json',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_CALLBACK,
     'file' => 'bgmap.pages.inc',
   );
   $items['node/%node/bgmap/state/json'] = array(
@@ -27,7 +27,7 @@ function bgmap_menu() {
     'page callback' => 'bgmap_state_json',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_CALLBACK,
     'file' => 'bgmap.pages.inc',
   );
 

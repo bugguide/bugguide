@@ -412,6 +412,90 @@ function bgimage_views_default_views() {
   $export['advanced_search'] = $view;
 
   $view = new view();
+  $view->name = 'featured_image';
+  $view->description = 'View to create a welcome banner with featured image';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Featured Image';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Featured Image';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '1';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Header: Global: Unfiltered text */
+  $handler->display->display_options['header']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['header']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['header']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['header']['area_text_custom']['label'] = 'Card Content';
+  $handler->display->display_options['header']['area_text_custom']['empty'] = TRUE;
+  $handler->display->display_options['header']['area_text_custom']['content'] = '<h1>Welcome to BugGuide</h1>
+<p>We are an online community of naturalists who enjoy learning about and sharing our observations of <strong>insect, spiders, and other related arthropods</strong>.</p>
+<p>We enjoy the opportunity to instill in others the <strong>fascination and appreciation</strong> that we share for the intricate lives of these oft-maligned creatures.</p>';
+  $handler->display->display_options['header']['area_text_custom']['tokenize'] = TRUE;
+  /* Footer: Global: Unfiltered text */
+  $handler->display->display_options['footer']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['footer']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['footer']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['footer']['area_text_custom']['label'] = 'Get Started Button';
+  $handler->display->display_options['footer']['area_text_custom']['content'] = '<a href="/user" class="card-footer-item">Get Started <span class="icon"><span class="fa fa-arrow-right"></span></span></a>';
+  /* Relationship: Content: Image (field_bgimage_image:fid) */
+  $handler->display->display_options['relationships']['field_bgimage_image_fid']['id'] = 'field_bgimage_image_fid';
+  $handler->display->display_options['relationships']['field_bgimage_image_fid']['table'] = 'field_data_field_bgimage_image';
+  $handler->display->display_options['relationships']['field_bgimage_image_fid']['field'] = 'field_bgimage_image_fid';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Field: Content: Image */
+  $handler->display->display_options['fields']['field_bgimage_image']['id'] = 'field_bgimage_image';
+  $handler->display->display_options['fields']['field_bgimage_image']['table'] = 'field_data_field_bgimage_image';
+  $handler->display->display_options['fields']['field_bgimage_image']['field'] = 'field_bgimage_image';
+  $handler->display->display_options['fields']['field_bgimage_image']['label'] = '';
+  $handler->display->display_options['fields']['field_bgimage_image']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_bgimage_image']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['field_bgimage_image']['alter']['absolute'] = TRUE;
+  $handler->display->display_options['fields']['field_bgimage_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_bgimage_image']['empty'] = 'Blep';
+  $handler->display->display_options['fields']['field_bgimage_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_bgimage_image']['settings'] = array(
+    'image_style' => '',
+    'image_link' => 'file',
+  );
+  /* Field: File: Path */
+  $handler->display->display_options['fields']['uri']['id'] = 'uri';
+  $handler->display->display_options['fields']['uri']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['uri']['field'] = 'uri';
+  $handler->display->display_options['fields']['uri']['relationship'] = 'field_bgimage_image_fid';
+  $handler->display->display_options['fields']['uri']['label'] = '';
+  $handler->display->display_options['fields']['uri']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['uri']['file_download_path'] = TRUE;
+  /* Filter criterion: Content: Nid */
+  $handler->display->display_options['filters']['nid']['id'] = 'nid';
+  $handler->display->display_options['filters']['nid']['table'] = 'node';
+  $handler->display->display_options['filters']['nid']['field'] = 'nid';
+  $handler->display->display_options['filters']['nid']['value']['value'] = '1501655';
+  $handler->display->display_options['filters']['nid']['group'] = 1;
+
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'block');
+  $handler->display->display_options['block_description'] = 'Welcome Banner';
+  $export['featured_image'] = $view;
+
+  $view = new view();
   $view->name = 'recent_images';
   $view->description = 'Shows recently uploaded images';
   $view->tag = 'default';
@@ -424,6 +508,7 @@ function bgimage_views_default_views() {
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Recent images';
+  $handler->display->display_options['css_class'] = 'columns';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -431,7 +516,11 @@ function bgimage_views_default_views() {
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
-  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['style_options']['row_class'] = 'column';
+  $handler->display->display_options['style_options']['default_row_class'] = FALSE;
+  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
+  $handler->display->display_options['style_options']['class'] = 'columns mr-0 ml-0';
   $handler->display->display_options['row_plugin'] = 'ds';
   $handler->display->display_options['row_options']['view_mode'] = 'homepage';
   $handler->display->display_options['row_options']['load_comments'] = 0;
@@ -476,10 +565,47 @@ function bgimage_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
+  $handler->display->display_options['defaults']['css_class'] = FALSE;
+  $handler->display->display_options['defaults']['use_more'] = FALSE;
+  $handler->display->display_options['defaults']['use_more_always'] = FALSE;
+  $handler->display->display_options['defaults']['use_more_always'] = FALSE;
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['defaults']['use_more_text'] = FALSE;
+  $handler->display->display_options['use_more_text'] = 'More recent images';
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '4';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['style_options']['row_class'] = 'column is-one-quarter-desktop is-half-tablet';
+  $handler->display->display_options['style_options']['default_row_class'] = FALSE;
+  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
+  $handler->display->display_options['style_options']['class'] = 'columns is-multiline';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'ds';
+  $handler->display->display_options['row_options']['view_mode'] = 'homepage';
+  $handler->display->display_options['row_options']['load_comments'] = 0;
+  $handler->display->display_options['row_options']['alternating'] = 0;
+  $handler->display->display_options['row_options']['grouping'] = 0;
+  $handler->display->display_options['row_options']['advanced'] = 0;
+  $handler->display->display_options['row_options']['delta_fieldset']['delta_fields'] = array();
+  $handler->display->display_options['row_options']['grouping_fieldset']['group_field'] = 'node|created';
+  $handler->display->display_options['row_options']['default_fieldset']['view_mode'] = 'homepage';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['footer'] = FALSE;
+  /* Footer: Global: Unfiltered text */
+  $handler->display->display_options['footer']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['footer']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['footer']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['footer']['area_text_custom']['label'] = 'More Link';
+  $handler->display->display_options['footer']['area_text_custom']['content'] = '<div class="has-text-right mt-2"><a href="/recent" class="button is-primary">More recently added images</a></div>';
   $handler->display->display_options['block_description'] = 'Recent images';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page_1');
+  $handler->display->display_options['defaults']['css_class'] = FALSE;
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
