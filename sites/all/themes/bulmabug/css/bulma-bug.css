@@ -291,6 +291,18 @@ a:hover,
 }
 
 /* --------------------- */
+/* ## VISUAL GUIDE
+/* --------------------- */
+
+.bg-visual-guide a {
+  display: block;
+}
+
+.bg-visual-guide a:hover {
+  outline: 2px solid var(--primary);
+}
+
+/* --------------------- */
 /* ## BREADCRUMB
 /* --------------------- */
 
