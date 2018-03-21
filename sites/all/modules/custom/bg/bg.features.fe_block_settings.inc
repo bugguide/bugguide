@@ -18,7 +18,7 @@ function bg_default_fe_block_settings() {
     'delta' => 'tagged_images',
     'module' => 'bgimage',
     'node_types' => array(),
-    'pages' => '',
+    'pages' => '<front>',
     'roles' => array(),
     'themes' => array(
       'ladybug' => array(
