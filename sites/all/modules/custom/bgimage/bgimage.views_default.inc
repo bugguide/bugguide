@@ -169,6 +169,7 @@ function bgimage_views_default_views() {
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'Image ID';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -180,8 +181,8 @@ function bgimage_views_default_views() {
   $handler->display->display_options['fields']['field_bgimage_date']['table'] = 'field_data_field_bgimage_date';
   $handler->display->display_options['fields']['field_bgimage_date']['field'] = 'field_bgimage_date';
   $handler->display->display_options['fields']['field_bgimage_date']['settings'] = array(
-    'format_type' => 'long',
-    'custom_date_format' => '',
+    'format_type' => 'custom',
+    'custom_date_format' => 'm-d-Y',
     'fromto' => 'both',
     'multiple_number' => '',
     'multiple_from' => '',
@@ -192,6 +193,7 @@ function bgimage_views_default_views() {
   $handler->display->display_options['fields']['field_bgimage_county']['id'] = 'field_bgimage_county';
   $handler->display->display_options['fields']['field_bgimage_county']['table'] = 'field_data_field_bgimage_county';
   $handler->display->display_options['fields']['field_bgimage_county']['field'] = 'field_bgimage_county';
+  $handler->display->display_options['fields']['field_bgimage_county']['label'] = 'County';
   /* Field: Content: Location */
   $handler->display->display_options['fields']['field_bgimage_location']['id'] = 'field_bgimage_location';
   $handler->display->display_options['fields']['field_bgimage_location']['table'] = 'field_data_field_bgimage_location';
@@ -291,7 +293,7 @@ function bgimage_views_default_views() {
   $handler->display->display_options['filters']['field_bgimage_county_value']['group'] = 1;
   $handler->display->display_options['filters']['field_bgimage_county_value']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_bgimage_county_value']['expose']['operator_id'] = 'field_bgimage_county_value_op';
-  $handler->display->display_options['filters']['field_bgimage_county_value']['expose']['label'] = 'County/Parish/District/Region';
+  $handler->display->display_options['filters']['field_bgimage_county_value']['expose']['label'] = 'County/Parish';
   $handler->display->display_options['filters']['field_bgimage_county_value']['expose']['operator'] = 'field_bgimage_county_value_op';
   $handler->display->display_options['filters']['field_bgimage_county_value']['expose']['identifier'] = 'field_bgimage_county_value';
   $handler->display->display_options['filters']['field_bgimage_county_value']['expose']['remember'] = TRUE;
@@ -343,26 +345,6 @@ function bgimage_views_default_views() {
     8 => 0,
     7 => 0,
   );
-  /* Filter criterion: Content: Representative Images (field_representative_images) */
-  $handler->display->display_options['filters']['field_representative_images_value']['id'] = 'field_representative_images_value';
-  $handler->display->display_options['filters']['field_representative_images_value']['table'] = 'field_data_field_representative_images';
-  $handler->display->display_options['filters']['field_representative_images_value']['field'] = 'field_representative_images_value';
-  $handler->display->display_options['filters']['field_representative_images_value']['operator'] = 'contains';
-  $handler->display->display_options['filters']['field_representative_images_value']['group'] = 1;
-  $handler->display->display_options['filters']['field_representative_images_value']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_representative_images_value']['expose']['operator_id'] = 'field_representative_images_value_op';
-  $handler->display->display_options['filters']['field_representative_images_value']['expose']['label'] = 'Representative Images';
-  $handler->display->display_options['filters']['field_representative_images_value']['expose']['operator'] = 'field_representative_images_value_op';
-  $handler->display->display_options['filters']['field_representative_images_value']['expose']['identifier'] = 'field_representative_images_value';
-  $handler->display->display_options['filters']['field_representative_images_value']['expose']['remember'] = TRUE;
-  $handler->display->display_options['filters']['field_representative_images_value']['expose']['remember_roles'] = array(
-    2 => '2',
-    6 => 0,
-    1 => 0,
-    5 => 0,
-    8 => 0,
-    7 => 0,
-  );
   /* Filter criterion: Content: Sex (field_bgimage_sex) */
   $handler->display->display_options['filters']['field_bgimage_sex_value']['id'] = 'field_bgimage_sex_value';
   $handler->display->display_options['filters']['field_bgimage_sex_value']['table'] = 'field_data_field_bgimage_sex';
@@ -377,6 +359,60 @@ function bgimage_views_default_views() {
   $handler->display->display_options['filters']['field_bgimage_sex_value']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['field_bgimage_sex_value']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['field_bgimage_sex_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    6 => 0,
+    1 => 0,
+    5 => 0,
+    8 => 0,
+    7 => 0,
+  );
+  /* Filter criterion: Content: Photographic Quality (field_bgimage_photo_quality:rating) */
+  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['id'] = 'field_bgimage_photo_quality_rating';
+  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['table'] = 'field_data_field_bgimage_photo_quality';
+  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['field'] = 'field_bgimage_photo_quality_rating';
+  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['operator'] = '>=';
+  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['expose']['operator_id'] = 'field_bgimage_photo_quality_rating_op';
+  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['expose']['label'] = 'Photographic Quality (1-5)';
+  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['expose']['operator'] = 'field_bgimage_photo_quality_rating_op';
+  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['expose']['identifier'] = 'field_bgimage_photo_quality_rating';
+  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['expose']['remember_roles'] = array(
+    2 => '2',
+    6 => 0,
+    1 => 0,
+    5 => 0,
+    8 => 0,
+    7 => 0,
+  );
+  /* Filter criterion: Content: Representative of Taxon (field_bgimage_representative:rating) */
+  $handler->display->display_options['filters']['field_bgimage_representative_rating']['id'] = 'field_bgimage_representative_rating';
+  $handler->display->display_options['filters']['field_bgimage_representative_rating']['table'] = 'field_data_field_bgimage_representative';
+  $handler->display->display_options['filters']['field_bgimage_representative_rating']['field'] = 'field_bgimage_representative_rating';
+  $handler->display->display_options['filters']['field_bgimage_representative_rating']['operator'] = '>=';
+  $handler->display->display_options['filters']['field_bgimage_representative_rating']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_bgimage_representative_rating']['expose']['operator_id'] = 'field_bgimage_representative_rating_op';
+  $handler->display->display_options['filters']['field_bgimage_representative_rating']['expose']['label'] = 'Representative of Taxon (1-5)';
+  $handler->display->display_options['filters']['field_bgimage_representative_rating']['expose']['operator'] = 'field_bgimage_representative_rating_op';
+  $handler->display->display_options['filters']['field_bgimage_representative_rating']['expose']['identifier'] = 'field_bgimage_representative_rating';
+  $handler->display->display_options['filters']['field_bgimage_representative_rating']['expose']['remember_roles'] = array(
+    2 => '2',
+    6 => 0,
+    1 => 0,
+    5 => 0,
+    8 => 0,
+    7 => 0,
+  );
+  /* Filter criterion: Content: Location code (field_bgimage_location_code) */
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['id'] = 'field_bgimage_location_code_value';
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['table'] = 'field_data_field_bgimage_location_code';
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['field'] = 'field_bgimage_location_code_value';
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['expose']['operator_id'] = 'field_bgimage_location_code_value_op';
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['expose']['label'] = 'State or Province';
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['expose']['description'] = 'E.g., NY';
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['expose']['operator'] = 'field_bgimage_location_code_value_op';
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['expose']['identifier'] = 'field_bgimage_location_code_value';
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['expose']['remember_roles'] = array(
     2 => '2',
     6 => 0,
     1 => 0,
