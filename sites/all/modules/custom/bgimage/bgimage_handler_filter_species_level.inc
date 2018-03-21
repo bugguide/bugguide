@@ -26,7 +26,7 @@ class bgimage_handler_filter_species_level extends views_handler_filter_boolean_
       'taxon_id'
     );
 
-    $this->query->add_having($this->options['group'], 'taxon_id', 3400, '<=');
+    $this->query->add_having($this->options['group'], 'taxon_id', 3400, '<');
   }
 
 }
