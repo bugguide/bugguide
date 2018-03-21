@@ -222,5 +222,8 @@
         <?php endif;?>
       </div>
     </div>
+    <?php if (gethostname() == 'bgbeta.ent.iastate.edu' && file_exists(DRUPAL_ROOT . '/sites/default/settings.php')) : ?>
+      <p>BugGuide 2.0 beta build completed <?php echo date("F d Y H:i", filemtime(DRUPAL_ROOT . '/sites/default/settings.php')) ?> CST.</p>
+    <?php endif;?>
   </footer>
 </div>
