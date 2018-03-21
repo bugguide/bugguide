@@ -30,10 +30,10 @@ function bgimage_views_default_views() {
   $handler->display->display_options['exposed_form']['type'] = 'better_exposed_filters';
   $handler->display->display_options['exposed_form']['options']['bef'] = array(
     'general' => array(
-      'input_required' => 0,
+      'input_required' => 1,
       'text_input_required' => array(
         'text_input_required' => array(
-          'value' => 'Select any filter and click on Apply to see results',
+          'value' => 'Select any criterion and click on Apply to see results',
           'format' => '1',
         ),
       ),
