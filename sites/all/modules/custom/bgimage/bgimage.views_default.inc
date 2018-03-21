@@ -703,10 +703,10 @@ function bgimage_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'list';
-  $handler->display->display_options['style_options']['row_class'] = 'column is-one-quarter-desktop is-half-tablet';
+  $handler->display->display_options['style_options']['row_class'] = 'column is-one-quarter-desktop is-half-tablet is-half-mobile';
   $handler->display->display_options['style_options']['default_row_class'] = FALSE;
   $handler->display->display_options['style_options']['row_class_special'] = FALSE;
-  $handler->display->display_options['style_options']['class'] = 'columns is-multiline';
+  $handler->display->display_options['style_options']['class'] = 'columns is-mobile is-multiline';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'ds';
