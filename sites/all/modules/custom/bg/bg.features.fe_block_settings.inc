@@ -50,5 +50,37 @@ function bg_default_fe_block_settings() {
     'visibility' => 0,
   );
 
+  $export['bg-bg_visual_guide'] = array(
+    'cache' => 1,
+    'custom' => 0,
+    'delta' => 'bg_visual_guide',
+    'module' => 'bg',
+    'node_types' => array(),
+    'pages' => '',
+    'roles' => array(),
+    'themes' => array(
+      'bulma' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'bulma',
+        'weight' => 0,
+      ),
+      'bulmabug' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'bulmabug',
+        'weight' => -16,
+      ),
+      'shiny' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'shiny',
+        'weight' => 0,
+      ),
+    ),
+    'title' => 'Visual Guide',
+    'visibility' => 0,
+  );
+
   return $export;
 }
