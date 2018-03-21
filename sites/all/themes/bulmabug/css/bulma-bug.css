@@ -242,6 +242,44 @@ a:hover,
   border-top: 1px solid #ddd;
 }
 
+/* --- ADVANCED SEARCH --- */
+
+.view-advanced-search .views-exposed-widgets {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.view-advanced-search .views-exposed-widget {
+  width: 25%;
+  min-width: 200px;
+  xborder: 1px solid;
+}
+
+.view-advanced-search .views-widget-filter-field_representative_images_value,
+.view-advanced-search .views-widget-filter-field_bgimage_representative_rating,
+.view-advanced-search .views-widget-filter-field_bgimage_photo_quality_rating {
+  min-width: 300px;
+}
+
+.view-advanced-search .views-exposed-widget .form-checkboxes {
+  padding-left: 0;
+}
+
+.view-advanced-search .views-exposed-widget > label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.view-advanced-search .views-exposed-widget .form-checkboxes label {
+  font-weight: normal;
+}
+
+@media (max-width: 848px) {
+  .view-advanced-search .views-exposed-widgets > .views-exposed-widget {
+  flex-grow: 1;
+}
+}
+
 /* --------------------- */
 /* ## HERO
 /* --------------------- */
