@@ -56,7 +56,7 @@ function bg_default_fe_block_settings() {
     'delta' => 'bg_visual_guide',
     'module' => 'bg',
     'node_types' => array(),
-    'pages' => '',
+    'pages' => '<front>',
     'roles' => array(),
     'themes' => array(
       'bulma' => array(
@@ -79,7 +79,7 @@ function bg_default_fe_block_settings() {
       ),
     ),
     'title' => 'Visual Guide',
-    'visibility' => 0,
+    'visibility' => 1,
   );
 
   return $export;
