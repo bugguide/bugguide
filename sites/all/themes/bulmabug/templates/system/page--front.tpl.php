@@ -169,7 +169,7 @@
             <?php endif; ?>
 
             <?php print render($title_suffix); ?>
-            <?php if ($tabs): ?>
+            <?php if (FALSE && $tabs): ?>
               <div class="tabs <?php print $tabs_primary_classes; ?>">
                 <?php print render($tabs); ?>
               </div>
