@@ -33,7 +33,7 @@ function bgpage_ds_field_settings_info() {
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
     'subscriptions' => array(
-      'weight' => '18',
+      'weight' => '19',
       'label' => 'hidden',
       'format' => 'default',
       'formatter_settings' => array(
@@ -296,7 +296,8 @@ function bgpage_ds_layout_settings_info() {
         15 => 'field_print_references',
         16 => 'field_internet_references',
         17 => 'bgpage_citations',
-        18 => 'subscriptions',
+        18 => 'field_tags',
+        19 => 'subscriptions',
       ),
     ),
     'fields' => array(
@@ -318,6 +319,7 @@ function bgpage_ds_layout_settings_info() {
       'field_print_references' => 'ds_content',
       'field_internet_references' => 'ds_content',
       'bgpage_citations' => 'ds_content',
+      'field_tags' => 'ds_content',
       'subscriptions' => 'ds_content',
     ),
     'classes' => array(),

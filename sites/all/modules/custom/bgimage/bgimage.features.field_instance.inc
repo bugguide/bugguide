@@ -177,7 +177,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 34,
+        'weight' => 35,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -235,7 +235,7 @@ function bgimage_field_default_field_instances() {
           'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
-        'weight' => 10,
+        'weight' => 8,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -422,7 +422,7 @@ function bgimage_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 12,
+        'weight' => 10,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -470,7 +470,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 33,
+        'weight' => 34,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -521,7 +521,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 35,
+        'weight' => 36,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -580,7 +580,7 @@ function bgimage_field_default_field_instances() {
           ),
         ),
         'type' => 'fivestar_formatter_default',
-        'weight' => 17,
+        'weight' => 15,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -641,7 +641,7 @@ function bgimage_field_default_field_instances() {
           ),
         ),
         'type' => 'fivestar_formatter_default',
-        'weight' => 16,
+        'weight' => 14,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -695,7 +695,7 @@ function bgimage_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 13,
+        'weight' => 11,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -744,7 +744,7 @@ function bgimage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 14,
+        'weight' => 12,
       ),
       'homepage' => array(
         'label' => 'above',
