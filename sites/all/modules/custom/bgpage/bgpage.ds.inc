@@ -33,7 +33,7 @@ function bgpage_ds_field_settings_info() {
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
     'subscriptions' => array(
-      'weight' => '19',
+      'weight' => '20',
       'label' => 'hidden',
       'format' => 'default',
       'formatter_settings' => array(
@@ -44,7 +44,7 @@ function bgpage_ds_field_settings_info() {
       ),
     ),
     'bgpage_classification' => array(
-      'weight' => '0',
+      'weight' => '1',
       'label' => 'above',
       'format' => 'default',
       'formatter_settings' => array(
@@ -55,7 +55,7 @@ function bgpage_ds_field_settings_info() {
       ),
     ),
     'bgpage_citations' => array(
-      'weight' => '17',
+      'weight' => '19',
       'label' => 'above',
       'format' => 'default',
       'formatter_settings' => array(
@@ -65,133 +65,10 @@ function bgpage_ds_field_settings_info() {
         ),
       ),
     ),
-    'field_counts' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_etymology' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_food' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_habitat' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_hodges_number' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_id' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_internet_references' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_life_cycle' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_other_common_names' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_print_references' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_range' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_remarks' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_season' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_see_also' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_size' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
-    'field_synonyms' => array(
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
+    'bgpage_representative_images' => array(
+      'weight' => '0',
+      'label' => 'hidden',
+      'format' => 'default',
     ),
   );
   $export['node|bgpage|default'] = $ds_fieldsetting;
@@ -278,29 +155,31 @@ function bgpage_ds_layout_settings_info() {
   $ds_layout->settings = array(
     'regions' => array(
       'ds_content' => array(
-        0 => 'bgpage_classification',
-        1 => 'field_hodges_number',
-        2 => 'field_other_common_names',
-        3 => 'field_synonyms',
-        4 => 'field_etymology',
-        5 => 'field_counts',
-        6 => 'field_size',
-        7 => 'field_id',
-        8 => 'field_range',
-        9 => 'field_habitat',
-        10 => 'field_season',
-        11 => 'field_food',
-        12 => 'field_life_cycle',
-        13 => 'field_remarks',
-        14 => 'field_see_also',
-        15 => 'field_print_references',
-        16 => 'field_internet_references',
-        17 => 'bgpage_citations',
+        0 => 'bgpage_representative_images',
+        1 => 'bgpage_classification',
+        2 => 'field_hodges_number',
+        3 => 'field_other_common_names',
+        4 => 'field_synonyms',
+        5 => 'field_etymology',
+        6 => 'field_counts',
+        7 => 'field_size',
+        8 => 'field_id',
+        9 => 'field_range',
+        10 => 'field_habitat',
+        11 => 'field_season',
+        12 => 'field_food',
+        13 => 'field_life_cycle',
+        14 => 'field_remarks',
+        15 => 'field_see_also',
+        16 => 'field_print_references',
+        17 => 'field_internet_references',
         18 => 'field_tags',
-        19 => 'subscriptions',
+        19 => 'bgpage_citations',
+        20 => 'subscriptions',
       ),
     ),
     'fields' => array(
+      'bgpage_representative_images' => 'ds_content',
       'bgpage_classification' => 'ds_content',
       'field_hodges_number' => 'ds_content',
       'field_other_common_names' => 'ds_content',
@@ -318,8 +197,8 @@ function bgpage_ds_layout_settings_info() {
       'field_see_also' => 'ds_content',
       'field_print_references' => 'ds_content',
       'field_internet_references' => 'ds_content',
-      'bgpage_citations' => 'ds_content',
       'field_tags' => 'ds_content',
+      'bgpage_citations' => 'ds_content',
       'subscriptions' => 'ds_content',
     ),
     'classes' => array(),
