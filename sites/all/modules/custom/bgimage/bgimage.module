@@ -292,7 +292,12 @@ function bgimage_node_validate($node, $form, &$form_state) {
       else {
         $full_parent = bgimage_get_full_parent($parent);
         if ($full_parent === FALSE) {
-          form_set_error('field_parent', 'bgimage: No such parent.');
+          if ($parent == BG_ID_REQUEST_NID || $parent == BG_FRASS_NID) {
+            $form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] = $parent;
+          }
+          else {
+            form_set_error('field_parent', 'bgimage: No such parent.');
+          }
         }
         else {
           $form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] = $full_parent . ',' . $parent;
@@ -688,7 +693,7 @@ function bgimage_original_from_derivative_path($scheme, $target) {
  * @return string e.g., 52,124,2234,32234
  */
 function bgimage_get_full_parent($nid) {
-  $parent = db_query("SELECT parent FROM {bgimage} WHERE nid = :nid", array(':nid' => $nid))->fetchField();
+  $parent = db_query("SELECT field_parent_value FROM {field_data_field_parent} WHERE entity_id = :nid", array(':nid' => $nid))->fetchField();
   return $parent;
 }
 
