@@ -152,7 +152,7 @@ function _bgpage_images($field) {
     // Run query and render results if matches are found.
     list($final_query, $response) = apachesolr_do_query($query);
     if ($response->code == '200' && $response->response->numFound > 0) {
-      // Group resuls by parent.
+      // Group results by parent.
       $docs_by_parent = array();
       foreach ($response->response->docs as $doc) {
         $docs_by_parent[$doc->is_bgimage_immediate_parent][] = $doc;
@@ -183,7 +183,12 @@ function _bgpage_images($field) {
 
       $output .= '<div class="card mb-3"><div class="card-header"><div class="card-header-title has-text-weight-normal is-block">' . implode(' &raquo; ', $breadcrumbs) .'</div></div>';
 
-
+      // Render a list of images for this group.
+      $output .= '<div class="card-content"><ul class="columns is-mobile is-multiline">';
+      foreach ($docs as $doc) {
+        $output .= '<li>' . $doc->ss_bgimage_thumbnail . '</li>';
+      }
+      $output .= '</ul></div></div>';
     }
 
     // Print pager.
