@@ -114,7 +114,7 @@ function bgref_strongarm() {
       'display' => array(
         'subscriptions_ui' => array(
           'default' => array(
-            'weight' => '29',
+            'weight' => '33',
             'visible' => FALSE,
           ),
         ),
