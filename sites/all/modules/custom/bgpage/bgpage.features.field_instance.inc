@@ -34,7 +34,7 @@ function bgpage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 23,
       ),
       'recent' => array(
         'label' => 'above',
