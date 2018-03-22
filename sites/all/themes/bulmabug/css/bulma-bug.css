@@ -61,6 +61,79 @@ a:hover,
 .search-form input[type=submit]:hover { background-color: var(--green-dark); }
 
 /* --------------------- */
+/* ## TABLES
+/* --------------------- */
+/* Duplicate bulma.io table styles because sometimes you just
+ * can't get your class on a table. To target those stray tables
+ * add your selectors to each rule. It ain't pretty, but it'll do.
+ */
+
+/* .page-user-track is user/%/track, a table created in modules/tracker */
+
+.page-user-track table {
+  background-color: white;
+  color: #363636;
+  margin-bottom: 1.5rem;
+}
+
+.page-user-track table td,
+.page-user-track table th {
+  border: 1px solid #dbdbdb;
+  border-width: 0 0 1px;
+  padding: 0.5em 0.75em;
+  vertical-align: top;
+}
+
+.page-user-track table th {
+  color: #363636;
+  text-align: left;
+}
+
+.page-user-track table thead td,
+.page-user-track table thead th {
+  border-width: 0 0 2px;
+  color: #363636;
+}
+
+.page-user-track table tfoot td,
+.page-user-track table tfoot th {
+  border-width: 2px 0 0;
+  color: #363636;
+}
+
+.page-user-track table tbody tr:last-child td,
+.page-user-track table tbody tr:last-child th {
+  border-bottom-width: 0;
+}
+
+/* --- Table Modifiers --- */
+/* Add your selectors here if you want to mimic
+ * the modifier classes from bulma.io
+ */
+
+/* .is-full-width */
+.page-user-track table {
+  width: 100%;
+}
+
+/* .is-narrow */
+.page-user-track table td,
+.page-user-track table th {
+  padding: 0.25em 0.5em;
+}
+
+.page-user-track table td,
+.page-user-track table th {
+  white-space: nowrap;
+  width: 1%;
+}
+
+/* .is-striped */
+.page-user-track table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* --------------------- */
 /* ## MOBILE MENU
 /* --------------------- */
 
