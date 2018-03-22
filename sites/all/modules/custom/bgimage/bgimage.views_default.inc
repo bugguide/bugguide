@@ -28,6 +28,7 @@ function bgimage_views_default_views() {
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'better_exposed_filters';
+  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Search';
   $handler->display->display_options['exposed_form']['options']['bef'] = array(
     'general' => array(
       'input_required' => 1,
@@ -40,6 +41,57 @@ function bgimage_views_default_views() {
       'allow_secondary' => 0,
       'secondary_label' => 'Advanced options',
       'secondary_collapse_override' => '0',
+    ),
+    'field_bgimage_location_code_value' => array(
+      'bef_format' => 'default',
+      'more_options' => array(
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
+    'field_bgimage_county_value' => array(
+      'bef_format' => 'default',
+      'more_options' => array(
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
+    'field_bgimage_location_value' => array(
+      'bef_format' => 'default',
+      'more_options' => array(
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
     ),
     'uid' => array(
       'bef_format' => 'default',
@@ -77,26 +129,11 @@ function bgimage_views_default_views() {
         ),
       ),
     ),
-    'body_value' => array(
-      'bef_format' => 'default',
+    'field_bgimage_sex_value' => array(
+      'bef_format' => 'bef',
       'more_options' => array(
-        'autosubmit' => 0,
-        'is_secondary' => 0,
-        'any_label' => '',
-        'bef_filter_description' => '',
-        'tokens' => array(
-          'available' => array(
-            0 => 'global_types',
-          ),
-        ),
-        'rewrite' => array(
-          'filter_rewrite_values' => '',
-        ),
-      ),
-    ),
-    'field_bgimage_county_value' => array(
-      'bef_format' => 'default',
-      'more_options' => array(
+        'bef_select_all_none' => 0,
+        'bef_collapsible' => 0,
         'autosubmit' => 0,
         'is_secondary' => 0,
         'any_label' => '',
@@ -130,28 +167,9 @@ function bgimage_views_default_views() {
         ),
       ),
     ),
-    'field_bgimage_location_value' => array(
+    'body_value' => array(
       'bef_format' => 'default',
       'more_options' => array(
-        'autosubmit' => 0,
-        'is_secondary' => 0,
-        'any_label' => '',
-        'bef_filter_description' => '',
-        'tokens' => array(
-          'available' => array(
-            0 => 'global_types',
-          ),
-        ),
-        'rewrite' => array(
-          'filter_rewrite_values' => '',
-        ),
-      ),
-    ),
-    'field_bgimage_sex_value' => array(
-      'bef_format' => 'bef',
-      'more_options' => array(
-        'bef_select_all_none' => 0,
-        'bef_collapsible' => 0,
         'autosubmit' => 0,
         'is_secondary' => 0,
         'any_label' => '',
@@ -167,7 +185,7 @@ function bgimage_views_default_views() {
       ),
     ),
     'field_bgimage_photo_quality_rating' => array(
-      'bef_format' => 'default',
+      'bef_format' => 'bef_slider',
       'slider_options' => array(
         'bef_slider_min' => '0',
         'bef_slider_max' => '5',
@@ -191,7 +209,7 @@ function bgimage_views_default_views() {
       ),
     ),
     'field_bgimage_representative_rating' => array(
-      'bef_format' => 'default',
+      'bef_format' => 'bef_slider',
       'slider_options' => array(
         'bef_slider_min' => '0',
         'bef_slider_max' => '5',
@@ -200,25 +218,6 @@ function bgimage_views_default_views() {
         'bef_slider_orientation' => 'horizontal',
       ),
       'more_options' => array(
-        'autosubmit' => 0,
-        'is_secondary' => 0,
-        'any_label' => '',
-        'bef_filter_description' => '',
-        'tokens' => array(
-          'available' => array(
-            0 => 'global_types',
-          ),
-        ),
-        'rewrite' => array(
-          'filter_rewrite_values' => '',
-        ),
-      ),
-    ),
-    'field_bgimage_location_code_value' => array(
-      'bef_format' => 'default',
-      'more_options' => array(
-        'bef_select_all_none' => 0,
-        'bef_collapsible' => 0,
         'autosubmit' => 0,
         'is_secondary' => 0,
         'any_label' => '',
@@ -255,7 +254,7 @@ function bgimage_views_default_views() {
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  $handler->display->display_options['fields']['nid']['label'] = 'Image ID';
+  $handler->display->display_options['fields']['nid']['label'] = 'ID';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -288,6 +287,7 @@ function bgimage_views_default_views() {
   $handler->display->display_options['fields']['field_bgimage_location_code']['id'] = 'field_bgimage_location_code';
   $handler->display->display_options['fields']['field_bgimage_location_code']['table'] = 'field_data_field_bgimage_location_code';
   $handler->display->display_options['fields']['field_bgimage_location_code']['field'] = 'field_bgimage_location_code';
+  $handler->display->display_options['fields']['field_bgimage_location_code']['label'] = 'State';
   /* Field: Content: Immediate parent */
   $handler->display->display_options['fields']['immediate_parent']['id'] = 'immediate_parent';
   $handler->display->display_options['fields']['immediate_parent']['table'] = 'field_data_field_parent';
@@ -331,6 +331,14 @@ function bgimage_views_default_views() {
     5 => 0,
     8 => 0,
     7 => 0,
+  );
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['group_info']['label'] = 'Location code (field_bgimage_location_code)';
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['group_info']['identifier'] = 'field_bgimage_location_code_value';
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['group_info']['remember'] = FALSE;
+  $handler->display->display_options['filters']['field_bgimage_location_code_value']['group_info']['group_items'] = array(
+    1 => array(),
+    2 => array(),
+    3 => array(),
   );
   /* Filter criterion: Content: County/Parish/District/Region (field_bgimage_county) */
   $handler->display->display_options['filters']['field_bgimage_county_value']['id'] = 'field_bgimage_county_value';
@@ -409,27 +417,6 @@ function bgimage_views_default_views() {
     8 => 0,
     7 => 0,
   );
-  /* Filter criterion: Content: Life stage (field_bgimage_life_stage) */
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['id'] = 'field_bgimage_life_stage_value';
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['table'] = 'field_data_field_bgimage_life_stage';
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['field'] = 'field_bgimage_life_stage_value';
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['group'] = 1;
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['operator_id'] = 'field_bgimage_life_stage_value_op';
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['label'] = 'Life stage';
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['operator'] = 'field_bgimage_life_stage_value_op';
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['identifier'] = 'field_bgimage_life_stage_value';
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['remember'] = TRUE;
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['remember_roles'] = array(
-    2 => '2',
-    6 => 0,
-    1 => 0,
-    5 => 0,
-    8 => 0,
-    7 => 0,
-  );
   /* Filter criterion: Content: Sex (field_bgimage_sex) */
   $handler->display->display_options['filters']['field_bgimage_sex_value']['id'] = 'field_bgimage_sex_value';
   $handler->display->display_options['filters']['field_bgimage_sex_value']['table'] = 'field_data_field_bgimage_sex';
@@ -444,6 +431,27 @@ function bgimage_views_default_views() {
   $handler->display->display_options['filters']['field_bgimage_sex_value']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['field_bgimage_sex_value']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['field_bgimage_sex_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    6 => 0,
+    1 => 0,
+    5 => 0,
+    8 => 0,
+    7 => 0,
+  );
+  /* Filter criterion: Content: Life stage (field_bgimage_life_stage) */
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['id'] = 'field_bgimage_life_stage_value';
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['table'] = 'field_data_field_bgimage_life_stage';
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['field'] = 'field_bgimage_life_stage_value';
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['operator'] = 'and';
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['operator_id'] = 'field_bgimage_life_stage_value_op';
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['label'] = 'Life stage';
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['operator'] = 'field_bgimage_life_stage_value_op';
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['identifier'] = 'field_bgimage_life_stage_value';
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['remember_roles'] = array(
     2 => '2',
     6 => 0,
     1 => 0,
@@ -471,44 +479,6 @@ function bgimage_views_default_views() {
     8 => 0,
     7 => 0,
   );
-  /* Filter criterion: Content: Photographic Quality (field_bgimage_photo_quality:rating) */
-  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['id'] = 'field_bgimage_photo_quality_rating';
-  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['table'] = 'field_data_field_bgimage_photo_quality';
-  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['field'] = 'field_bgimage_photo_quality_rating';
-  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['operator'] = '>=';
-  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['group'] = 1;
-  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['expose']['operator_id'] = 'field_bgimage_photo_quality_rating_op';
-  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['expose']['label'] = 'Photographic Quality (1-5)';
-  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['expose']['operator'] = 'field_bgimage_photo_quality_rating_op';
-  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['expose']['identifier'] = 'field_bgimage_photo_quality_rating';
-  $handler->display->display_options['filters']['field_bgimage_photo_quality_rating']['expose']['remember_roles'] = array(
-    2 => '2',
-    6 => 0,
-    1 => 0,
-    5 => 0,
-    8 => 0,
-    7 => 0,
-  );
-  /* Filter criterion: Content: Representative of Taxon (field_bgimage_representative:rating) */
-  $handler->display->display_options['filters']['field_bgimage_representative_rating']['id'] = 'field_bgimage_representative_rating';
-  $handler->display->display_options['filters']['field_bgimage_representative_rating']['table'] = 'field_data_field_bgimage_representative';
-  $handler->display->display_options['filters']['field_bgimage_representative_rating']['field'] = 'field_bgimage_representative_rating';
-  $handler->display->display_options['filters']['field_bgimage_representative_rating']['operator'] = '>=';
-  $handler->display->display_options['filters']['field_bgimage_representative_rating']['group'] = 1;
-  $handler->display->display_options['filters']['field_bgimage_representative_rating']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_bgimage_representative_rating']['expose']['operator_id'] = 'field_bgimage_representative_rating_op';
-  $handler->display->display_options['filters']['field_bgimage_representative_rating']['expose']['label'] = 'Representative of Taxon (1-5)';
-  $handler->display->display_options['filters']['field_bgimage_representative_rating']['expose']['operator'] = 'field_bgimage_representative_rating_op';
-  $handler->display->display_options['filters']['field_bgimage_representative_rating']['expose']['identifier'] = 'field_bgimage_representative_rating';
-  $handler->display->display_options['filters']['field_bgimage_representative_rating']['expose']['remember_roles'] = array(
-    2 => '2',
-    6 => 0,
-    1 => 0,
-    5 => 0,
-    8 => 0,
-    7 => 0,
-  );
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -527,6 +497,62 @@ function bgimage_views_default_views() {
   $handler->display->display_options['style_options']['newline_token'] = '1';
   $handler->display->display_options['style_options']['header'] = 1;
   $handler->display->display_options['style_options']['keep_html'] = 0;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Image */
+  $handler->display->display_options['fields']['field_bgimage_image']['id'] = 'field_bgimage_image';
+  $handler->display->display_options['fields']['field_bgimage_image']['table'] = 'field_data_field_bgimage_image';
+  $handler->display->display_options['fields']['field_bgimage_image']['field'] = 'field_bgimage_image';
+  $handler->display->display_options['fields']['field_bgimage_image']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_bgimage_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_bgimage_image']['settings'] = array(
+    'image_style' => 'bg_small',
+    'image_link' => '',
+  );
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'URL';
+  $handler->display->display_options['fields']['nid']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['nid']['alter']['text'] = 'https://bugguide.net/node/view/[nid]';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Field: Content: Date taken */
+  $handler->display->display_options['fields']['field_bgimage_date']['id'] = 'field_bgimage_date';
+  $handler->display->display_options['fields']['field_bgimage_date']['table'] = 'field_data_field_bgimage_date';
+  $handler->display->display_options['fields']['field_bgimage_date']['field'] = 'field_bgimage_date';
+  $handler->display->display_options['fields']['field_bgimage_date']['settings'] = array(
+    'format_type' => 'custom',
+    'custom_date_format' => 'm-d-Y',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+    'show_remaining_days' => 0,
+  );
+  /* Field: Content: County/Parish/District/Region */
+  $handler->display->display_options['fields']['field_bgimage_county']['id'] = 'field_bgimage_county';
+  $handler->display->display_options['fields']['field_bgimage_county']['table'] = 'field_data_field_bgimage_county';
+  $handler->display->display_options['fields']['field_bgimage_county']['field'] = 'field_bgimage_county';
+  $handler->display->display_options['fields']['field_bgimage_county']['label'] = 'County';
+  /* Field: Content: Location */
+  $handler->display->display_options['fields']['field_bgimage_location']['id'] = 'field_bgimage_location';
+  $handler->display->display_options['fields']['field_bgimage_location']['table'] = 'field_data_field_bgimage_location';
+  $handler->display->display_options['fields']['field_bgimage_location']['field'] = 'field_bgimage_location';
+  /* Field: Content: Location code */
+  $handler->display->display_options['fields']['field_bgimage_location_code']['id'] = 'field_bgimage_location_code';
+  $handler->display->display_options['fields']['field_bgimage_location_code']['table'] = 'field_data_field_bgimage_location_code';
+  $handler->display->display_options['fields']['field_bgimage_location_code']['field'] = 'field_bgimage_location_code';
+  /* Field: Content: Immediate parent */
+  $handler->display->display_options['fields']['immediate_parent']['id'] = 'immediate_parent';
+  $handler->display->display_options['fields']['immediate_parent']['table'] = 'field_data_field_parent';
+  $handler->display->display_options['fields']['immediate_parent']['field'] = 'immediate_parent';
+  $handler->display->display_options['fields']['immediate_parent']['label'] = 'Guide Placement';
   $handler->display->display_options['path'] = 'export';
   $handler->display->display_options['displays'] = array(
     'page' => 'page',
@@ -667,13 +693,6 @@ function bgimage_views_default_views() {
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filter criterion: Content: Published */
-  $handler->display->display_options['filters']['status']['id'] = 'status';
-  $handler->display->display_options['filters']['status']['table'] = 'node';
-  $handler->display->display_options['filters']['status']['field'] = 'status';
-  $handler->display->display_options['filters']['status']['value'] = 1;
-  $handler->display->display_options['filters']['status']['group'] = 1;
-  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
