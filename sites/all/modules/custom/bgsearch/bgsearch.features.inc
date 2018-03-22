@@ -245,7 +245,7 @@ function bgsearch_default_search_api_page() {
   $items = array();
   $items['bugguide_search'] = entity_import('search_api_page', '{
     "index_id" : "bugguide",
-    "path" : "search",
+    "path" : "search\\/global",
     "name" : "BugGuide search",
     "machine_name" : "bugguide_search",
     "description" : "",
