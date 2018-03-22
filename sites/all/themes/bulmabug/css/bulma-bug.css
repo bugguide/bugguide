@@ -393,6 +393,18 @@ a:hover,
   margin-right: 0.5rem;
 }
 
+.field-name-field-tags form.editable-field > div {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.field-name-field-tags form.editable-field input[type=submit] {
+  margin-left: 0.5rem;
+  /* is-small */
+  font-size: 0.75rem;
+  border-radius: 2px;
+}
+
 /* --------------------- */
 /* ## BUG CARD
 /* --------------------- */
@@ -521,6 +533,21 @@ a:hover,
   font-family: 'FontAwesome';
   display: inline-block;
   margin-right: 0.5rem;
+}
+
+/* --------------------- */
+/* ## GUIDE PAGE
+/* --------------------- */
+
+/* --- Representative Images --- */
+/* This ul is inside of the page .content so is getting the
+ * bulleted list style. So we're going to override it.
+ */
+
+.field-name-bgpage-representative-images ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 /* --------------------- */
