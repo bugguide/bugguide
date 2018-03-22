@@ -87,18 +87,8 @@ function bgimage_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'bgimage';
   $ds_fieldsetting->view_mode = 'homepage';
   $ds_fieldsetting->settings = array(
-    'title' => array(
-      'weight' => '0',
-      'label' => 'hidden',
-      'format' => 'default',
-      'formatter_settings' => array(
-        'link' => '0',
-        'wrapper' => 'p',
-        'class' => 'card-header-title',
-      ),
-    ),
     'bgimage_field_placed_by' => array(
-      'weight' => '2',
+      'weight' => '1',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -348,18 +338,14 @@ function bgimage_ds_layout_settings_info() {
   $ds_layout->layout = 'card';
   $ds_layout->settings = array(
     'regions' => array(
-      'header' => array(
-        0 => 'title',
-      ),
       'image' => array(
-        1 => 'field_bgimage_image',
+        0 => 'field_bgimage_image',
       ),
       'body' => array(
-        2 => 'bgimage_field_placed_by',
+        1 => 'bgimage_field_placed_by',
       ),
     ),
     'fields' => array(
-      'title' => 'header',
       'field_bgimage_image' => 'image',
       'bgimage_field_placed_by' => 'body',
     ),
