@@ -114,7 +114,7 @@ function bgpage_strongarm() {
       'display' => array(
         'subscriptions_ui' => array(
           'default' => array(
-            'weight' => '51',
+            'weight' => '50',
             'visible' => FALSE,
           ),
         ),
