@@ -97,7 +97,7 @@ function bgimage_menu() {
     'title' => 'Add image',
     'page callback' => 'bgimage_add_image',
     'page arguments' => array(1),
-    'access arguments' => array('Create bgimage nodes'),
+    'access arguments' => array('create bgimages'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'bgimage.pages.inc',
   );
@@ -884,4 +884,15 @@ function bgimage_get_series($nid) {
   $nids = db_query('SELECT nid FROM {bgimage_series} WHERE series = :nid', array(':nid' => $nid))->fetchCol();
 
   return $nids;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Only allow users with Administer content permission to edit the parent field.
+ */
+function bgimage_form_bgimage_node_form_alter(&$form, &$form_state) {
+  if (!user_access('administer nodes')) {
+    $form['field_parent']['#access'] = FALSE;
+  }
 }
