@@ -889,10 +889,11 @@ function bgimage_get_series($nid) {
 /**
  * Implements hook_form_FORM_ID_alter().
  *
- * Only allow users with Administer content permission to edit the parent field.
+ * Only allow users with Administer content permission to edit some fields.
  */
 function bgimage_form_bgimage_node_form_alter(&$form, &$form_state) {
   if (!user_access('administer nodes')) {
     $form['field_parent']['#access'] = FALSE;
+    $form['field_bgimage_base']['#access'] = FALSE;
   }
 }
