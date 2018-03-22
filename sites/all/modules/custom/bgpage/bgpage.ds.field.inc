@@ -81,23 +81,12 @@ function _bgpage_browse($field) {
       $children_docs[] = $document;
     }
 
-    // Find the top rated 5 images for each bgpage.
+    // Find the top rated images for each bgpage.
     foreach ($children_docs as $child_doc) {
-      // Filter images with this child nid as their parent.
-      $filter_parent = new SolrFilterSubQuery('AND');
-      $filter_parent->addFilter('sm_bgimage_parents', $child_doc->entity_id);
-
-      $query = apachesolr_drupal_query('browse_images_' . $child_doc->entity_id, array());
-      $query->addFilterSubQuery($filter_parent);
-      $query->addParam('fl', 'ss_bgimage_thumbnail');
-      $query->addParam('rows', 8);
-      $query->addParam('sort', 'is_bgimage_rating_avg desc');
-      $query->addParam('sort', 'is_bgimage_rating_count desc');
-
-      // Query Solr and attach images to the child's document.
-      list(, $response) = apachesolr_do_query($query);
-      $child_doc->matches = array();
-      $child_doc->matches = $response->response->docs;
+      $child_doc->matches = _bgpage_search_representative_images_for($child_doc->entity_id);
+      if (empty($child_doc->matches)) {
+        $child_doc->matches = array();
+      }
     }
 
     // Render results.
@@ -194,13 +183,7 @@ function _bgpage_images($field) {
 
       $output .= '<div class="card mb-3"><div class="card-header"><div class="card-header-title has-text-weight-normal is-block">' . implode(' &raquo; ', $breadcrumbs) .'</div></div>';
 
-      // Render a list of images for this group.
-      $output .= '<div class="card-content"><ul class="columns is-mobile is-multiline">';
-      foreach ($docs as $doc) {
-        $thumbnail = isset($doc->ss_bgimage_thumbnail) ? $doc->ss_bgimage_thumbnail : '<!-- missing thumbnail for ' . $doc->entity_id . ' -->';
-        $output .= '<li>' . $thumbnail . '</li>';
-      }
-      $output .= '</ul></div></div>';
+
     }
 
     // Print pager.
@@ -211,4 +194,57 @@ function _bgpage_images($field) {
     $output = 'No images found for this classification.';
   }
   return $output;
+}
+
+/**
+ * Callback to render representative images for a bgpage node.
+ */
+function bgpage_representative_images($field) {
+  try {
+    $documents = _bgpage_search_representative_images_for($field['entity']->nid);
+
+    // Render a list of images.
+    $output = '<div class="card mb-3"><div class="card-content"><ul class="columns is-mobile is-multiline">';
+    foreach ($documents as $document) {
+      $output .= '<li>' . $document->ss_bgimage_thumbnail . '</li>';
+    }
+    $output .= '</ul></div></div>';
+
+    return $output;
+  }
+  catch (Exception $e) {
+    watchdog('bgpage', 'Could not connect to Solr to fetch representative images for !nid. Error was %error.', array(
+      '!nid' => $field['entity']->nid,
+      '%error' => $e->getMessage(),
+    ), WATCHDOG_ERROR);
+  }
+}
+
+/**
+ * Private callback to search for representative images.
+ *
+ * @param int $bgpage_nid
+ *   A bgpage nid.
+ *
+ * @return array
+ *   An array of Apache_Solr_Document objects.
+ *
+ * @throws \Exception
+ *   When the Solr server cannot be reached or the query failed.
+ */
+function _bgpage_search_representative_images_for($bgpage_nid) {
+  // Filter images with this child nid as their parent.
+  $filter_parent = new SolrFilterSubQuery('AND');
+  $filter_parent->addFilter('sm_bgimage_parents', $bgpage_nid);
+
+  $query = apachesolr_drupal_query('representative_images_' . $bgpage_nid, array());
+  $query->addFilterSubQuery($filter_parent);
+  $query->addParam('fl', 'ss_bgimage_thumbnail');
+  $query->addParam('rows', 8);
+  $query->addParam('sort', 'is_bgimage_rating_avg desc');
+  $query->addParam('sort', 'is_bgimage_rating_count desc');
+
+  // Query Solr and attach images to the child's document.
+  list(, $response) = apachesolr_do_query($query);
+  return $response->response->docs;
 }
