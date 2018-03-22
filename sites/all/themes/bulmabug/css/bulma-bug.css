@@ -330,18 +330,20 @@ a:hover,
 }
 
 .view-advanced-search .views-widget-filter-field_bgimage_life_stage_value,
-.view-advanced-search .views-widget-filter-parent_ancestor {
+.view-advanced-search .views-submit-button {
   width: 66%;
 }
 
-.view-advanced-search .views-widget-filter-body_value,
 .view-advanced-search .views-submit-button {
-  xgrid-column: span 3;
-  width: 100%;
+  flex-grow: 1;
 }
 
 .view-advanced-search .views-exposed-widget .form-checkboxes {
   padding-left: 0;
+}
+
+.view-advanced-search .form-item {
+  margin-bottom: 0.25rem !important;
 }
 
 .view-advanced-search .views-exposed-widget > label {
@@ -353,9 +355,18 @@ a:hover,
   font-weight: normal;
 }
 
+.view-advanced-search .description {
+  margin-top: 0;
+}
+
+.view-advanced-search .views-widget-per-page {
+  width: auto;
+}
+
 .view-advanced-search .form-submit {
   color: #fff;
   background: var(--primary);
+  margin-top: 0;
 }
   .view-advanced-search .form-submit:hover {
     color: #fff;
@@ -369,6 +380,9 @@ a:hover,
   .view-advanced-search .views-exposed-widget {
     width: 100%;
     border-bottom: 0;
+  }
+  .view-advanced-search .views-exposed-widget .form-submit {
+    margin-top: 0;
   }
 }
 
