@@ -400,9 +400,15 @@ function bgref_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'module' => 'editablefields',
+        'settings' => array(
+          'click_to_edit' => 1,
+          'click_to_edit_style' => 'button',
+          'empty_text' => '',
+          'fallback_format' => 'taxonomy_term_reference_link',
+          'fallback_settings' => array(),
+        ),
+        'type' => 'editable',
         'weight' => 7,
       ),
       'homepage' => array(
