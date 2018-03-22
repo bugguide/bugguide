@@ -129,7 +129,7 @@ function bgpage_ds_fields_info($entity_type) {
     );
 
     $fields['bgpage_representative_images'] = array(
-      'title' => t('Representative images'),
+      'title' => t('Representative images for taxon'),
       'field_type' => DS_FIELD_TYPE_FUNCTION,
       'function' => 'bgpage_representative_images',
       'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
