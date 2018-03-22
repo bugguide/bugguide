@@ -250,32 +250,20 @@ function bgpage_ds_layout_settings_info() {
   $ds_layout->entity_type = 'node';
   $ds_layout->bundle = 'page';
   $ds_layout->view_mode = 'homepage';
-  $ds_layout->layout = 'ds_2col';
+  $ds_layout->layout = 'ds_1col';
   $ds_layout->settings = array(
-    'regions' => array(
-      'left' => array(
-        0 => 'title',
-        1 => 'body',
-      ),
-      'right' => array(
-        2 => 'recent_images',
-      ),
-    ),
-    'fields' => array(
-      'title' => 'left',
-      'body' => 'left',
-      'recent_images' => 'right',
-    ),
     'classes' => array(),
     'wrappers' => array(
-      'left' => 'div',
-      'right' => 'div',
+      'ds_content' => 'div',
     ),
     'layout_wrapper' => 'div',
     'layout_attributes' => '',
     'layout_attributes_merge' => 1,
     'layout_link_attribute' => '',
     'layout_link_custom' => '',
+    'layout_disable_css' => FALSE,
+    'hide_page_title' => '1',
+    'page_option_title' => '',
   );
   $export['node|page|homepage'] = $ds_layout;
 
