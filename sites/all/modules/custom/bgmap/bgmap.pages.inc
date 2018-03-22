@@ -163,7 +163,7 @@ function bgmap_page($nid) {
   $output .= '<div id="iframecontainer"><iframe src="https://maps.eddmaps.org/bugguide/?node=' . $node->nid . '" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" height="500" width="960" scrolling="no" seamless></iframe></div>';
   $output .= '<p>The state map may show different results than the county map because contributors do not always submit a county, or they may have misspelled the county name.</p>';
   if (user_is_logged_in()) {
-    $output .= '<p>See <a href="/advanced-search?parent_ancestor=' . $nid . '">records that make up this map</a>.';
+    $output .= '<p>See <a href="/advanced-search?pid=' . $nid . '">records that make up this map</a>.';
   }
   else {
     $output .= '<p>Log in to see a link to records that make up this map.</p>';
