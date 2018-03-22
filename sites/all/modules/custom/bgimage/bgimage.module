@@ -93,6 +93,15 @@ function bgimage_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['node/%bgpage_node/bgimage/add'] = array(
+    'title' => 'Add image',
+    'page callback' => 'bgimage_add_image',
+    'page arguments' => array(1),
+    'access arguments' => array('Create bgimage nodes'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'bgimage.pages.inc',
+  );
+
   return $items;
 }
 

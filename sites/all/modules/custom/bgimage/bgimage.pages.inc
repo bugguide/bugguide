@@ -198,3 +198,13 @@ function bgimage_link_tagged() {
   $destination = drupal_get_destination();
   drupal_goto($destination['destination']);
 }
+
+/**
+ * Redirects to a form to add an image for a bgpage.
+ *
+ * @param int $nid
+ *   The nid of the bgpage node.
+ */
+function bgimage_add_image($nid) {
+  drupal_goto('node/add/bgimage/' . $nid);
+}
