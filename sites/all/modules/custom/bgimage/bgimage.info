@@ -72,7 +72,6 @@ features[field_instance][] = node-bgimage-field_bgimage_sex
 features[field_instance][] = node-bgimage-field_bgimage_size
 features[field_instance][] = node-bgimage-field_parent
 features[node][] = bgimage
-features[page_manager_pages][] = home
 features[user_permission][] = clone own nodes
 features[user_permission][] = create bgimages
 features[user_permission][] = link all bgimages

@@ -118,7 +118,7 @@ function bgimage_strongarm() {
             'visible' => FALSE,
           ),
           'homepage' => array(
-            'weight' => '40',
+            'weight' => '41',
             'visible' => FALSE,
           ),
           'recent' => array(
