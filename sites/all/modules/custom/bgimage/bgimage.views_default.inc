@@ -509,7 +509,7 @@ function bgimage_views_default_views() {
     8 => 0,
     7 => 0,
   );
-  
+
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'advanced-search';

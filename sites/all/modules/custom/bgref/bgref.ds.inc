@@ -18,12 +18,12 @@ function bgref_ds_field_settings_info() {
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
     'subscriptions' => array(
-      'weight' => '7',
+      'weight' => '8',
       'label' => 'hidden',
       'format' => 'default',
     ),
     'comments' => array(
-      'weight' => '8',
+      'weight' => '9',
       'label' => 'above',
       'format' => 'default',
     ),
@@ -66,8 +66,9 @@ function bgref_ds_layout_settings_info() {
         4 => 'body',
         5 => 'submitted_by',
         6 => 'changed_date',
-        7 => 'subscriptions',
-        8 => 'comments',
+        7 => 'field_tags',
+        8 => 'subscriptions',
+        9 => 'comments',
       ),
     ),
     'fields' => array(
@@ -78,6 +79,7 @@ function bgref_ds_layout_settings_info() {
       'body' => 'ds_content',
       'submitted_by' => 'ds_content',
       'changed_date' => 'ds_content',
+      'field_tags' => 'ds_content',
       'subscriptions' => 'ds_content',
       'comments' => 'ds_content',
     ),
