@@ -78,7 +78,7 @@ function bgpage_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 37,
+        'weight' => 42,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -141,7 +141,7 @@ function bgpage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 45,
+        'weight' => 50,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -199,7 +199,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -256,7 +256,7 @@ function bgpage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 42,
+        'weight' => 47,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -314,7 +314,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 4,
+        'weight' => 5,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -372,7 +372,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 11,
+        'weight' => 12,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -430,7 +430,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 9,
+        'weight' => 10,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -488,7 +488,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 1,
+        'weight' => 2,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -546,7 +546,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 7,
+        'weight' => 8,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -604,7 +604,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 16,
+        'weight' => 17,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -662,7 +662,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 12,
+        'weight' => 13,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -719,7 +719,7 @@ function bgpage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 43,
+        'weight' => 48,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -777,7 +777,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 2,
+        'weight' => 3,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -834,7 +834,7 @@ function bgpage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 44,
+        'weight' => 49,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -892,7 +892,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 15,
+        'weight' => 16,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -949,7 +949,7 @@ function bgpage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 40,
+        'weight' => 45,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -1007,7 +1007,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 8,
+        'weight' => 9,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -1065,7 +1065,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 13,
+        'weight' => 14,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -1122,7 +1122,7 @@ function bgpage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 39,
+        'weight' => 44,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -1179,7 +1179,7 @@ function bgpage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 38,
+        'weight' => 43,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -1237,7 +1237,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 10,
+        'weight' => 11,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -1295,7 +1295,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 14,
+        'weight' => 15,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -1353,7 +1353,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -1411,7 +1411,7 @@ function bgpage_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 3,
+        'weight' => 4,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -1468,7 +1468,7 @@ function bgpage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 41,
+        'weight' => 46,
       ),
       'homepage' => array(
         'label' => 'above',
