@@ -1,7 +1,7 @@
 <?php if ($logged_in): ?>
   <ul class="is-flex">
     <li>
-      <a class="button is-primary mr-2" href="/node/6">
+      <a class="button is-primary mr-2" href="/node/6/bgimage">
         <span class="icon">
           <span class="fa fa-bug" aria-hidden="true"></span>
         </span>
