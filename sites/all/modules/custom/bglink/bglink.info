@@ -17,6 +17,7 @@ features[field_base][] = field_bglink_link
 features[field_instance][] = node-bglink-body
 features[field_instance][] = node-bglink-field_bglink_link
 features[field_instance][] = node-bglink-field_parent
+features[field_instance][] = node-bglink-field_tags
 features[node][] = bglink
 features[variable][] = comment_anonymous_bglink
 features[variable][] = comment_bglink

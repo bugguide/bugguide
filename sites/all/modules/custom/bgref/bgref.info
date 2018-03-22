@@ -35,6 +35,7 @@ features[field_instance][] = node-book_reference-field_book_reference_show_image
 features[field_instance][] = node-book_reference-field_book_reference_weight
 features[field_instance][] = node-book_reference-field_book_reference_year
 features[field_instance][] = node-book_reference-field_parent
+features[field_instance][] = node-book_reference-field_tags
 features[node][] = book_reference
 features[variable][] = comment_anonymous_book_reference
 features[variable][] = comment_book_reference
