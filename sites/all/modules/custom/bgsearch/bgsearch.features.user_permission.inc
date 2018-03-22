@@ -15,6 +15,7 @@ function bgsearch_user_default_permissions() {
     'name' => 'access bugguide_search search_api_page',
     'roles' => array(
       'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'search_api_page',
   );
