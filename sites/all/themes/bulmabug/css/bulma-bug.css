@@ -393,6 +393,18 @@ a:hover,
   margin-right: 0.5rem;
 }
 
+.field-name-field-tags form.editable-field > div {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.field-name-field-tags form.editable-field input[type=submit] {
+  margin-left: 0.5rem;
+  /* is-small */
+  font-size: 0.75rem;
+  border-radius: 2px;
+}
+
 /* --------------------- */
 /* ## BUG CARD
 /* --------------------- */
