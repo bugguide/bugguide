@@ -52,3 +52,21 @@ function _bgsearch_update_bgpage_totals($node) {
     }
   }
 }
+
+/**
+ * Implements hook_menu_alter().
+ */
+function bgsearch_menu_alter(&$items) {
+  // Disable apachesolr search menu items.
+  unset($items['search/site']);
+  unset($items['search/site/%']);
+  // Set Search API as the default tab.
+  $items['search/global']['type'] = MENU_DEFAULT_LOCAL_TASK;
+  // Adjust the tab parent of the user search. This is so tabs are still visible
+  //while searching users.
+  unset($items['search/user/%menu_tail']['tab_root']);
+  unset($items['search/user/%menu_tail']['tab_parent']);
+  // Redirect "search" to "search/global".
+  $items['search']['page callback'] = 'drupal_goto';
+  $items['search']['page arguments'] = array('search/global');
+}
