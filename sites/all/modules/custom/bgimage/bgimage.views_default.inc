@@ -235,7 +235,79 @@ function bgimage_views_default_views() {
   );
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '25';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page'] = TRUE;
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options'] = '25, 50, 100, 250, 500';
   $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'field_bgimage_image' => 'field_bgimage_image',
+    'nid' => 'nid',
+    'title' => 'title',
+    'field_bgimage_date' => 'field_bgimage_date',
+    'field_bgimage_county' => 'field_bgimage_county',
+    'field_bgimage_location' => 'field_bgimage_location',
+    'field_bgimage_location_code' => 'field_bgimage_location_code',
+    'immediate_parent' => 'immediate_parent',
+  );
+  $handler->display->display_options['style_options']['default'] = 'field_bgimage_date';
+  $handler->display->display_options['style_options']['info'] = array(
+    'field_bgimage_image' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nid' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_bgimage_date' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_bgimage_county' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_bgimage_location' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_bgimage_location_code' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'immediate_parent' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
   /* Header: Global: Result summary */
   $handler->display->display_options['header']['result']['id'] = 'result';
   $handler->display->display_options['header']['result']['table'] = 'views';
@@ -367,6 +439,7 @@ function bgimage_views_default_views() {
   $handler->display->display_options['filters']['field_bgimage_location_value']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_bgimage_location_value']['expose']['operator_id'] = 'field_bgimage_location_value_op';
   $handler->display->display_options['filters']['field_bgimage_location_value']['expose']['label'] = 'Location';
+  $handler->display->display_options['filters']['field_bgimage_location_value']['expose']['description'] = 'E.g., Chattahoochee';
   $handler->display->display_options['filters']['field_bgimage_location_value']['expose']['operator'] = 'field_bgimage_location_value_op';
   $handler->display->display_options['filters']['field_bgimage_location_value']['expose']['identifier'] = 'field_bgimage_location_value';
   $handler->display->display_options['filters']['field_bgimage_location_value']['expose']['remember'] = TRUE;
@@ -386,7 +459,7 @@ function bgimage_views_default_views() {
   $handler->display->display_options['filters']['uid']['group'] = 1;
   $handler->display->display_options['filters']['uid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['uid']['expose']['operator_id'] = 'uid_op';
-  $handler->display->display_options['filters']['uid']['expose']['label'] = 'Author uid';
+  $handler->display->display_options['filters']['uid']['expose']['label'] = 'Contributor';
   $handler->display->display_options['filters']['uid']['expose']['operator'] = 'uid_op';
   $handler->display->display_options['filters']['uid']['expose']['identifier'] = 'uid';
   $handler->display->display_options['filters']['uid']['expose']['remember'] = TRUE;
@@ -406,10 +479,31 @@ function bgimage_views_default_views() {
   $handler->display->display_options['filters']['parent_ancestor']['group'] = 1;
   $handler->display->display_options['filters']['parent_ancestor']['exposed'] = TRUE;
   $handler->display->display_options['filters']['parent_ancestor']['expose']['operator_id'] = 'parent_ancestor_op';
-  $handler->display->display_options['filters']['parent_ancestor']['expose']['label'] = 'Taxon ID #';
+  $handler->display->display_options['filters']['parent_ancestor']['expose']['label'] = 'Taxon ID';
+  $handler->display->display_options['filters']['parent_ancestor']['expose']['description'] = 'E.g., 191 for Odonata';
   $handler->display->display_options['filters']['parent_ancestor']['expose']['operator'] = 'parent_ancestor_op';
-  $handler->display->display_options['filters']['parent_ancestor']['expose']['identifier'] = 'parent_ancestor';
+  $handler->display->display_options['filters']['parent_ancestor']['expose']['identifier'] = 'taxon';
   $handler->display->display_options['filters']['parent_ancestor']['expose']['remember_roles'] = array(
+    2 => '2',
+    6 => 0,
+    1 => 0,
+    5 => 0,
+    8 => 0,
+    7 => 0,
+  );
+  /* Filter criterion: Content: Body (body) */
+  $handler->display->display_options['filters']['body_value']['id'] = 'body_value';
+  $handler->display->display_options['filters']['body_value']['table'] = 'field_data_body';
+  $handler->display->display_options['filters']['body_value']['field'] = 'body_value';
+  $handler->display->display_options['filters']['body_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['body_value']['group'] = 1;
+  $handler->display->display_options['filters']['body_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['body_value']['expose']['operator_id'] = 'body_value_op';
+  $handler->display->display_options['filters']['body_value']['expose']['label'] = 'Description';
+  $handler->display->display_options['filters']['body_value']['expose']['operator'] = 'body_value_op';
+  $handler->display->display_options['filters']['body_value']['expose']['identifier'] = 'body_value';
+  $handler->display->display_options['filters']['body_value']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['body_value']['expose']['remember_roles'] = array(
     2 => '2',
     6 => 0,
     1 => 0,
@@ -452,26 +546,6 @@ function bgimage_views_default_views() {
   $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['remember_roles'] = array(
-    2 => '2',
-    6 => 0,
-    1 => 0,
-    5 => 0,
-    8 => 0,
-    7 => 0,
-  );
-  /* Filter criterion: Content: Body (body) */
-  $handler->display->display_options['filters']['body_value']['id'] = 'body_value';
-  $handler->display->display_options['filters']['body_value']['table'] = 'field_data_body';
-  $handler->display->display_options['filters']['body_value']['field'] = 'body_value';
-  $handler->display->display_options['filters']['body_value']['operator'] = 'contains';
-  $handler->display->display_options['filters']['body_value']['group'] = 1;
-  $handler->display->display_options['filters']['body_value']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['body_value']['expose']['operator_id'] = 'body_value_op';
-  $handler->display->display_options['filters']['body_value']['expose']['label'] = 'Description';
-  $handler->display->display_options['filters']['body_value']['expose']['operator'] = 'body_value_op';
-  $handler->display->display_options['filters']['body_value']['expose']['identifier'] = 'body_value';
-  $handler->display->display_options['filters']['body_value']['expose']['remember'] = TRUE;
-  $handler->display->display_options['filters']['body_value']['expose']['remember_roles'] = array(
     2 => '2',
     6 => 0,
     1 => 0,
