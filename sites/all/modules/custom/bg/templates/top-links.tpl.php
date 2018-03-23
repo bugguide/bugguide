@@ -17,6 +17,14 @@
       </a>
     </li>
     <li>
+      <a class="button is-tan mr-2" href="https://www.biology-it.iastate.edu/bugguide-bug-report">
+        <span class="icon">
+          <span class="fa fa-bug" aria-hidden="true"></span>
+        </span>
+        <span>Report Bug</span>
+      </a>
+    </li>
+    <li>
       <a class="button is-tan" title="Logout"href="/user/logout">
         <span>
           <span class="fa fa-sign-out" aria-hidden="true"></span>
