@@ -568,9 +568,11 @@ a:hover,
   border: 1px solid #ddd;
 }
 
-/* --- Bug Page Buttons --- */
+/* --------------------- */
+/* ## BUGGUIDE BUTTONS
+/* --------------------- */
 
-.node-type-bgimage .action-links a {
+.action-links a {
   align-items: center;
   border: 1px solid transparent;
   border-radius: 0 3px 3px 0;
@@ -597,26 +599,43 @@ a:hover,
   text-align: center;
   white-space: nowrap;
 
-  /* is-small */
+  /* is-small 
   border-radius: 2px;
-  font-size: 0.75rem;
+  font-size: 0.75rem;*/
+
+  text-decoration: none;
 }
 
-  .node-type-bgimage .action-links a:hover {
+  .action-links a:hover {
     border-color: #b5b5b5;
     color: #363636;
   }
 
-.field-name-bgimage-tag a:before,
-.bgimage-related-actions a:before {
-  content: '\f0ea';
+/* + Add images (of this individual) */
+.page-node-bgimage .action-links a:before,
+.node-type-bgimage .action-links a:before {
+  content: '\f067'; /* fa-plus */
   font-family: 'FontAwesome';
   display: inline-block;
   margin-right: 0.5rem;
 }
 
-.node-type-bgimage .action-links a:before {
-  content: '\f067';
+.node-type-bgimage .action-links a {
+  /* is-small */
+  border-radius: 2px;
+  font-size: 0.75rem;
+}
+
+.page-node-bgimage .action-links a {
+  margin-bottom: 1rem;
+}
+
+/* Add to clipboard */
+/* These already have the button class, so just add icon. */
+
+.field-name-bgimage-tag a:before,
+.bgimage-related-actions a:before {
+  content: '\f0ea';
   font-family: 'FontAwesome';
   display: inline-block;
   margin-right: 0.5rem;
@@ -705,5 +724,7 @@ a:hover,
   .megapanels-pane:first-child:nth-last-child(3) ~ .megapanels-pane {
     width: calc(50% - 1rem);
     flex: 0 1 auto;
+  }
+} auto;
   }
 }
