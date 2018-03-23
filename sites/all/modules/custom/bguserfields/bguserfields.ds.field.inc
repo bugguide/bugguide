@@ -18,5 +18,5 @@ function _bguserfields_field_contributed_images($field) {
     return;
   }
 
-  return l($total_images . ' images submitted by this contributor', 'contributed-images/' . $user->name);
+  return l($total_images . ' images submitted by this contributor', '/user/' . $user->uid . '/images');
 }
