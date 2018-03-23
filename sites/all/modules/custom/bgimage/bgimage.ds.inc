@@ -421,10 +421,12 @@ function bgimage_ds_layout_settings_info() {
     'regions' => array(
       'ds_content' => array(
         0 => 'field_bgimage_image',
+        1 => 'body',
       ),
     ),
     'fields' => array(
       'field_bgimage_image' => 'ds_content',
+      'body' => 'ds_content',
     ),
     'classes' => array(),
     'wrappers' => array(
@@ -435,6 +437,9 @@ function bgimage_ds_layout_settings_info() {
     'layout_attributes_merge' => 1,
     'layout_link_attribute' => '',
     'layout_link_custom' => '',
+    'layout_disable_css' => FALSE,
+    'hide_page_title' => '0',
+    'page_option_title' => '',
   );
   $export['node|bgimage|teaser'] = $ds_layout;
 
