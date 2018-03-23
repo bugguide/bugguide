@@ -255,7 +255,7 @@ function bgsearch_default_search_api_page() {
       "per_page" : "20",
       "result_page_search_form" : 1,
       "get_per_page" : 1,
-      "view_mode" : "search_api_page_result",
+      "view_mode" : "teaser",
       "empty_behavior" : "results"
     },
     "enabled" : "1"
