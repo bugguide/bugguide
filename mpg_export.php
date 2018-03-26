@@ -8,6 +8,12 @@ error_reporting(E_ERROR);
 //
 // John VanDyk
 
+// Sanity check.
+if (!drupal_is_cli()) {
+  echo "BISON export is restricted to the command line.";
+  exit();
+}
+
 // START CONFIGURATION
 
 // logging
@@ -45,11 +51,6 @@ bison_log($hodges);
 define('DRUPAL_ROOT', getcwd());
 require_once DRUPAL_ROOT . '/sites/all/modules/custom/bg/bg_globals.inc';
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
-
-if (!drupal_is_cli()) {
-  echo "BISON export is restricted to the command line.";
-  exit();
-}
 
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
