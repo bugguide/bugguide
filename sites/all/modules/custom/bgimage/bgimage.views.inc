@@ -46,12 +46,12 @@ function bgimage_views_data_alter(&$data) {
   );
 
   // Add a custom filter for hiding the Images column.
-  $data['field_data_field_parent']['hide_images'] = array(
+  $data['field_data_field_bgimage_image']['hide_images'] = array(
     'group' => 'Content',
     'title' => t('Hide images'),
     'title short' => t('Hide images'),
     'help' => t('Hides the images column.'),
-    'real field' => 'field_bgimage_image',
+    'real field' => 'field_bgimage_image_fid',
     'filter' => array(
       'handler' => 'bgimage_handler_filter_hide_images',
     ),

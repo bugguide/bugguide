@@ -569,7 +569,7 @@ function bgimage_views_default_views() {
   );
   /* Filter criterion: Content: Hide images */
   $handler->display->display_options['filters']['hide_images']['id'] = 'hide_images';
-  $handler->display->display_options['filters']['hide_images']['table'] = 'field_data_field_parent';
+  $handler->display->display_options['filters']['hide_images']['table'] = 'field_data_field_bgimage_image';
   $handler->display->display_options['filters']['hide_images']['field'] = 'hide_images';
   $handler->display->display_options['filters']['hide_images']['value'] = '0';
   $handler->display->display_options['filters']['hide_images']['exposed'] = TRUE;
