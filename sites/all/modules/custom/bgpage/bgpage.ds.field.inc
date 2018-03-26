@@ -55,7 +55,7 @@ function _bgpage_browse($field) {
 
     // Configure query.
     $query->addFilterSubQuery($immediate_children);
-    $query->addParam('fl', 'entity_id,label');
+    $query->addParam('fl', 'entity_id,label,sm_field_scientific_name');
     $sort_field = 'sort_label';
     $sort_direction = 'asc';
     $query->setAvailableSort($sort_field, array(
@@ -91,7 +91,12 @@ function _bgpage_browse($field) {
 
     // Render results.
     foreach ($children_docs as $child_doc) {
-      $output .= '<div class="card mb-3"><div class="card-header"><h2 class="card-header-title"><a href="' . url('node/' . $child_doc->entity_id) . '" title="' . $child_doc->label . '">' . $child_doc->label . ' <span class="icon"><span class="fa fa-angle-right" aria-hidden="true"></span></span></a></h2></div>';
+
+      $name = $child_doc->label;
+      if (!empty($child_doc->sm_field_scientific_name)) {
+        $name .= ' - ' . $child_doc->sm_field_scientific_name[0];
+      }
+      $output .= '<div class="card mb-3"><div class="card-header"><h2 class="card-header-title"><a href="' . url('node/' . $child_doc->entity_id) . '" title="' . $child_doc->label . '">' . $name . ' <span class="icon"><span class="fa fa-angle-right" aria-hidden="true"></span></span></a></h2></div>';
       if (!empty($child_doc->matches)) {
         $output .= '<div class="card-content"><ul class="columns is-mobile is-multiline">';
         foreach ($child_doc->matches as $image_doc) {
