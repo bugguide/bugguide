@@ -126,7 +126,7 @@ function bgimage_strongarm() {
             'visible' => FALSE,
           ),
           'teaser' => array(
-            'weight' => '100',
+            'weight' => '41',
             'visible' => FALSE,
           ),
         ),

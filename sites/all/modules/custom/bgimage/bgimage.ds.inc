@@ -416,21 +416,31 @@ function bgimage_ds_layout_settings_info() {
   $ds_layout->entity_type = 'node';
   $ds_layout->bundle = 'bgimage';
   $ds_layout->view_mode = 'teaser';
-  $ds_layout->layout = 'ds_1col';
+  $ds_layout->layout = 'horizontalcard';
   $ds_layout->settings = array(
     'regions' => array(
-      'ds_content' => array(
+      'left' => array(
         0 => 'field_bgimage_image',
-        1 => 'body',
+      ),
+      'body' => array(
+        1 => 'title',
+        2 => 'location_combined',
+        3 => 'divider_1',
+        4 => 'submitted_by',
       ),
     ),
     'fields' => array(
-      'field_bgimage_image' => 'ds_content',
-      'body' => 'ds_content',
+      'field_bgimage_image' => 'left',
+      'title' => 'body',
+      'location_combined' => 'body',
+      'divider_1' => 'body',
+      'submitted_by' => 'body',
     ),
     'classes' => array(),
     'wrappers' => array(
-      'ds_content' => 'div',
+      'left' => 'div',
+      'body' => 'div',
+      'right' => 'div',
     ),
     'layout_wrapper' => 'div',
     'layout_attributes' => '',
