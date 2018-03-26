@@ -207,6 +207,25 @@ function bgimage_views_default_views() {
         ),
       ),
     ),
+    'hide_images' => array(
+      'bef_format' => 'bef_single',
+      'more_options' => array(
+        'bef_select_all_none' => FALSE,
+        'bef_collapsible' => 0,
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
   );
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '25';
@@ -541,6 +560,26 @@ function bgimage_views_default_views() {
   $handler->display->display_options['filters']['species_level']['expose']['required'] = TRUE;
   $handler->display->display_options['filters']['species_level']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['species_level']['expose']['remember_roles'] = array(
+    2 => '2',
+    6 => 0,
+    1 => 0,
+    5 => 0,
+    8 => 0,
+    7 => 0,
+  );
+  /* Filter criterion: Content: Hide images */
+  $handler->display->display_options['filters']['hide_images']['id'] = 'hide_images';
+  $handler->display->display_options['filters']['hide_images']['table'] = 'field_data_field_parent';
+  $handler->display->display_options['filters']['hide_images']['field'] = 'hide_images';
+  $handler->display->display_options['filters']['hide_images']['value'] = '0';
+  $handler->display->display_options['filters']['hide_images']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['hide_images']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['hide_images']['expose']['label'] = 'Suppress thumbnail images';
+  $handler->display->display_options['filters']['hide_images']['expose']['operator'] = 'hide_images_op';
+  $handler->display->display_options['filters']['hide_images']['expose']['identifier'] = 'hide_images';
+  $handler->display->display_options['filters']['hide_images']['expose']['required'] = TRUE;
+  $handler->display->display_options['filters']['hide_images']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['hide_images']['expose']['remember_roles'] = array(
     2 => '2',
     6 => 0,
     1 => 0,
