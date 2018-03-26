@@ -587,6 +587,24 @@ function bgimage_views_default_views() {
     8 => 0,
     7 => 0,
   );
+  /* Filter criterion: Content: Month taken */
+  $handler->display->display_options['filters']['month']['id'] = 'month';
+  $handler->display->display_options['filters']['month']['table'] = 'field_data_field_bgimage_date';
+  $handler->display->display_options['filters']['month']['field'] = 'month';
+  $handler->display->display_options['filters']['month']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['month']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['month']['expose']['label'] = 'Month';
+  $handler->display->display_options['filters']['month']['expose']['operator'] = 'month_op';
+  $handler->display->display_options['filters']['month']['expose']['identifier'] = 'month';
+  $handler->display->display_options['filters']['month']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['month']['expose']['remember_roles'] = array(
+    2 => '2',
+    6 => 0,
+    1 => 0,
+    5 => 0,
+    8 => 0,
+    7 => 0,
+  );
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
