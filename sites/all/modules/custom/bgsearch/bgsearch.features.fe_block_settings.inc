@@ -63,7 +63,7 @@ function bgsearch_default_fe_block_settings() {
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -15,
       ),
       'shiny' => array(
         'region' => '',
@@ -95,7 +95,7 @@ function bgsearch_default_fe_block_settings() {
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -12,
       ),
       'shiny' => array(
         'region' => '',
@@ -127,7 +127,7 @@ function bgsearch_default_fe_block_settings() {
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -14,
       ),
       'shiny' => array(
         'region' => '',
@@ -159,7 +159,7 @@ function bgsearch_default_fe_block_settings() {
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -22,
       ),
       'shiny' => array(
         'region' => '',
@@ -191,7 +191,7 @@ function bgsearch_default_fe_block_settings() {
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -23,
       ),
       'shiny' => array(
         'region' => '',
@@ -220,10 +220,10 @@ function bgsearch_default_fe_block_settings() {
         'weight' => 0,
       ),
       'bulmabug' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -17,
       ),
       'shiny' => array(
         'region' => '',
@@ -255,39 +255,7 @@ function bgsearch_default_fe_block_settings() {
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'bulmabug',
-        'weight' => 0,
-      ),
-      'shiny' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'shiny',
-        'weight' => 0,
-      ),
-    ),
-    'title' => '',
-    'visibility' => 0,
-  );
-
-  $export['facetapi-iSe2skBAzWKWR1cegrNa9x4yjQuUJp1U'] = array(
-    'cache' => -1,
-    'custom' => 0,
-    'delta' => 'iSe2skBAzWKWR1cegrNa9x4yjQuUJp1U',
-    'module' => 'facetapi',
-    'node_types' => array(),
-    'pages' => '',
-    'roles' => array(),
-    'themes' => array(
-      'bulma' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'bulma',
-        'weight' => 0,
-      ),
-      'bulmabug' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
-        'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -13,
       ),
       'shiny' => array(
         'region' => '',
@@ -319,7 +287,7 @@ function bgsearch_default_fe_block_settings() {
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -20,
       ),
       'shiny' => array(
         'region' => '',
@@ -351,7 +319,7 @@ function bgsearch_default_fe_block_settings() {
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -16,
       ),
       'shiny' => array(
         'region' => '',
@@ -383,7 +351,7 @@ function bgsearch_default_fe_block_settings() {
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -17,
       ),
       'shiny' => array(
         'region' => '',
@@ -415,7 +383,7 @@ function bgsearch_default_fe_block_settings() {
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -19,
       ),
       'shiny' => array(
         'region' => '',
@@ -447,7 +415,7 @@ function bgsearch_default_fe_block_settings() {
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -21,
       ),
       'shiny' => array(
         'region' => '',
@@ -479,7 +447,7 @@ function bgsearch_default_fe_block_settings() {
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'bulmabug',
-        'weight' => 0,
+        'weight' => -18,
       ),
       'shiny' => array(
         'region' => '',

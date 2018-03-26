@@ -522,25 +522,32 @@ function bgsearch_facetapi_default_facet_settings() {
     'filters' => array(),
     'active_sorts' => array(
       'active' => 'active',
-      'count' => 'count',
       'display' => 'display',
+      'count' => 0,
+      'indexed' => 0,
     ),
     'sort_weight' => array(
-      'active' => -50,
-      'count' => -49,
-      'display' => -48,
+      'active' => '-50',
+      'count' => '-49',
+      'display' => '-48',
+      'indexed' => '0',
     ),
     'sort_order' => array(
-      'active' => 3,
-      'count' => 3,
-      'display' => 4,
+      'active' => '3',
+      'count' => '3',
+      'display' => '4',
+      'indexed' => '4',
     ),
     'empty_behavior' => 'none',
     'facet_more_text' => 'Show more',
     'facet_fewer_text' => 'Show fewer',
-    'soft_limit' => 20,
+    'soft_limit' => '40',
     'nofollow' => 1,
     'show_expanded' => 0,
+    'empty_text' => array(
+      'value' => '',
+      'format' => '1',
+    ),
   );
   $export['search_api@bugguide:block:field_bgimage_location_code'] = $facet;
 
@@ -623,7 +630,7 @@ function bgsearch_facetapi_default_facet_settings() {
   $facet->searcher = 'search_api@bugguide';
   $facet->realm = 'block';
   $facet->facet = 'field_book_reference_author';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'weight' => 0,
     'widget' => 'facetapi_links',
@@ -1271,7 +1278,7 @@ function bgsearch_facetapi_default_facet_settings() {
   $facet->searcher = 'search_api@bugguide';
   $facet->realm = 'block';
   $facet->facet = 'title';
-  $facet->enabled = TRUE;
+  $facet->enabled = FALSE;
   $facet->settings = array(
     'weight' => 0,
     'widget' => 'facetapi_links',
