@@ -46,14 +46,26 @@ function bgimage_views_data_alter(&$data) {
   );
 
   // Add a custom filter for hiding the Images column.
-  $data['field_data_field_parent']['hide_images'] = array(
+  $data['field_data_field_bgimage_image']['hide_images'] = array(
     'group' => 'Content',
     'title' => t('Hide images'),
     'title short' => t('Hide images'),
     'help' => t('Hides the images column.'),
-    'real field' => 'field_bgimage_image',
+    'real field' => 'field_bgimage_image_fid',
     'filter' => array(
       'handler' => 'bgimage_handler_filter_hide_images',
+    ),
+  );
+
+  // Add a custom filter for filtering by month
+  $data['field_data_field_bgimage_date']['month'] = array(
+    'group' => 'Content',
+    'title' => t('Month taken'),
+    'title short' => t('Month taken'),
+    'help' => t('Filters images taken in a given month.'),
+    'real field' => 'field_bgimage_date_value',
+    'filter' => array(
+      'handler' => 'bgimage_handler_filter_month',
     ),
   );
 }

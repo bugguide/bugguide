@@ -98,3 +98,4 @@ files[] = bgimage_handler_filter_parent.inc
 files[] = bgimage_handler_immediate_parent.inc
 files[] = bgimage_handler_filter_species_level.inc
 files[] = bgimage_handler_filter_hide_images.inc
+files[] = bgimage_handler_filter_month.inc

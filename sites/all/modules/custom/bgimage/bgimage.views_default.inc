@@ -226,6 +226,41 @@ function bgimage_views_default_views() {
         ),
       ),
     ),
+    'month' => array(
+      'bef_format' => 'default',
+      'more_options' => array(
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
+    'field_bgimage_date_value' => array(
+      'bef_format' => 'default',
+      'more_options' => array(
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+        'datepicker_options' => '',
+      ),
+    ),
   );
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '25';
@@ -569,7 +604,7 @@ function bgimage_views_default_views() {
   );
   /* Filter criterion: Content: Hide images */
   $handler->display->display_options['filters']['hide_images']['id'] = 'hide_images';
-  $handler->display->display_options['filters']['hide_images']['table'] = 'field_data_field_parent';
+  $handler->display->display_options['filters']['hide_images']['table'] = 'field_data_field_bgimage_image';
   $handler->display->display_options['filters']['hide_images']['field'] = 'hide_images';
   $handler->display->display_options['filters']['hide_images']['value'] = '0';
   $handler->display->display_options['filters']['hide_images']['exposed'] = TRUE;
@@ -587,6 +622,45 @@ function bgimage_views_default_views() {
     8 => 0,
     7 => 0,
   );
+  /* Filter criterion: Content: Month taken */
+  $handler->display->display_options['filters']['month']['id'] = 'month';
+  $handler->display->display_options['filters']['month']['table'] = 'field_data_field_bgimage_date';
+  $handler->display->display_options['filters']['month']['field'] = 'month';
+  $handler->display->display_options['filters']['month']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['month']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['month']['expose']['label'] = 'Month';
+  $handler->display->display_options['filters']['month']['expose']['operator'] = 'month_op';
+  $handler->display->display_options['filters']['month']['expose']['identifier'] = 'month';
+  $handler->display->display_options['filters']['month']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['month']['expose']['remember_roles'] = array(
+    2 => '2',
+    6 => 0,
+    1 => 0,
+    5 => 0,
+    8 => 0,
+    7 => 0,
+  );
+  /* Filter criterion: Content: Date taken (field_bgimage_date) */
+  $handler->display->display_options['filters']['field_bgimage_date_value']['id'] = 'field_bgimage_date_value';
+  $handler->display->display_options['filters']['field_bgimage_date_value']['table'] = 'field_data_field_bgimage_date';
+  $handler->display->display_options['filters']['field_bgimage_date_value']['field'] = 'field_bgimage_date_value';
+  $handler->display->display_options['filters']['field_bgimage_date_value']['operator'] = 'between';
+  $handler->display->display_options['filters']['field_bgimage_date_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_bgimage_date_value']['expose']['operator_id'] = 'field_bgimage_date_value_op';
+  $handler->display->display_options['filters']['field_bgimage_date_value']['expose']['label'] = 'Year';
+  $handler->display->display_options['filters']['field_bgimage_date_value']['expose']['operator'] = 'field_bgimage_date_value_op';
+  $handler->display->display_options['filters']['field_bgimage_date_value']['expose']['identifier'] = 'field_bgimage_date_value';
+  $handler->display->display_options['filters']['field_bgimage_date_value']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['field_bgimage_date_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    6 => 0,
+    1 => 0,
+    5 => 0,
+    8 => 0,
+    7 => 0,
+  );
+  $handler->display->display_options['filters']['field_bgimage_date_value']['granularity'] = 'year';
+  $handler->display->display_options['filters']['field_bgimage_date_value']['year_range'] = '-100:+0';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
