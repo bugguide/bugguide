@@ -42,6 +42,10 @@ function bgimage_views_default_views() {
       'secondary_label' => 'Advanced options',
       'secondary_collapse_override' => '0',
     ),
+    'pager' => array(
+      'bef_format' => 'default',
+      'is_secondary' => 0,
+    ),
     'field_bgimage_location_code_value' => array(
       'bef_format' => 'default',
       'more_options' => array(
@@ -129,6 +133,23 @@ function bgimage_views_default_views() {
         ),
       ),
     ),
+    'body_value' => array(
+      'bef_format' => 'default',
+      'more_options' => array(
+        'autosubmit' => 0,
+        'is_secondary' => 0,
+        'any_label' => '',
+        'bef_filter_description' => '',
+        'tokens' => array(
+          'available' => array(
+            0 => 'global_types',
+          ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
+      ),
+    ),
     'field_bgimage_sex_value' => array(
       'bef_format' => 'bef',
       'more_options' => array(
@@ -167,57 +188,11 @@ function bgimage_views_default_views() {
         ),
       ),
     ),
-    'body_value' => array(
-      'bef_format' => 'default',
+    'species_level' => array(
+      'bef_format' => 'bef_single',
       'more_options' => array(
-        'autosubmit' => 0,
-        'is_secondary' => 0,
-        'any_label' => '',
-        'bef_filter_description' => '',
-        'tokens' => array(
-          'available' => array(
-            0 => 'global_types',
-          ),
-        ),
-        'rewrite' => array(
-          'filter_rewrite_values' => '',
-        ),
-      ),
-    ),
-    'field_bgimage_photo_quality_rating' => array(
-      'bef_format' => 'bef_slider',
-      'slider_options' => array(
-        'bef_slider_min' => '0',
-        'bef_slider_max' => '5',
-        'bef_slider_step' => '1',
-        'bef_slider_animate' => '',
-        'bef_slider_orientation' => 'horizontal',
-      ),
-      'more_options' => array(
-        'autosubmit' => 0,
-        'is_secondary' => 0,
-        'any_label' => '',
-        'bef_filter_description' => '',
-        'tokens' => array(
-          'available' => array(
-            0 => 'global_types',
-          ),
-        ),
-        'rewrite' => array(
-          'filter_rewrite_values' => '',
-        ),
-      ),
-    ),
-    'field_bgimage_representative_rating' => array(
-      'bef_format' => 'bef_slider',
-      'slider_options' => array(
-        'bef_slider_min' => '0',
-        'bef_slider_max' => '5',
-        'bef_slider_step' => '1',
-        'bef_slider_animate' => '',
-        'bef_slider_orientation' => 'horizontal',
-      ),
-      'more_options' => array(
+        'bef_select_all_none' => FALSE,
+        'bef_collapsible' => 0,
         'autosubmit' => 0,
         'is_secondary' => 0,
         'any_label' => '',
@@ -546,6 +521,26 @@ function bgimage_views_default_views() {
   $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['field_bgimage_life_stage_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    6 => 0,
+    1 => 0,
+    5 => 0,
+    8 => 0,
+    7 => 0,
+  );
+  /* Filter criterion: Content: Is not classified at species level */
+  $handler->display->display_options['filters']['species_level']['id'] = 'species_level';
+  $handler->display->display_options['filters']['species_level']['table'] = 'field_data_field_parent';
+  $handler->display->display_options['filters']['species_level']['field'] = 'species_level';
+  $handler->display->display_options['filters']['species_level']['value'] = '0';
+  $handler->display->display_options['filters']['species_level']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['species_level']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['species_level']['expose']['label'] = 'Is not classified at species level';
+  $handler->display->display_options['filters']['species_level']['expose']['operator'] = 'species_level_op';
+  $handler->display->display_options['filters']['species_level']['expose']['identifier'] = 'species_level';
+  $handler->display->display_options['filters']['species_level']['expose']['required'] = TRUE;
+  $handler->display->display_options['filters']['species_level']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['species_level']['expose']['remember_roles'] = array(
     2 => '2',
     6 => 0,
     1 => 0,
