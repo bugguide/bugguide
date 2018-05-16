@@ -17,7 +17,7 @@
       </a>
     </li>
     <li>
-      <a class="button is-tan mr-2" href="https://www.biology-it.iastate.edu/bugguide-bug-report">
+      <a class="button is-tan mr-2" href="https://github.com/bugguide/issues/issues">
         <span class="icon">
           <span class="fa fa-bug" aria-hidden="true"></span>
         </span>
@@ -36,7 +36,7 @@
 <?php else: ?>
   <ul class="is-flex">
     <li>
-      <a class="button is-tan mr-2" href="https://www.biology-it.iastate.edu/bugguide-bug-report">
+      <a class="button is-tan mr-2" href="https://github.com/bugguide/issues/issues">
         <span class="icon">
           <span class="fa fa-bug" aria-hidden="true"></span>
         </span>
