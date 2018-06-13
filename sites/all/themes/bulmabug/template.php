@@ -38,3 +38,12 @@ function bulmabug_breadcrumb($variables) {
 function bulmabug_preprocess_views_view_table(&$vars) {
   $vars['classes_array'][] = 'table is-narrow is-striped is-fullwidth';
 }
+
+/**
+ * Implements THEME_preprocess_comment().
+ *
+ * Override "Submitted by" to be "-Jane Doe, 12 June 2018 - 02:14 am"
+ */
+function bulmabug_preprocess_comment(&$variables) {
+    $variables['submitted'] = '&ndash;&nbsp;' . t('!username, !datetime', array('!username' => $variables['author'], '!datetime' => format_date(strtotime($variables['created']), 'custom', 'j F, Y  -  h:i a')));
+}
