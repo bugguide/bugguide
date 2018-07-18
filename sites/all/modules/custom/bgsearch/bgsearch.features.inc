@@ -11,6 +11,9 @@ function bgsearch_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "apachesolr_search" && $api == "apachesolr_search_defaults") {
     return array("version" => "3");
   }
+  if ($module == "elysia_cron" && $api == "default_elysia_cron_rules") {
+    return array("version" => "1");
+  }
   if ($module == "facetapi" && $api == "facetapi_defaults") {
     return array("version" => "1");
   }
@@ -33,7 +36,7 @@ function bgsearch_default_search_api_index() {
     "options" : {
       "datasource" : { "bundles" : [ "book_reference", "bgpage", "bgimage", "bglink" ] },
       "index_directly" : 0,
-      "cron_limit" : "500",
+      "cron_limit" : "800",
       "fields" : {
         "author" : { "type" : "integer", "entity_type" : "user" },
         "changed" : { "type" : "date" },
@@ -277,7 +280,7 @@ function bgsearch_default_search_api_server() {
       "clean_ids" : true,
       "site_hash" : true,
       "scheme" : "http",
-      "host" : "db1.ent.iastate.edu",
+      "host" : "bgsolr2.ent.iastate.edu",
       "port" : "8983",
       "path" : "solr\\/bugguide_search_api",
       "http_user" : "",
