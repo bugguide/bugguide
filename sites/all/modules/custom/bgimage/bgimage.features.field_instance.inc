@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * bgimage.features.field_instance.inc
@@ -111,7 +112,7 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 3,
+      'weight' => 2,
     ),
   );
 
@@ -331,7 +332,7 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 4,
+      'weight' => 3,
     ),
   );
 
@@ -406,7 +407,7 @@ function bgimage_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 15,
+      'weight' => 14,
     ),
   );
 
@@ -513,51 +514,53 @@ function bgimage_field_default_field_instances() {
   // Exported field_instance: 'node-bgimage-field_bgimage_location_code'.
   $field_instances['node-bgimage-field_bgimage_location_code'] = array(
     'bundle' => 'bgimage',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 'ZZ',
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'hidden',
+        'label' => 'above',
+        'module' => 'list',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 36,
+        'type' => 'list_default',
+        'weight' => 41,
       ),
       'homepage' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 31,
+        'weight' => 0,
       ),
       'recent' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 33,
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 29,
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
     'field_name' => 'field_bgimage_location_code',
-    'label' => 'Location code',
+    'label' => 'Location Code',
     'required' => 0,
     'settings' => array(
-      'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 13,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 4,
     ),
   );
 
@@ -618,7 +621,7 @@ function bgimage_field_default_field_instances() {
       'module' => 'fivestar',
       'settings' => array(),
       'type' => 'exposed',
-      'weight' => 14,
+      'weight' => 13,
     ),
   );
 
@@ -853,7 +856,7 @@ function bgimage_field_default_field_instances() {
   t('Image');
   t('Life stage');
   t('Location');
-  t('Location code');
+  t('Location Code');
   t('Parent');
   t('Photographic Quality');
   t('Remarks');
