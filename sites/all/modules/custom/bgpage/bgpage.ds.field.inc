@@ -191,7 +191,13 @@ function _bgpage_images($field) {
       // Render a list of images for this group.
       $output .= '<div class="card-content"><ul class="columns is-mobile is-multiline">';
       foreach ($docs as $doc) {
-        $output .= '<li>' . $doc->ss_bgimage_thumbnail . '</li>';
+        if (isset($doc->ss_bgimage_thumbnail)) {
+          $output .= '<li>' . $doc->ss_bgimage_thumbnail . '</li>';
+        } 
+        else {
+          // The image thumbnail has not been indexed by Solr. Fall back to MySQL.
+          $output .= '<li>' . bgimage_thumb_link(node_load($doc->entity_id)) . '</li>';
+        }
       }
       $output .= '</ul></div></div>';
     }
