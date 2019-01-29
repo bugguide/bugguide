@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * bgimage.strongarm.inc

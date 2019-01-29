@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * bgimage.features.fe_block_settings.inc
