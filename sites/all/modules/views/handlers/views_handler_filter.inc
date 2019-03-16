@@ -629,6 +629,12 @@ class views_handler_filter extends views_handler {
     if (!$this->view->display_handler->is_identifier_unique($form_state['id'], $form_state['values']['options']['expose']['identifier'])) {
       form_error($form['expose']['identifier'], t('This identifier is used by another handler.'));
     }
+
+    // Filter out roles which weren't selected, so that they aren't exported.
+    // This is purely cosmetic.
+    if (!empty($form_state['values']['options']['expose']['remember_roles'])) {
+      $form_state['values']['options']['expose']['remember_roles'] = array_filter($form_state['values']['options']['expose']['remember_roles']);
+    }
   }
 
   /**
@@ -657,10 +663,13 @@ class views_handler_filter extends views_handler {
         if (empty($group['remove'])) {
           // Check if the title is defined but value wasn't defined.
           if (!empty($group['title'])) {
-            if ((!is_array($group['value']) && trim($group['value']) == "") ||
-                (is_array($group['value']) && count(array_filter($group['value'], '_views_array_filter_zero')) == 0)) {
-              form_error($form['group_info']['group_items'][$id]['value'],
-                t('The value is required if title for this item is defined.'));
+            // No value is needed for 'empty' and 'not empty' operator.
+            if (!in_array($group['operator'], array('empty', 'not empty'))) {
+              if ((!is_array($group['value']) && trim($group['value']) == "") ||
+                  (is_array($group['value']) && count(array_filter($group['value'], '_views_array_filter_zero')) == 0)) {
+                form_error($form['group_info']['group_items'][$id]['value'],
+                  t('The value is required if title for this item is defined.'));
+              }
             }
           }
 
@@ -1392,7 +1401,9 @@ class views_handler_filter extends views_handler {
         $session[$this->options['expose']['operator_id']] = $input[$this->options['expose']['operator_id']];
       }
 
-      $session[$this->options['expose']['identifier']] = $input[$this->options['expose']['identifier']];
+      if (isset($input[$this->options['expose']['identifier']])) {
+        $session[$this->options['expose']['identifier']] = $input[$this->options['expose']['identifier']];
+      }
     }
   }
 

@@ -1231,7 +1231,7 @@ function views_add_css($file) {
  * Include views .js files.
  */
 function views_add_js($file) {
-  // If javascript has been disabled by the user, never add js files.
+  // If JavaScript has been disabled by the user, never add js files.
   if (variable_get('views_no_javascript', FALSE)) {
     return;
   }
@@ -2584,6 +2584,17 @@ function views_views_api() {
     'api' => views_api_version(),
     'path' => drupal_get_path('module', 'views') . '/modules',
   );
+}
+
+/**
+ * Implements hook_admin_menu_cache_info().
+ */
+function views_admin_menu_cache_info() {
+  $caches['views'] = array(
+    'title' => t('Views'),
+    'callback' => 'views_invalidate_cache',
+  );
+  return $caches;
 }
 
 if (!function_exists('aggregator_views_api')) {

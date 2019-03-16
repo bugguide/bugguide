@@ -418,8 +418,10 @@ class views_handler extends views_object {
       '#collapsed' => TRUE,
       '#weight' => 150,
     );
+
     // Allow to alter the default values brought into the form.
-    drupal_alter('views_handler_options', $this->options, $view);
+    // Triggers hook_views_handler_options_alter().
+    drupal_alter('views_handler_options', $this->options, $this);
   }
 
   /**
@@ -1000,20 +1002,20 @@ class views_many_to_one_helper {
       // We do one join per selected value.
 
       // Clone the join for each table:
-      $this->handler->table_aliases = [];
+      $this->handler->table_aliases = array();
       foreach ($this->handler->value as $value) {
         $join = $this->get_join();
         if ($this->handler->operator == 'and') {
           $join->type = 'INNER';
         }
         if (empty($join->extra)) {
-          $join->extra = [];
+          $join->extra = array();
         }
-        $join->extra[] = [
+        $join->extra[] = array(
           'field' => $this->handler->real_field,
           'value' => $value,
           'numeric' => !empty($this->handler->definition['numeric']),
-        ];
+        );
         // The table alias needs to be unique to this value across the
         // multiple times the filter or argument is called by the view.
         if (!isset($this->handler->view->many_to_one_aliases[$field][$value])) {

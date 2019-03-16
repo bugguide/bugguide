@@ -1575,7 +1575,7 @@ class view extends views_db_object {
   /**
    * Override the view's current title.
    *
-   * The tokens in the title get's replaced before rendering.
+   * The tokens in the title get replaced before rendering.
    */
   public function set_title($title) {
     $this->build_info['title'] = $title;

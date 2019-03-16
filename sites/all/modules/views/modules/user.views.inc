@@ -110,6 +110,19 @@ function user_views_data() {
     ),
   );
 
+  // Comments authored.
+  $data['users']['uid_comment'] = array(
+    'relationship' => array(
+      'title' => t('Comments authored'),
+      'help' => t('Relate comments to the user who created it. This relationship will create one record for each comment created by the user.'),
+      'handler' => 'views_handler_relationship',
+      'base' => 'comment',
+      'base field' => 'uid',
+      'field' => 'uid',
+      'label' => t('comments'),
+    ),
+  );
+
   // User name.
   $data['users']['name'] = array(
     // The item it appears as on the UI,
