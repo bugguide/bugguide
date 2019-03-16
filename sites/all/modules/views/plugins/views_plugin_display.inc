@@ -2297,7 +2297,7 @@ class views_plugin_display extends views_plugin {
       $fixed[] = $template;
     }
 
-    return implode(', ', array_reverse($fixed));
+    return theme('item_list', array('items' => array_reverse($fixed)));
   }
 
   /**

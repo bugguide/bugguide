@@ -116,6 +116,12 @@ class views_handler_filter_numeric extends views_handler_filter {
           'method' => 'op_regex',
           'values' => 1,
         ),
+        'not_regular_expression' => array(
+          'title' => t('Not regular expression'),
+          'short' => t('not regex'),
+          'method' => 'op_not_regex',
+          'values' => 1,
+        ),
       );
     }
 
@@ -289,6 +295,13 @@ class views_handler_filter_numeric extends views_handler_filter {
    */
   public function op_regex($field) {
     $this->query->add_where($this->options['group'], $field, $this->value['value'], 'RLIKE');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function op_not_regex($field) {
+    $this->query->add_where($this->options['group'], $field, $this->value['value'], 'NOT RLIKE');
   }
 
   /**
