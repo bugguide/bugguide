@@ -1,14 +1,17 @@
 (function ($) {
 Drupal.behaviors.editablefields_submit = {
   attach: function (context) {
-    $('.editablefield-item').once('editablefield', function() {
+    $('.editablefield-item', context).once('editablefield', function() {
       var $this = $(this);
 
       // There is only one editable field in that form, we can hide the submit
       // button.
-      if ($this.find('input[type=text],input[type=checkbox],textarea,select').length == 1 || $this.find('input[type=radio] ').length > 1) {
+      var $singleEditableFields = $this.find('input[type=text],input[type=checkbox],textarea,select');
+      // Filter out select's from table drag.
+      $singleEditableFields = $singleEditableFields.not('[name*="[_weight]"]');
+      if ($singleEditableFields.length === 1 || $this.find('input[type=radio]').length > 1) {
         $this.find('.form-submit').hide();
-        $this.find('input[type=text],input[type=checkbox],input[type=radio],textarea,select').change(function() {
+        $this.find('input[type=text],input[type=checkbox],input[type=radio],textarea,select').change(function () {
           $this.find('.form-submit').triggerHandler('click');
         });
       }
@@ -37,7 +40,7 @@ Drupal.behaviors.editablefields_submit = {
  */
 Drupal.jsAC.prototype.hidePopup = function (keycode) {
   // Select item if the right key or mousebutton was pressed.
-  if (this.selected && ((keycode && keycode != 46 && keycode != 8 && keycode != 27) || !keycode)) {
+  if (this.selected && ((keycode && keycode !== 46 && keycode !== 8 && keycode !== 27) || !keycode)) {
     this.input.value = $(this.selected).data('autocompleteValue');
     $(this.input).trigger('change');
   }

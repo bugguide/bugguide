@@ -5,9 +5,8 @@ core = 7.x
 
 dependencies[] = entity
 
-; Information added by Drupal.org packaging script on 2017-02-20
-version = "7.x-1.0-alpha3"
+; Information added by Drupal.org packaging script on 2019-03-22
+version = "7.x-1.0-alpha4"
 core = "7.x"
 project = "editablefields"
-datestamp = "1487626086"
-
+datestamp = "1553290687"
