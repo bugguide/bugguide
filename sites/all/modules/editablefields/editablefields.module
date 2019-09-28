@@ -416,7 +416,6 @@ function editablefields_form($form, &$form_state, $entity_type, $entity, $field,
   return $form;
 }
 
-
 /**
  * A special purpose object harbouring values that cannot be serialized.
  */
@@ -431,10 +430,12 @@ class EditableFieldsShield {
  */
 function editablefields_lazy_render_fields($element) {
   $element['field'] = call_user_func_array('editablefields_fallback_formatter', $element['#arguments']->arguments);
-  if (empty($element['field']) && !empty($element['#arguments']->arguments[6]['settings']['empty_text'])) {
-    $element['field'] = array(
-      '#markup' => $element['#arguments']->arguments[6]['settings']['empty_text'],
-    );
+  if (empty($element['field']) && isset($element['#arguments']->arguments[6]['settings']['empty_text'])) {
+    if ($element['#arguments']->arguments[6]['settings']['empty_text'] !== '') {
+      $element['field'] = array(
+        '#markup' => $element['#arguments']->arguments[6]['settings']['empty_text'],
+      );
+    }
   }
   return $element;
 }
