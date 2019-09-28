@@ -303,8 +303,8 @@ function bg_preprocess_page(&$vars) {
         $node->type == 'page'          // Content of type page
         ) {
       $keep = array();
-      // This 
-      if (isset($vars['tabs']['#primary'])) {
+
+      if (isset($vars['tabs']['#primary']) && is_array($vars['tabs']['#primary'])) {
         foreach ($vars['tabs']['#primary'] as $item) {
           if ($item['#link']['path'] == 'node/%/edit') {
             $keep[] = $item;
