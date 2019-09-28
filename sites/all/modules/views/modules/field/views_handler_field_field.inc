@@ -537,6 +537,7 @@ class views_handler_field_field extends views_handler_field {
         'ul' => t('Unordered list'),
         'ol' => t('Ordered list'),
         'separator' => t('Simple separator'),
+        'count' => t('Count'),
       ),
       '#dependency' => array('edit-options-group-rows' => array(TRUE)),
       '#default_value' => $this->options['multi_type'],
@@ -726,6 +727,9 @@ class views_handler_field_field extends views_handler_field {
 
       if ($this->options['multi_type'] == 'separator') {
         return implode(filter_xss_admin($this->options['separator']), $items);
+      }
+      elseif ($this->options['multi_type'] == 'count') {
+        return count($items);
       }
       else {
         return theme('item_list',
