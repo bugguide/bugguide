@@ -384,8 +384,9 @@ function dump_record($taxon) {
     dump('BugGuide');
     
     // resource_url ([Inserted by BISON] Link to the metadata record published in the BISON IPT in association with this dataset.)	
-    // http://bison.ornl.gov/ipt/resource.do?r=bugguide (DRAFT not public yet)	
-    dump('http://bison.ornl.gov/ipt/resource.do?r=bugguide');
+    // http://bison.ornl.gov/ipt/resource.do?r=bugguide (DRAFT not public yet)
+    // updated 20191002 to https://bison.usgs.gov/ipt/resource?r=bugguide	
+    dump('https://bison.usgs.gov/ipt/resource?r=bugguide');
 
     // occurrence_url (Unique URL pointing to species page specific to a single occurrence record.)
     // https://bugguide.net/node/view/580134	
@@ -465,10 +466,12 @@ function dump_record($taxon) {
     
     // thumb_url (A VERY SPECIFIC SYNTAX field for associating thumbnail images or media icons with original(size) associated_media items.*The description section is not required. e.g. [{\\"url\\":\\"BugGuideThumbNailImageURL\\",\\"description\\":\\"WhateverYouWantforImageCaption\\"}]    Multiple thumbnails are each enclosed in curly brackets and separated in the syntax string by a comma e.g.   [{\\"url\\":\\"BugGuideThumbNailImageURL_1\\",\\"description\\":\\"ImageCaption_1\\"},{\\"url\\":\\"BugGuideThumbNailImageURL_2\\",\\"description\\":\\"ImageCaption_2\\"}])
     // [{\\"url\\":\\"https://bugguide.net/images/cache/HKU/KQK/HKUKQKNKMKO09QHS1QLSVQT08QT0ZKUKSKWK8KAKNQ1KNQHSWQV0WQ30AQY0XKRS8KDKSKCKMKCKGK1KBQZSMKDKMK.jpg\\",\\"description\\":\\"Whitebanded Crab Spider (Misumenoides formosipes)\\"}]	
+    // Update 20191002: this can now be a regular URL.
     dump($record['thumb_url']);
 
     // associated_media (A VERY SPECIFIC SYNTAX field for defining and linking thumbnail images or icons referenced in thumb_url field with with associated_media (e.g. original(sized) images, video, audio) NOTE that the order of the thumbnail images must match the order of the original images e.g.  [{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"BugGuideRecordSpecificORIGINALImageURL\\"}]  *Multiple Original Image URLs are each surrounded by curly brackets and separated by a comma e.g.  [{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"BugGuideRecordSpecificORIGINALImageURL_1\\"},{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"BugGuideRecordSpecificORIGINALImageURL_2\\"}])
     // [{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"https://bugguide.net/images/raw/VRY/KUR/VRYKUR3K9R0QFR0QS0E0Z020DQ50AR40ARYKBRXQBRLQNRHQYQJKDQM0Z0I0FQI0TQ40WRFKFQM0FQ.jpg\\"}]	
+    // Update 20191002: this can now be a regular URL.
     dump($record['associated_media']);
 	
 	// associated_references (A VERY SPECIFIC SYNTAX field for defining and linking (usually bibliographic) citations for publication or Web resources. Can be dataset-specific or individual record-specific e.g.   [{\\"url\\":\\"http://dx.doi.org/10.15560/11.3.1665\\",\\"description\\":\\"Sellers, E. and D. McCarthy. 2015. Distribution and floral hosts of Anthophorula micheneri (Timberlake, 1947) and Hylaeus sparsus (Cresson, 1869), (Insecta: Hymenoptera: Apoidea: Anthophila), with new state records in Giles and Loudoun counties, Virginia, eastern USA. Check List 11(3):1665. doi:10.15560/11.3.1665\\"}]  OR  [{\\"url\\":\\"yourURLgoesHere\\",\\"description\\":\\"TextOfYourCitationGoesHere_CanIncludeURLatEnd\\"}])
@@ -693,8 +696,15 @@ foreach ($r as $t) {
     // With description (we're not using description)
     //$taxon['children'][$image->entity_id]['thumb_url'] = '[{\\"url\\":\\"' . $absolute_thumbnail . '\\",\\"description\\":\\"\\"}]';
     // Without description
-    $taxon['children'][$image->entity_id]['thumb_url'] = '[{\\"url\\":\\"' . $absolute_thumbnail . '\\"}]';
-    $taxon['children'][$image->entity_id]['associated_media'] = '[{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"' . 'https://bugguide.net/node/view/' . $node->nid . '\\"}]';
+    // Pre-2019
+    //$taxon['children'][$image->entity_id]['thumb_url'] = '[{\\"url\\":\\"' . $absolute_thumbnail . '\\"}]';
+    // 2019 and later can just take a URL
+    $taxon['children'][$image->entity_id]['thumb_url'] = $absolute_thumbnail;    
+    
+    // Pre-2019
+    //$taxon['children'][$image->entity_id]['associated_media'] = '[{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"' . 'https://bugguide.net/node/view/' . $node->nid . '\\"}]';
+    // 2019 and later can just take a URL
+    $taxon['children'][$image->entity_id]['associated_media'] = 'https://bugguide.net/node/view/' . $node->nid;
     
     $general_comments = check_plain(strip_tags($node->{'body'}[LANGUAGE_NONE][0]['safe_value']));
     $taxon['children'][$image->entity_id]['general_comments'] = $general_comments;
