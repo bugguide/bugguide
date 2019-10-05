@@ -12,7 +12,6 @@ dependencies[] = ds
 dependencies[] = ds_extras
 dependencies[] = ds_ui
 dependencies[] = entity
-dependencies[] = entitycache
 dependencies[] = features
 dependencies[] = image
 dependencies[] = strongarm
