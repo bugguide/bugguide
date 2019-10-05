@@ -23,7 +23,6 @@ dependencies[] = ds_extras
 dependencies[] = ds_ui
 dependencies[] = elysia_cron
 dependencies[] = entity
-dependencies[] = entitycache
 dependencies[] = fe_block
 dependencies[] = features
 dependencies[] = filter
