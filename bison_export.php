@@ -570,7 +570,7 @@ foreach ($r as $t) {
   $parent = $taxon['parent'] . ',' . $taxon['entity_id'];
   // Regex for parent 1,2,3 matches 1,2,3 and 1,2,3,4 and 1,2,3,5
   bison_log("Querying for $parent");
-  $result = db_query("SELECT entity_id FROM field_data_field_parent WHERE field_parent_value REGEXP '$parent(\,|$)'");
+  $result = db_query("SELECT entity_id FROM field_data_field_parent WHERE bundle = 'bgimage' AND field_parent_value REGEXP '$parent(\,|$)'");
   
   // Load each image and mine for data.
   foreach ($result as $image) {
