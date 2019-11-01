@@ -529,7 +529,7 @@ function dump_record($taxon) {
     dump($record['iso_country_code']);	
     
     // license (special request from Elizabeth Sellers)
-    dump();
+    dump('https://creativecommons.org/publicdomain/zero/1.0/legalcode');
 
     // Additional DarwinCore compatible data fields we can publish to GBIF (not currently accommodated in BISON. REF: http://rs.tdwg.org/dwc/terms/) -->	
     //
