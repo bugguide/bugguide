@@ -729,12 +729,12 @@ foreach ($r as $t) {
       $taxon['children'][$image->entity_id]['lifeStage'] = $node->{'field_bgimage_life_stage'}[LANGUAGE_NONE][0]['value'];
     }  
     $taxon['children'][$image->entity_id]['sex'] = '';
-    if (isset($node->{'field_bgimage_gender'}[LANGUAGE_NONE])) {
-      $taxon['children'][$image->entity_id]['sex'] = $node->{'field_bgimage_gender'}[LANGUAGE_NONE][0]['value'];    
+    if (isset($node->{'field_bgimage_sex'}[LANGUAGE_NONE])) {
+      $taxon['children'][$image->entity_id]['sex'] = $node->{'field_bgimage_sex'}[LANGUAGE_NONE][0]['value'];    
     }
 
     $taxon['children'][$image->entity_id]['size'] = '';
-    if (isset($node->{'field_bgimage_gender'}[LANGUAGE_NONE]) && isset($node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value'])) {
+    if (isset($node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value'])) {
       $taxon['children'][$image->entity_id]['size'] = $node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value'];    
     }
   }
