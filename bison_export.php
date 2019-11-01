@@ -287,9 +287,9 @@ function dump_headers() {
   echo "itis_common_name \t";
   echo "itis_tsn \t";
   echo "basis_of_record \t";
-  echo "verbatim_event_date \t";
   echo "occurrence_date \t";
   echo "year \t";
+  echo "verbatim_event_date \t";
   echo "provider \t";
   echo "provier_url \t";
   echo "resource \t";
@@ -359,10 +359,6 @@ function dump_record($taxon) {
     // observation	
     dump('observation');
   
-    // verbatim_event_date (Date as it appears in original raw dataset.)
-    // September 10, 2011	
-    dump($record['verbatim_event_date']);
-
     // occurrence_date (ISO 8601 Standard Formatted date generated or derived from verbatimEventDate. Format: yyyy-mm-dd or yyyy only.)
     // 2011-09-10	
     dump($record['occurrence_date']);
@@ -370,6 +366,10 @@ function dump_record($taxon) {
     // year (yyyy)
     // 2011	
     dump($record['year']);
+
+    // verbatim_event_date (Date as it appears in original raw dataset.)
+    // September 10, 2011	
+    dump($record['verbatim_event_date']);
 
     // provider (BISON)
     // BISON
