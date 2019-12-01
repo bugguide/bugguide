@@ -291,7 +291,7 @@ function dump_headers() {
   echo "year \t";
   echo "verbatim_event_date \t";
   echo "provider \t";
-  echo "provier_url \t";
+  echo "provider_url \t";
   echo "resource \t";
   echo "resource_url \t";
   echo "occurrence_url \t";
