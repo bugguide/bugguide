@@ -375,9 +375,9 @@ function dump_record($taxon) {
     // BISON
     dump('BISON');
     
-    // provider_url (http://bison.usgs.ornl.gov)	
-    // http://bison.usgs.ornl.gov
-    dump('http://bison.usgs.ornl.gov');
+    // provider_url (https://bison.usgs.gov)	
+    // https://bison.usgs.gov
+    dump('https://bison.usgs.gov');
     
     // resource ([Inserted by BISON] Dataset name following BISON Standardized Syntax (See Data Providers page on BISON Web site).)	
     // BugGuide (negotiable)
