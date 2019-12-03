@@ -628,7 +628,10 @@ foreach ($r as $t) {
       $taxon['children'][$image->entity_id]['verbatim_event_date'] = '';
       $taxon['children'][$image->entity_id]['occurrence_date'] = '';      
       $taxon['children'][$image->entity_id]['year'] = '';
+      // Per email from Liz on 12/2/2019, skip records with no dates.
+      continue;
     }
+    
     $taxon['children'][$image->entity_id]['occurrence_url'] = 'https://bugguide.net/node/view/' . $node->nid;
     $taxon['children'][$image->entity_id]['catalog_number'] = $node->nid;
     // Use full name if set, otherwise username.
