@@ -11,7 +11,7 @@
 // START CONFIGURATION
 
 // logging
-$debug_logging = TRUE;
+$debug_logging = FALSE;
 // Which node is the top of the tree? (Arthropods is node 3).
 // Retrieve only records that are children of this node in the tree.
 // Can be set in environment variable e.g., TREETOP=3
@@ -34,7 +34,7 @@ if (!$laterthan) {
 // Limit. This is the number of nodes we will retrieve.
 // For debugging, use LIMIT 3
 // Otherwise, use a blank string.
-$limit = '3';
+$limit = '';
 //$limit = 'LIMIT 4';
 
 // There will be a link to a thumbnail image in the output. How wide of an image
@@ -55,7 +55,7 @@ require_once DRUPAL_ROOT . '/sites/all/modules/custom/bg/bg_globals.inc';
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 
 if (!drupal_is_cli()) {
-  echo "BISON export is restricted to the command line.";
+  echo "MPG export is restricted to the command line.";
   exit();
 }
 
@@ -143,7 +143,7 @@ $LOCATION_CODES['WI'] = 'Wisconsin';
 $LOCATION_CODES['WY'] = 'Wyoming';
 $LOCATION_CODES['YT'] = 'Yukon Territory';
 
-bison_log("Finding parent string for treetop");
+bison_log("Finding parent string for treetop $treetop");
 $treetop_node = node_load($treetop, array(), TRUE);
 // Append treetop nid to get the parent string for the requested treetop.
 // E.g., if Dragonflies (node 191) are the treetop, $treetop_parent will be
@@ -211,6 +211,7 @@ foreach ($result as $record) {
     $r[$record->revision_id]['hodges_number'] = $record->field_hodges_number_value;
   }
 }
+bison_log("Found ". count($r) ." records");
 
 function bison_export_is_genus($nid) {
   $cache = &drupal_static(__FUNCTION__);
@@ -285,21 +286,21 @@ function dump($s = '', $last = FALSE) {
   
   // Remove tabs, multiple spaces, line breaks.
   $clean_s = preg_replace('/\s+/S', ' ', $s);
-  $separator = $last ? "\n" : "\t";
+  $separator = $last ? PHP_EOL : "\t";
   echo $clean_s . $separator;
 }
 
 // Headers
 function dump_headers() {
-  global $hodges
+  global $hodges;
   if ($hodges) {
-    echo "hodges_num"
+    echo "hodges_num \t";
   }
   echo "clean_provided_scientific_name \t";
-  echo "itis_common_name \t";
+  //echo "itis_common_name \t";
   //echo "itis_tsn \t";
   //echo "basis_of_record \t";
-  echo "verbatim_event_date \t";
+  //echo "verbatim_event_date \t";
   echo "occurrence_date \t";
   //echo "year \t";
   //echo "provider \t";
@@ -307,46 +308,50 @@ function dump_headers() {
   //echo "resource \t";
   //echo "resource_url \t";
   echo "occurrence_url \t";
-  echo "catalog_number \t";
+  echo "bugguide_id \t";
   echo "collector \t";
-  echo "collector_number \t";
-  echo "valid_accepted_scientific_name \t";
-  echo "valid_accepted_tsn \t";
-  echo "provided_scientific_name \t";
-  echo "provided_tsn \t";
-  echo "latitude \t";
-  echo "longitude \t";
-  echo "verbatim_elevation \t";
-  echo "verbatim_depth \t";
-  echo "calculated_county_name \t";
-  echo "calculated_fips \t";
-  echo "calculated_state_name \t";
-  echo "centroid \t";
+  //echo "collector_number \t";
+  echo "collector_url \t";
+  echo "user_role \t";
+  //echo "valid_accepted_scientific_name \t";
+  //echo "valid_accepted_tsn \t";
+  //echo "provided_scientific_name \t";
+  //echo "provided_tsn \t";
+  //echo "latitude \t";
+  //echo "longitude \t";
+  //echo "verbatim_elevation \t";
+  //echo "verbatim_depth \t";
+  //echo "calculated_county_name \t";
+  //echo "calculated_fips \t";
+  //echo "calculated_state_name \t";
+  //echo "centroid \t";
   echo "provided_county_name \t";
-  echo "provided_fips \t";
+  //echo "provided_fips \t";
   echo "provided_state_name \t";
   echo "thumb_url \t";
-  echo "associated_media \t";
-  echo "associated_references \t";
-  echo "general_comments \t";
-  echo "id \t";
-  echo "provider_id \t";
-  echo "resource_id \t";
+  //echo "associated_media \t";
+  //echo "associated_references \t";
+  //echo "general_comments \t";
+  //echo "id \t";
+  //echo "provider_id \t";
+  //echo "resource_id \t";
   echo "provided_common_name \t";
-  echo "kingdom \t";
-  echo "geodetic_datum \t";
-  echo "coordinate_precision \t";
-  echo "coordinate_uncertainty \t";
+  //echo "kingdom \t";
+  //echo "geodetic_datum \t";
+  //echo "coordinate_precision \t";
+  //echo "coordinate_uncertainty \t";
   echo "verbatim_locality \t";
-  echo "mrgid \t";
-  echo "calculated_waterbody \t";
+  //echo "mrgid \t";
+  //echo "calculated_waterbody \t";
   echo "iso_country_code \t";
-  echo "license \t";
-  echo "AdditionalDarwinCore \t";
+  //echo "license \t";
+  //echo "AdditionalDarwinCore \t";
   echo "lifeStage \t";
-  echo "Sex \t";
-  echo "Size";
-  echo "\n";
+  echo "sex \t";
+  echo "size \t";
+  echo "last_modified \t";
+  echo "placed_by \t";
+  echo PHP_EOL;
 }
 
 function dump_record($taxon) {
@@ -368,7 +373,7 @@ function dump_record($taxon) {
   
     // itis_common_name ([Inserted by BISON] Common name that according to ITIS, corresponds to the clean_provided_scientific name.)
     // whitebanded crab spider	
-    dump();
+    //dump();
   
     // itis_tsn ([Inserted by BISON] ITIS Taxonomic Serial Number (TSN) that is associated with the clean_provided_scientific_name.)
     // 883799
@@ -380,7 +385,7 @@ function dump_record($taxon) {
   
     // verbatim_event_date (Date as it appears in original raw dataset.)
     // September 10, 2011	
-    dump($record['verbatim_event_date']);
+    //dump($record['verbatim_event_date']);
 
     // occurrence_date (ISO 8601 Standard Formatted date generated or derived from verbatimEventDate. Format: yyyy-mm-dd or yyyy only.)
     // 2011-09-10	
@@ -421,55 +426,61 @@ function dump_record($taxon) {
 
     // collector_number ((Specimen) number sometimes applied by collectors while out collecting in the field. Sometimes unique within a dataset.)
     // DSCF6910sml	
-    dump($record['collector_number']);
+    // dump($record['collector_number']);
+
+    // link to BugGuide user page
+    dump($record['collector_url']);
+
+    // user role
+    dump($record['user_role']);
 
     // valid_accepted_scientific_name ([Inserted by BISON] Taxonomically valid or accepted scientific name according to ITIS. May be the same as or different from provided_scientific_name).
     // Misumenoides formosipes	
-    dump();
+    //dump();
 
     // valid_accepted_tsn ([Inserted by BISON] ITIS TSN that corresponds to the valid_accepted_scientific_name).
     // 883799	
-    dump();
+    //dump();
 
     // provided_scientific_name (Verbatim scientific name as it appears in the original raw dataset. May contain taxon author and year information and/or special characters etc.).
     // Misumenoides formosipes	
-	dump($taxon['genus_name'] . ' ' . $taxon['specific_epithet']);
+	//dump($taxon['genus_name'] . ' ' . $taxon['specific_epithet']);
 
     // provided_tsn (ITIS or other taxonomic serial number associated with the provided_scientific_name in the original raw dataset.)
     //
-    dump();
+    //dump();
 
     // latitude (Decimal latitude (up to 6 decimal places). If missing from raw original dataset, this can be calculated by performing a join between provided_county_name field and and county centroid coordinates index.)
     // Either a specific point coordinate or a centroid coordinate generated at BugGuide or at BISON (the latter based on provided_county_name)
-    dump();
+    //dump();
     
     // longitude (Decimal longitude (up to 6 decimal places). If missing from raw original dataset, this can be calculated by performing a join between provided_county_name field and and county centroid coordinates index.)
     // Either a specific point coordinate or a centroid coordinate generated at BugGuide or at BISON (the latter based on provided_county_name)	
-	dump();
+	//dump();
 	
 	// verbatim_elevation (Elevation as it appears in original raw dataset.)
 	//
-	dump();
+	//dump();
 	
 	// verbatim_depth (Depth as it appears in original raw dataset. Usually in aquatic/marine datasets.)
 	//
-	dump();
+	//dump();
 	
 	// calculated_county_name ([Inserted by BISON] Value is calculated based on latitude and longitude coordinates.)
 	//
-	dump();
+	//dump();
 	
 	// calculated_fips ([Inserted by BISON] Federal Information Process Standard five-digit numeric code for state and county calculated based on values in the provided_county_name and provided_state_name values.)
 	//
-	dump();
+	//dump();
 	
 	// calculated_state_name ([Inserted by BISON] Value is calculated based on latitude and longitude coordinates.)
 	//
-	dump();
+	//dump();
 	
 	// centroid (Controlled vocabulary:  county (also used for parish, or organized borough), state, protected area, 10 Minute Block, HUC12 (Hydrologic Unit Code (HUC)), HUC10, HUC8, HUC6, lake (calculated centroid of a lake or other coastal or inland water body), other (known type of centroid not on this list), unknown (nature of the centroid of the record is generic or undefined), zip code.)
 	// county
-	dump();
+	//dump();
 	
 	// provided_county_name (County name as it appears in original raw dataset.)
     // Loudoun	
@@ -477,7 +488,7 @@ function dump_record($taxon) {
     
     // provided_fips (Federal Information Processing Standard numeric code as it appears in original raw dataset.)
     //
-    dump();
+    //dump();
     
     // provided_state_name (State name as it appears in original raw dataset.)
     // Virginia
@@ -491,27 +502,27 @@ function dump_record($taxon) {
     // associated_media (A VERY SPECIFIC SYNTAX field for defining and linking thumbnail images or icons referenced in thumb_url field with with associated_media (e.g. original(sized) images, video, audio) NOTE that the order of the thumbnail images must match the order of the original images e.g.  [{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"BugGuideRecordSpecificORIGINALImageURL\\"}]  *Multiple Original Image URLs are each surrounded by curly brackets and separated by a comma e.g.  [{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"BugGuideRecordSpecificORIGINALImageURL_1\\"},{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"BugGuideRecordSpecificORIGINALImageURL_2\\"}])
     // [{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"https://bugguide.net/images/raw/VRY/KUR/VRYKUR3K9R0QFR0QS0E0Z020DQ50AR40ARYKBRXQBRLQNRHQYQJKDQM0Z0I0FQI0TQ40WRFKFQM0FQ.jpg\\"}]	
     // Update 20191002: this can now be a regular URL.
-    dump($record['associated_media']);
+    //dump($record['associated_media']);
 	
 	// associated_references (A VERY SPECIFIC SYNTAX field for defining and linking (usually bibliographic) citations for publication or Web resources. Can be dataset-specific or individual record-specific e.g.   [{\\"url\\":\\"http://dx.doi.org/10.15560/11.3.1665\\",\\"description\\":\\"Sellers, E. and D. McCarthy. 2015. Distribution and floral hosts of Anthophorula micheneri (Timberlake, 1947) and Hylaeus sparsus (Cresson, 1869), (Insecta: Hymenoptera: Apoidea: Anthophila), with new state records in Giles and Loudoun counties, Virginia, eastern USA. Check List 11(3):1665. doi:10.15560/11.3.1665\\"}]  OR  [{\\"url\\":\\"yourURLgoesHere\\",\\"description\\":\\"TextOfYourCitationGoesHere_CanIncludeURLatEnd\\"}])
 	//
-	dump();
+	//dump();
 	
 	// general_comments (As its name suggests, this field can contain general comments about the dataset, field notes or other concatenated data fields that were not already accommodated by BISON fields.)
     // Hunting among goldenrod (Solidago sp.) flowers as usual.	
-	dump($record['general_comments']);
+	//dump($record['general_comments']);
 	
 	// id ([Inserted by BISON] Record-level ID, unique within the dataset but not necessarily persistent. Do not use this field for your unique and/or persistent record identifiers. Suggest using the catalog_number field if it is not already populated.)
 	//
-	dump();
+	//dump();
 	
 	// provider_id (440)
     // 440
-    dump('440');
+    //dump('440');
     
     // resource_id (Unique identifier for the dataset. [Inserted by BISON])
     //
-    dump('100061');
+    //dump('100061');
     
     // provided_common_name (Common name as it appears in original raw dataset.)
     //
@@ -519,40 +530,40 @@ function dump_record($taxon) {
     
     // 	provided_kingdom (Controlled vocabulary: Animalia, Plantae, Bacteria, Fungi, Protozoa, Chromista, Archaea, Virus.)
     // Animalia
-    dump('Animalia');
+    //dump('Animalia');
 
     // geodetic_datum (Ellipsoid, geodetic datum, or spatial reference system (SRS) upon which the geographic coordinates given in the Latitude and Longitude fields are based (e.g. WGS84))	
 	//
-	dump();
+	//dump();
 	
 	// coordinate_precision (Decimal representation of the exactness of the latitude and longitude coordinates.)
 	//
-	dump();
+	//dump();
 	
 	// coordinate_uncertainty (Horizontal distance (in meters) from the latitude and longitude coordinates, describing the smallest circle containing the whole of the species occurrence location. Not necessary for county centroid coordinate pairs.)
 	//
-	dump();
+	//dump();
 	
 	// verbatim_locality (Locality information not already contained in other geographic/locality fields e.g. Name of a city, national park, lake, wildlife refuge or other protected area; or a narrative description of how to get to the collection location e.g. Near the large boulder to the left of the waterfall.)
     // Banshee Reeks Nature Preserve
     dump($record['verbatim_locality']);
     
     // mrgid (special request from Elizabeth Sellers)
-    dump();
+    //dump();
 
     // calculated_waterbody (special request from Elizabeth Sellers)
-    dump();
+    //dump();
 
     // iso_country_code (Controlled vocabulary: AS = American Samoa, GU = Guam, FM = Micronesia, Federated States of, PW = Palau, Republic of, UM = United States Minor Outlying Islands, MH = Marshall Islands, Republic of, MP = Northern Mariana Islands, PR = Puerto Rico, VI = Virgin Islands, U.S.)	
     // US
     dump($record['iso_country_code']);	
     
     // license (special request from Elizabeth Sellers)
-    dump();
+    //dump();
 
     // Additional DarwinCore compatible data fields we can publish to GBIF (not currently accommodated in BISON. REF: http://rs.tdwg.org/dwc/terms/) -->	
     //
-    dump();
+    //dump();
     
     // lifeStage
     //
@@ -564,7 +575,14 @@ function dump_record($taxon) {
     
     // Size
     //
-    dump($record['size'], TRUE);
+    dump($record['size']);
+    
+    // Last modified
+    //
+    dump($record['last_modified']);
+    
+    // Placed by
+    dump('', TRUE);
   }
 }
 
@@ -618,6 +636,8 @@ foreach ($r as $t) {
     }
       
     $node = node_load($image->entity_id, array(), TRUE);
+    //bison_log(print_r($node, TRUE));
+
     // Exclude non-US records.
     if (in_array($node->{'field_bgimage_location_code'}[LANGUAGE_NONE][0]['value'], $US_STATES)) {
       //bison_log("Excluding non-US record https://bugguide.net/node/view/" . $node->nid);
@@ -637,7 +657,7 @@ foreach ($r as $t) {
     }
     if ($field_bgimage_date != '' && $field_bgimage_date != '1969-12-31 06:00:00') {
       // 2012-06-10 05:00:00
-      $taxon['children'][$image->entity_id]['verbatim_event_date'] = $node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value'];
+      //$taxon['children'][$image->entity_id]['verbatim_event_date'] = $node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value'];
       // 2012-06-10
       $taxon['children'][$image->entity_id]['occurrence_date'] = substr(date(DATE_ISO8601, strtotime($node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value'])), 0, 10);
       $taxon['children'][$image->entity_id]['year'] = date('Y', strtotime($node->{'field_bgimage_date'}[LANGUAGE_NONE][0]['value']));
@@ -663,6 +683,20 @@ foreach ($r as $t) {
     }
     $taxon['children'][$image->entity_id]['collector'] = $collector;
     $taxon['children'][$image->entity_id]['collector_number'] = '';
+    $taxon['children'][$image->entity_id]['collector_url'] = 'https://bugguide.net/user/view/' . $u->uid;
+    
+    $user_roles = $u->roles;
+    // 5 - contributing editor
+    // 8 - expert
+    $user_role = 'contributor';
+    if (user_has_role(8, $u)) {
+      $user_role = 'expert';
+    }
+    if (user_has_role(5, $u)) {
+      $user_role = 'contributing editor';
+    }
+    $taxon['children'][$image->entity_id]['user_role'] = $user_role;
+    
     $taxon['children'][$image->entity_id]['provided_tsn'] = '';
     if (!isset($node->{'field_bgimage_county'}[LANGUAGE_NONE][0]['safe_value'])) {
       $county = '';
@@ -723,7 +757,7 @@ foreach ($r as $t) {
     // Pre-2019
     //$taxon['children'][$image->entity_id]['associated_media'] = '[{\\"type\\":\\"image\\",\\"mediaUrl\\":\\"' . 'https://bugguide.net/node/view/' . $node->nid . '\\"}]';
     // 2019 and later can just take a URL
-    $taxon['children'][$image->entity_id]['associated_media'] = 'https://bugguide.net/node/view/' . $node->nid;
+    //$taxon['children'][$image->entity_id]['associated_media'] = 'https://bugguide.net/node/view/' . $node->nid;
     
     $general_comments = check_plain(strip_tags($node->{'body'}[LANGUAGE_NONE][0]['safe_value']));
     $taxon['children'][$image->entity_id]['general_comments'] = $general_comments;
@@ -748,14 +782,17 @@ foreach ($r as $t) {
       $taxon['children'][$image->entity_id]['lifeStage'] = $node->{'field_bgimage_life_stage'}[LANGUAGE_NONE][0]['value'];
     }  
     $taxon['children'][$image->entity_id]['sex'] = '';
-    if (isset($node->{'field_bgimage_gender'}[LANGUAGE_NONE])) {
-      $taxon['children'][$image->entity_id]['sex'] = $node->{'field_bgimage_gender'}[LANGUAGE_NONE][0]['value'];    
+    if (isset($node->{'field_bgimage_sex'}[LANGUAGE_NONE])) {
+      $taxon['children'][$image->entity_id]['sex'] = $node->{'field_bgimage_sex'}[LANGUAGE_NONE][0]['value'];    
     }
 
     $taxon['children'][$image->entity_id]['size'] = '';
-    if (isset($node->{'field_bgimage_gender'}[LANGUAGE_NONE]) && isset($node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value'])) {
+    if (isset($node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value'])) {
       $taxon['children'][$image->entity_id]['size'] = $node->{'field_bgimage_size'}[LANGUAGE_NONE][0]['value'];    
     }
+    //$taxon['children'][$image->entity_id]['last_modified'] = date('Y-m-d', $node->changed);
+    $taxon['children'][$image->entity_id]['last_modified'] = '';
+    
   }
   
   // Dump current records to file so we can reclaim memory.
