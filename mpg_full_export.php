@@ -350,7 +350,7 @@ function dump_headers() {
   echo "sex \t";
   echo "size \t";
   echo "last_modified \t";
-  echo "placed_by \t";
+  echo "placed_by";
   echo PHP_EOL;
 }
 
