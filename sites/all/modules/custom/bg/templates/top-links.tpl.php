@@ -25,7 +25,7 @@
       </a>
     </li>
     <li>
-      <a class="button is-tan" title="Logout"href="/user/logout">
+      <a class="button is-tan" title="Logout" href="/user/logout">
         <span>
           <span class="fa fa-sign-out" aria-hidden="true"></span>
         </span>
