@@ -870,7 +870,8 @@ function bgimage_block_view($delta = '') {
 function bgimage_get_series($nid) {
   // First, check if there are related images.
   $result = db_query('SELECT nid, series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $nid))->fetchAssoc();
-  if (!count($result)) {
+  // fetchAssoc() returns FALSE if no results, otherwise an associative array.
+  if (!$result) {
     return;
   }
 
