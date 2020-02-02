@@ -116,7 +116,7 @@ function _bgimage_field_related_images($field) {
   $node = $field['entity'];
 
   $nids = bgimage_get_series($node->nid);
-  if (!count($nids)) {
+  if (!$nids) {
     return;
   }
 
