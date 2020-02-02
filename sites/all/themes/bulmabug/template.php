@@ -1,5 +1,11 @@
 <?php
 
+// Make database name available so we can display it in footer during beta.
+// TODO remove this in production.
+function bulmabug_preprocess_page(&$vars) {
+  $vars['current_database'] = $GLOBALS['databases']['default']['default']['database'];
+}
+
 /**
  * Implements theme_breadcrumb().
  *
