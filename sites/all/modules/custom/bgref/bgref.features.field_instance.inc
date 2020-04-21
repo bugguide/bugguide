@@ -306,9 +306,7 @@ function bgref_field_default_field_instances() {
         'module' => 'number',
         'settings' => array(
           'decimal_separator' => '.',
-          'prefix_suffix' => TRUE,
           'scale' => 0,
-          'thousand_separator' => ' ',
         ),
         'type' => 'number_integer',
         'weight' => 2,
