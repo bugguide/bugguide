@@ -222,7 +222,12 @@ function bgpage_representative_images($field) {
     // Render a list of images.
     $output = '<div class="card mb-3"><div class="card-content"><ul class="columns is-mobile is-multiline">';
     foreach ($documents as $document) {
-      $output .= '<li>' . $document->ss_bgimage_thumbnail . '</li>';
+      if (isset($document->ss_bgimage_thumbnail)) {
+        $output .= '<li>' . $document->ss_bgimage_thumbnail . '</li>';    
+      }
+      else {
+        $output .= '<li>(Thumbnail image not currently available)</li>';
+      }
     }
     $output .= '</ul></div></div>';
 
