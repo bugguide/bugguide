@@ -453,7 +453,7 @@ function taxonomy_update_7004() {
       }
       else {
         $instance['widget'] = array(
-          'type' => 'options_select',
+          'type' => 'select',
           'module' => 'options',
           'settings' => array(),
         );
