@@ -321,6 +321,38 @@ function bg_preprocess_page(&$vars) {
         }
       }
     }
+    
+    // If we are viewing an individual book_reference, set the active tab to Books 
+    // instead of Info.
+    if ($node->type == 'book_reference') {
+      if (isset($vars['tabs']['#primary']) && is_array($vars['tabs']['#primary'])) {
+        $i = 0;
+        foreach ($vars['tabs']['#primary'] as $item) {
+          if ($item['#link']['title'] == 'Info') {
+            unset($vars['tabs']['#primary'][$i]['#active']);
+          }
+          if ($item['#link']['title'] == 'Books') {
+            $vars['tabs']['#primary'][$i]['#active'] = 1;
+          }
+        $i++;
+        }
+      }
+    }
+
+    if ($node->type == 'bgimage') {
+      if (isset($vars['tabs']['#primary']) && is_array($vars['tabs']['#primary'])) {
+        $i = 0;
+        foreach ($vars['tabs']['#primary'] as $item) {
+          if ($item['#link']['title'] == 'Info') {
+            unset($vars['tabs']['#primary'][$i]['#active']);
+          }
+          if ($item['#link']['title'] == 'Images') {
+            $vars['tabs']['#primary'][$i]['#active'] = 1;
+          }
+        $i++;
+        }
+      }
+    }
 
     // Set breadcrumb for bgpage, bgimage and book reference nodes.
     if (!empty($node) && isset($node->type) && in_array($node->type, array('bgpage', 'bgimage', 'bglink', 'book_reference'))) {
