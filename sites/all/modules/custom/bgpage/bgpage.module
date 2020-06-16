@@ -174,9 +174,8 @@ function bgpage_menu_local_tasks_alter(&$data, $route_name) {
     return;
   }
 
-  // When looking at a bgimage node, the Info tab should not link
-  // to the nid of the bgimage node, but to its parent (which will
-  // be a bgpage node).
+  // When looking at a bgimage node or book_reference, the Info tab should not link
+  // to the nid of the bgimage node, but to its parent (which will be a bgpage node).
   if ($route_name['path'] == 'node/%' && isset($route_name['page_arguments'][0]->type)) {
     switch($route_name['page_arguments'][0]->type) {
 
@@ -186,6 +185,7 @@ function bgpage_menu_local_tasks_alter(&$data, $route_name) {
         break;
 
       case 'bgimage':
+      case 'book_reference':
         $parentpath = $route_name['page_arguments'][0]->field_parent[LANGUAGE_NONE][0]['value'];
         $parents = explode(',', $parentpath);
         if (count($parents) > 0) {
