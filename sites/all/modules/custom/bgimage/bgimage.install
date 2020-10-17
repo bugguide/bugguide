@@ -21,3 +21,199 @@ function bgimage_install() {
     ->condition('name', 'bgimage', '=')
     ->execute();
 }
+
+/**
+ * Implements hook_schema().
+ */
+function bgimage_schema() {
+  $schema['bgimage'] = array(
+    'description' => 'Reflection of bgimage content type for speedy ad hoc queries.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'Node id from node table',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'parent' => array(
+        'description' => 'Comma-delimited hierarchy of parent nids',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'parent_idx' => array(
+        'description' => 'Comma-delimited hierarchy of parent nids with trailing comma',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'base' => array(
+        'description' => 'Unique hash for this image',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'id' => array(
+        'description' => 'User notes for this image',
+        'type' => 'varchar',
+        'length' => 128,
+        'null' => TRUE,
+        'default' => NULL,
+      ),
+      'location' => array(
+        'description' => 'Descriptive location',
+        'type' => 'varchar',
+        'length' => 128,
+        'null' => TRUE,
+        'default' => NULL,
+      ),
+      'size' => array(
+        'description' => 'Size estimate of specimen',
+        'type' => 'varchar',
+        'length' => 100,
+        'default' => '',
+      ),
+      'date_taken' => array(
+        'description' => 'Unix timestamp of date image was taken',
+        'type' => 'int',
+        'length' => 11,
+        'null' => TRUE,
+        'default' => NULL,
+      ),
+      'width' => array(
+        'description' => 'Horizontal size in pixels',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'length' => 10,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'height' => array(
+        'description' => 'Vertical size in pixels',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'length' => 10,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'filesize' => array(
+        'description' => 'File size (not used in D7)',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'length' => 10,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'weight' => array(
+        'description' => 'A Drupal weight (not used in D7, all are 0)',
+        'type' => 'int',
+        'length' => 4,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'representative' => array(
+        'description' => 'Whether shown on taxon pages as good example',
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'male' => array(
+        'description' => '1 if male, 0 if not male',
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'female' => array(
+        'description' => '1 if female, 0 if not female',
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'adult' => array(
+        'description' => '1 if adult, 0 if not adult',
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'immature' => array(
+        'description' => '1 if immature, 0 if not immature',
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'owner' => array(
+        'description' => 'Copyright owner (blank if user is owner)',
+        'type' => 'varchar',
+        'length' => 128,
+        'null' => TRUE,
+        'default' => '',
+      ),
+      'county' => array(
+        'description' => 'County where photographed',
+        'type' => 'varchar',
+        'length' => 128,
+        'null' => TRUE,
+        'default' => '',
+      ),
+      'location_code' => array(
+        'description' => 'Two-digit alpha code of state or province',
+        'type' => 'char',
+        'length' => 2,
+        'null' => TRUE,
+        'default' => NULL,
+      ),  
+    ),
+    'indexes' => array(
+      'bgimage_immature' => array('immature'),
+      'bgimage_parent' => array('parent'),
+      'bgimage_parent_idx' => array('parent_idx'),
+      'bgimage_representative' => array('representative')
+    ),
+    'unique keys' => array(    
+    ),
+    'primary key' => array('nid'),
+  );
+  
+  $schema['bgimage_series'] = array(
+    'description' => 'Groups multiple images of same speciemen.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'Node id from node table',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'weight' => array(
+        'description' => 'A Drupal weight to order related images',
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'series' => array(
+        'description' => 'Node id of first image in this series',
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ),     
+    ),
+    'indexes' => array(
+      'bgimage_series' => array('series'),
+    ),
+    'unique keys' => array(    
+    ),
+    'primary key' => array('nid'),
+  );
+  return $schema;
+}
