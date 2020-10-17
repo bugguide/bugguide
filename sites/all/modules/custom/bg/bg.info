@@ -7,7 +7,6 @@ project = bg
 dependencies[] = admin_menu
 dependencies[] = apachesolr
 dependencies[] = apachesolr_parallel
-dependencies[] = bg
 dependencies[] = bgimage
 dependencies[] = bglink
 dependencies[] = bgpage
