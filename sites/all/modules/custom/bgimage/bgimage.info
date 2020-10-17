@@ -6,7 +6,6 @@ version = 7.x-1.9
 project = bgimage
 dependencies[] = addressfield
 dependencies[] = better_exposed_filters
-dependencies[] = bgimage
 dependencies[] = clone
 dependencies[] = ctools
 dependencies[] = date
