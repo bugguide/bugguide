@@ -373,12 +373,28 @@ function bgimage_node_insert($node) {
     $result = db_query('select * from {bgimage_series} where nid = :nid', array(
       ':nid' => $node->original_nid,
     ))->fetchObject();
-
+    
+    // The bgimage_series table is only used if there is more than one image.
+    // If this is the second image initialize the series.
+    if (!$result) {
+      db_insert('bgimage_series')
+        ->fields(array(
+          'nid' => $node->original_nid,
+          'weight' => 0,
+          'series' => $node->original_nid,
+        ))
+        ->execute();
+    }
+    $max_weight = db_query('SELECT MAX(weight) FROM {bgimage_series} WHERE series = :nid', array(
+      ':nid' => $node->original_nid,
+    ))->fetchField();
+    
+    // Add the new image at the end of the series.
     db_insert('bgimage_series')
       ->fields(array(
         'nid' => $node->nid,
-        'weight' => $result->weight + 1,
-        'series' => $result->series,
+        'weight' => $max_weight + 1,
+        'series' => $node->original_nid,
       ))
       ->execute();
   }
