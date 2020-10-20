@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * bgimage.features.user_permission.inc
@@ -32,6 +33,15 @@ function bgimage_user_default_permissions() {
     'module' => 'bgimage',
   );
 
+  // Exported permission: 'edit any bgimage content'.
+  $permissions['edit any bgimage content'] = array(
+    'name' => 'edit any bgimage content',
+    'roles' => array(
+      'contributing editor' => 'contributing editor',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'link all bgimages'.
   $permissions['link all bgimages'] = array(
     'name' => 'link all bgimages',
@@ -52,6 +62,15 @@ function bgimage_user_default_permissions() {
       'spam zapper' => 'spam zapper',
     ),
     'module' => 'bgimage',
+  );
+
+  // Exported permission: 'use editablefields'.
+  $permissions['use editablefields'] = array(
+    'name' => 'use editablefields',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'editablefields',
   );
 
   // Exported permission: 'use image clipboard'.
