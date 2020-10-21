@@ -194,5 +194,6 @@ features[user_permission][] = view the administration theme
 features[user_role][] = administrator
 features[user_role][] = contributing editor
 features[user_role][] = expert
+features[user_role][] = senior editor
 features[user_role][] = spam zapper
 project path = sites/all/modules/custom

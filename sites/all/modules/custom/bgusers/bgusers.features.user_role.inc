@@ -29,6 +29,12 @@ function bgusers_user_default_roles() {
     'weight' => 0,
   );
 
+  // Exported role: senior editor.
+  $roles['senior editor'] = array(
+    'name' => 'senior editor',
+    'weight' => 1,
+  );
+
   // Exported role: spam zapper.
   $roles['spam zapper'] = array(
     'name' => 'spam zapper',
