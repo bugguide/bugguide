@@ -64,15 +64,6 @@ function bgimage_user_default_permissions() {
     'module' => 'bgimage',
   );
 
-  // Exported permission: 'use editablefields'.
-  $permissions['use editablefields'] = array(
-    'name' => 'use editablefields',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'editablefields',
-  );
-
   // Exported permission: 'use image clipboard'.
   $permissions['use image clipboard'] = array(
     'name' => 'use image clipboard',

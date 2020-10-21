@@ -78,7 +78,6 @@ features[user_permission][] = create bgimages
 features[user_permission][] = edit any bgimage content
 features[user_permission][] = link all bgimages
 features[user_permission][] = move all bgimages
-features[user_permission][] = use editablefields
 features[user_permission][] = use image clipboard
 features[user_permission][] = view fullsize bgimages
 features[variable][] = comment_anonymous_bgimage
