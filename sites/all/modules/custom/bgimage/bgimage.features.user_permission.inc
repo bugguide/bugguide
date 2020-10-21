@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * bgimage.features.user_permission.inc
@@ -30,6 +31,15 @@ function bgimage_user_default_permissions() {
       'spam zapper' => 'spam zapper',
     ),
     'module' => 'bgimage',
+  );
+
+  // Exported permission: 'edit any bgimage content'.
+  $permissions['edit any bgimage content'] = array(
+    'name' => 'edit any bgimage content',
+    'roles' => array(
+      'contributing editor' => 'contributing editor',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: 'link all bgimages'.
