@@ -60,7 +60,6 @@ features[image][] = bg_large
 features[image][] = bg_small
 features[node][] = page
 features[taxonomy][] = tags
-features[user_permission][] = use editablefields
 features[variable][] = admin_theme
 features[variable][] = comment_default_mode_page
 features[variable][] = comment_page
