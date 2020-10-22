@@ -227,23 +227,13 @@ function bgpage_representative_images($field) {
       $representative_images__nids = explode(',', $field_representative_images_value);
       foreach ($representative_images__nids as $representative_images__nid) {
         $bgimage__node = node_load($representative_images__nid);
-        // Render a thumbnail of the image.
-        $rendered_image = theme('image_style', array(
-          'path' => $bgimage__node->field_bgimage_image[LANGUAGE_NONE][0]['uri'],
-          'style_name' => 'bg_small',
-          'alt' => $bgimage__node->title,
-          'title' => $bgimage__node->title,
-        ));
         // We do this to simulate this as apache solr fetching documents.
         // in order to merge them later.
         $document__representative_image = new stdClass();
-        $document__representative_image->ss_bgimage_thumbnail = l($rendered_image, 'node/' . $bgimage__node->nid, array(
-          'attributes' => array(
-            'title' => $bgimage__node->title,
-          ),
-          'html' => TRUE));
+        $document__representative_image->ss_bgimage_thumbnail =  bgimage_thumb_link($bgimage__node);
         $representative_images[] = $document__representative_image;
       }
+      $limit_images_to_display = $limit_images_to_display - count($representative_images);
       // Remove representative images if we have more than our current limit to display.
       if (count($representative_images) > $limit_images_to_display) {
         // We get negative value so in array_splice it removes
@@ -267,8 +257,9 @@ function bgpage_representative_images($field) {
       if (isset($document->ss_bgimage_thumbnail)) {
         $output .= '<li>' . $document->ss_bgimage_thumbnail . '</li>';    
       }
-      else {
-        $output .= '<li>(Thumbnail image not currently available)</li>';
+      elseif (isset($document->entity_id)) {
+        // The image thumbnail has not been indexed by Solr. Fall back to MySQL.
+        $output .= '<li>' . bgimage_thumb_link(node_load($document->entity_id)) . '</li>';
       }
     }
     $output .= '</ul></div></div>';
@@ -304,7 +295,7 @@ function _bgpage_search_representative_images_for($bgpage_nid, $limit = 8) {
 
   $query = apachesolr_drupal_query('representative_images_' . $bgpage_nid, array());
   $query->addFilterSubQuery($filter_parent);
-  $query->addParam('fl', 'ss_bgimage_thumbnail');
+  $query->addParam('fl', 'entity_id,ss_bgimage_thumbnail');
   $query->addParam('rows', $limit);
   $query->addParam('sort', 'is_bgimage_rating_avg desc');
   $query->addParam('sort', 'is_bgimage_rating_count desc');
