@@ -497,6 +497,20 @@ function _bgimage_filter_thumb_process($text, $filter, $format) {
   return $text;
 }
 
+/**
+ * Get a rendered thumbnail image.
+ *
+ * Example of a thumbnail image:
+ * <img src="http://./files/styles/bg_small/public/108/K10/108K10LKZS3ROQHQYQY0BQY05Q10PQ9K5QC04QWKLK102QO04QA0LKB04QUKRKD00KDKWQVK9QB0UQB0GQF04QC05QC0.jpg?itok=QTeqhGF8" alt="" />
+ *
+ * @param stdclass $node
+ *   The node object.
+ *
+ * @return string
+ *   The rendered thumbnail image.
+ *
+ * @throws Exception
+ */
 function bgimage_thumb($node) {
   // e.g., for $node->nid = 1877
   // $base = 665891889baf9ad4d0cb1626a5f56fb5
@@ -508,13 +522,33 @@ function bgimage_thumb($node) {
   $prefix = bgimage_get_prefix($obfuscate);
   // $uri = public://raw/MZA/LMZ/MZALMZWLLZELSRWLFL9LKRJZLZ6LYL9LRZJZHZ9L0R3Z3LDZGRTLERDLHZCLHZULXZ9LFLWLFL.jpg
   $uri = 'public://raw/' . $prefix . $obfuscate  .'.jpg';
-  $rendered_image = theme('image_style', array('path' => $uri, 'style_name' => 'bg_small'));
   // <img src="http://./files/styles/bg_small/public/108/K10/108K10LKZS3ROQHQYQY0BQY05Q10PQ9K5QC04QWKLK102QO04QA0LKB04QUKRKD00KDKWQVK9QB0UQB0GQF04QC05QC0.jpg?itok=QTeqhGF8" alt="" />
-  return $rendered_image;
+  return theme('image_style', array(
+    'path' => $uri,
+    'style_name' => 'bg_small',
+    'alt' => $node->title,
+    'title' => $node->title,
+  ));
 }
 
+/**
+ * Get a thumbnail linkable image of node.
+ *
+ * @param stdclass $node
+ *   The node object.
+ * @return string
+ *   A link with image as thumbnail else empty.
+ */
 function bgimage_thumb_link($node) {
-  return l(bgimage_thumb($node), 'node/' . $node->nid, array('html' => TRUE));
+  if (!$node) {
+    return '';
+  }
+  return l(bgimage_thumb($node), 'node/' . $node->nid, array(
+    'html' => TRUE,
+    'attributes' => array(
+      'title' => $node->title,
+    ),
+  ));
 }
 
 /**
