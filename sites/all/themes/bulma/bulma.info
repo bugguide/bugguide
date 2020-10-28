@@ -2,7 +2,7 @@ name = Bulma
 core = 7.x
 description = Base theme using Bulma
 
-stylesheets[all][] = css/bulma.css
+stylesheets[all][] = css/bulma.min.css
 stylesheets[all][] = css/bulma-custom.css
 
 scripts[] = js/mobile-menu.js
