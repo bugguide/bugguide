@@ -670,6 +670,21 @@ a:hover,
 }
 
 /* --------------------- */
+/* ## USER PAGE - IMAGES
+/* --------------------- */
+
+/* Put the Images Per Page filter inline */
+.view-my-images.view-display-id-page .views-exposed-widgets .form-item-items-per-page {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.view-my-images.view-display-id-page .views-exposed-widgets .form-submit {
+  margin-top: 0;
+}
+
+/* --------------------- */
 /* ## MEGAPANELS
 /* --------------------- */
 
@@ -725,6 +740,5 @@ a:hover,
     width: calc(50% - 1rem);
     flex: 0 1 auto;
   }
-} auto;
-  }
 }
+
