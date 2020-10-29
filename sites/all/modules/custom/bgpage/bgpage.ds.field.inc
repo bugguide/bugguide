@@ -217,16 +217,49 @@ function _bgpage_images($field) {
  */
 function bgpage_representative_images($field) {
   try {
-    $documents = _bgpage_search_representative_images_for($field['entity']->nid);
-
+    $node = $field['entity'];
+    $limit_images_to_display = 8;
+    $no_need_to_load_solr_documents = FALSE;
+    $documents = array();
+    $representative_images = array();
+    if (!empty($node->field_representative_images[LANGUAGE_NONE][0]['value'])) {
+      $field_representative_images_value = $node->field_representative_images[LANGUAGE_NONE][0]['value'];
+      $representative_images__nids = explode(',', $field_representative_images_value);
+      foreach ($representative_images__nids as $representative_images__nid) {
+        $bgimage__node = node_load($representative_images__nid);
+        // We do this to simulate this as apache solr fetching documents.
+        // in order to merge them later.
+        $document__representative_image = new stdClass();
+        $document__representative_image->ss_bgimage_thumbnail =  bgimage_thumb_link($bgimage__node);
+        $representative_images[] = $document__representative_image;
+      }
+      $limit_images_to_display = $limit_images_to_display - count($representative_images);
+      // Remove representative images if we have more than our current limit to display.
+      if (count($representative_images) > $limit_images_to_display) {
+        // We get negative value so in array_splice it removes
+        // the rest that exceeds the limits.
+        $amount_to_remove = $limit_images_to_display - count($representative_images);
+        array_splice($representative_images, $amount_to_remove);
+        $no_need_to_load_solr_documents = TRUE;
+        $documents = $representative_images;
+      }
+    }
+    if (!$no_need_to_load_solr_documents) {
+      $documents = _bgpage_search_representative_images_for($node->nid, $limit_images_to_display);
+      // Loop representative images if so then they should be the first ones to be added.
+      foreach (array_reverse($representative_images) as $representative_image) {
+        array_unshift($documents, $representative_image);
+      }
+    }
     // Render a list of images.
     $output = '<div class="card mb-3"><div class="card-content"><ul class="columns is-mobile is-multiline">';
     foreach ($documents as $document) {
       if (isset($document->ss_bgimage_thumbnail)) {
         $output .= '<li>' . $document->ss_bgimage_thumbnail . '</li>';    
       }
-      else {
-        $output .= '<li>(Thumbnail image not currently available)</li>';
+      elseif (isset($document->entity_id)) {
+        // The image thumbnail has not been indexed by Solr. Fall back to MySQL.
+        $output .= '<li>' . bgimage_thumb_link(node_load($document->entity_id)) . '</li>';
       }
     }
     $output .= '</ul></div></div>';
@@ -246,6 +279,8 @@ function bgpage_representative_images($field) {
  *
  * @param int $bgpage_nid
  *   A bgpage nid.
+ * @param int $limit
+ *   The limit to get images for. By default it is 8.
  *
  * @return array
  *   An array of Apache_Solr_Document objects.
@@ -253,15 +288,15 @@ function bgpage_representative_images($field) {
  * @throws \Exception
  *   When the Solr server cannot be reached or the query failed.
  */
-function _bgpage_search_representative_images_for($bgpage_nid) {
+function _bgpage_search_representative_images_for($bgpage_nid, $limit = 8) {
   // Filter images with this child nid as their parent.
   $filter_parent = new SolrFilterSubQuery('AND');
   $filter_parent->addFilter('sm_bgimage_parents', $bgpage_nid);
 
   $query = apachesolr_drupal_query('representative_images_' . $bgpage_nid, array());
   $query->addFilterSubQuery($filter_parent);
-  $query->addParam('fl', 'ss_bgimage_thumbnail');
-  $query->addParam('rows', 8);
+  $query->addParam('fl', 'entity_id,ss_bgimage_thumbnail');
+  $query->addParam('rows', $limit);
   $query->addParam('sort', 'is_bgimage_rating_avg desc');
   $query->addParam('sort', 'is_bgimage_rating_count desc');
 
