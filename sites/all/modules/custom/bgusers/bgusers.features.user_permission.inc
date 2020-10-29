@@ -815,14 +815,18 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'edit any bglink content'.
   $permissions['edit any bglink content'] = array(
     'name' => 'edit any bglink content',
-    'roles' => array(),
+    'roles' => array(
+      'contributing editor' => 'contributing editor',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'edit any book_reference content'.
   $permissions['edit any book_reference content'] = array(
     'name' => 'edit any book_reference content',
-    'roles' => array(),
+    'roles' => array(
+      'contributing editor' => 'contributing editor',
+    ),
     'module' => 'node',
   );
 
