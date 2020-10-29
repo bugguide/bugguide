@@ -16,7 +16,7 @@ function bgimage_field_default_field_instances() {
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, sex of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).',
+    'description' => 'Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -49,6 +49,36 @@ function bgimage_field_default_field_instances() {
     'label' => 'Remarks',
     'required' => 0,
     'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          1 => 1,
+          2 => 2,
+          3 => 3,
+          4 => 4,
+          'xbbcode' => 'xbbcode',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            1 => array(
+              'weight' => -10,
+            ),
+            2 => array(
+              'weight' => -9,
+            ),
+            3 => array(
+              'weight' => 0,
+            ),
+            4 => array(
+              'weight' => 1,
+            ),
+            'xbbcode' => array(
+              'weight' => -6,
+            ),
+          ),
+        ),
+      ),
       'display_summary' => 1,
       'text_processing' => 1,
       'user_register_form' => FALSE,
@@ -290,7 +320,7 @@ function bgimage_field_default_field_instances() {
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Optional. An identifier for your own use. If you choose something unique here from your own records, you can easily find this image later using search.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -322,6 +352,36 @@ function bgimage_field_default_field_instances() {
     'label' => 'ID',
     'required' => 0,
     'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          1 => 1,
+          2 => 2,
+          3 => 3,
+          4 => 4,
+          'xbbcode' => 'xbbcode',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            1 => array(
+              'weight' => -10,
+            ),
+            2 => array(
+              'weight' => -9,
+            ),
+            3 => array(
+              'weight' => 0,
+            ),
+            4 => array(
+              'weight' => 1,
+            ),
+            'xbbcode' => array(
+              'weight' => -6,
+            ),
+          ),
+        ),
+      ),
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -340,8 +400,7 @@ function bgimage_field_default_field_instances() {
   $field_instances['node-bgimage-field_bgimage_image'] = array(
     'bundle' => 'bgimage',
     'deleted' => 0,
-    'description' => 'If you have more than one image of the same specimen, submit this form first. Then view the first submitted image and select the "add image" link to add another. Please limit yourself to just a few of your best shots for a particular specimen.
-',
+    'description' => 'If you have more than one image of the <b>same specimen</b>, submit this form first. Then view the first submitted image and select the "add image" link to add another. Please limit yourself to just a few of your best shots for a particular specimen.<br />',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -465,7 +524,7 @@ function bgimage_field_default_field_instances() {
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'To narrow things down, you may optionally specify a city or other well known location. <b>Do not include the county, state, or province here</b>. Specify that above, except for captive specimens.',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -497,6 +556,36 @@ function bgimage_field_default_field_instances() {
     'label' => 'Location',
     'required' => 0,
     'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          1 => 1,
+          2 => 2,
+          3 => 3,
+          4 => 4,
+          'xbbcode' => 'xbbcode',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            1 => array(
+              'weight' => -10,
+            ),
+            2 => array(
+              'weight' => -9,
+            ),
+            3 => array(
+              'weight' => 0,
+            ),
+            4 => array(
+              'weight' => 1,
+            ),
+            'xbbcode' => array(
+              'weight' => -6,
+            ),
+          ),
+        ),
+      ),
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -520,7 +609,7 @@ function bgimage_field_default_field_instances() {
       ),
     ),
     'deleted' => 0,
-    'description' => '',
+    'description' => '<strong>Note that we only accept images of specimens from the United States and Canada.</strong><br />To ensure the accuracy of our collection data, specify the state or province where the specimen was found. Range information is derived from this data, so only provide this for wild specimens.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -740,7 +829,7 @@ function bgimage_field_default_field_instances() {
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Size, if known.',
     'display' => array(
       'default' => array(
         'label' => 'inline',
@@ -773,6 +862,36 @@ function bgimage_field_default_field_instances() {
     'label' => 'Size',
     'required' => 0,
     'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          1 => 1,
+          2 => 2,
+          3 => 3,
+          4 => 4,
+          'xbbcode' => 'xbbcode',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            1 => array(
+              'weight' => -10,
+            ),
+            2 => array(
+              'weight' => -9,
+            ),
+            3 => array(
+              'weight' => 0,
+            ),
+            4 => array(
+              'weight' => 1,
+            ),
+            'xbbcode' => array(
+              'weight' => -6,
+            ),
+          ),
+        ),
+      ),
       'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
@@ -841,28 +960,31 @@ function bgimage_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('<b>Leave this blank if the image is your own</b>. If the image is not your own you must get permission from the owner before submitting it here. If you have permission, specify the copyright owner\'s name here.');
+  t('<strong>Note that we only accept images of specimens from the United States and Canada.</strong><br />To ensure the accuracy of our collection data, specify the state or province where the specimen was found. Range information is derived from this data, so only provide this for wild specimens.');
   t('Base');
   t('Copyright Owner');
   t('County/Parish/District/Region');
   t('Date taken');
   t('Date taken, if known (mm/dd/yy). Only specify this for wild specimens.');
-  t('Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, sex of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).');
+  t('Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).');
   t('ID');
   t('If known, otherwise leave blank. Do not include the word \'County\' or \'Parish\' here as the system will provide that as needed.');
   t('If you don\'t know for sure, don\'t check it. For example: for caterpillars check immature and for butterflies and moths check adult. If an image shows more than one life stage, check each one.');
   t('If you don\'t know for sure, don\'t check it. If the photo shows mating behavior, check both male and female.');
-  t('If you have more than one image of the same specimen, submit this form first. Then view the first submitted image and select the "add image" link to add another. Please limit yourself to just a few of your best shots for a particular specimen.
-');
+  t('If you have more than one image of the <b>same specimen</b>, submit this form first. Then view the first submitted image and select the "add image" link to add another. Please limit yourself to just a few of your best shots for a particular specimen.<br />');
   t('Image');
   t('Life stage');
   t('Location');
   t('Location Code');
+  t('Optional. An identifier for your own use. If you choose something unique here from your own records, you can easily find this image later using search.');
   t('Parent');
   t('Photographic Quality');
   t('Remarks');
   t('Representative of Taxon');
   t('Sex');
   t('Size');
+  t('Size, if known.');
+  t('To narrow things down, you may optionally specify a city or other well known location. <b>Do not include the county, state, or province here</b>. Specify that above, except for captive specimens.');
 
   return $field_instances;
 }
