@@ -16,7 +16,7 @@ function bgimage_field_default_field_instances() {
     'bundle' => 'bgimage',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).',
+    'description' => 'Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, sex of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -966,7 +966,7 @@ function bgimage_field_default_field_instances() {
   t('County/Parish/District/Region');
   t('Date taken');
   t('Date taken, if known (mm/dd/yy). Only specify this for wild specimens.');
-  t('Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, gender of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).');
+  t('Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, sex of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).');
   t('ID');
   t('If known, otherwise leave blank. Do not include the word \'County\' or \'Parish\' here as the system will provide that as needed.');
   t('If you don\'t know for sure, don\'t check it. For example: for caterpillars check immature and for butterflies and moths check adult. If an image shows more than one life stage, check each one.');
