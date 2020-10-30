@@ -139,6 +139,13 @@ function bgimage_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'fivestar_tags';
+  $strongarm->value = 'r,p';
+  $export['fivestar_tags'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'menu_options_bgimage';
   $strongarm->value = array(
     0 => 'main-menu',
