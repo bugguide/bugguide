@@ -754,16 +754,6 @@ a:hover,
 /* ## MISC
 /* --------------------- */
 
-.box {
-  border: 1px solid #eee;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.15);
-}
-
-.card {
-  border: 1px solid #eee;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.15);
-}
-
 .bg-image-list img {
   margin: 0 !important;
 }

@@ -343,6 +343,12 @@ a.card-footer-item {
   font-size: 0.75rem;
 }
 
+  .links.inline > li > a:hover,
+  .links.inline > li > a:focus {
+    color: #111111;
+    background-color: #dddddd;
+  }
+
 .more-link {
   display: flex;
   justify-content: flex-end;
@@ -682,6 +688,58 @@ input#edit-submit:hover {
 .vertical-tabs-panes .form-type-select {
   display: block;
 }
+
+/* -------------------- */
+/* ## COMMENT
+/* -------------------- */
+/* Custom - does not use bulma component */
+
+.comment-header {
+  display: flex;
+}
+
+.comment-header img {
+  margin-right: 1rem;
+}
+
+.comment-header_title {
+  flex-grow: 1;
+}
+
+.comment-header_title h3 {
+  font-weight: bold;
+}
+
+.submitted {
+  color: #676767;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.comment-content {
+  margin-bottom: 1rem;
+  padding: 1rem 0;
+}
+
+.comment-footer {
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+}
+
+/* -------------------- */
+/* ## DESIGN OVERRIDE
+/* -------------------- */
+
+.box {
+  border: 1px solid #eee;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.15);
+}
+
+.card {
+  border: 1px solid #eee;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.15);
+}
+
 /* -------------------- */
 /* ## UTILITY
 /* -------------------- */
