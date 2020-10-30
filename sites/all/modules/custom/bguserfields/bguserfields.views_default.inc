@@ -416,10 +416,10 @@ function bguserfields_views_default_views() {
   $handler = $view->new_display('page', 'My Images Gallery', 'page');
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'list';
-  $handler->display->display_options['style_options']['row_class'] = 'mr-4';
+  $handler->display->display_options['style_options']['row_class'] = 'column is-half';
   $handler->display->display_options['style_options']['default_row_class'] = FALSE;
   $handler->display->display_options['style_options']['row_class_special'] = FALSE;
-  $handler->display->display_options['style_options']['class'] = 'columns is-mobile is-multiline mt-4 mb-4';
+  $handler->display->display_options['style_options']['class'] = 'columns is-tablet is-multiline mt-0 mb-4';
   $handler->display->display_options['style_options']['wrapper_class'] = '';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
