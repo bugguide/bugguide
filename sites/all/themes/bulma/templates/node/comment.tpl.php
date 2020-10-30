@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Bartik's theme implementation for comments.
+ * Bulma's theme implementation for comments.
  *
  * Available variables:
  * - $author: Comment author. Can be link or plain text.
@@ -59,48 +59,37 @@
 ?>
 <div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 
-  <div class="box mb-2 p-3">
-    <article class="media">
-
+  <div class="box p-3">
+    <div class="comment-header">
       <?php if ($picture) : ?>
-        <figure class="media-left">
-          <div class="image is-64x64">
-            <?php print $picture; ?>
-          </div>
-        </figure>
+        <div class="image is-64x64">
+          <?php print $picture; ?>
+        </div>
       <?php endif; ?>
-
-      <div class="media-content">
+      <div class="comment-header_title">
         <?php print render($title_prefix); ?>
-        <h3 class="title is-5 mb-2"<?php print $title_attributes; ?>><?php print $title; ?></h3>
+          <h3<?php print $title_attributes; ?>><?php print $title; ?></h3>
         <?php print render($title_suffix); ?>
-
-        <div class="submitted">
-          <?php print $submitted; ?>
-        </div>
-
-        <div class="content"<?php print $content_attributes; ?>>
-          <?php
-            // We hide the comments and links now so that we can render them later.
-            hide($content['links']);
-            print render($content);
-          ?>
-          <?php if ($signature): ?>
-          <div class="user-signature clearfix">
-            <?php print $signature; ?>
-          </div>
-          <?php endif; ?>
-        </div>
-
-        <?php print render($content['links']); ?>
-
+        <div class="submitted"><?php print $submitted; ?></div>
       </div>
-
-      <div class="media-right">
-        <?php if ($new): ?>
-          <span class="new tag is-success"><?php print $new; ?></span>
-        <?php endif; ?>
+      <?php if ($new): ?>
+        <span class="new tag is-success"><?php print $new; ?></span>
+      <?php endif; ?>
+    </div>
+    <div class="comment-content content"<?php print $content_attributes; ?>>
+      <?php
+        // We hide the comments and links now so that we can render them later.
+        hide($content['links']);
+        print render($content);
+      ?>
+      <?php if ($signature): ?>
+      <div class="user-signature clearfix">
+        <?php print $signature; ?>
       </div>
-    </article>
+      <?php endif; ?>
+    </div>
+    <div class="comment-footer">
+      <?php print render($content['links']); ?>
+    </div>
   </div>
 </div>
