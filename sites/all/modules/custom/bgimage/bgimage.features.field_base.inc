@@ -314,7 +314,7 @@ function bgimage_field_default_field_bases() {
     'locked' => 0,
     'module' => 'fivestar',
     'settings' => array(
-      'axis' => 'vote',
+      'axis' => 'p',
     ),
     'translatable' => 0,
     'type' => 'fivestar',
@@ -331,7 +331,7 @@ function bgimage_field_default_field_bases() {
     'locked' => 0,
     'module' => 'fivestar',
     'settings' => array(
-      'axis' => 'vote',
+      'axis' => 'r',
     ),
     'translatable' => 0,
     'type' => 'fivestar',
