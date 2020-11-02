@@ -15,7 +15,6 @@ include_once 'bgsubscriptions.features.inc';
  */
 function bgsubscriptions_block_info() {
   $blocks['bgsubscriptions_block'] = array(
-    // The name that will appear in the block list.
     'info' => t('BGSubscriptions interface'),
     // Default setting.
     'cache' => DRUPAL_CACHE_PER_PAGE,
@@ -51,7 +50,10 @@ function bgsubscriptions_block_view($delta = '') {
 }
 
 /**
- * Returns the form definition for the node subform.
+ * Bg subscriptions (subscribe and unsubscribe) logic.
+ *
+ * Most of the code comes from subscriptions_ui_node_form since
+ * subscriptions contrib module doesn't support single subscribe button.
  *
  * @param $form
  * @param $form_state
@@ -64,6 +66,10 @@ function bgsubscriptions_block_view($delta = '') {
  *
  * @ingroup form
  * @ingroup hooks
+ *
+ * @see sites/all/modules/subscriptions/subscriptions_ui.module
+ * @see https://www.drupal.org/project/issues/subscriptions
+ *
  */
 function bgsubscriptions_ui_node_form($form, &$form_state, $node, $expand = NULL) {
   global $user;
