@@ -113,6 +113,7 @@ function bgsubscriptions_ui_node_form($form, &$form_state, $node, $expand = NULL
   }
   $index = 1; ///< If we start with zero, get some value sent as 0 => 0
   $default_send_intervals = array();
+  $default_subscriptions = array();
   foreach ($node_options as $field => $field_options) {
     foreach ($field_options as $option) {
       if (!is_array($option) || isset($option['#access']) && !$option['#access']) {
@@ -137,22 +138,27 @@ function bgsubscriptions_ui_node_form($form, &$form_state, $node, $expand = NULL
     '#type' => 'value',
     '#value' => $params
   );
-  $subscriptions_data = (!empty($options[$default_subscriptions[0]])) ? [0 => 1] : [];
+  $subscriptions_data = (!empty($default_subscriptions[0]) && !empty($options[$default_subscriptions[0]])) ? array(1) : array();
   $form['subscription'] = array(
     '#type' => 'value',
     '#value' => $subscriptions_data ? TRUE : FALSE,
   );
   $form['subscriptions'] = array('#type' => 'value', '#value' => $subscriptions_data);
-  $subscription_title = empty($subscriptions_data)
-    // Code is_blocked comes from subscriptions_ui.module.
-    ? t('Subscribe') . (!empty($is_blocked) ? '&nbsp;' . SUBSCRIPTIONS_UNAVAILABLE : '')
-    : t('Unsubscribe');
+  // Code is_blocked comes from subscriptions_ui.module.
+  $subscribe_title = t('Subscribe') . (!empty($is_blocked) ? '&nbsp;' . SUBSCRIPTIONS_UNAVAILABLE : '');
+  $unsubscribe_title = t('Unsubscribe');
+  $unsubscribe_html = '<button type="submit" id="edit-submit" href="" class="button is-small"><span class="icon"><span class="fa fa-ban" aria-hidden="true"></span></span><span>' . $unsubscribe_title . '</span>';
+  $subscribe_html = '<button type="submit" id="edit-submit" href="" class="form-submit button is-small"><span class="icon"><span class="fa fa-envelope" aria-hidden="true"></span></span><span>' . $subscribe_title . '</span>';
+  $closing_html_subscribe_unsubscribe = '</button>';
+  $subscription_markup = empty($subscriptions_data)
+    ? $subscribe_html
+    : $unsubscribe_html;
   // Custom code to create a personalized button for subscribing/un-subscribing.
   $form['submit'] = array(
     '#type' => 'submit',
     '#attributes' => array('class' => array('element-invisible')),
-    '#prefix' => '<button type="submit" id="edit-submit" href="" class="form-submit button is-small"><span class="icon"><span class="fa fa-envelope" aria-hidden="true"></span></span><span>' . $subscription_title . '</span>',
-    '#suffix' => '</button>',
+    '#prefix' => $subscription_markup,
+    '#suffix' => $closing_html_subscribe_unsubscribe,
     '#markup' => '', // This line is required to force the element to render.
     '#weight' => 10,
   );
@@ -178,7 +184,9 @@ function bgsubscriptions_ui_node_form_submit(array $form, array &$form_state) {
   // We get the value as the previous state that's why we would like the
   // opposite which is subscribing.
   if (!$subscription) {
-    $args[] = $default_send_intervals[1];
+    if (!empty($default_send_intervals[1])) {
+      $args[] = $default_send_intervals[1];
+    }
     call_user_func_array('subscriptions_write_subscription', $args);
   }
   // If it is subscribed then let's unsubscribe.
