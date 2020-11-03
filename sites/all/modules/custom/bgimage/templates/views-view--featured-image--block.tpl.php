@@ -28,6 +28,17 @@
  */
 ?>
 
+<?php
+/**
+  * During the Featured Image view has a filter that refers to a specific bgimage node
+  * but that node is not present during development. Initialize an empty array instead
+  * of emitting errors.
+  */
+?>
+<?php if (!isset($view->style_plugin->rendered_fields)): ?>
+  <?php $view->style_plugin->rendered_fields = array(); ?>
+<?php endif; ?>
+
 <section aria-label="Welcome Banner" class="hero is-primary" style="background-image: url(<?php foreach ($view->style_plugin->rendered_fields as $delta => $item): ?><?php print $item['uri']; ?><?php endforeach; ?>); background-size: cover; background-position: center;">
   <div class="hero-body">
     <div class="container">
