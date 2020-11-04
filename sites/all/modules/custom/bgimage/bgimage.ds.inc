@@ -18,11 +18,6 @@ function bgimage_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'bgimage';
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
-    'bgsubscription' => array(
-      'weight' => '20',
-      'label' => 'hidden',
-      'format' => 'default',
-    ),
     'divider_1' => array(
       'weight' => '9',
       'label' => 'hidden',
@@ -44,7 +39,7 @@ function bgimage_ds_field_settings_info() {
       'format' => 'default',
     ),
     'comments' => array(
-      'weight' => '21',
+      'weight' => '19',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -269,8 +264,7 @@ function bgimage_ds_layout_settings_info() {
       ),
       'bottom_full' => array(
         18 => 'field_tags',
-        19 => 'bgsubscription',
-        20 => 'comments',
+        19 => 'comments',
       ),
     ),
     'fields' => array(
@@ -293,7 +287,6 @@ function bgimage_ds_layout_settings_info() {
       'divider_3' => 'top_1',
       'submitted_by' => 'top_1',
       'field_tags' => 'bottom_full',
-      'bgsubscription' => 'bottom_full',
       'comments' => 'bottom_full',
     ),
     'classes' => array(),
