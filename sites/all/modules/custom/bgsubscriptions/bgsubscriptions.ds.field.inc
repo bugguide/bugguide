@@ -72,18 +72,18 @@ function bgsubscriptions_ui_node_form($form, &$form_state, $node, $expand = NULL
   uasort($node_options, '_subscriptions_cmp_by_weight');
 
   foreach (array(
-             db_query("SELECT sid, module, field, value, author_uid, send_interval, send_updates, send_comments FROM {subscriptions} WHERE module = :module AND field = :field AND value = :value AND recipient_uid = :recipient_uid", array(
-               ':module' => 'node',
-               ':field' => 'nid',
-               ':value' => $node->nid,
-               ':recipient_uid' => $account->uid
-             ), array('fetch' => PDO::FETCH_ASSOC)),
-             db_query("SELECT sid, module, field, value, author_uid, send_interval, send_updates, send_comments FROM {subscriptions} WHERE module = :module AND field <> :field AND recipient_uid = :recipient_uid", array(
-               ':module' => 'node',
-               ':field' => 'nid',
-               ':recipient_uid' => $account->uid
-             ), array('fetch' => PDO::FETCH_ASSOC)),
-           ) as $result) {
+     db_query("SELECT sid, module, field, value, author_uid, send_interval, send_updates, send_comments FROM {subscriptions} WHERE module = :module AND field = :field AND value = :value AND recipient_uid = :recipient_uid", array(
+       ':module' => 'node',
+       ':field' => 'nid',
+       ':value' => $node->nid,
+       ':recipient_uid' => $account->uid
+     ), array('fetch' => PDO::FETCH_ASSOC)),
+     db_query("SELECT sid, module, field, value, author_uid, send_interval, send_updates, send_comments FROM {subscriptions} WHERE module = :module AND field <> :field AND recipient_uid = :recipient_uid", array(
+       ':module' => 'node',
+       ':field' => 'nid',
+       ':recipient_uid' => $account->uid
+     ), array('fetch' => PDO::FETCH_ASSOC)),
+   ) as $result) {
     foreach ($result as $s) {
       $subscriptions[$s['field']][$s['value']][$s['author_uid']] = $s;
     }
