@@ -505,8 +505,8 @@ function bg_node_view_alter(&$build) {
 
           // Extract citation index so we can show it as "(7)" in the text.
           $citation_index = array_search($nid, $citation_nids);
-
-          $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid) . ')</span>';
+          $bgref_node = node_load($nid);
+          $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid, array('attributes' => array('title' => $bgref_node->title))) . ')</span>';
         }
         $build[$field_key][0]['#markup'] = str_replace($find, $replace, $text);
       }
@@ -519,7 +519,7 @@ function bg_node_view_alter(&$build) {
     $cited_nodes = node_load_multiple($citation_nids);
     foreach ($cited_nodes as $bgref_node) {
       if (!empty($bgref_node)) {
-        $list_items .= '<li>' . l($bgref_node->title, 'node/' . $bgref_node->nid);
+        $list_items .= '<li>' . l($bgref_node->title, 'node/' . $bgref_node->nid, array('attributes' => array('title' => $bgref_node->title)));
         // Append book details if they are available.
         $book_details = array();
         if (!empty($bgref_node->field_book_reference_author['und'][0])) {
