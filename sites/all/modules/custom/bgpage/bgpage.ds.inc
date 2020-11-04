@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * bgpage.ds.inc
@@ -32,17 +33,6 @@ function bgpage_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'bgpage';
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
-    'subscriptions' => array(
-      'weight' => '20',
-      'label' => 'hidden',
-      'format' => 'default',
-      'formatter_settings' => array(
-        'ft' => array(
-          'func' => 'theme_ds_field_expert',
-          'lb-el' => 'h2',
-        ),
-      ),
-    ),
     'bgpage_classification' => array(
       'weight' => '1',
       'label' => 'above',
@@ -175,7 +165,6 @@ function bgpage_ds_layout_settings_info() {
         17 => 'field_internet_references',
         18 => 'field_tags',
         19 => 'bgpage_citations',
-        20 => 'subscriptions',
       ),
     ),
     'fields' => array(
@@ -199,7 +188,6 @@ function bgpage_ds_layout_settings_info() {
       'field_internet_references' => 'ds_content',
       'field_tags' => 'ds_content',
       'bgpage_citations' => 'ds_content',
-      'subscriptions' => 'ds_content',
     ),
     'classes' => array(),
     'wrappers' => array(
