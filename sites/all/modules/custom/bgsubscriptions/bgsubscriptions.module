@@ -7,46 +7,39 @@
 include_once 'bgsubscriptions.features.inc';
 
 /**
- * Implements hook_block_info().
- *
- * Tell Drupal about the Subscriptions Interface block.
- *
- * @ingroup hooks
+ * Implements hook_ds_fields_info().
  */
-function bgsubscriptions_block_info() {
-  $blocks['bgsubscriptions_block'] = array(
-    'info' => t('BGSubscriptions interface'),
-    // Default setting.
-    'cache' => DRUPAL_CACHE_PER_PAGE,
-    $blocks[0]['region'] = 'content'
-  );
-  return $blocks;
+function bgsubscriptions_ds_fields_info($entity_type) {
+  $fields = array();
+
+  if ($entity_type == 'node') {
+    $fields['bgsubscriptions_subscriptions'] = array(
+      'title' => t('BGSubscriptions interface'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => 'bgsubscriptions_subscriptions',
+      'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
+    );
+
+    return array($entity_type => $fields);
+  }
+  return;
 }
 
 /**
- * Implements hook_block_view().
- *
- * Define the Subscriptions Interface block for node pages (depending on the Display Settings).
- *
- * @param int $delta
- *
- * @return array|null
- *
- * @ingroup hooks
+ * Callback to render representative images for a bgpage node.
  */
-function bgsubscriptions_block_view($delta = '') {
-  switch ($delta) {
-    case 'bgsubscriptions_block':
-      $arg2 = subscriptions_arg(2);
-      if (subscriptions_ui_can_subscribe() && variable_get('subscriptions_form_in_block', 0) &&
-        ((!variable_get('subscriptions_form_link_only', 0) && (empty($arg2) || $arg2 == 'view')) ||
-          (variable_get('subscriptions_form_link_only', 0) && $arg2 == 'subscribe'))) {
-        return [
-          'content' => drupal_get_form('bgsubscriptions_ui_node_form', menu_get_object()),
-        ];
-      }
+function bgsubscriptions_subscriptions($field) {
+  if (!isset($field['entity'])) {
+    return;
   }
-  return NULL;
+  $node = $field['entity'];
+  $arg2 = subscriptions_arg(2);
+  if (subscriptions_ui_can_subscribe() &&
+    ((!variable_get('subscriptions_form_link_only', 0) && (empty($arg2) || $arg2 == 'view')) ||
+      (variable_get('subscriptions_form_link_only', 0) && $arg2 == 'subscribe'))) {
+    $subscription_form = drupal_get_form('bgsubscriptions_ui_node_form', $node);
+    return drupal_render($subscription_form);
+  }
 }
 
 /**
