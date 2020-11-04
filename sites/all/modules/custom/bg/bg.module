@@ -293,6 +293,11 @@ function bg_preprocess_page(&$vars) {
   if (arg(0) == 'node' && is_numeric($nid)) {
     $node = node_load($nid);
 
+    // Bail out if on a 404 page for a nonexistent nid.
+    if ($node === FALSE) {
+      return;
+    }
+
     // Eliminate local task tabs on these special pages or their children.
     $pid = bg_get_first_parent_nid($node);
     if (($nid == BG_ID_REQUEST_NID) || // ID Request
