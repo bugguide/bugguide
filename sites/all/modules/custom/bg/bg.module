@@ -314,15 +314,15 @@ function bg_preprocess_page(&$vars) {
             $keep[] = $item;
           }
         }
-      
+
         $vars['tabs']['#primary'] = array();
         foreach ($keep as $item) {
           $vars['tabs']['#primary'][] = $item;
         }
       }
     }
-    
-    // If we are viewing an individual book_reference, set the active tab to Books 
+
+    // If we are viewing an individual book_reference, set the active tab to Books
     // instead of Info.
     if ($node->type == 'book_reference') {
       if (isset($vars['tabs']['#primary']) && is_array($vars['tabs']['#primary'])) {
@@ -492,24 +492,7 @@ function bg_node_view_alter(&$build) {
     }
     if (is_array($field) && !empty($field[0]['#markup'])) {
       $text = $field[0]['#markup'];
-      unset($match);
-      if (preg_match_all("/\[cite(all)?:(\d+)(,(\d+))?(,(\d+))?\]/i", $text, $match)) {
-        $find = array();
-        $replace = array();
-        // Loop citation matches and replace them by links of type "Some reference(2)".
-        foreach ($match[2] as $idx => $nid) {
-          $find[] = $match[0][$idx];
-          if (!in_array($nid, $citation_nids)) {
-            $citation_nids[] = $nid;
-          }
-
-          // Extract citation index so we can show it as "(7)" in the text.
-          $citation_index = array_search($nid, $citation_nids);
-          $bgref_node = node_load($nid);
-          $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid, array('attributes' => array('title' => $bgref_node->title))) . ')</span>';
-        }
-        $build[$field_key][0]['#markup'] = str_replace($find, $replace, $text);
-      }
+      $build[$field_key][0]['#markup'] = _bg_preprocess_markup_citations($text, $citation_nids);
     }
   }
 
@@ -546,6 +529,46 @@ function bg_node_view_alter(&$build) {
 }
 
 /**
+ * Generate markup cites (1), (2), (3), (4).
+ *
+ * For instance given the following text:
+ * "Right Solidago [node:20] contains caterpillas [node:50] and pupa [node:7040]"
+ * Should convert to the following text:
+ * "Right Solidago (1) contains host plants with caterpillas (2) and pupa (3)."
+ * Every cite number should be linkeable to the node id.
+ *
+ * @param $text
+ *   The html text
+ * @param $citation_nids
+ *
+ * @return string|string[]|null
+ *   The correct markup text cited linkeable to nodes.
+ *
+ * @see
+ */
+function _bg_preprocess_markup_citations($text, &$citation_nids) {
+  unset($match);
+  if (preg_match_all("/\[cite(all)?:(\d+)(,(\d+))?(,(\d+))?\]/i", $text, $match)) {
+    $find = array();
+    $replace = array();
+    // Loop citation matches and replace them by links of type "Some reference(2)".
+    foreach ($match[2] as $idx => $nid) {
+      $find[] = $match[0][$idx];
+      if (!in_array($nid, $citation_nids)) {
+        $citation_nids[] = $nid;
+      }
+
+      // Extract citation index so we can show it as "(7)" in the text.
+      $citation_index = array_search($nid, $citation_nids);
+      $bgref_node = node_load($nid);
+      $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid, array('attributes' => array('title' => $bgref_node->title))) . ')</span>';
+    }
+    return str_replace($find, $replace, $text);
+  }
+  return NULL;
+}
+
+/**
  * Implements hook_entity_info_alter().
  */
 function bg_entity_info_alter(&$entity_info) {
@@ -577,7 +600,7 @@ function bg_block_info() {
     'status' => TRUE,
     'region' => 'content',
     'weight' => 1,
-    
+
   );
 
   return $blocks;
