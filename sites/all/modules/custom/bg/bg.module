@@ -509,7 +509,6 @@ function _bg_node_comments_process_cite_html(&$build) {
   }
 }
 
-
 /**
  * Process cites and works cited for entity type node.
  *
