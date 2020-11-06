@@ -5,3 +5,22 @@
  */
 
 include_once 'bgsubscriptions.features.inc';
+
+/**
+ * Implements hook_ds_fields_info().
+ */
+function bgsubscriptions_ds_fields_info($entity_type) {
+  $fields = array();
+
+  if ($entity_type == 'node') {
+    $fields['bgsubscriptions_subscriptions'] = array(
+      'title' => t('BGSubscriptions interface'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => 'bgsubscriptions_subscriptions',
+      'file' => drupal_get_path('module', 'bgsubscriptions') . '/bgsubscriptions.ds.field.inc',
+    );
+
+    return array($entity_type => $fields);
+  }
+  return;
+}

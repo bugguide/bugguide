@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * bgref.ds.inc
@@ -17,13 +18,8 @@ function bgref_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'book_reference';
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
-    'subscriptions' => array(
-      'weight' => '8',
-      'label' => 'hidden',
-      'format' => 'default',
-    ),
     'comments' => array(
-      'weight' => '9',
+      'weight' => '10',
       'label' => 'above',
       'format' => 'default',
     ),
@@ -67,8 +63,7 @@ function bgref_ds_layout_settings_info() {
         5 => 'submitted_by',
         6 => 'changed_date',
         7 => 'field_tags',
-        8 => 'subscriptions',
-        9 => 'comments',
+        8 => 'comments',
       ),
     ),
     'fields' => array(
@@ -80,7 +75,6 @@ function bgref_ds_layout_settings_info() {
       'submitted_by' => 'ds_content',
       'changed_date' => 'ds_content',
       'field_tags' => 'ds_content',
-      'subscriptions' => 'ds_content',
       'comments' => 'ds_content',
     ),
     'classes' => array(),
