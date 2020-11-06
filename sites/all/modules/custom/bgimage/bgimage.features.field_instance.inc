@@ -106,7 +106,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 40,
+        'weight' => 41,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -157,7 +157,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 39,
+        'weight' => 40,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -208,7 +208,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 35,
+        'weight' => 37,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -326,7 +326,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 37,
+        'weight' => 38,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -530,7 +530,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 34,
+        'weight' => 36,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -613,10 +613,9 @@ function bgimage_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 41,
+        'type' => 'hidden',
+        'weight' => 43,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -917,7 +916,7 @@ function bgimage_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 38,
+        'weight' => 39,
       ),
       'homepage' => array(
         'label' => 'above',
