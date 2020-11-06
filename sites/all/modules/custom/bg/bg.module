@@ -479,7 +479,36 @@ function bg_get_first_parent_nid($node) {
  */
 function bg_node_view_alter(&$build) {
   _bg_node_process_cite_html($build);
+  _bg_node_comments_process_cite_html($build);
 }
+
+/**
+ * Process cites and works cited for entity type node.
+ *
+ * @param array $build
+ *   Html renderable array.
+ */
+function _bg_node_comments_process_cite_html(&$build) {
+  // Check if we need to process citations of type [cite:123].
+  if (($build['#view_mode'] != 'full') || !isset($build['bgpage_citations'])) {
+    return;
+  }
+  if (!isset($build['comments']['comments'])) {
+    return;
+  }
+  foreach ($build['comments']['comments'] as &$comment_build) {
+    $citation_nids = array();
+    if (!isset($comment_build['comment_body'][0]['#markup'])) {
+      continue;
+    }
+    $text = $comment_build['comment_body'][0]['#markup'];
+    $comment_build['comment_body'][0]['#markup'] = _bg_get_citations_html($text, $citation_nids);
+    if ($works_cited_html = _bg_get_add_works_cited_html($citation_nids)) {
+      $comment_build['comment_body'][0]['#markup'] .= '<b>' . t('Works cited') . '</b>' . $works_cited_html;
+    }
+  }
+}
+
 
 /**
  * Process cites and works cited for entity type node.
