@@ -125,7 +125,8 @@ function bgsubscriptions_ui_node_form($form, &$form_state, $node, $expand = NULL
   $subscribe_title = t('Subscribe') . (!empty($is_blocked) ? '&nbsp;' . SUBSCRIPTIONS_UNAVAILABLE : '');
   $unsubscribe_title = t('Unsubscribe');
   $subscribe_html = '<div><hr><button type="submit" id="edit-submit" href="" class="form-submit button is-small"><span class="icon"><span class="fa fa-envelope" aria-hidden="true"></span></span><span>' . $subscribe_title . '</span>';
-  $unsubscribe_html = '<div><hr><button type="submit" id="edit-submit" href="" class="button is-small"><span class="icon"><span class="fa fa-ban" aria-hidden="true"></span></span><span>' . $unsubscribe_title . '</span></button></button><p class="help">You are currently receiving email notifications for this image.</p>';
+  $node_types = node_type_get_types();
+  $unsubscribe_html = '<div><hr><button type="submit" id="edit-submit" href="" class="button is-small"><span class="icon"><span class="fa fa-ban" aria-hidden="true"></span></span><span>' . $unsubscribe_title . '</span></button></button><p class="help">You are currently receiving email notifications for this ' . $node_types[$node->type]->{'name'} .'.</p>';
   $closing_html_subscribe_unsubscribe = '</div>';
   $subscription_markup = empty($subscriptions_data)
     ? $subscribe_html
