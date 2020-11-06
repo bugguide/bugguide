@@ -177,55 +177,56 @@ function bgstat_logins() {
  */
 function bgstat_node_view($node, $view_mode, $langcode) {
 
-  print "<p>The following statistics are generated in real time.</p>";
+  $html = "<p>The following statistics are generated in real time.</p>";
 
   $now = time();
   $weekago = $now - (60 * 60 * 24 * 7);
-  //$contributorCount = db_result(db_query("select count(*) from {users} u join {role} r on r.rid = u.rid where u.status = 1 and r.name = 'authenticated user' and uid != 1 and u.data <> 'N;'"));
-  $contributorCount = db_result(db_query("SELECT COUNT(DISTINCT uid) FROM (SELECT uid FROM node UNION ALL SELECT uid FROM comments) as foo"));
-  $editorCount = db_result(db_query("select count(*) from {users} u join {role} r on r.rid = u.rid where u.status = 1 and ((r.name = 'contributing editor') or uid = 1)"));
-  $expertCount = db_result(db_query("select count(*) from {users} u join {role} r on r.rid = u.rid where u.status = 1 and ((r.name = 'expert') or uid = 1)"));
+  //$contributorCount = db_query("select count(*) from {users} u join {role} r on r.rid = u.rid where u.status = 1 and r.name = 'authenticated user' and uid != 1 and u.data <> 'N;'"));
+  $contributorCount = db_query("SELECT COUNT(DISTINCT uid) FROM (SELECT uid FROM node UNION ALL SELECT uid FROM comment) as foo")->fetchField();
+
+  $editorCount = db_query("select count(*) from {users} u join {role} r on r.rid = u.rid where u.status = 1 and ((r.name = 'contributing editor') or uid = 1)")->fetchField();
+  $expertCount = db_query("select count(*) from {users} u join {role} r on r.rid = u.rid where u.status = 1 and ((r.name = 'expert') or uid = 1)")->fetchField();
   $totalUserCount = $contributorCount + $editorCount + $expertCount;
-  $activeUserCount = db_result(db_query("select count(*) from {users} where status = 1 and timestamp > $weekago and data <> 'N;'"));
+  $activeUserCount = db_query("select count(*) from {users} where status = 1 and timestamp > $weekago and data <> 'N;'")->fetchField();
 
-  print "<b>Users</b><ul>";
-  print "<li>Contributors: $contributorCount (counts anyone who has ever submitted content or comment)</li>";
-  print "<li>Editors: $editorCount</li>";
-  print "<li>Experts: $expertCount</li>";
-  print "<li>Total: $totalUserCount</li>";
-  print "<li>Active: $activeUserCount (within the past 7 days)</li>";
-  print "</ul>";
+  $html .= "<b>Users</b><ul>";
+  $html .= "<li>Contributors: $contributorCount (counts anyone who has ever submitted content or comment)</li>";
+  $html .= "<li>Editors: $editorCount</li>";
+  $html .= "<li>Experts: $expertCount</li>";
+  $html .= "<li>Total: $totalUserCount</li>";
+  $html .= "<li>Active: $activeUserCount (within the past 7 days)</li>";
+  $html .= "</ul>";
 
-  $guideImageCount = db_result(db_query("SELECT count(*) FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' and t.parent not in ('6','9410')"));
-  $idRequestImageCount = db_result(db_query("SELECT count(*) FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' and t.parent='6'"));
-  $frassImageCount = db_result(db_query("SELECT count(*) FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' and t.parent='9410'"));
+  $guideImageCount = db_query("SELECT count(*) FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' and t.parent not in ('6','9410')")->fetchField();
+  $idRequestImageCount = db_query("SELECT count(*) FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' and t.parent='6'")->fetchField();
+  $frassImageCount = db_query("SELECT count(*) FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' and t.parent='9410'")->fetchField();
   $totalImageCount = $guideImageCount + $idRequestImageCount + $frassImageCount;
 
-  print "<b>Images</b><ul>";
-  print "<li>Guide: $guideImageCount</li>";
-  print "<li>ID Request: $idRequestImageCount</li>";
-  print "<li>Frass: $frassImageCount</li>";
-  print "<li>Total: $totalImageCount</li>";
-  print "</ul>";
+  $html .= "<b>Images</b><ul>";
+  $html .= "<li>Guide: $guideImageCount</li>";
+  $html .= "<li>ID Request: $idRequestImageCount</li>";
+  $html .= "<li>Frass: $frassImageCount</li>";
+  $html .= "<li>Total: $totalImageCount</li>";
+  $html .= "</ul>";
 
-  $orderPageCount = db_result(db_query("SELECT count(*) FROM {bgpage} p WHERE taxon = 2300"));
-  $familyPageCount = db_result(db_query("SELECT count(*) FROM {bgpage} p WHERE taxon = 2700"));
-  $genusPageCount = db_result(db_query("SELECT count(*) FROM {bgpage} p WHERE taxon = 3300"));
-  $speciesPageCount = db_result(db_query("SELECT count(*) FROM {bgpage} p WHERE taxon = 3400"));
-  $guidePageCount = db_result(db_query("SELECT count(*) FROM {node} n JOIN {bgpage} g ON  g.nid = n.nid WHERE n.type = 'bgpage' AND n.status = 1"));
-  $bookCount = db_result(db_query("SELECT count(*) FROM {node} n JOIN {bgref} b ON b.nid = n.nid WHERE n.type = 'bgref' AND n.status = 1"));
-  $linkCount = db_result(db_query("SELECT count(*) FROM {node} n JOIN {bglink} l ON l.nid = n.nid WHERE n.type = 'bglink' AND n.status = 1"));
+  $orderPageCount = db_query("SELECT count(*) FROM {bgpage} p WHERE taxon = 2300")->fetchField();
+  $familyPageCount = db_query("SELECT count(*) FROM {bgpage} p WHERE taxon = 2700")->fetchField();
+  $genusPageCount = db_query("SELECT count(*) FROM {bgpage} p WHERE taxon = 3300")->fetchField();
+  $speciesPageCount = db_query("SELECT count(*) FROM {bgpage} p WHERE taxon = 3400")->fetchField();
+  $guidePageCount = db_query("SELECT count(*) FROM {node} n JOIN {bgpage} g ON  g.nid = n.nid WHERE n.type = 'bgpage' AND n.status = 1")->fetchField();
+  $bookCount = db_query("SELECT count(*) FROM {node} n JOIN {bgref} b ON b.nid = n.nid WHERE n.type = 'bgref' AND n.status = 1")->fetchField();
+  $linkCount = db_query("SELECT count(*) FROM {node} n JOIN {bglink} l ON l.nid = n.nid WHERE n.type = 'bglink' AND n.status = 1")->fetchField();
 
-  print "<b>Guide</b><ul>";
-  print "<li>Order Pages: $orderPageCount</li>";
-  print "<li>Family Pages: $familyPageCount</li>";
-  print "<li>Genus Pages: $genusPageCount</li>";
-  print "<li>Species Pages: $speciesPageCount</li>";
-  print "<li>Total Pages: $guidePageCount</li>";
-  print "<li>Images: $guideImageCount</li>";
-  print "<li>Books: $bookCount</li>";
-  print "<li>Links: $linkCount</li>";
-  print "</ul>";
+  $html .= "<b>Guide</b><ul>";
+  $html .= "<li>Order Pages: $orderPageCount</li>";
+  $html .= "<li>Family Pages: $familyPageCount</li>";
+  $html .= "<li>Genus Pages: $genusPageCount</li>";
+  $html .= "<li>Species Pages: $speciesPageCount</li>";
+  $html .= "<li>Total Pages: $guidePageCount</li>";
+  $html .= "<li>Images: $guideImageCount</li>";
+  $html .= "<li>Books: $bookCount</li>";
+  $html .= "<li>Links: $linkCount</li>";
+  $html .= "</ul>";
 
   // Should just use $LOCATION_CODES from includes/globals.inc but
   // that doesn't seem to work from here.
@@ -298,13 +299,13 @@ function bgstat_node_view($node, $view_mode, $langcode) {
   $LOCATION_CODES['YT'] = 'Yukon Territory';
 
 
-  print "<table><tr><th>Location</th><th>Images</th><th>Percentage</th></tr>";
+  $html .= "<table><tr><th>Location</th><th>Images</th><th>Percentage</th></tr>";
 
   foreach ($LOCATION_CODES as $abbrev => $name) {
-    $count = db_result(db_query("SELECT COUNT(*) FROM {bgimage} WHERE location_code = '%s'", $abbrev));
-    print "<tr><td>$name</td><td align='right'>" . $count . "<td align='right'>" . number_format(($count/$totalImageCount) * 100, 1) . "</td></tr>";
+    $count = db_query("SELECT COUNT(*) FROM {bgimage} WHERE location_code = '%s'", $abbrev)->fetchField();
+    $html .= "<tr><td>$name</td><td align='right'>" . $count . "<td align='right'>" . number_format(($count/$totalImageCount) * 100, 1) . "</td></tr>";
   }
-  print "</table>";
+  $html .= "</table>";
 
   $taxa = array(
     'Order Microcoryphia - Bristletails' => '^3,878075,52,80',
@@ -340,26 +341,26 @@ function bgstat_node_view($node, $view_mode, $langcode) {
 
   print "<table><tr><th>Taxon</th><th>Image Count</th></tr>";
   foreach ($taxa as $taxon => $parent) {
-    $count = db_result(db_query("SELECT COUNT(nid) FROM bgimage WHERE parent_idx REGEXP '%s';", $parent));
-    print "<tr><td>$taxon</td><td>$count</td></tr>";
+    $count = db_query("SELECT COUNT(nid) FROM bgimage WHERE parent_idx REGEXP '%s';", $parent)->fetchField();
+    $html .= "<tr><td>$taxon</td><td>$count</td></tr>";
   }
   print "</table>";
 
   print "<table><tr><th>User</th><th>Number of Images</th></tr>";
   $result = db_query("SELECT COUNT(n.nid) as c, u.name FROM node n JOIN users u ON n.uid = u.uid WHERE type='bgimage' GROUP BY u.uid ORDER BY c DESC LIMIT 0,100");
   while ($data = db_fetch_object($result)) {
-    print "<tr><td>$data->name</td><td>$data->c</td></tr>";
+    $html .= "<tr><td>$data->name</td><td>$data->c</td></tr>";
   }
   print "</table>";
 
   print "<table><tr><th>Month</th><th>Number of Images</th></tr>";
   $result = db_query("SELECT DISTINCT FROM_UNIXTIME(created, '%M %Y') AS month, count(*) AS ct FROM node WHERE type='bgimage' GROUP BY month ORDER BY created DESC");
   while ($data = db_fetch_object($result)) {
-    print "<tr><td>$data->month</td><td>$data->ct</td></tr>";
+    $html .= "<tr><td>$data->month</td><td>$data->ct</td></tr>";
   }
-  print "</table>";
+  $html .= "</table>";
   if ($view_mode === 'full' && $node->nid === '11181') {
-    $node->content['body'][0]['#markup'] .=  'something';
+    $node->content['body'][0]['#markup'] .= $html;
   }
 }
 
