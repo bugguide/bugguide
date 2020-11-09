@@ -186,11 +186,11 @@ function bgstat_node_view($node, $view_mode, $langcode) {
 
   $editorCount = db_query("select count(*) from users u join users_roles r on r.uid = u.uid where u.status = 1 and ((r.rid = 5) or u.uid = 1)")->fetchField();
 
-  // @Todo: ABOVE IS WORKING... Now work on the rest below..
-  $expertCount = db_query("select count(*) from {users} u join {role} r on r.rid = u.rid where u.status = 1 and ((r.name = 'expert') or uid = 1)")->fetchField();
+  $expertCount = db_query("select count(*) from users u join users_roles r on r.uid = u.uid where u.status = 1 and ((r.rid = 8) or u.uid = 1)")->fetchField();
   $totalUserCount = $contributorCount + $editorCount + $expertCount;
-  $activeUserCount = db_query("select count(*) from {users} where status = 1 and timestamp > $weekago and data <> 'N;'")->fetchField();
+  $activeUserCount = db_query("select count(*) from {users} where status = 1 and created > $weekago and data <> 'N;'")->fetchField();
 
+  // @Todo: ABOVE IS WORKING... Now work on the rest below..
   $html .= "<b>Users</b><ul>";
   $html .= "<li>Contributors: $contributorCount (counts anyone who has ever submitted content or comment)</li>";
   $html .= "<li>Editors: $editorCount</li>";
