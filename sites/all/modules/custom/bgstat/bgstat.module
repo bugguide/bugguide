@@ -350,10 +350,10 @@ function _bgstat_get_html_statistics_page() {
     'Order Siphonaptera - Fleas' => '^3,878075,52,7040',
     'Order Protorthoptera' => '^3,878075,52,317568',
   );
-  
+
   $html .= "<table><tr><th>Taxon</th><th>Image Count</th></tr>";
   foreach ($taxa as $taxon => $parent) {
-    $count = db_query("SELECT COUNT(nid) FROM bgimage WHERE parent_idx REGEXP ':parent_idx';", array(':parent_idx', $parent))->fetchField();
+    $count = db_query("SELECT COUNT(nid) FROM {bgimage} WHERE parent_idx REGEXP '$parent'")->fetchField();
     $html .= "<tr><td>$taxon</td><td>$count</td></tr>";
   }
   $html .= "</table>";
