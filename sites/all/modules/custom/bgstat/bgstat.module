@@ -199,7 +199,7 @@ function _bgstat_get_html_statistics_page() {
   $editorCount = db_query("select count(*) from users u join users_roles r on r.uid = u.uid where u.status = 1 and ((r.rid = 5) or u.uid = 1)")->fetchField();
   $expertCount = db_query("select count(*) from users u join users_roles r on r.uid = u.uid where u.status = 1 and ((r.rid = 8) or u.uid = 1)")->fetchField();
   $totalUserCount = $contributorCount + $editorCount + $expertCount;
-  $activeUserCount = db_query("select count(*) from {users} where status = 1 and created > $weekago and data <> 'N;'")->fetchField();
+  $activeUserCount = db_query("select count(*) from {users} where status = 1 and created > $weekago")->fetchField();
 
   $html .= "<b>Users</b><ul>";
   $html .= "<li>Contributors: $contributorCount (counts anyone who has ever submitted content or comment)</li>";
@@ -314,7 +314,7 @@ function _bgstat_get_html_statistics_page() {
   $html .= "<table><tr><th>Location</th><th>Images</th><th>Percentage</th></tr>";
 
   foreach ($LOCATION_CODES as $abbrev => $name) {
-    $count = db_query("SELECT COUNT(*) FROM {bgimage} WHERE location_code = ':location_code'", array(':location_code' => $abbrev))->fetchField();
+    $count = db_query("SELECT COUNT(*) FROM {bgimage} WHERE location_code = :location_code", array(':location_code' => $abbrev))->fetchField();
     $html .= "<tr><td>$name</td><td align='right'>" . $count . "<td align='right'>" . number_format(($count/$totalImageCount) * 100, 1) . "</td></tr>";
   }
   $html .= "</table>";
@@ -350,9 +350,7 @@ function _bgstat_get_html_statistics_page() {
     'Order Siphonaptera - Fleas' => '^3,878075,52,7040',
     'Order Protorthoptera' => '^3,878075,52,317568',
   );
-
-  // @Todo: ABOVE IS WORKING... Now work on the rest below..
-
+  
   $html .= "<table><tr><th>Taxon</th><th>Image Count</th></tr>";
   foreach ($taxa as $taxon => $parent) {
     $count = db_query("SELECT COUNT(nid) FROM bgimage WHERE parent_idx REGEXP ':parent_idx';", array(':parent_idx', $parent))->fetchField();
@@ -361,7 +359,7 @@ function _bgstat_get_html_statistics_page() {
   $html .= "</table>";
 
   $html .= "<table><tr><th>User</th><th>Number of Images</th></tr>";
-  $query = db_query("SELECT COUNT(n.nid) as c, u.name FROM node n JOIN users u ON n.uid = u.uid WHERE type='bgimage' GROUP BY u.uid ORDER BY c DESC LIMIT 0,100");
+  $query = db_query("SELECT COUNT(n.nid) as c, u.name FROM node n JOIN users u ON n.uid = u.uid WHERE type = 'bgimage' GROUP BY u.uid ORDER BY c DESC LIMIT 0, 100");
   $result = $query->fetchAll();
   foreach ($result as $data) {
     $html .= "<tr><td>$data->name</td><td>$data->c</td></tr>";
@@ -369,7 +367,7 @@ function _bgstat_get_html_statistics_page() {
   $html .= "</table>";
 
   $html .= "<table><tr><th>Month</th><th>Number of Images</th></tr>";
-  $query = db_query("SELECT DISTINCT FROM_UNIXTIME(created, '%M %Y') AS month, count(*) AS ct FROM node WHERE type='bgimage' GROUP BY month ORDER BY created DESC");
+  $query = db_query("SELECT DISTINCT FROM_UNIXTIME(created, '%M %Y') AS month, count(*) AS ct FROM node WHERE type = 'bgimage' GROUP BY month ORDER BY created DESC");
   $result = $query->fetchAll();
   foreach ($result as $data) {
     $html .= "<tr><td>$data->month</td><td>$data->ct</td></tr>";
