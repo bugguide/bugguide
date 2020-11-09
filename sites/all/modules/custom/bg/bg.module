@@ -489,10 +489,6 @@ function bg_node_view_alter(&$build) {
  *   Html renderable array.
  */
 function _bg_node_comments_process_cite_html(&$build) {
-  // Check if we need to process citations of type [cite:123].
-  if (($build['#view_mode'] != 'full') || !isset($build['bgpage_citations'])) {
-    return;
-  }
   if (!isset($build['comments']['comments'])) {
     return;
   }
