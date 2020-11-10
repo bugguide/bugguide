@@ -319,15 +319,15 @@ function bg_preprocess_page(&$vars) {
             $keep[] = $item;
           }
         }
-      
+
         $vars['tabs']['#primary'] = array();
         foreach ($keep as $item) {
           $vars['tabs']['#primary'][] = $item;
         }
       }
     }
-    
-    // If we are viewing an individual book_reference, set the active tab to Books 
+
+    // If we are viewing an individual book_reference, set the active tab to Books
     // instead of Info.
     if ($node->type == 'book_reference') {
       if (isset($vars['tabs']['#primary']) && is_array($vars['tabs']['#primary'])) {
@@ -483,6 +483,40 @@ function bg_get_first_parent_nid($node) {
  * Implements hook_node_view_alter().
  */
 function bg_node_view_alter(&$build) {
+  _bg_node_process_cite_html($build);
+  _bg_node_comments_process_cite_html($build);
+}
+
+/**
+ * Process cites and works cited for entity type node.
+ *
+ * @param array $build
+ *   Html renderable array.
+ */
+function _bg_node_comments_process_cite_html(&$build) {
+  if (!isset($build['comments']['comments'])) {
+    return;
+  }
+  foreach ($build['comments']['comments'] as &$comment_build) {
+    $citation_nids = array();
+    if (!isset($comment_build['comment_body'][0]['#markup'])) {
+      continue;
+    }
+    $text = $comment_build['comment_body'][0]['#markup'];
+    $comment_build['comment_body'][0]['#markup'] = _bg_get_citations_html($text, $citation_nids);
+    if ($works_cited_html = _bg_get_add_works_cited_html($citation_nids)) {
+      $comment_build['comment_body'][0]['#markup'] .= '<b>' . t('Works cited') . '</b>' . $works_cited_html;
+    }
+  }
+}
+
+/**
+ * Process cites and works cited for entity type node.
+ *
+ * @param array $build
+ *   Html renderable array.
+ */
+function _bg_node_process_cite_html(&$build) {
   // Check if we need to process citations of type [cite:123].
   if (($build['#view_mode'] != 'full') || !isset($build['bgpage_citations'])) {
     return;
@@ -497,57 +531,97 @@ function bg_node_view_alter(&$build) {
     }
     if (is_array($field) && !empty($field[0]['#markup'])) {
       $text = $field[0]['#markup'];
-      unset($match);
-      if (preg_match_all("/\[cite(all)?:(\d+)(,(\d+))?(,(\d+))?\]/i", $text, $match)) {
-        $find = array();
-        $replace = array();
-        // Loop citation matches and replace them by links of type "Some reference(2)".
-        foreach ($match[2] as $idx => $nid) {
-          $find[] = $match[0][$idx];
-          if (!in_array($nid, $citation_nids)) {
-            $citation_nids[] = $nid;
-          }
-
-          // Extract citation index so we can show it as "(7)" in the text.
-          $citation_index = array_search($nid, $citation_nids);
-
-          $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid) . ')</span>';
-        }
-        $build[$field_key][0]['#markup'] = str_replace($find, $replace, $text);
-      }
+      $build[$field_key][0]['#markup'] = _bg_get_citations_html($text, $citation_nids);
     }
   }
-
-  // List citations at field bgpge_citations.
-  if (count($citation_nids)) {
-    $list_items = '<ol>';
-    $cited_nodes = node_load_multiple($citation_nids);
-    foreach ($cited_nodes as $bgref_node) {
-      if (!empty($bgref_node)) {
-        $list_items .= '<li>' . l($bgref_node->title, 'node/' . $bgref_node->nid);
-        // Append book details if they are available.
-        $book_details = array();
-        if (!empty($bgref_node->field_book_reference_author['und'][0])) {
-          $book_details[] = $bgref_node->field_book_reference_author['und'][0]['safe_value'];
-        }
-        if (!empty($bgref_node->field_book_reference_year['und'][0])) {
-          $book_details[] = $bgref_node->field_book_reference_year['und'][0]['value'];
-        }
-        if (!empty($bgref_node->field_book_reference_publisher['und'][0])) {
-          $book_details[] = $bgref_node->field_book_reference_publisher['und'][0]['safe_value'];
-        }
-        if (count($book_details)) {
-          $list_items .= '</br>' . implode('. ', $book_details) . '.';
-        }
-        $list_items .= '</li>';
-      }
-    }
-    $list_items .= '</ol>';
-    $build['bgpage_citations'][0]['#markup'] = $list_items;
+  if ($works_cited_html = _bg_get_add_works_cited_html($citation_nids)) {
+    $build['bgpage_citations'][0]['#markup'] = $works_cited_html;
   }
   else {
     unset($build['bgpage_citations']);
   }
+}
+
+/**
+ * Get citation html like: (1), (2), (3), (4).
+ *
+ * For instance given the following text:
+ * "Right Solidago [node:20] contains caterpillas [node:50] and pupa [node:7040]"
+ * Should convert to the following text:
+ * "Right Solidago (1) contains host plants with caterpillas (2) and pupa (3)."
+ * Every cite number contains a link to the node id.
+ *
+ * @param string $text
+ *   The html text
+ * @param array &$citation_nids
+ *   The citation node ids. We can use later citation_nids
+ *   so we can have a generation of "cites worked" which is
+ *   used in _bg_get_add_works_cited_html().
+ *
+ * @return string|string[]|null
+ *   The correct markup text cited linkeable to nodes.
+ *
+ * @see _bg_get_add_works_cited_html().
+ */
+function _bg_get_citations_html($text, &$citation_nids) {
+  unset($match);
+  if (preg_match_all("/\[cite(all)?:(\d+)(,(\d+))?(,(\d+))?\]/i", $text, $match)) {
+    $find = array();
+    $replace = array();
+    // Loop citation matches and replace them by links of type "Some reference(2)".
+    foreach ($match[2] as $idx => $nid) {
+      $find[] = $match[0][$idx];
+      if (!in_array($nid, $citation_nids)) {
+        $citation_nids[] = $nid;
+      }
+      // Extract citation index so we can show it as "(7)" in the text.
+      $citation_index = array_search($nid, $citation_nids);
+      $bgref_node = node_load($nid);
+      $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid, array('attributes' => array('title' => $bgref_node->title))) . ')</span>';
+    }
+    return str_replace($find, $replace, $text);
+  }
+  return NULL;
+}
+
+/**
+ * Get the works cited in html.
+ *
+ * @param array $citation_nids
+ *   The citation node ids.
+ *
+ * @return string|null
+ *   The text already cited.
+ */
+function _bg_get_add_works_cited_html($citation_nids) {
+  if (!$citation_nids) {
+    return NULL;
+  }
+  // List citations at field bgpge_citations.
+  $list_items = '<ol>';
+  $cited_nodes = node_load_multiple($citation_nids);
+  foreach ($cited_nodes as $bgref_node) {
+    if (!empty($bgref_node)) {
+      $list_items .= '<li>' . l($bgref_node->title, 'node/' . $bgref_node->nid, array('attributes' => array('title' => $bgref_node->title)));
+      // Append book details if they are available.
+      $book_details = array();
+      if (!empty($bgref_node->field_book_reference_author['und'][0])) {
+        $book_details[] = $bgref_node->field_book_reference_author['und'][0]['safe_value'];
+      }
+      if (!empty($bgref_node->field_book_reference_year['und'][0])) {
+        $book_details[] = $bgref_node->field_book_reference_year['und'][0]['value'];
+      }
+      if (!empty($bgref_node->field_book_reference_publisher['und'][0])) {
+        $book_details[] = $bgref_node->field_book_reference_publisher['und'][0]['safe_value'];
+      }
+      if (count($book_details)) {
+        $list_items .= '</br>' . implode('. ', $book_details) . '.';
+      }
+      $list_items .= '</li>';
+    }
+  }
+  $list_items .= '</ol>';
+  return $list_items;
 }
 
 /**
@@ -582,7 +656,7 @@ function bg_block_info() {
     'status' => TRUE,
     'region' => 'content',
     'weight' => 1,
-    
+
   );
 
   return $blocks;
