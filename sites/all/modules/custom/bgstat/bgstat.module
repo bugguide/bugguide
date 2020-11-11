@@ -315,7 +315,13 @@ function _bgstat_get_html_statistics_page() {
 
   foreach ($LOCATION_CODES as $abbrev => $name) {
     $count = db_query("SELECT COUNT(*) FROM {bgimage} WHERE location_code = :location_code", array(':location_code' => $abbrev))->fetchField();
-    $html .= "<tr><td>$name</td><td align='right'>" . $count . "<td align='right'>" . number_format(($count/$totalImageCount) * 100, 1) . "</td></tr>";
+    if ($count) {
+      $percentage = number_format(($count/$totalImageCount) * 100, 1);
+    }
+    else {
+      $percentage = "0";
+    }
+    $html .= "<tr><td>$name</td><td align='right'>" . $count . "<td align='right'>" . $percentage . "</td></tr>";
   }
   $html .= "</table>";
 
