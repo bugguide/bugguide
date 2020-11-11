@@ -19,7 +19,7 @@ function bgref_ds_field_settings_info() {
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
     'comments' => array(
-      'weight' => '10',
+      'weight' => '9',
       'label' => 'above',
       'format' => 'default',
     ),
@@ -32,6 +32,11 @@ function bgref_ds_field_settings_info() {
       'weight' => '5',
       'label' => 'hidden',
       'format' => 'ds_time_ago',
+    ),
+    'bgpage_citations' => array(
+      'weight' => '8',
+      'label' => 'hidden',
+      'format' => 'default',
     ),
   );
   $export['node|book_reference|default'] = $ds_fieldsetting;
@@ -63,7 +68,8 @@ function bgref_ds_layout_settings_info() {
         5 => 'submitted_by',
         6 => 'changed_date',
         7 => 'field_tags',
-        8 => 'comments',
+        8 => 'bgpage_citations',
+        9 => 'comments',
       ),
     ),
     'fields' => array(
@@ -75,6 +81,7 @@ function bgref_ds_layout_settings_info() {
       'submitted_by' => 'ds_content',
       'changed_date' => 'ds_content',
       'field_tags' => 'ds_content',
+      'bgpage_citations' => 'ds_content',
       'comments' => 'ds_content',
     ),
     'classes' => array(),

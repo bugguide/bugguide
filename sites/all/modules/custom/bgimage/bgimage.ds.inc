@@ -39,7 +39,7 @@ function bgimage_ds_field_settings_info() {
       'format' => 'default',
     ),
     'comments' => array(
-      'weight' => '20',
+      'weight' => '21',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -75,6 +75,11 @@ function bgimage_ds_field_settings_info() {
     ),
     'bgsubscriptions_subscriptions' => array(
       'weight' => '19',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'bgpage_citations' => array(
+      'weight' => '20',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -270,7 +275,8 @@ function bgimage_ds_layout_settings_info() {
       'bottom_full' => array(
         18 => 'field_tags',
         19 => 'bgsubscriptions_subscriptions',
-        20 => 'comments',
+        20 => 'bgpage_citations',
+        21 => 'comments',
       ),
     ),
     'fields' => array(
@@ -294,6 +300,7 @@ function bgimage_ds_layout_settings_info() {
       'submitted_by' => 'top_1',
       'field_tags' => 'bottom_full',
       'bgsubscriptions_subscriptions' => 'bottom_full',
+      'bgpage_citations' => 'bottom_full',
       'comments' => 'bottom_full',
     ),
     'classes' => array(),
