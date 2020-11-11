@@ -9,10 +9,10 @@
  * Implementation of hook_menu().
  */
 function bgstat_menu() {
-  $items['admin/reports/bgstat'] = array(
+  $items['stats'] = array(
     'title' => 'BugGuide Statistics',
     'description' => 'Special data mining queries',
-    'page callback' => 'system_admin_menu_block_page',
+    'page callback' => '_bgstat_get_html_statistics_page',
     'access arguments' => array('access bgstats'),
     'file' => 'system.admin.inc',
     'file path' => drupal_get_path('module', 'system'),
@@ -221,11 +221,11 @@ function _bgstat_get_html_statistics_page() {
   $html .= "<li>Total: $totalImageCount</li>";
   $html .= "</ul>";
 
-  $orderPageCount = db_query("SELECT count(*) FROM {bgpage_archive} p WHERE taxon = 2300")->fetchField();
-  $familyPageCount = db_query("SELECT count(*) FROM {bgpage_archive} p WHERE taxon = 2700")->fetchField();
-  $genusPageCount = db_query("SELECT count(*) FROM {bgpage_archive} p WHERE taxon = 3300")->fetchField();
-  $speciesPageCount = db_query("SELECT count(*) FROM {bgpage_archive} p WHERE taxon = 3400")->fetchField();
-  $guidePageCount = db_query("SELECT count(*) FROM {node} n JOIN {bgpage_archive} g ON  g.nid = n.nid WHERE n.type = 'bgpage' AND n.status = 1")->fetchField();
+  $orderPageCount = db_query("SELECT count(*) FROM {field_data_field_taxon} p WHERE field_taxon_value = 2300")->fetchField();
+  $familyPageCount = db_query("SELECT count(*) FROM {field_data_field_taxon} p WHERE field_taxon_value = 2700")->fetchField();
+  $genusPageCount = db_query("SELECT count(*) FROM {field_data_field_taxon} p WHERE field_taxon_value = 3300")->fetchField();
+  $speciesPageCount = db_query("SELECT count(*) FROM {field_data_field_taxon} p WHERE field_taxon_value = 3400")->fetchField();
+  $guidePageCount = db_query("SELECT count(*) FROM {node} n JOIN {field_data_field_taxon} t ON  t.entity_id = n.nid WHERE n.type = 'bgpage' AND n.status = 1")->fetchField();
   $bookCount = db_query("SELECT count(*) FROM {node} n JOIN {bgref} b ON b.nid = n.nid WHERE n.type = 'book_reference' AND n.status = 1")->fetchField();
   $linkCount = db_query("SELECT count(*) FROM {node} n JOIN {bglink} l ON l.nid = n.nid WHERE n.type = 'bglink' AND n.status = 1")->fetchField();
 
