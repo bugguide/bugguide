@@ -226,8 +226,8 @@ function _bgstat_get_html_statistics_page() {
   $genusPageCount = db_query("SELECT count(*) FROM {field_data_field_taxon} p WHERE field_taxon_value = 3300")->fetchField();
   $speciesPageCount = db_query("SELECT count(*) FROM {field_data_field_taxon} p WHERE field_taxon_value = 3400")->fetchField();
   $guidePageCount = db_query("SELECT count(*) FROM {node} n JOIN {field_data_field_taxon} t ON  t.entity_id = n.nid WHERE n.type = 'bgpage' AND n.status = 1")->fetchField();
-  $bookCount = db_query("SELECT count(*) FROM {node} n JOIN {bgref} b ON b.nid = n.nid WHERE n.type = 'book_reference' AND n.status = 1")->fetchField();
-  $linkCount = db_query("SELECT count(*) FROM {node} n JOIN {bglink} l ON l.nid = n.nid WHERE n.type = 'bglink' AND n.status = 1")->fetchField();
+  $bookCount = db_query("SELECT count(*) FROM {node} n WHERE n.type = 'book_reference' AND n.status = 1")->fetchField();
+  $linkCount = db_query("SELECT count(*) FROM {node} n WHERE n.type = 'bglink' AND n.status = 1")->fetchField();
 
   $html .= "<b>Guide</b><ul>";
   $html .= "<li>Order Pages: $orderPageCount</li>";
