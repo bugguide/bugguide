@@ -80,7 +80,7 @@ function bgimage_ds_field_settings_info() {
     ),
     'bgpage_citations' => array(
       'weight' => '7',
-      'label' => 'hidden',
+      'label' => 'above',
       'format' => 'default',
     ),
   );
@@ -287,6 +287,7 @@ function bgimage_ds_layout_settings_info() {
       'bgimage_related' => 'top_grow_first',
       'bgimage_title_classification' => 'top_grow_first',
       'body' => 'top_grow_first',
+      'bgpage_citations' => 'top_grow_first',
       'location_combined' => 'top_1',
       'field_bgimage_date' => 'top_1',
       'divider_1' => 'top_1',
