@@ -599,11 +599,11 @@ function _bg_get_citations_html($text, &$citation_nids) {
       }
       $title = $bgref_node->title;
       if ($bgref_node->name) {
-        $title .= t(', by ', array(
+        $title .= t(', by :author_name', array(
           ':author_name' => $bgref_node->name
         ));
+        $title .= $pages;
       }
-      $title .= $pages;
       $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid, array('attributes' => array('title' => $title))) . ')</span>';
     }
     return str_replace($find, $replace, $text);
