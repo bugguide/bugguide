@@ -577,7 +577,34 @@ function _bg_get_citations_html($text, &$citation_nids) {
       // Extract citation index so we can show it as "(7)" in the text.
       $citation_index = array_search($nid, $citation_nids);
       $bgref_node = node_load($nid);
-      $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid, array('attributes' => array('title' => $bgref_node->title))) . ')</span>';
+      $first_page = '';
+      $last_page = '';
+      $pages = '';
+      if (!empty($match[4][$idx])) {
+        $first_page = $match[4][$idx];
+      }
+      if (!empty($match[6][$idx])) {
+        $last_page = $match[6][$idx];
+      }
+      if ($last_page) {
+        $pages = t(', pages :first_page - :last_page', array(
+          ':first_page' => $first_page,
+          ':last_page' => $last_page
+        ));
+      }
+      elseif ($first_page) {
+        $pages = t(', page :first_page', array(
+          'fist_page' => $first_page
+        ));
+      }
+      $title = $bgref_node->title;
+      if ($bgref_node->name) {
+        $title .= t(', by ', array(
+          ':author_name' => $bgref_node->name
+        ));
+      }
+      $title .= $pages;
+      $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid, array('attributes' => array('title' => $title))) . ')</span>';
     }
     return str_replace($find, $replace, $text);
   }

@@ -24,8 +24,8 @@ function bglink_ds_field_settings_info() {
       'format' => 'default',
     ),
     'bgpage_citations' => array(
-      'weight' => '4',
-      'label' => 'hidden',
+      'weight' => '1',
+      'label' => 'above',
       'format' => 'default',
     ),
   );
@@ -51,19 +51,19 @@ function bglink_ds_layout_settings_info() {
     'regions' => array(
       'ds_content' => array(
         0 => 'body',
-        1 => 'field_parent',
-        2 => 'field_bglink_link',
-        3 => 'field_tags',
-        4 => 'bgpage_citations',
+        1 => 'bgpage_citations',
+        2 => 'field_parent',
+        3 => 'field_bglink_link',
+        4 => 'field_tags',
         5 => 'bgsubscription',
       ),
     ),
     'fields' => array(
       'body' => 'ds_content',
+      'bgpage_citations' => 'ds_content',
       'field_parent' => 'ds_content',
       'field_bglink_link' => 'ds_content',
       'field_tags' => 'ds_content',
-      'bgpage_citations' => 'ds_content',
       'bgsubscription' => 'ds_content',
     ),
     'classes' => array(),
