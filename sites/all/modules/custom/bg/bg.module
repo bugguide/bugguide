@@ -394,6 +394,10 @@ function bg_preprocess_page(&$vars) {
       }
       drupal_set_breadcrumb($breadcrumbs);
     }
+    // Set breadcrumb for bgpage, bgimage and book reference nodes.
+    if (isset($node->type) && in_array($node->type, array('bgpage', 'bgimage'))) {
+      $vars['title'] = _bg_get_title_classification($node);
+    }
   }
 }
 
@@ -677,3 +681,54 @@ function bg_block_view($delta = ''){
   return $block;
 }
 
+/**
+ * Get title classification
+ *
+ * @param stdClass $node
+ * The node object.
+ *
+ * @return string
+ * The new title classification.
+ */
+function _bg_get_title_classification($node) {
+  global $TAXON_IDS;
+
+  $taxon_key = $node->field_taxon[LANGUAGE_NONE][0]['value'];
+  $scientific_name = $node->field_scientific_name[LANGUAGE_NONE][0]['value'];
+  $common_name = $node->field_common_name[LANGUAGE_NONE][0]['value'];
+  $new_title = '';
+  $taxon_ids = array_flip($TAXON_IDS);
+  $taxon_name = !empty($taxon_ids[$taxon_key]) ? $taxon_ids[$taxon_key] : '';
+  if ($taxon_name) {
+    // Regarding to taxon.
+    // @TODO: Add missing parents.
+    if ($taxon_key >= $TAXON_IDS['Genus']) {
+      $full_scientific_name = $bgpage->genus;
+      if ($bgpage->species) {
+        $full_scientific_name .= " $bgpage->species";
+      }
+      if ($bgpage->subspecies) {
+        $full_scientific_name .= " $bgpage->subspecies";
+      }
+    }
+
+    // Regarding to title.
+
+    if (empty($common_name) || $scientific_name == $common_name) {
+      $new_title = "$taxon_name $scientific_name";
+    }
+    elseif (!empty($common_name) && $scientific_name != $common_name) {
+      $new_title = "$taxon_name $scientific_name - $common_name";
+    }
+  }
+  else {
+    if (empty($common_name) || $scientific_name == $common_name) {
+      $new_title = $scientific_name;
+    }
+    elseif (!empty($common_name) && $scientific_name != $common_name) {
+      $new_title = "$scientific_name - $common_name";
+    }
+  }
+
+  return 'Title updated';
+}
