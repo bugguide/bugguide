@@ -666,7 +666,10 @@ function bg_block_info() {
   return $blocks;
 }
 
-function bg_block_view($delta = ''){
+/**
+ * Implements hook_block_view().
+ */
+function bg_block_view($delta = '') {
   $block = array();
 
   switch($delta){
@@ -682,53 +685,90 @@ function bg_block_view($delta = ''){
 }
 
 /**
- * Get title classification
+ * Get title classification.
  *
  * @param stdClass $node
  * The node object.
  *
  * @return string
- * The new title classification.
+ *   The new title classification.
+ *
+ * @throws \EntityFieldQueryException
  */
 function _bg_get_title_classification($node) {
   global $TAXON_IDS;
+  global $TAXON_NAMES;
 
   $taxon_key = $node->field_taxon[LANGUAGE_NONE][0]['value'];
-  $scientific_name = $node->field_scientific_name[LANGUAGE_NONE][0]['value'];
-  $common_name = $node->field_common_name[LANGUAGE_NONE][0]['value'];
-  $new_title = '';
-  $taxon_ids = array_flip($TAXON_IDS);
-  $taxon_name = !empty($taxon_ids[$taxon_key]) ? $taxon_ids[$taxon_key] : '';
-  if ($taxon_name) {
+  $scientific_name = !empty($node->field_scientific_name[LANGUAGE_NONE][0]['value']) ? $node->field_scientific_name[LANGUAGE_NONE][0]['value'] : '';
+  $common_name = !empty($node->field_common_name[LANGUAGE_NONE][0]['value']) ? $node->field_common_name[LANGUAGE_NONE][0]['value'] : '';
+  $taxon_name = !empty($TAXON_NAMES[$taxon_key]) ? $TAXON_NAMES[$taxon_key] : '';
+  dpm($taxon_name);
+    if ($taxon_name) {
     // Regarding to taxon.
     // @TODO: Add missing parents.
     if ($taxon_key >= $TAXON_IDS['Genus']) {
-      $full_scientific_name = $bgpage->genus;
-      if ($bgpage->species) {
-        $full_scientific_name .= " $bgpage->species";
+      $scientific_names_from_all_taxons = _bg_get_all_scientific_names_from_all_taxon_of_a_specific_node($node);
+      $full_scientific_name = !empty($scientific_names_from_all_taxons['Genus']) ? $scientific_names_from_all_taxons['Genus'] : '';
+      if (!empty($scientific_names_from_all_taxons['Species'])) {
+        $full_scientific_name .= ' ' . $scientific_names_from_all_taxons['Species'];
       }
-      if ($bgpage->subspecies) {
-        $full_scientific_name .= " $bgpage->subspecies";
+      if (!empty($scientific_names_from_all_taxons['Subspecies'])) {
+        $full_scientific_name .= ' ' . $scientific_names_from_all_taxons['Subspecies'];
       }
-    }
-
-    // Regarding to title.
-
-    if (empty($common_name) || $scientific_name == $common_name) {
-      $new_title = "$taxon_name $scientific_name";
-    }
-    elseif (!empty($common_name) && $scientific_name != $common_name) {
-      $new_title = "$taxon_name $scientific_name - $common_name";
+      if (empty($common_name) || $full_scientific_name === $common_name) {
+        return "$taxon_name $full_scientific_name";
+      }
+      elseif (!empty($common_name) && $full_scientific_name !== $common_name) {
+        return "$taxon_name $full_scientific_name - $common_name";
+      }
     }
   }
-  else {
-    if (empty($common_name) || $scientific_name == $common_name) {
-      $new_title = $scientific_name;
-    }
-    elseif (!empty($common_name) && $scientific_name != $common_name) {
-      $new_title = "$scientific_name - $common_name";
+  if (empty($common_name) || $scientific_name === $common_name) {
+    return $taxon_name . ' ' . $scientific_name;
+  }
+  elseif (!empty($common_name) && $scientific_name !== $common_name) {
+    return "$taxon_name $scientific_name - $common_name";
+  }
+}
+
+/**
+ * Get all scientific names from all taxon of a specific node.
+ *
+ * @param $node
+ *
+ * @return array
+ *   An array of scientific names from taxon.
+ * @todo: Add missing example.
+ * @throws \EntityFieldQueryException
+ */
+function _bg_get_all_scientific_names_from_all_taxon_of_a_specific_node($node) {
+  global $TAXON_NAMES;
+  $nids = array($node->nid);
+  $parent_nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
+  // Include the current node to get also scientific name.
+  $nids = array_merge($parent_nids, $nids);
+  $scientific_names_from_taxon = array();
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'bgpage')
+    ->propertyCondition('nid', $nids, 'IN')
+    ->fieldOrderBy('field_taxon', 'value', 'ASC');
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    $nids = array_keys($result['node']);
+    $nodes = entity_load('node', $nids);
+    foreach ($nodes as $parent_node) {
+      // We only look at the format when the node has a scientific name.
+      $scientific_name = !empty($parent_node->field_scientific_name) ? $parent_node->field_scientific_name[LANGUAGE_NONE][0]['value'] : '';
+      if (!empty($scientific_name)) {
+        // What level of hierarchy we're at
+        if (!empty($parent_node->field_taxon) && isset($TAXON_NAMES[$parent_node->field_taxon[LANGUAGE_NONE][0]['value']])) {
+          $taxon_name = $TAXON_NAMES[$parent_node->field_taxon[LANGUAGE_NONE][0]['value']];
+          $scientific_names_from_taxon[$taxon_name] = $scientific_name;
+        }
+      }
     }
   }
-
-  return 'Title updated';
+  return $scientific_names_from_taxon;
 }
