@@ -57,7 +57,7 @@ services:
       # and update steps, because the results of those are inherited
       # from the base preview.
       build:
-        - drush -y -r "${DOCROOT}" si standard -v "--db-url=mysql://tugboat@mysql/tugboat" --site-name=BugGuide --account-name=admin install_configure_form.update_status_module='array(FALSE,FALSE)'
+        - drush -y -r "${DOCROOT}" si standard -v "--db-url=mysql://tugboat:tugboat@mysql/tugboat" --site-name=BugGuide --account-name=admin install_configure_form.update_status_module='array(FALSE,FALSE)'
         - drush -y -r "${DOCROOT}" en entityreference
         - drush -y -r "${DOCROOT}" en bg
         - drush -y -r "${DOCROOT}" en php better_formats views views_ui forum bgapi bgsubscriptions
@@ -96,7 +96,7 @@ services:
   # hostname to access the service by from the php service.
   mysql:
     # Use the latest available 5.x version of MySQL
-    image: tugboatqa/mysql:5
+    image: tugboatqa/percona:5.7
 
     # A set of commands to run while building this service
     commands:
