@@ -34,7 +34,7 @@ services:
       # already be present.
       update:
         # Use the tugboat-specific Drupal settings
-        - cp "${TUGBOAT_ROOT}/.tugboat/settings.local.php" "${DOCROOT}/sites/default/"
+        #- cp "${TUGBOAT_ROOT}/.tugboat/settings.local.php" "${DOCROOT}/sites/default/"
 
         # Copy the files directory from an external server. The public
         # SSH key found in the Tugboat Repository configuration must be
