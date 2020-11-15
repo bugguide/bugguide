@@ -706,7 +706,6 @@ function _bg_get_title_classification($node) {
   $taxon_name = !empty($TAXON_NAMES[$taxon_key]) ? $TAXON_NAMES[$taxon_key] : '';
   if ($taxon_name) {
     // Regarding to taxon.
-    // @TODO: Add missing parents.
     if ($taxon_key >= $TAXON_IDS['Genus']) {
       $scientific_names_from_all_taxons = _bg_get_all_scientific_names_from_all_taxon_of_a_specific_node($node);
       $full_scientific_name = !empty($scientific_names_from_all_taxons['Genus']) ? $scientific_names_from_all_taxons['Genus'] : '';
