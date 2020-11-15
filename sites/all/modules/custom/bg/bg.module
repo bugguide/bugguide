@@ -396,7 +396,8 @@ function bg_preprocess_page(&$vars) {
     }
     // Set breadcrumb for bgpage, bgimage and book reference nodes.
     if (isset($node->type) && in_array($node->type, array('bgpage', 'bgimage'))) {
-      $vars['title'] = _bg_get_title_classification($node);
+      // Changes title for both node title and title bar.
+      drupal_set_title(_bg_get_title_classification($node));
     }
   }
 }
@@ -703,8 +704,7 @@ function _bg_get_title_classification($node) {
   $scientific_name = !empty($node->field_scientific_name[LANGUAGE_NONE][0]['value']) ? $node->field_scientific_name[LANGUAGE_NONE][0]['value'] : '';
   $common_name = !empty($node->field_common_name[LANGUAGE_NONE][0]['value']) ? $node->field_common_name[LANGUAGE_NONE][0]['value'] : '';
   $taxon_name = !empty($TAXON_NAMES[$taxon_key]) ? $TAXON_NAMES[$taxon_key] : '';
-  dpm($taxon_name);
-    if ($taxon_name) {
+  if ($taxon_name) {
     // Regarding to taxon.
     // @TODO: Add missing parents.
     if ($taxon_key >= $TAXON_IDS['Genus']) {
