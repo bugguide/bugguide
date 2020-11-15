@@ -17,7 +17,7 @@ services:
       # Commands that set up the basic preview infrastructure
       init:
         # Install opcache and enable mod-rewrite.
-        - docker-php-ext-install opcache
+        #- docker-php-ext-install opcache
         - a2enmod headers rewrite
 
         # Install drush 8.1.17
@@ -39,6 +39,7 @@ services:
         # Copy the files directory from an external server. The public
         # SSH key found in the Tugboat Repository configuration must be
         # copied to the external server in order to use rsync over SSH.
+        - ls -lR "${DOCROOT}"
         - mkdir -p "${DOCROOT}/files"
 
         # Set file permissions such that Drupal will not complain
