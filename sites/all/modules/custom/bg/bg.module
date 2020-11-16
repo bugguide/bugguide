@@ -594,7 +594,7 @@ function _bg_get_citations_html($text, &$citation_nids) {
       }
       elseif ($first_page) {
         $pages = t(', page :first_page', array(
-          'fist_page' => $first_page
+          ':first_page' => $first_page
         ));
       }
       $title = $bgref_node->title;
