@@ -92,7 +92,7 @@ services:
         - drush -r "${DOCROOT}" sqlq "UPDATE block SET status = 0 WHERE delta = 'navigation' AND theme REGEXP '^bulma'"
         - drush -r "${DOCROOT}" sqlq "UPDATE block SET status = 0 WHERE delta = 'bg_visual_guide' AND theme NOT REGEXP '^bulma'"
         - # Seed initial nodes and start tree.
-        - drush -r "${DOCROOT}" scr "${DOCROOT}/initialnodes.php"
+        - drush -r "${DOCROOT}" scr "${DOCROOT}.tugboat/initialnodes.php"
 
   # What to call the service hosting MySQL. This name also acts as the
   # hostname to access the service by from the php service.
