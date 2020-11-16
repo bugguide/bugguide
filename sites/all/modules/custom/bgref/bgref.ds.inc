@@ -19,19 +19,24 @@ function bgref_ds_field_settings_info() {
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
     'comments' => array(
-      'weight' => '10',
+      'weight' => '9',
       'label' => 'above',
       'format' => 'default',
     ),
     'changed_date' => array(
-      'weight' => '6',
+      'weight' => '7',
       'label' => 'hidden',
       'format' => 'ds_post_date_long',
     ),
     'submitted_by' => array(
-      'weight' => '5',
+      'weight' => '6',
       'label' => 'hidden',
       'format' => 'ds_time_ago',
+    ),
+    'bgpage_citations' => array(
+      'weight' => '5',
+      'label' => 'above',
+      'format' => 'default',
     ),
   );
   $export['node|book_reference|default'] = $ds_fieldsetting;
@@ -60,10 +65,11 @@ function bgref_ds_layout_settings_info() {
         2 => 'field_book_reference_year',
         3 => 'field_book_reference_isbn',
         4 => 'body',
-        5 => 'submitted_by',
-        6 => 'changed_date',
+        5 => 'bgpage_citations',
+        6 => 'submitted_by',
         7 => 'field_tags',
-        8 => 'comments',
+        8 => 'changed_date',
+        9 => 'comments',
       ),
     ),
     'fields' => array(
@@ -72,9 +78,10 @@ function bgref_ds_layout_settings_info() {
       'field_book_reference_year' => 'ds_content',
       'field_book_reference_isbn' => 'ds_content',
       'body' => 'ds_content',
+      'bgpage_citations' => 'ds_content',
       'submitted_by' => 'ds_content',
-      'changed_date' => 'ds_content',
       'field_tags' => 'ds_content',
+      'changed_date' => 'ds_content',
       'comments' => 'ds_content',
     ),
     'classes' => array(),

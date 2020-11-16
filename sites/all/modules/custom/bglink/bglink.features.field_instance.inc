@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * bglink.features.field_instance.inc
@@ -9,6 +10,39 @@
  */
 function bglink_field_default_field_instances() {
   $field_instances = array();
+
+  // Exported field_instance: 'comment-comment_node_bglink-comment_body'.
+  $field_instances['comment-comment_node_bglink-comment_body'] = array(
+    'bundle' => 'comment_node_bglink',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'comment',
+    'field_name' => 'comment_body',
+    'label' => 'Comment',
+    'required' => TRUE,
+    'settings' => array(
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 0,
+    ),
+  );
 
   // Exported field_instance: 'node-bglink-body'.
   $field_instances['node-bglink-body'] = array(
@@ -22,7 +56,7 @@ function bglink_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 1,
+        'weight' => 0,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -71,9 +105,11 @@ function bglink_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'link',
-        'settings' => array(),
+        'settings' => array(
+          'custom_title' => '',
+        ),
         'type' => 'link_default',
-        'weight' => 3,
+        'weight' => 2,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -136,7 +172,7 @@ function bglink_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -222,7 +258,7 @@ function bglink_field_default_field_instances() {
           'fallback_settings' => array(),
         ),
         'type' => 'editable',
-        'weight' => 4,
+        'weight' => 3,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -259,6 +295,7 @@ function bglink_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('A BugGuide link.');
+  t('Comment');
   t('Description');
   t('Link');
   t('Parent');
