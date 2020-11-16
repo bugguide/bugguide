@@ -47,6 +47,16 @@ function bgusers_user_default_permissions() {
     'module' => 'bgstat',
   );
 
+  // Exported permission: 'access bugguide_search search_api_page'.
+  $permissions['access bugguide_search search_api_page'] = array(
+    'name' => 'access bugguide_search search_api_page',
+    'roles' => array(
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'search_api_page',
+  );
+
   // Exported permission: 'access comments'.
   $permissions['access comments'] = array(
     'name' => 'access comments',
@@ -124,6 +134,7 @@ function bgusers_user_default_permissions() {
   $permissions['access user profiles'] = array(
     'name' => 'access user profiles',
     'roles' => array(
+      'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
     ),
     'module' => 'user',
@@ -458,6 +469,7 @@ function bgusers_user_default_permissions() {
     'name' => 'administer users',
     'roles' => array(
       'administrator' => 'administrator',
+      'senior editor' => 'senior editor',
     ),
     'module' => 'user',
   );
@@ -528,7 +540,9 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'cancel account'.
   $permissions['cancel account'] = array(
     'name' => 'cancel account',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'user',
   );
 
@@ -599,6 +613,17 @@ function bgusers_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'create bgpage content'.
+  $permissions['create bgpage content'] = array(
+    'name' => 'create bgpage content',
+    'roles' => array(
+      'contributing editor' => 'contributing editor',
+      'senior editor' => 'senior editor',
+      'spam zapper' => 'spam zapper',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'create book_reference content'.
   $permissions['create book_reference content'] = array(
     'name' => 'create book_reference content',
@@ -642,6 +667,13 @@ function bgusers_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'delete any bgpage content'.
+  $permissions['delete any bgpage content'] = array(
+    'name' => 'delete any bgpage content',
+    'roles' => array(),
+    'module' => 'node',
+  );
+
   // Exported permission: 'delete any book_reference content'.
   $permissions['delete any book_reference content'] = array(
     'name' => 'delete any book_reference content',
@@ -678,6 +710,13 @@ function bgusers_user_default_permissions() {
     'roles' => array(
       'authenticated user' => 'authenticated user',
     ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own bgpage content'.
+  $permissions['delete own bgpage content'] = array(
+    'name' => 'delete own bgpage content',
+    'roles' => array(),
     'module' => 'node',
   );
 
@@ -747,7 +786,9 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'display drupal links'.
   $permissions['display drupal links'] = array(
     'name' => 'display drupal links',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'admin_menu',
   );
 
@@ -799,7 +840,9 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'ds_switch page'.
   $permissions['ds_switch page'] = array(
     'name' => 'ds_switch page',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'ds_extras',
   );
 
@@ -808,6 +851,8 @@ function bgusers_user_default_permissions() {
     'name' => 'edit any bgimage content',
     'roles' => array(
       'contributing editor' => 'contributing editor',
+      'senior editor' => 'senior editor',
+      'spam zapper' => 'spam zapper',
     ),
     'module' => 'node',
   );
@@ -817,6 +862,17 @@ function bgusers_user_default_permissions() {
     'name' => 'edit any bglink content',
     'roles' => array(
       'contributing editor' => 'contributing editor',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any bgpage content'.
+  $permissions['edit any bgpage content'] = array(
+    'name' => 'edit any bgpage content',
+    'roles' => array(
+      'contributing editor' => 'contributing editor',
+      'senior editor' => 'senior editor',
+      'spam zapper' => 'spam zapper',
     ),
     'module' => 'node',
   );
@@ -862,6 +918,15 @@ function bgusers_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit own bgpage content'.
+  $permissions['edit own bgpage content'] = array(
+    'name' => 'edit own bgpage content',
+    'roles' => array(
+      'contributing editor' => 'contributing editor',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'edit own book_reference content'.
   $permissions['edit own book_reference content'] = array(
     'name' => 'edit own book_reference content',
@@ -874,7 +939,9 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'edit own comments'.
   $permissions['edit own comments'] = array(
     'name' => 'edit own comments',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'comment',
   );
 
@@ -948,6 +1015,7 @@ function bgusers_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
+      'senior editor' => 'senior editor',
       'spam zapper' => 'spam zapper',
     ),
     'module' => 'bgimage',
@@ -977,6 +1045,7 @@ function bgusers_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
+      'senior editor' => 'senior editor',
       'spam zapper' => 'spam zapper',
     ),
     'module' => 'bgimage',
@@ -1036,7 +1105,9 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'select account cancellation method'.
   $permissions['select account cancellation method'] = array(
     'name' => 'select account cancellation method',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'user',
   );
 
@@ -1112,6 +1183,15 @@ function bgusers_user_default_permissions() {
     'name' => 'subscribe to all content types',
     'roles' => array(
       'administrator' => 'administrator',
+    ),
+    'module' => 'subscriptions',
+  );
+
+  // Exported permission: 'subscribe to content'.
+  $permissions['subscribe to content'] = array(
+    'name' => 'subscribe to content',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'subscriptions',
   );
@@ -1300,6 +1380,7 @@ function bgusers_user_default_permissions() {
       'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
       'expert' => 'expert',
+      'senior editor' => 'senior editor',
       'spam zapper' => 'spam zapper',
     ),
     'module' => 'bgimage',
@@ -1323,11 +1404,29 @@ function bgusers_user_default_permissions() {
     'module' => 'panels',
   );
 
+  // Exported permission: 'view raw parents'.
+  $permissions['view raw parents'] = array(
+    'name' => 'view raw parents',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'bgpage',
+  );
+
   // Exported permission: 'view revisions'.
   $permissions['view revisions'] = array(
     'name' => 'view revisions',
     'roles' => array(),
     'module' => 'node',
+  );
+
+  // Exported permission: 'view taxon ID field'.
+  $permissions['view taxon ID field'] = array(
+    'name' => 'view taxon ID field',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'bgpage',
   );
 
   // Exported permission: 'view the administration theme'.
@@ -1337,6 +1436,15 @@ function bgusers_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'system',
+  );
+
+  // Exported permission: 'view who edited bgpage'.
+  $permissions['view who edited bgpage'] = array(
+    'name' => 'view who edited bgpage',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'bgpage',
   );
 
   return $permissions;
