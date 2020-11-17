@@ -48,12 +48,8 @@ function bgstat_menu() {
 function bgstat_permission() {
   return array(
     'access bgstats' => array(
-      'title' => t('View badges denoting privileged roles'),
-      'description' => t('Make visible which other users have enhanced privileges.'),
-    ),
-    'administer bg utilities' => array(
-      'title' => t('Administer bg utilities'),
-      'description' => t('Perform bg maintenance tasks'),
+      'title' => t('View system statistics'),
+      'description' => t('Advanced statistics for administrative insight.'),
     )
   );
 }
