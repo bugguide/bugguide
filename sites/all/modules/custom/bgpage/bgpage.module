@@ -134,10 +134,16 @@ function bgpage_ds_fields_info($entity_type) {
       'function' => 'bgpage_representative_images',
       'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
     );
-
-    return array($entity_type => $fields);
   }
-  return;
+  if ($entity_type === 'comment') {
+    $fields['bgpage_citations'] = array(
+      'title' => t('Works cited'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bgpage_citations',
+      'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
+    );
+  }
+  return array($entity_type => $fields);
 }
 
 /**
@@ -191,7 +197,7 @@ function bgpage_menu_local_tasks_alter(&$data, $route_name) {
         if (count($parents) > 0) {
           $parent_nid = $parents[count($parents) - 1];
           $data['tabs'][0]['output'][0]['#link']['href'] = 'node/' . $parent_nid;
-      
+
           // Also, the Info tab should not look like it is selected.
           unset($data['tabs'][0]['output'][0]['#active']);
         }
@@ -549,4 +555,76 @@ function bgpage_fetch_classification($nid, $filter) {
   }
 
   return $results;
+}
+
+/**
+ * Query alter to get more results if field_parent exists.
+ *
+ * This is useful to get more records for BOOKS and LINKS.
+ *
+ * Example SQL query after using this function for LINKS:
+ *
+ * SELECT node.nid AS nid, node.title AS node_title, node.created AS node_created, 'node' AS field_data_body_node_entity_type
+ * FROM {node} node
+ * LEFT JOIN {field_data_field_parent} field_data_field_parent ON node.nid = field_data_field_parent.entity_id AND
+ * (field_data_field_parent.entity_type = 'node' AND field_data_field_parent.deleted = '0')
+ * WHERE (( (field_parent_value IN  (
+ * '3',
+ * '3,878075',
+ * '3,878075,52',
+ * '3,878075,52,57',
+ * '3,878075,52,57,81',
+ * '3,878075,52,57,81,156',
+ * '3,878075,52,57,81,156,43480',
+ * '3,878075,52,57,81,156,43480,483723')) OR (field_parent_value LIKE '3,878075,52,57,81,156,43480,483723,347,%' ESCAPE '\\') ) AND
+ * (( (node.status = '1') AND (node.type IN  ('book_reference')) AND (field_data_field_parent.field_parent_value LIKE '%' ESCAPE '\\') )))
+ * ORDER BY field_parent_value != '3,878075,52,57,81,156,43480,483723,347', LENGTH(field_parent_value) DESC, node_created DESC
+ * LIMIT 25 OFFSET 0
+ *
+ * @param stdClass $view
+ *   The view object.
+ *
+ * @param stdClass $query
+ *   The query object.
+ *
+ * @see bgref.module
+ * @see bglink.module
+ */
+function _bgpage_views_query_alter_for_field_parent(&$view, &$query) {
+  $node = node_load($view->args[0]);
+  if (!isset($node->field_parent[LANGUAGE_NONE][0]['value'])) {
+    return;
+  }
+  $parent_paths = array();
+  $parent_path = $node->field_parent[LANGUAGE_NONE][0]['value'];
+  $parent = '';
+  foreach (explode(',', $parent_path) as $nid) {
+    if ($parent) {
+      $parent .= ',';
+    }
+    $parent .= $nid;
+    $parent_paths[] = $parent;
+  }
+
+  $where_condition = array(
+    'conditions' => array(
+      array(
+        'field' => 'field_parent_value',
+        'value' => $parent_paths,
+        'operator' => 'IN',
+      ),
+      array(
+        'field' => 'field_parent_value',
+        'value' => $parent_path . ',' . $node->nid . ',%',
+        'operator' => 'LIKE',
+      )
+    ),
+    'type' => 'OR',
+  );
+  array_unshift($query->where, $where_condition);
+  $order_by = array(
+    'field' => "field_parent_value != '$parent_path,$node->nid', LENGTH(field_parent_value)",
+    'direction' => 'DESC',
+  );
+  array_unshift($query->orderby, $order_by);
 }
