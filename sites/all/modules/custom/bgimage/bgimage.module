@@ -948,3 +948,28 @@ function bgimage_form_bgimage_node_form_alter(&$form, &$form_state) {
     $form['field_bgimage_base']['#access'] = FALSE;
   }
 }
+
+/**
+ * Implements hook_views_pre_render().
+ *
+ * @param $view
+ *   The view object.
+ */
+function bgimage_views_pre_render(&$view) {
+  // For recent images views with display block show just 4 recent images
+  // that doesn't contain parent value 6.
+  if (($view->name === 'recent_images') && ($view->current_display == 'block')) {
+    $nids_not_containing_parent_6 = 0;
+    foreach ($view->result as $key => $record) {
+      $node = node_load($record->nid);
+      // If DOESN'T contain PARENT value 6.
+      $parent_value = bg_get_first_parent_nid($node);
+      if ($parent_value === '6' && $nids_not_containing_parent_6 < 4) {
+        $nids_not_containing_parent_6++;
+      }
+      else {
+        unset($view->result[$key]);
+      }
+    }
+  }
+}
