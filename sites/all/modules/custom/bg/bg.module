@@ -772,14 +772,20 @@ function _bg_get_title_classification($node) {
         }
         if (empty($common_name) || $scientific_name === $common_name) {
             return $taxon_name . ' ' . $scientific_name;
-        } elseif (!empty($common_name) && $scientific_name !== $common_name) {
+        }
+        elseif (!empty($common_name) && $scientific_name !== $common_name) {
             return "$taxon_name $scientific_name - $common_name";
         }
-    } else {
+    }
+    elseif (!empty($common_name)) {
         // This is a No Taxon node.
         // No Taxon nodes use only the common name, not the scientific name.
-        return "$common_name";
+        return $common_name;
     }
+    else {
+      return $node->title;
+    }
+
 }
 
 /**
