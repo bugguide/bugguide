@@ -136,6 +136,7 @@ function bgusers_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'user',
   );
@@ -617,6 +618,7 @@ function bgusers_user_default_permissions() {
   $permissions['create bgpage content'] = array(
     'name' => 'create bgpage content',
     'roles' => array(
+      'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
       'senior editor' => 'senior editor',
       'spam zapper' => 'spam zapper',
@@ -649,49 +651,63 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'create page content'.
   $permissions['create page content'] = array(
     'name' => 'create page content',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'delete any bgimage content'.
   $permissions['delete any bgimage content'] = array(
     'name' => 'delete any bgimage content',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'delete any bglink content'.
   $permissions['delete any bglink content'] = array(
     'name' => 'delete any bglink content',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'delete any bgpage content'.
   $permissions['delete any bgpage content'] = array(
     'name' => 'delete any bgpage content',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'delete any book_reference content'.
   $permissions['delete any book_reference content'] = array(
     'name' => 'delete any book_reference content',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'delete any forum content'.
   $permissions['delete any forum content'] = array(
     'name' => 'delete any forum content',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'delete any page content'.
   $permissions['delete any page content'] = array(
     'name' => 'delete any page content',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -716,7 +732,9 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'delete own bgpage content'.
   $permissions['delete own bgpage content'] = array(
     'name' => 'delete own bgpage content',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -741,35 +759,45 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'delete own page content'.
   $permissions['delete own page content'] = array(
     'name' => 'delete own page content',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'delete revisions'.
   $permissions['delete revisions'] = array(
     'name' => 'delete revisions',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'delete terms in forums'.
   $permissions['delete terms in forums'] = array(
     'name' => 'delete terms in forums',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'delete terms in tags'.
   $permissions['delete terms in tags'] = array(
     'name' => 'delete terms in tags',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'delete terms in vocabulary_2'.
   $permissions['delete terms in vocabulary_2'] = array(
     'name' => 'delete terms in vocabulary_2',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -850,6 +878,7 @@ function bgusers_user_default_permissions() {
   $permissions['edit any bgimage content'] = array(
     'name' => 'edit any bgimage content',
     'roles' => array(
+      'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
       'senior editor' => 'senior editor',
       'spam zapper' => 'spam zapper',
@@ -861,6 +890,7 @@ function bgusers_user_default_permissions() {
   $permissions['edit any bglink content'] = array(
     'name' => 'edit any bglink content',
     'roles' => array(
+      'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
     ),
     'module' => 'node',
@@ -870,6 +900,7 @@ function bgusers_user_default_permissions() {
   $permissions['edit any bgpage content'] = array(
     'name' => 'edit any bgpage content',
     'roles' => array(
+      'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
       'senior editor' => 'senior editor',
       'spam zapper' => 'spam zapper',
@@ -881,6 +912,7 @@ function bgusers_user_default_permissions() {
   $permissions['edit any book_reference content'] = array(
     'name' => 'edit any book_reference content',
     'roles' => array(
+      'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
     ),
     'module' => 'node',
@@ -889,14 +921,18 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'edit any forum content'.
   $permissions['edit any forum content'] = array(
     'name' => 'edit any forum content',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'edit any page content'.
   $permissions['edit any page content'] = array(
     'name' => 'edit any page content',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -922,6 +958,7 @@ function bgusers_user_default_permissions() {
   $permissions['edit own bgpage content'] = array(
     'name' => 'edit own bgpage content',
     'roles' => array(
+      'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
     ),
     'module' => 'node',
@@ -957,28 +994,36 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'edit own page content'.
   $permissions['edit own page content'] = array(
     'name' => 'edit own page content',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'edit terms in forums'.
   $permissions['edit terms in forums'] = array(
     'name' => 'edit terms in forums',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'edit terms in tags'.
   $permissions['edit terms in tags'] = array(
     'name' => 'edit terms in tags',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'taxonomy',
   );
 
   // Exported permission: 'edit terms in vocabulary_2'.
   $permissions['edit terms in vocabulary_2'] = array(
     'name' => 'edit terms in vocabulary_2',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'taxonomy',
   );
 
@@ -1085,7 +1130,9 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'revert revisions'.
   $permissions['revert revisions'] = array(
     'name' => 'revert revisions',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1416,7 +1463,9 @@ function bgusers_user_default_permissions() {
   // Exported permission: 'view revisions'.
   $permissions['view revisions'] = array(
     'name' => 'view revisions',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
