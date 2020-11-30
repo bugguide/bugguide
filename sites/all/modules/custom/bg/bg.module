@@ -756,13 +756,13 @@ function _bg_get_title_classification($node) {
         // Species and Subspecies are below Genus and need special attention.
         // Namely, we need to prepend the Genus name and, for subspecies, the species name.
         if ($taxon_key >= $TAXON_IDS['Genus']) {
-            $scientific_names_from_all_taxons = _bg_get_all_scientific_names_from_all_taxon_of_a_specific_node($node);
-            $full_scientific_name = !empty($scientific_names_from_all_taxons['Genus']) ? $scientific_names_from_all_taxons['Genus'] : '';
-            if (!empty($scientific_names_from_all_taxons['Species'])) {
-                $full_scientific_name .= ' ' . $scientific_names_from_all_taxons['Species'];
+            $scientific_names_from_all_taxa = _bg_get_all_scientific_names_from_all_taxa_of_a_specific_node($node);
+            $full_scientific_name = !empty($scientific_names_from_all_taxa['Genus']) ? $scientific_names_from_all_taxa['Genus'] : '';
+            if (!empty($scientific_names_from_all_taxa['Species'])) {
+                $full_scientific_name .= ' ' . $scientific_names_from_all_taxa['Species'];
             }
-            if (!empty($scientific_names_from_all_taxons['Subspecies'])) {
-                $full_scientific_name .= ' ' . $scientific_names_from_all_taxons['Subspecies'];
+            if (!empty($scientific_names_from_all_taxa['Subspecies'])) {
+                $full_scientific_name .= ' ' . $scientific_names_from_all_taxa['Subspecies'];
             }
             if (empty($common_name) || $full_scientific_name === $common_name) {
                 return "$taxon_name $full_scientific_name";
@@ -783,28 +783,42 @@ function _bg_get_title_classification($node) {
 }
 
 /**
- * Get all scientific names from all taxon of a specific node.
+ * Get all scientific names from all taxa of a specific node.
  *
  * @param $node
  *
  * @return array
  *   An array of scientific names from taxon.
- * @todo: Add missing example.
- * @todo: Optimization - consider replacing this with solr-based queries (see bgpage.module)
- * @throws \EntityFieldQueryException
  */
-function _bg_get_all_scientific_names_from_all_taxon_of_a_specific_node($node) {
-  global $TAXON_NAMES;
+function _bg_get_all_scientific_names_from_all_taxa_of_a_specific_node($node) {
   $nids = array($node->nid);
   $parent_nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
   // Include the current node to get also scientific name.
   $nids = array_merge($parent_nids, $nids);
+  $scientific_names_from_taxon = _bg_get_all_scientific_names_from_all_taxa_of_nids($nids);
+  return $scientific_names_from_taxon;
+}
+
+/**
+ * Get all scientific names from all taxa of a specific node.
+ *
+ * @param $nids
+ *   An array of node ids.
+ *
+ * @return array
+ *   An array of scientific names from taxon keyed by TAXON_NAMEs.
+ * @todo: Add missing example.
+ * @todo: Optimization - consider replacing this with solr-based queries (see bgpage.module)
+ * @throws \EntityFieldQueryException
+ */
+function _bg_get_all_scientific_names_from_all_taxa_of_nids($nids) {
+  global $TAXON_NAMES;
   $scientific_names_from_taxon = array();
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'bgpage')
-    ->propertyCondition('nid', $nids, 'IN')
-    ->fieldOrderBy('field_taxon', 'value', 'ASC');
+      ->entityCondition('bundle', 'bgpage')
+      ->propertyCondition('nid', $nids, 'IN')
+      ->fieldOrderBy('field_taxon', 'value', 'ASC');
   $result = $query->execute();
   if (isset($result['node'])) {
     $nids = array_keys($result['node']);
