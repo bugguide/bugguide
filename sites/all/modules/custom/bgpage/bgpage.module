@@ -254,7 +254,7 @@ function bgpage_form_bgpage_node_form_alter(&$form, &$form_state, $form_id) {
  * Form validate callback for bgpage nodes.
  */
 function bgpage_node_form_validate(&$form, &$form_state) {
-  global $TAXON_NAMES, $TAXON_IDS;
+  global $TAXON_NAMES;
 
   $scientific_name = NULL;
 
@@ -318,10 +318,10 @@ function bgpage_node_form_validate(&$form, &$form_state) {
       $scientific_name = strtolower($scientific_name);
       $query = new EntityFieldQuery;
       $query->entityCondition('entity_type', 'node')
-            ->entityCondition('bundle', 'bgpage')
-            ->fieldCondition('field_scientific_name', 'value', $scientific_name)
-            ->fieldCondition('field_taxon', 'value', $values['field_taxon'][LANGUAGE_NONE][0]['value'])
-            ->fieldCondition('field_parent', 'value', $values['field_parent'][LANGUAGE_NONE][0]['value']);
+          ->entityCondition('bundle', 'bgpage')
+          ->fieldCondition('field_scientific_name', 'value', $scientific_name)
+          ->fieldCondition('field_taxon', 'value', $values['field_taxon'][LANGUAGE_NONE][0]['value'])
+          ->fieldCondition('field_parent', 'value', $values['field_parent'][LANGUAGE_NONE][0]['value']);
       // Existing nodes have nids.
       // In that case we want the query to exclude the nid of this node
       // because it is silly to alert that this node has the same title as this node.
@@ -332,7 +332,7 @@ function bgpage_node_form_validate(&$form, &$form_state) {
       if (!empty($result['node'])) {
         foreach ($result['node'] as $nid => $info) {
           form_set_error('', t('There is a <a href="!link" target="_blank">guide page</a> with that scientific name, taxon and parent.', array(
-            '!link' => url('node/' . $nid),
+              '!link' => url('node/' . $nid),
           )));
         }
       }
@@ -360,6 +360,33 @@ function bgpage_node_form_validate(&$form, &$form_state) {
       }
     }
   }
+
+  // Common name field is required, as it becomes the node title.
+  // If it has not been entered by the user, build it.
+  if ($values['field_common_name'][LANGUAGE_NONE][0]['value'] == '') {
+    // Populating a common name for Species and Subspecies includes the Genus name.
+    // E.g., 1668198 is a subspecies so even though the scientific name is nevadensis
+    // the common name value would be Zootermopsis nevadensis nevadensis.
+    if (($taxon_name == "Species") || ($taxon_name == "Subspecies")) {
+      $nids = explode(',', $values['field_parent'][LANGUAGE_NONE][0]['value']);
+      if (isset($values['nid'])) {
+        $nids = array_merge($nids, array($values['nid']));
+      }
+      $taxon_key = _bg_get_all_scientific_names_from_all_taxa_of_nids($nids);
+      if ($taxon_name == "Species") {
+        $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'] = $taxon_key['Genus'] . ' ' . $scientific_name;
+      }
+      if ($taxon_name == "Subspecies") {
+        $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'] = $taxon_key['Genus'] . ' ' . $taxon_key['Species'] . ' ' . $scientific_name;
+      }
+    }
+    else {
+      // Populating a common name for other taxa means just copying the scientific name.
+      $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'] = $scientific_name;
+    }
+  }
+  // Synchronize Drupal node title field with common name field.
+  $form_state['values']['title'] = $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'];
 
   // Pass value forward to submit function.
   $form_state['values']['taxon_name'] = $taxon_name;
