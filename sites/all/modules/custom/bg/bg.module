@@ -632,7 +632,7 @@ function _bg_get_citations_html($text, &$citation_nids) {
     }
     return str_replace($find, $replace, $text);
   }
-  return NULL;
+  return $text;
 }
 
 /**

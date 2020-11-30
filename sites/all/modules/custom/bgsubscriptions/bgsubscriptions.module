@@ -19,8 +19,6 @@ function bgsubscriptions_ds_fields_info($entity_type) {
       'function' => 'bgsubscriptions_subscriptions',
       'file' => drupal_get_path('module', 'bgsubscriptions') . '/bgsubscriptions.ds.field.inc',
     );
-
-    return array($entity_type => $fields);
   }
-  return;
+  return array($entity_type => $fields);
 }
