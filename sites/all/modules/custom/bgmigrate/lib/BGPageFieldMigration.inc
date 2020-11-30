@@ -34,14 +34,17 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
 
     $query = db_select('bgpage_archive', 'bgp');
     $query->join('field_data_body', 'fdb', 'fdb.entity_id = bgp.nid');
+    $query->join('node', 'n', 'fdb.entity_id = n.nid');
     $query->fields('bgp', array('nid', 'parent', 'scientific_name', 'names', 'counts', 'size', 'id', 'raynge', 'habitat', 'season', 'food', 'life_cycle', 'pronunciation', 'etymology', 'synonyms', 'see_also', 'print_references', 'web_references', 'taxon', 'hodges_number', 'uids', 'location_codes'))
           ->fields('fdb', array('body_value'));
+    $query->addField('n', 'title');
     $this->source = new MigrateSourceSQL($query, array());
 
     // Set up our destination - nodes of type bgpage
     $this->destination = new MigrateDestinationNode('bgpage');
 
     // Mapped fields
+    $this->addFieldMapping('field_common_name', 'title');
     $this->addFieldMapping('field_remarks', 'body_value');
     $this->addFieldMapping('field_remarks:format')->defaultValue(1);
     $this->addFieldMapping('field_scientific_name', 'scientific_name');
@@ -83,7 +86,6 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
     $this->addFieldMapping('field_internet_references:format')->defaultValue(1);
 
     $this->addUnmigratedDestinations(array(
-      'title',
       'uid',
       'created',
       'changed',
@@ -102,7 +104,6 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
       'body:format',
       'body:language',
       'field_bgimage_image',
-      'field_common_name',
       'field_representative_images',
       'comment',
     ));
