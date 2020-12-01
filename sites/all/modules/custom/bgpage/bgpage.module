@@ -232,9 +232,10 @@ function bgpage_theme() {
  * New nodes are created with the bgpage quickadd form.
  */
 function bgpage_form_bgpage_node_form_alter(&$form, &$form_state, $form_id) {
-  $node = $form['#entity'];
+  // The common name field becomes the title during validation.
+  // Thus, hide the title field on the edit form.
+  $form['title']['#access'] = FALSE;
 
-  //$form['title']['#access'] = FALSE;
   if (!user_access('view taxon ID field')) {
     $form['field_taxon']['#access'] = FALSE;
   }
