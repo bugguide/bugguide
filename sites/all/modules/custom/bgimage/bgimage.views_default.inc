@@ -35,7 +35,7 @@ function bgimage_views_default_views() {
       'text_input_required' => array(
         'text_input_required' => array(
           'value' => 'Select any criterion and click on Apply to see results',
-          'format' => '1',
+          'format' => 'f',
         ),
       ),
       'allow_secondary' => 0,
