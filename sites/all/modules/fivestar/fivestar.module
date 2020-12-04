@@ -635,22 +635,24 @@ function fivestar_expand($element, $form_state, $complete_form) {
   elseif (isset($complete_form['#node'])) {
     $title = $complete_form['#node']->title;
   }
-  $options = array('-' => t('Select rating'));
+  $options = array('-' => '<span class="sr-only">' . t('Select rating') . '</span>');
   for ($i = 1; $i <= $element['#stars']; $i++) {
     $this_value = ceil($i * 100 / $element['#stars']);
-    $options[$this_value] = t('Give @title @star/@count', array('@title' => $title, '@star' => $i, '@count' => $element['#stars']));
+    $options[$this_value] = '<span class="sr-only">' . t('Give @title @star/@count</span>' . '</span>', array('@title' => $title, '@star' => $i, '@count' => $element['#stars']));
   }
+
   // Display clear button only if enabled.
   if ($element['#allow_clear'] == TRUE) {
     $options[0] = t('Cancel rating');
   }
 
   $element['vote'] = array(
-    '#type' => 'select',
+    '#type' => 'radios',
+    '#title' => t('Can we make this the field name?:'),
     '#options' => $options,
     '#required' => $element['#required'],
     '#attributes' => $element['#attributes'],
-    '#theme' => _fivestar_allow_vote($element) ? 'fivestar_select' : 'fivestar_static',
+    //'#theme' => _fivestar_allow_vote($element) ? 'fivestar_select' : 'fivestar_static',
     '#default_value' => _fivestar_get_element_default_value($element),
     '#weight' => -2,
   );
