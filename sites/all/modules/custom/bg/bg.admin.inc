@@ -202,19 +202,30 @@ n.title NOT REGEXP '88'"); // Skip the butterfly called the '88 Butterfly'.
 function bg_fixup_locations_form() {
   global $LOCATION_CODES;
 
+  $form['locations'] = array(
+    '#prefix' => '<div id="locations">',
+    '#suffix' => '</div>',
+    '#tree' => TRUE,
+    '#theme' => 'table',
+    '#header' => array(
+      t('Fix'),
+      t('Original Location'),
+      t('Location'),
+      t('Original County'),
+      t('County'),
+      t('Original Location Code'),
+      t('Location Code'),
+    ),
+    '#rows' => array(),
+  );
+
   // In order to do a case-sensitive search on a column which is using
   // the utf8_general_ci (ci = case insensitive) collation, coerce
   // collation to utf8_bin first. Then we can select Foo, USA while
   // avoiding false matches like Dusachen.
-  $result = db_query("SELECT base, location, location_code, county, COUNT(*) AS count FROM {bgimage} WHERE ((county COLLATE utf8_bin LIKE '%USA%') OR (UPPER(county) LIKE '%CANADA%')) GROUP BY location ORDER BY RAND() LIMIT 10");
-  $ids = array();
+  $result = db_query("SELECT base, location, location_code, county FROM {bgimage} WHERE ((UPPER(county) COLLATE utf8_bin LIKE '%USA%') OR (UPPER(county) LIKE '%CANADA%')) ORDER BY RAND() LIMIT 10 ");
 
-  foreach ($result as $location) {
-    // Unique identifier.
-    $base = $location->base;
-    $ids[] = $base;
-    // Number of records like this.
-    $count = $location->count;
+  foreach ($result as $key => $location) {
     // Original entry in location field.
     $original = $location->location;
     $original_location_code = $location->location_code;
@@ -323,11 +334,11 @@ function bg_fixup_locations_form() {
       }
     }
 
-    $form['#tree'] = TRUE;
-    $form['table'] = array();
-    $form['table']['#theme'] = 'bg_fixup_locations_table';
-    $form['table'][$base] = array();
-    $form['table'][$base]['fix'] = array(
+    // Build the fields for this row in the table. We'll be adding
+    // these to the form several times, so it's easier if they are
+    // individual variables rather than in an array.
+
+    $fix__form_field = array(
       '#type' => 'checkbox',
       '#default_value' => $location_code && ($county || $location) ? 1 : 0,
       '#options' => array(
@@ -335,44 +346,91 @@ function bg_fixup_locations_form() {
         '1' => 1,
       ),
     );
-    $form['table'][$base]['original_location'] = array(
+
+    $original_location__form_field = array(
       '#type' => 'value',
       '#value' => $original,
     );
-    $form['table'][$base]['location'] = array(
+
+    $location__form_field = array(
       '#type' => 'textfield',
       '#default_value' => $location,
       '#description' => t('Proposed Location'),
     );
-    $form['table'][$base]['original_county'] = array(
+
+    $original_county__form_field = array(
       '#type' => 'value',
       '#value' => $original_county,
     );
-    $form['table'][$base]['county'] = array(
+
+    $county__form_field = array(
       '#type' => 'textfield',
       '#default_value' => $county,
       '#description' => t('Proposed County'),
     );
-    $form['table'][$base]['original_location_code'] = array(
+
+    $original_location_code__form_field = array(
       '#type' => 'value',
       '#value' => $original_location_code,
       '#size' => 4,
     );
-    $form['table'][$base]['location_code'] = array(
+
+    $location_code__form_field = array(
       '#type' => 'textfield',
       '#default_value' => $location_code,
       '#size' => 4,
     );
-    $form['table'][$base]['count'] = array(
-      '#type' => 'value',
-      '#value' => $count,
+
+    // Include the fields so they'll be rendered and named
+    // correctly, but they'll be ignored here when rendering as
+    // we're using #theme => table.
+    //
+    // Note that we're using references to the variables, not just
+    // copying the values into the array.
+
+    $form['locations'][] = array(
+      'fix' => &$fix__form_field,
+      'original_location' => &$original_location__form_field,
+      'location' => &$location__form_field,
+      'original_county' => &$original_county__form_field,
+      'county' => &$county__form_field,
+      'original_location_code' => &$original_location_code__form_field,
+      'location_code' => &$location_code__form_field,
     );
+
+    // Now add references to the fields to the rows that
+    // `theme_table()` will use.
+    // As we've used references, the table will use the very same
+    // field arrays as the FAPI used above.
+
+    $form['locations']['#rows'][] = array(
+      array('data' => &$fix__form_field),
+      array('data' => &$original),
+      array('data' => &$location__form_field),
+      array('data' => &$original_county),
+      array('data' => &$county__form_field),
+      array('data' => &$original_location_code),
+      array('data' => &$location_code__form_field),
+    );
+
+    // Because we've used references we need to `unset()` our
+    // variables. If we don't then every iteration of the loop will
+    // just overwrite the variables we created the first time
+    // through leaving us with a form with 3 copies of the same fields.
+
+    unset($fix__form_field);
+    unset($original_location__form_field);
+    unset($location__form_field);
+    unset($original_county__form_field);
+    unset($county__form_field);
+    unset($original_location_code__form_field);
+    unset($location_code__form_field);
+
+    unset($original);
+    unset($original_county);
+    unset($original_location_code);
   }
 
-  $form['ids'] = array(
-    '#type' => 'value',
-    '#value' => $ids,
-  );
   $form['update'] = array(
     '#type' => 'submit',
     '#value' => t('Update'),
@@ -381,57 +439,37 @@ function bg_fixup_locations_form() {
   return $form;
 }
 
-function bg_fixup_locations_form_submit($form, &$form_state) {
-  foreach ($form_state['values']['ids'] as $base) {
-    if ($form_state['values'][$base]['fix']) {
-      db_query("UPDATE {bgimage}
-        SET
-        location = '%s',
-        location_code = '%s',
-        county = '%s'
-        WHERE
-        ((county COLLATE utf8_bin LIKE '%USA%') OR (UPPER(county) LIKE '%CANADA%'))
-        AND location = '%s'
-        AND location_code = '%s'
-        AND county = '%s'
-        ", $form_state['values'][$base]['location'], $form_state['values'][$base]['location_code'], $form_state['values'][$base]['county'], $form_state['values'][$base]['original_location'], $form_state['values'][$base]['original_location_code'], $form_state['values'][$base]['original_county']
-      );
-    }
-  }
-}
-
 /**
- * Theme function for the location fixup form.
+ * Callback submission for bg_fixup_locations_form().
+ *
+ * @param $form
+ * @param $form_state
  */
-function theme_bg_fixup_locations_table(&$variables) {
-  $form = $variables['form'];
-  $table['#theme'] = 'table';
-  $table['#header'] = array(
-    t('Fix'),
-    t('Count'),
-    t('Original Location'),
-    t('Location'),
-    t('Original County'),
-    t('County'),
-    t('Original Location Code'),
-    t('Location Code'),
-  );
-  $rows = array();
-
-  foreach ($form['ids']['#value'] as $base) {
-    $rows[] = array(
-      drupal_render($form['table'][$base]['fix']),
-      $form[$base]['count']['#value'],
-      $form[$base]['original_location']['#value'],
-      drupal_render($form['table'][$base]['location']),
-      $form[$base]['original_county']['#value'],
-      drupal_render($form['table'][$base]['county']),
-      $form[$base]['original_location_code']['#value'],
-      drupal_render($form['table'][$base]['location_code']),
-    );
+function bg_fixup_locations_form_submit($form, &$form_state) {
+  if (!isset($form_state['values']['locations'])) {
+    return;
   }
-
-  $table['#rows'] = $rows;
-  $output = drupal_render($table);
-  return $output;
+  foreach ($form_state['values']['locations'] as $location) {
+    db_query("UPDATE {bgimage}
+      SET
+      location = ':location',
+      location_code = ':location_code',
+      county = ':county'
+      WHERE
+      ((county COLLATE utf8_bin LIKE '%USA%') OR (UPPER(county) LIKE '%CANADA%'))
+      AND location = ':original_location'
+      AND location_code = ':original_location_code'
+      AND county = ':original_county'
+      ",
+      array(
+        ':location' => $location['location'],
+        ':location_code' => $location['location_code'],
+        ':county_code' => $location['county'],
+        ':original_location' => $location['original_location'],
+        ':original_location_code' => $location['original_location_code'],
+        ':original_county' => $location['original_county'],
+      )
+    );
+    break;
+  }
 }
