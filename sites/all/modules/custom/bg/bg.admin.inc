@@ -470,6 +470,5 @@ function bg_fixup_locations_form_submit($form, &$form_state) {
         ':original_county' => $location['original_county'],
       )
     );
-    break;
   }
 }
