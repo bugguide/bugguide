@@ -470,5 +470,33 @@ function bg_fixup_locations_form_submit($form, &$form_state) {
         ':original_county' => $location['original_county'],
       )
     );
+
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'bgimage')
+      ->fieldCondition('field_bgimage_location', 'value', $location['original_location'], '=')
+      ->fieldCondition('field_bgimage_location_code', 'value', $location['original_location_code'], '=')
+      ->fieldCondition('field_bgimage_county', 'value', $location['original_county'], '=')
+      // Run the query as user 1.
+      ->addMetaData('account', user_load(1));
+
+    $result = $query->execute();
+    if (isset($result['node'])) {
+      $bgimage_items_nids = array_keys($result['node']);
+      $bgimage_nodes = entity_load('node', $bgimage_items_nids);
+      foreach ($bgimage_nodes as $bgimage_node) {
+        // If found county contains USA or CANADA then save the node with new
+        // location data.
+        if (isset($bgimage_node->field_bgimage_county[LANGUAGE_NONE][0]['value']) &&
+          (strpos($bgimage_node->field_bgimage_county[LANGUAGE_NONE][0]['value'], 'USA') !== FALSE ||
+            stripos($bgimage_node->field_bgimage_county[LANGUAGE_NONE][0]['value'], 'CANADA'))
+          ) {
+          $bgimage_node->field_bgimage_location[LANGUAGE_NONE][0]['value'] = $location['location'];
+          $bgimage_node->field_bgimage_location_code[LANGUAGE_NONE][0]['value'] = $location['location_code'];
+          $bgimage_node->field_bgimage_county[LANGUAGE_NONE][0]['value'] = $location['county'];
+          node_save($bgimage_node);
+        }
+      }
+    }
   }
 }
