@@ -446,33 +446,14 @@ function bg_fixup_locations_form() {
  *
  * @param $form
  * @param $form_state
+ *
+ * @throws \Exception
  */
 function bg_fixup_locations_form_submit($form, &$form_state) {
   if (!isset($form_state['values']['locations'])) {
     return;
   }
   foreach ($form_state['values']['locations'] as $location) {
-    db_query("UPDATE {bgimage}
-      SET
-      location = ':location',
-      location_code = ':location_code',
-      county = ':county'
-      WHERE
-      ((county COLLATE utf8_bin LIKE '%USA%') OR (UPPER(county) LIKE '%CANADA%'))
-      AND location = ':original_location'
-      AND location_code = ':original_location_code'
-      AND county = ':original_county'
-      ",
-      array(
-        ':location' => $location['location'],
-        ':location_code' => $location['location_code'],
-        ':county_code' => $location['county'],
-        ':original_location' => $location['original_location'],
-        ':original_location_code' => $location['original_location_code'],
-        ':original_county' => $location['original_county'],
-      )
-    );
-
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
       ->entityCondition('bundle', 'bgimage')
