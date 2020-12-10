@@ -96,9 +96,9 @@ function _bgpage_browse($field) {
       $title = _bg_get_title_classification($node);
       $output .= '<div class="card mb-3"><div class="card-header"><h2 class="card-header-title"><a href="' . url('node/' . $child_doc->entity_id) . '" title="' . $title . '">' . $title . ' <span class="icon"><span class="fa fa-angle-right" aria-hidden="true"></span></span></a></h2></div>';
       if (!empty($child_doc->matches)) {
-        $output .= '<div class="card-content p-2 bg-image-list"><ul class="columns is-mobile is-multiline">';
+        $output .= '<div class="card-content p-3 bg-image-list"><ul class="columns is-mobile is-multiline">';
         foreach ($child_doc->matches as $image_doc) {
-          $output .= '<li class="column m-0">' . $image_doc->ss_bgimage_thumbnail . '</li>';
+          $output .= '<li class="column is-narrow m-0">' . $image_doc->ss_bgimage_thumbnail . '</li>';
         }
         $output .= '</ul></div>';
       }
@@ -187,14 +187,14 @@ function _bgpage_images($field) {
       $output .= '<div class="card mb-3"><div class="card-header"><div class="card-header-title has-text-weight-normal is-block">' . implode(' &raquo; ', $breadcrumbs) .'</div></div>';
 
       // Render a list of images for this group.
-      $output .= '<div class="card-content p-2 bg-image-list"><ul class="columns is-mobile is-multiline">';
+      $output .= '<div class="card-content p-3 bg-image-list"><ul class="columns is-mobile is-multiline">';
       foreach ($docs as $doc) {
         if (isset($doc->ss_bgimage_thumbnail)) {
-          $output .= '<li class="column m-0">' . $doc->ss_bgimage_thumbnail . '</li>';
+          $output .= '<li class="column is-narrow m-0">' . $doc->ss_bgimage_thumbnail . '</li>';
         }
         else {
           // The image thumbnail has not been indexed by Solr. Fall back to MySQL.
-          $output .= '<li class="column m-0">' . bgimage_thumb_link(node_load($doc->entity_id)) . '</li>';
+          $output .= '<li class="column is-narrow m-0">' . bgimage_thumb_link(node_load($doc->entity_id)) . '</li>';
         }
       }
       $output .= '</ul></div></div>';
@@ -253,11 +253,11 @@ function bgpage_representative_images($field) {
     $output = '<div class="card mb-3"><div class="card-content p-2  bg-image-list"><ul class="columns is-mobile is-multiline">';
     foreach ($documents as $document) {
       if (isset($document->ss_bgimage_thumbnail)) {
-        $output .= '<li class="column m-0">' . $document->ss_bgimage_thumbnail . '</li>';
+        $output .= '<li class="column is-narrow m-0">' . $document->ss_bgimage_thumbnail . '</li>';
       }
       elseif (isset($document->entity_id)) {
         // The image thumbnail has not been indexed by Solr. Fall back to MySQL.
-        $output .= '<li class="column m-0">' . bgimage_thumb_link(node_load($document->entity_id)) . '</li>';
+        $output .= '<li class="column is-narrow m-0">' . bgimage_thumb_link(node_load($document->entity_id)) . '</li>';
       }
     }
     $output .= '</ul></div></div>';
