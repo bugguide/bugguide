@@ -193,245 +193,43 @@ n.title NOT REGEXP '88'"); // Skip the butterfly called the '88 Butterfly'.
 }
 
 /**
- * Menu callback.
- * Find images where county field erroneously contains USA or Canada.
- * Suggest corrected fields.
+ * Menu callback to find nodes that contains content error.
  *
- * @return $form
+ * Find images where county field erroneously contains USA or Canada.
+ * This is a form because originally we were working on a way to bulk
+ * correct these errors. However, currently it just lists links to affected images.
+ *
+ * @return mixed $form
  */
 function bg_fixup_locations_form() {
-  global $LOCATION_CODES;
+
+  $form['locations'] = array(
+    '#prefix' => '<div id="locations">',
+    '#suffix' => '</div>',
+    '#tree' => TRUE,
+    '#theme' => 'table',
+    '#header' => array(
+      t('Link'),
+      t('Location'),
+      t('County'),
+      t('Location Code'),
+    ),
+    '#rows' => array(),
+  );
 
   // In order to do a case-sensitive search on a column which is using
   // the utf8_general_ci (ci = case insensitive) collation, coerce
   // collation to utf8_bin first. Then we can select Foo, USA while
   // avoiding false matches like Dusachen.
-  $result = db_query("SELECT base, location, location_code, county, COUNT(*) AS count FROM {bgimage} WHERE ((county COLLATE utf8_bin LIKE '%USA%') OR (UPPER(county) LIKE '%CANADA%')) GROUP BY location ORDER BY RAND() LIMIT 10");
-  $ids = array();
+  $result = db_query("SELECT nid, location, location_code, county FROM {bgimage} WHERE (county COLLATE utf8_bin LIKE '%USA%') OR (UPPER(county) LIKE '%CANADA%') ORDER BY nid LIMIT 250 ");
 
-  foreach ($result as $location) {
-    // Unique identifier.
-    $base = $location->base;
-    $ids[] = $base;
-    // Number of records like this.
-    $count = $location->count;
-    // Original entry in location field.
-    $original = $location->location;
-    $original_location_code = $location->location_code;
-    $location_code = $location->location_code;
-    $original_county = $location->county;
-    $county = $location->county;
-    $location = $original;
-
-    // Remove USA or Canada from end of location.
-    if (bg_str_ends_with(strtoupper($location), ', USA')) {
-      $location = substr($location, 0, strlen($location) - 5);
-    }
-    if (bg_str_ends_with(strtoupper($location), ' USA')) {
-      $location = substr($location, 0, strlen($location) - 4);
-    }
-
-    if (bg_str_ends_with(strtoupper($location), ', CANADA')) {
-      $location = substr($location, 0, strlen($location) - 8);
-    }
-    if (bg_str_ends_with(strtoupper($location), ' CANADA')) {
-      $location = substr($location, 0, strlen($location) - 7);
-    }
-
-    // @see bg_globals.inc
-    // e.g., $LOCATION_CODES['AL'] = 'Alabama';
-    foreach ($LOCATION_CODES as $code => $name) {
-      if (bg_str_ends_with(strtoupper($location), ', '. strtoupper($name))) {
-        $location_code = $code;
-        $location = substr($location, 0, strlen($location) - strlen($name) - 2);
-        break;
-      }
-
-      if (bg_str_ends_with(strtoupper($location), ' ' . strtoupper($name))) {
-        $location_code = $code;
-        $location = substr($location, 0, strlen($location) - strlen($name) - 1);
-        break;
-      }
-
-      if (bg_str_ends_with(strtoupper($location), ", $code.")) {
-        $location_code = $code;
-        $location = substr($location, 0, strlen($location) - 5);
-        break;
-      }
-
-      if (bg_str_ends_with(strtoupper($location), " $code.")) {
-        $location_code = $code;
-        $location = substr($location, 0, strlen($location) - 4);
-        break;
-      }
-
-      if (bg_str_ends_with(strtoupper($location), ", $code")) {
-        $location_code = $code;
-        $location = substr($location, 0, strlen($location) - 4);
-        break;
-      }
-
-      if (bg_str_ends_with(strtoupper($location), ",$code")) {
-        $location_code = $code;
-        $location = substr($location, 0, strlen($location) - 3);
-        break;
-      }
-
-      if (bg_str_ends_with(strtoupper($location), " $code")) {
-        $location_code = $code;
-        $location = substr($location, 0, strlen($location) - 3);
-        break;
-      }
-
-      if ((strtoupper($location) == strtoupper($name)) ||
-          (strtoupper($location) == $code)) {
-        $location_code = $code;
-        $location = '';
-        break;
-      }
-    }
-
-    if (bg_str_ends_with(strtoupper($location), ' COUNTY')) {
-      $lastComma = strrpos($location, ',');
-      if ($lastComma) {
-        $lastComma++;
-      }
-
-      $county = ltrim(substr($location, $lastComma, strlen($location) - 7 - $lastComma));
-
-      if ($lastComma) {
-        $location = trim(substr($location, 0, $lastComma - 1));
-      }
-      else {
-        $location = '';
-      }
-    }
-
-    if (bg_str_ends_with(strtoupper($location), ' CO.')) {
-      $lastComma = strrpos($location, ',');
-      if ($lastComma) {
-        $lastComma++;
-      }
-
-      $county = ltrim(substr($location, $lastComma, strlen($location) - 4 - $lastComma));
-
-      if ($lastComma) {
-        $location = trim(substr($location, 0, $lastComma - 1));
-      }
-      else {
-        $location = '';
-      }
-    }
-
-    $form['#tree'] = TRUE;
-    $form['table'] = array();
-    $form['table']['#theme'] = 'bg_fixup_locations_table';
-    $form['table'][$base] = array();
-    $form['table'][$base]['fix'] = array(
-      '#type' => 'checkbox',
-      '#default_value' => $location_code && ($county || $location) ? 1 : 0,
-      '#options' => array(
-        '0' => 0,
-        '1' => 1,
-      ),
-    );
-    $form['table'][$base]['original_location'] = array(
-      '#type' => 'value',
-      '#value' => $original,
-    );
-    $form['table'][$base]['location'] = array(
-      '#type' => 'textfield',
-      '#default_value' => $location,
-      '#description' => t('Proposed Location'),
-    );
-    $form['table'][$base]['original_county'] = array(
-      '#type' => 'value',
-      '#value' => $original_county,
-    );
-    $form['table'][$base]['county'] = array(
-      '#type' => 'textfield',
-      '#default_value' => $county,
-      '#description' => t('Proposed County'),
-    );
-    $form['table'][$base]['original_location_code'] = array(
-      '#type' => 'value',
-      '#value' => $original_location_code,
-      '#size' => 4,
-    );
-    $form['table'][$base]['location_code'] = array(
-      '#type' => 'textfield',
-      '#default_value' => $location_code,
-      '#size' => 4,
-    );
-    $form['table'][$base]['count'] = array(
-      '#type' => 'value',
-      '#value' => $count,
+  foreach ($result as $key => $record) {
+    $form['locations']['#rows'][] = array(
+      'link' => l($record->nid, 'node/' . $record->nid),
+      'location' => $record->location,
+      'county' => $record->county,
+      'location_code' => $record->location_code,
     );
   }
-
-  $form['ids'] = array(
-    '#type' => 'value',
-    '#value' => $ids,
-  );
-  $form['update'] = array(
-    '#type' => 'submit',
-    '#value' => t('Update'),
-  );
-
   return $form;
-}
-
-function bg_fixup_locations_form_submit($form, &$form_state) {
-  foreach ($form_state['values']['ids'] as $base) {
-    if ($form_state['values'][$base]['fix']) {
-      db_query("UPDATE {bgimage}
-        SET
-        location = '%s',
-        location_code = '%s',
-        county = '%s'
-        WHERE
-        ((county COLLATE utf8_bin LIKE '%USA%') OR (UPPER(county) LIKE '%CANADA%'))
-        AND location = '%s'
-        AND location_code = '%s'
-        AND county = '%s'
-        ", $form_state['values'][$base]['location'], $form_state['values'][$base]['location_code'], $form_state['values'][$base]['county'], $form_state['values'][$base]['original_location'], $form_state['values'][$base]['original_location_code'], $form_state['values'][$base]['original_county']
-      );
-    }
-  }
-}
-
-/**
- * Theme function for the location fixup form.
- */
-function theme_bg_fixup_locations_table(&$variables) {
-  $form = $variables['form'];
-  $table['#theme'] = 'table';
-  $table['#header'] = array(
-    t('Fix'),
-    t('Count'),
-    t('Original Location'),
-    t('Location'),
-    t('Original County'),
-    t('County'),
-    t('Original Location Code'),
-    t('Location Code'),
-  );
-  $rows = array();
-
-  foreach ($form['ids']['#value'] as $base) {
-    $rows[] = array(
-      drupal_render($form['table'][$base]['fix']),
-      $form[$base]['count']['#value'],
-      $form[$base]['original_location']['#value'],
-      drupal_render($form['table'][$base]['location']),
-      $form[$base]['original_county']['#value'],
-      drupal_render($form['table'][$base]['county']),
-      $form[$base]['original_location_code']['#value'],
-      drupal_render($form['table'][$base]['location_code']),
-    );
-  }
-
-  $table['#rows'] = $rows;
-  $output = drupal_render($table);
-  return $output;
 }
