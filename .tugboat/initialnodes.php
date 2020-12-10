@@ -60,7 +60,7 @@ Yes, we know. Not all insects are '<a href='/node/view/64'>true bugs</a>'. Spide
 
 1. bug -- general term for any insect or similar creeping or crawling invertebrate
 
-We think you'll agree that insects, spiders, and other things you'll find on this web site fit that definition. Besides, BugGuide.Net is short and catchy!";
+We think you'll agree that insects, spiders, and other things you'll find on this web site fit that definition.";
 
 $node->status = 1;   // (1 or 0): published or unpublished
 $node->promote = 0;  // (1 or 0): promoted to front page or not
