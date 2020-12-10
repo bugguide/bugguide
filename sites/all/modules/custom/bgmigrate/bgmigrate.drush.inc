@@ -56,7 +56,7 @@ function drush_bgmigrate_users() {
     $contact_info = isset($data['contact']) ? $data['contact'] : '';
     if ($contact_info) {
       $account->field_user_contact_info[LANGUAGE_NONE][0]['value'] = $contact_info;
-      $account->field_user_contact_info[LANGUAGE_NONE][0]['format'] = 1;
+      $account->field_user_contact_info[LANGUAGE_NONE][0]['format'] = 'f';
     }
     
     // location
@@ -69,7 +69,7 @@ function drush_bgmigrate_users() {
     $biography = isset($data['biography']) ? $data['biography'] : '';
     if ($biography) {
       $account->field_user_biography[LANGUAGE_NONE][0]['value'] = $biography;
-      $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 1;
+      $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 'f';
     }
     
     // license
@@ -86,7 +86,7 @@ function drush_bgmigrate_users() {
     $license_details = isset($data['license_details']) ? $data['license_details'] : '';
     if ($license_details) {
       $account->field_user_content_license_add[LANGUAGE_NONE][0]['value'] = $license_details;
-      $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 1;
+      $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 'f';
     }
     
     // subscriptions_auto
