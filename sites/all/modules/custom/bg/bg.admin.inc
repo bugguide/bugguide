@@ -193,12 +193,13 @@ n.title NOT REGEXP '88'"); // Skip the butterfly called the '88 Butterfly'.
 }
 
 /**
- * Menu callback.
+ * Menu callback to find nodes that contains content error.
+ *
  * Find images where county field erroneously contains USA or Canada.
  * This is a form because originally we were working on a way to bulk
  * correct these errors. However, currently it just lists links to affected images.
  *
- * @return $form
+ * @return mixed $form
  */
 function bg_fixup_locations_form() {
 
@@ -224,29 +225,11 @@ function bg_fixup_locations_form() {
 
   foreach ($result as $key => $record) {
     $form['locations']['#rows'][] = array(
-      'link' => l($record->nid, "node/" . $record->nid),
+      'link' => l($record->nid, 'node/' . $record->nid),
       'location' => $record->location,
       'county' => $record->county,
       'location_code' => $record->location_code,
     );
-
   }
-
   return $form;
-}
-
-/**
- * Callback submission for bg_fixup_locations_form().
- *
- * Get locations data and save them in bgimage table and content type.
- *
- * @param $form
- * @param $form_state
- *
- * @throws \Exception
- */
-function bg_fixup_locations_form_submit($form, &$form_state) {
-  // This space intentionally left blank.
-  // Because bg_fixup_locations_form() does not have a Submit button.
-  // See https://github.com/bugguide/bugguide/issues/75
 }
