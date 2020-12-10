@@ -157,7 +157,7 @@ function bgimage_ds_custom_fields_info() {
   $ds_field->properties = array(
     'code' => array(
       'value' => '<hr>',
-      'format' => '2',
+      'format' => 'u',
     ),
     'use_token' => 0,
   );
@@ -175,7 +175,7 @@ function bgimage_ds_custom_fields_info() {
   $ds_field->properties = array(
     'code' => array(
       'value' => '<hr>',
-      'format' => '2',
+      'format' => 'u',
     ),
     'use_token' => 0,
   );
@@ -193,7 +193,7 @@ function bgimage_ds_custom_fields_info() {
   $ds_field->properties = array(
     'code' => array(
       'value' => '<hr>',
-      'format' => '2',
+      'format' => 'u',
     ),
     'use_token' => 0,
   );
@@ -211,7 +211,7 @@ function bgimage_ds_custom_fields_info() {
   $ds_field->properties = array(
     'code' => array(
       'value' => '[node:field_bgimage_location], [node:field_bgimage_county], [node:field_bgimage_location_code]',
-      'format' => '2',
+      'format' => 'f',
     ),
     'use_token' => 1,
   );

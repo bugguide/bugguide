@@ -10,10 +10,10 @@
 function bg_filter_default_formats() {
   $formats = array();
 
-  // Exported format: Filtered HTML numeric.
+  // Exported format: Filtered HTML
   $formats[1] = array(
-    'format' => 1,
-    'name' => 'Filtered HTML numeric',
+    'format' => 'f',
+    'name' => 'Filtered HTML',
     'cache' => 1,
     'status' => 1,
     'weight' => -10,
@@ -190,10 +190,10 @@ function bg_filter_default_formats() {
     ),
   );
 
-  // Exported format: Full HTML numeric.
+  // Exported format: Full HTML
   $formats[2] = array(
-    'format' => 2,
-    'name' => 'Full HTML numeric',
+    'format' => 'u',
+    'name' => 'Full HTML',
     'cache' => 1,
     'status' => 1,
     'weight' => -9,
