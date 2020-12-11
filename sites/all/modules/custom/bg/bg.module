@@ -43,7 +43,7 @@ function bg_menu() {
     'title' => 'Utilities',
     'description' => 'BugGuide system utilities',
     'page callback' => 'bg_utilities',
-    'access arguments' => array('administer BG utilities'),
+    'access arguments' => array('administer bg utilities'),
     'expanded' => 1,
     'file' => 'bg.admin.inc',
   );
@@ -51,7 +51,7 @@ function bg_menu() {
     'title' => 'Show orphaned nodes',
     'description' => 'Shows pages, images, links, and references with no parent',
     'page callback' => 'bg_orphans',
-    'access arguments' => array('administer BG utilities'),
+    'access arguments' => array('administer bg utilities'),
     'file' => 'bg.admin.inc',
   );
   $items['bg/badlocations'] = array(
@@ -59,7 +59,23 @@ function bg_menu() {
     'description' => 'Shows images that have country names in county field',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('bg_fixup_locations_form'),
-    'access arguments' => array('administer BG utilities'),
+    'access arguments' => array('administer bg utilities'),
+    'file' => 'bg.admin.inc',
+  );
+
+  $items['bg/lepstage'] = array(
+    'title' => 'Show stageless Leps',
+    'description' => 'Shows Lepidoptera that have not been marked adult or immature',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('bg_stageless_leps'),
+    'access arguments' => array('administer bg utilities'),
+    'file' => 'bg.admin.inc',
+  );
+  $items['bg/blankhodges'] = array(
+    'title' => 'Show Lepidopterans without Hodges #',
+    'description' => 'Shows Lepidoptera that have not been assigned a Hodges number',
+    'page callback' => 'bugguide_blank_hodges',
+    'access arguments' => array('administer bg utilities'),
     'file' => 'bg.admin.inc',
   );
 

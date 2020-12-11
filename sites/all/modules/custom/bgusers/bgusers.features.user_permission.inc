@@ -1360,6 +1360,38 @@ function bgusers_user_default_permissions() {
     'module' => 'panels',
   );
 
+  // Exported permission: 'use text format 1'.
+  $permissions['use text format 1'] = array(
+    'name' => 'use text format 1',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+      'contributing editor' => 'contributing editor',
+      'expert' => 'expert',
+      'spam zapper' => 'spam zapper',
+    ),
+    'module' => 'filter',
+  );
+
+  // Exported permission: 'use text format 2'.
+  $permissions['use text format 2'] = array(
+    'name' => 'use text format 2',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'filter',
+  );
+
+  // Exported permission: 'use text format 3'.
+  $permissions['use text format 3'] = array(
+    'name' => 'use text format 3',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'filter',
+  );
+
   // Exported permission: 'use text format f'.
   $permissions['use text format f'] = array(
     'name' => 'use text format f',
@@ -1383,20 +1415,10 @@ function bgusers_user_default_permissions() {
     'module' => 'filter',
   );
 
-  // Exported permission: 'use text format php_code'.
-  $permissions['use text format php_code'] = array(
-    'name' => 'use text format php_code',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'filter',
-  );
-
   // Exported permission: 'use text format xbbcode'.
   $permissions['use text format xbbcode'] = array(
     'name' => 'use text format xbbcode',
-    'roles' => array(
-    ),
+    'roles' => array(),
     'module' => 'filter',
   );
 
