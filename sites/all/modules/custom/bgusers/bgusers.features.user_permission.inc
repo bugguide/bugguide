@@ -201,7 +201,7 @@ function bgusers_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
     ),
-    'module' => 'bgstat',
+    'module' => 'bg',
   );
 
   // Exported permission: 'administer blocks'.
