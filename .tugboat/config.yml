@@ -91,6 +91,16 @@ services:
         - drush -r "${DOCROOT}" sqlq "UPDATE block SET status = 0 WHERE delta = 'login' AND theme REGEXP '^bulma'"
         - drush -r "${DOCROOT}" sqlq "UPDATE block SET status = 0 WHERE delta = 'navigation' AND theme REGEXP '^bulma'"
         - drush -r "${DOCROOT}" sqlq "UPDATE block SET status = 0 WHERE delta = 'bg_visual_guide' AND theme NOT REGEXP '^bulma'"
+        - # xbbcode settings are not exportable; set them here
+        - drush -r "${DOCROOT}" sqlq "UPDATE xbbcode_handler SET enabled = '0';"
+        - drush -r "${DOCROOT}" sqlq "UPDATE xbbcode_handler SET enabled = '1' WHERE name = 'b' AND format = 'GLOBAL';"
+        - drush -r "${DOCROOT}" sqlq "UPDATE xbbcode_handler SET enabled = '1' WHERE name = 'color' AND format = 'GLOBAL';"
+        - drush -r "${DOCROOT}" sqlq "UPDATE xbbcode_handler SET enabled = '1' WHERE name = 'i' AND format = 'GLOBAL';"
+        - drush -r "${DOCROOT}" sqlq "UPDATE xbbcode_handler SET enabled = '1' WHERE name = 'list' AND format = 'GLOBAL';"
+        - drush -r "${DOCROOT}" sqlq "UPDATE xbbcode_handler SET enabled = '1' WHERE name = 'u' AND format = 'GLOBAL';"
+        - drush -r "${DOCROOT}" sqlq "UPDATE xbbcode_handler SET enabled = '1' WHERE name = 'url' AND format = 'GLOBAL';"
+        - drush -r "${DOCROOT}" sqlq "UPDATE xbbcode_handler SET enabled = '1' WHERE name = 'abbr' AND format = 'GLOBAL';"
+        - drush -r "${DOCROOT}" sqlq "UPDATE xbbcode_handler SET enabled = '1' WHERE name = 'youtube' AND format = 'GLOBAL';"
         - # Seed initial nodes and start tree.
         - drush -r "${DOCROOT}" scr "${DOCROOT}/.tugboat/initialnodes.php"
 

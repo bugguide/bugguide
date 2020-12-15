@@ -55,7 +55,7 @@ function _bgpage_browse($field) {
 
     // Configure query.
     $query->addFilterSubQuery($immediate_children);
-    $query->addParam('fl', 'entity_id,label,sm_field_scientific_name');
+    $query->addParam('fl', 'entity_id,label,sm_field_scientific_name,sm_field_common_name,its_field_taxon');
     $sort_field = 'sort_label';
     $sort_direction = 'asc';
     $query->setAvailableSort($sort_field, array(
@@ -91,12 +91,10 @@ function _bgpage_browse($field) {
 
     // Render results.
     foreach ($children_docs as $child_doc) {
-
-      $name = $child_doc->label;
-      if (!empty($child_doc->sm_field_scientific_name)) {
-        $name .= ' - ' . $child_doc->sm_field_scientific_name[0];
-      }
-      $output .= '<div class="card mb-3"><div class="card-header"><h2 class="card-header-title"><a href="' . url('node/' . $child_doc->entity_id) . '" title="' . $child_doc->label . '">' . $name . ' <span class="icon"><span class="fa fa-angle-right" aria-hidden="true"></span></span></a></h2></div>';
+      $node = node_load($child_doc->entity_id);
+      // @TODO: Work on title classification by using apache solr query instead.
+      $title = _bg_get_title_classification($node);
+      $output .= '<div class="card mb-3"><div class="card-header"><h2 class="card-header-title"><a href="' . url('node/' . $child_doc->entity_id) . '" title="' . $title . '">' . $title . ' <span class="icon"><span class="fa fa-angle-right" aria-hidden="true"></span></span></a></h2></div>';
       if (!empty($child_doc->matches)) {
         $output .= '<div class="card-content p-3 bg-image-list"><ul class="columns is-mobile is-multiline">';
         foreach ($child_doc->matches as $image_doc) {
@@ -193,7 +191,7 @@ function _bgpage_images($field) {
       foreach ($docs as $doc) {
         if (isset($doc->ss_bgimage_thumbnail)) {
           $output .= '<li class="column is-narrow m-0">' . $doc->ss_bgimage_thumbnail . '</li>';
-        } 
+        }
         else {
           // The image thumbnail has not been indexed by Solr. Fall back to MySQL.
           $output .= '<li class="column is-narrow m-0">' . bgimage_thumb_link(node_load($doc->entity_id)) . '</li>';
@@ -255,7 +253,7 @@ function bgpage_representative_images($field) {
     $output = '<div class="card mb-3"><div class="card-content p-2  bg-image-list"><ul class="columns is-mobile is-multiline">';
     foreach ($documents as $document) {
       if (isset($document->ss_bgimage_thumbnail)) {
-        $output .= '<li class="column is-narrow m-0">' . $document->ss_bgimage_thumbnail . '</li>';    
+        $output .= '<li class="column is-narrow m-0">' . $document->ss_bgimage_thumbnail . '</li>';
       }
       elseif (isset($document->entity_id)) {
         // The image thumbnail has not been indexed by Solr. Fall back to MySQL.
