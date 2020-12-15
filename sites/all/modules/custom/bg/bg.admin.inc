@@ -164,9 +164,11 @@ function bg_stageless_leps_submit($form, &$form_state) {
 
 /**
  * Menu callback.
+ *
  * Find nodes of type bgpage in Lepidoptera without a Hodges number
  *
- * @return HTML
+ * @return string
+ *   HTML list of nodes of type bgpage in Lepidoptera without a Hodges number.
  */
 function bg_blank_hodges() {
   $output = '<p>' . t('The following are Lepidoptera with Hodges numbers in the title but the submitter forgot to fill out Hodges number field.');
@@ -183,7 +185,7 @@ n.type = 'bgpage' AND
 (p.field_parent_value LIKE '%,57' OR p.field_parent_value LIKE '%,57,%') AND
 t.field_taxon_value = 3400 AND
 n.title REGEXP '[0-9][0-9]' AND
-n.title NOT REGEXP '88'"); // Skip the butterfly called the '88 Butterfly'.
+n.title NOT REGEXP '88'"); ///< Skip the butterfly called the '88 Butterfly'.
 
   foreach ($result as $bgpage) {
     $node = node_load($bgpage->nid);
