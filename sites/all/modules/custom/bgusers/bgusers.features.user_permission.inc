@@ -1364,12 +1364,8 @@ function bgusers_user_default_permissions() {
   $permissions['use text format 1'] = array(
     'name' => 'use text format 1',
     'roles' => array(
-      'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
-      'contributing editor' => 'contributing editor',
-      'expert' => 'expert',
-      'spam zapper' => 'spam zapper',
     ),
     'module' => 'filter',
   );
