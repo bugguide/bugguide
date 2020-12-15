@@ -1360,9 +1360,9 @@ function bgusers_user_default_permissions() {
     'module' => 'panels',
   );
 
-  // Exported permission: 'use text format 1'.
-  $permissions['use text format 1'] = array(
-    'name' => 'use text format 1',
+  // Exported permission: 'use text format f'.
+  $permissions['use text format f'] = array(
+    'name' => 'use text format f',
     'roles' => array(
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
@@ -1370,18 +1370,18 @@ function bgusers_user_default_permissions() {
     'module' => 'filter',
   );
 
-  // Exported permission: 'use text format 2'.
-  $permissions['use text format 2'] = array(
-    'name' => 'use text format 2',
+  // Exported permission: 'use text format u'.
+  $permissions['use text format u'] = array(
+    'name' => 'use text format u',
     'roles' => array(
       'administrator' => 'administrator',
     ),
     'module' => 'filter',
   );
 
-  // Exported permission: 'use text format 3'.
-  $permissions['use text format 3'] = array(
-    'name' => 'use text format 3',
+  // Exported permission: 'use text format php_code'.
+  $permissions['use text format php_code'] = array(
+    'name' => 'use text format php_code',
     'roles' => array(
       'administrator' => 'administrator',
     ),
