@@ -18,15 +18,35 @@ function bglink_ds_field_settings_info() {
   $ds_fieldsetting->bundle = 'bglink';
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
-    'bgsubscription' => array(
-      'weight' => '5',
+    'title' => array(
+      'weight' => '0',
       'label' => 'hidden',
       'format' => 'default',
     ),
-    'bgpage_citations' => array(
-      'weight' => '1',
+    'links' => array(
+      'weight' => '0',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'comments' => array(
+      'weight' => '5',
       'label' => 'above',
       'format' => 'default',
+    ),
+    'author' => array(
+      'weight' => '2',
+      'label' => 'hidden',
+      'format' => 'author_linked',
+    ),
+    'post_date' => array(
+      'weight' => '3',
+      'label' => 'hidden',
+      'format' => 'ds_post_date_bg_short_F_j_Y',
+    ),
+    'changed_date' => array(
+      'weight' => '4',
+      'label' => 'hidden',
+      'format' => 'ds_post_date_medium',
     ),
   );
   $export['node|bglink|default'] = $ds_fieldsetting;
@@ -51,18 +71,24 @@ function bglink_ds_layout_settings_info() {
     'regions' => array(
       'ds_content' => array(
         0 => 'body',
-        1 => 'bgpage_citations',
-        2 => 'field_bglink_link',
-        3 => 'field_tags',
-        4 => 'bgsubscription',
+        1 => 'links',
+        2 => 'title',
+        3 => 'field_bglink_link',
+        4 => 'author',
+        5 => 'post_date',
+        6 => 'changed_date',
+        7 => 'comments',
       ),
     ),
     'fields' => array(
       'body' => 'ds_content',
-      'bgpage_citations' => 'ds_content',
+      'links' => 'ds_content',
+      'title' => 'ds_content',
       'field_bglink_link' => 'ds_content',
-      'field_tags' => 'ds_content',
-      'bgsubscription' => 'ds_content',
+      'author' => 'ds_content',
+      'post_date' => 'ds_content',
+      'changed_date' => 'ds_content',
+      'comments' => 'ds_content',
     ),
     'classes' => array(),
     'wrappers' => array(

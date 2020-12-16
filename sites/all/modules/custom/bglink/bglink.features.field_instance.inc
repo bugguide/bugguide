@@ -109,7 +109,7 @@ function bglink_field_default_field_instances() {
           'custom_title' => '',
         ),
         'type' => 'link_default',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -169,10 +169,9 @@ function bglink_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
+        'type' => 'hidden',
+        'weight' => 28,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -249,16 +248,9 @@ function bglink_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'editablefields',
-        'settings' => array(
-          'click_to_edit' => 1,
-          'click_to_edit_style' => 'button',
-          'empty_text' => '',
-          'fallback_format' => 'taxonomy_term_reference_link',
-          'fallback_settings' => array(),
-        ),
-        'type' => 'editable',
-        'weight' => 3,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 29,
       ),
       'homepage' => array(
         'label' => 'above',

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * bglink.views_default.inc
@@ -30,27 +31,91 @@ function bglink_views_default_views() {
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '25';
-  $handler->display->display_options['style_plugin'] = 'table';
-  /* Field: Content: Nid */
-  $handler->display->display_options['fields']['nid']['id'] = 'nid';
-  $handler->display->display_options['fields']['nid']['table'] = 'node';
-  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Relationship: Content: Content author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['required'] = TRUE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
   /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  /* Field: Content: Add comment link */
+  $handler->display->display_options['fields']['comments_link']['id'] = 'comments_link';
+  $handler->display->display_options['fields']['comments_link']['table'] = 'node';
+  $handler->display->display_options['fields']['comments_link']['field'] = 'comments_link';
+  $handler->display->display_options['fields']['comments_link']['label'] = '';
+  $handler->display->display_options['fields']['comments_link']['element_label_colon'] = FALSE;
+  /* Field: Content: Author uid */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'node';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['label'] = '';
+  $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
+  /* Field: Content: Comment count */
+  $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
+  $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
+  $handler->display->display_options['fields']['comment_count']['label'] = '';
+  $handler->display->display_options['fields']['comment_count']['element_label_colon'] = FALSE;
+  /* Field: Content: Link to content */
+  $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
+  $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['view_node']['field'] = 'view_node';
+  $handler->display->display_options['fields']['view_node']['label'] = '';
+  $handler->display->display_options['fields']['view_node']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['view_node']['text'] = 'Details';
+  /* Field: Content: Post date */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = '';
+  $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['created']['date_format'] = 'bg_short_F_j_Y';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'bg_short_F_j_Y';
+  /* Field: Content: Author */
+  $handler->display->display_options['fields']['field_book_reference_author']['id'] = 'field_book_reference_author';
+  $handler->display->display_options['fields']['field_book_reference_author']['table'] = 'field_data_field_book_reference_author';
+  $handler->display->display_options['fields']['field_book_reference_author']['field'] = 'field_book_reference_author';
+  $handler->display->display_options['fields']['field_book_reference_author']['label'] = '';
+  $handler->display->display_options['fields']['field_book_reference_author']['element_label_colon'] = FALSE;
+  /* Field: Content: Link */
+  $handler->display->display_options['fields']['field_bglink_link']['id'] = 'field_bglink_link';
+  $handler->display->display_options['fields']['field_bglink_link']['table'] = 'field_data_field_bglink_link';
+  $handler->display->display_options['fields']['field_bglink_link']['field'] = 'field_bglink_link';
+  $handler->display->display_options['fields']['field_bglink_link']['label'] = '';
+  $handler->display->display_options['fields']['field_bglink_link']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_bglink_link']['alter']['text'] = '<a href="[field_bglink_link]">Visit</a>';
+  $handler->display->display_options['fields']['field_bglink_link']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_bglink_link']['click_sort_column'] = 'url';
+  $handler->display->display_options['fields']['field_bglink_link']['type'] = 'link_plain';
+  $handler->display->display_options['fields']['field_bglink_link']['settings'] = array(
+    'custom_title' => '',
+  );
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filter criterion: Content: Published */
+  /* Filter criterion: Content: Published status */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
