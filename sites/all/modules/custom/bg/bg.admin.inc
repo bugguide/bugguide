@@ -23,7 +23,9 @@ function bg_utilities() {
  * Show orphaned nodes; i.e., nodes whose parent has been deleted.
  */
 function bg_orphans() {
-  $output = '';
+  $output = '<div class="content">';
+
+  $bgimage_check = array();
 
   // Create array of immediate parents for each bgpage node.
   $result = db_query("SELECT n.nid, p.field_parent_value FROM {field_data_field_parent} p JOIN {node} n ON p.revision_id = n.vid WHERE n.type = 'bgpage' AND p.deleted = 0");
@@ -60,32 +62,35 @@ function bg_orphans() {
     foreach ($parents as $nid) {
       $parent = isset($bgpages[$nid]) ? $bgpages[$nid] : NULL;
       if (!$parent && !isset($parentless_but_ok[$nid])) {
-        $output .= "<ul><li>$node->bundle ";
-        $output .= l($node->nid . ' ' . t($node->title), "node/$node->nid");
-        $output .= " has missing parent ";
-        $output .= " $nid" . ' ' . $node->title;
-        $output .= "</li></ul>\n";
+        $bgimage_html = "$node->bundle";
+        $bgimage_html .= l($node->nid . ' ' . t($node->title), "node/$node->nid");
+        $bgimage_html .= " has missing parent ";
+        $bgimage_html .= " $nid" . ' ' . $node->title;
+        $bgimage_check[] = $bgimage_html;
       }
       else {
         if (isset($child) && ($child->last_parent != $nid)) {
-          $output .= "<ul><li>$node->bundle ";
-          $output .= l($node->nid . ' ' . t($node->title), "node/$node->nid");
-          $output .= " has path problem ";
-          $output .= " $child->nid's parent $nid != $child->last_parent";
-          $output .= "</li></ul>\n";
+          $bgimage_html = "$node->bundle";
+          $bgimage_html .= l($node->nid . ' ' . t($node->title), "node/$node->nid");
+          $bgimage_html .= " has path problem ";
+          $bgimage_html .= " $child->nid's parent $nid != $child->last_parent";
+          $bgimage_check[] = $bgimage_html;
         }
         $child = $parent;
       }
     }
     $counter++;
   }
-  $output .= '<p>';
-  $output .= 'Checked ' . $counter . ' nodes.';
-  $output .= '<p>';
+  $output .= theme('item_list', array('items' => $bgimage_check));
+  $output .= 'Checked <b>' . $counter . '</b> nodes.';
+  $output .= '<p><p>';
   $output .= 'The following nodes are orphaned purposely: ';
+  $orphaned_purposely = array();
   foreach ($parentless_but_ok as $nid => $title) {
-    $output .= '<p>' . l($title, "node/$nid");
+    $orphaned_purposely[] = l($title, "node/$nid");
   }
+  $output .= theme('item_list', array('items' => $orphaned_purposely));
+  $output .= '</div>';
   return $output;
 }
 
