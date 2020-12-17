@@ -25,37 +25,6 @@ function bugguide_theme() {
 }
 
 /**
- * Implements hook_menu().
- */
-function bugguide_menu() {
-  $items['bugguide'] = array(
-    'title' => 'Utilities',
-    'description' => 'BugGuide system utilities',
-    'page callback' => 'bugguide_utilities',
-    'access arguments' => array('administer BG utilities'),
-    'expanded' => 1,
-    'file' => 'bugguide.admin.inc',
-  );
-  $items['bugguide/lepstage'] = array(
-    'title' => 'Show stageless Leps',
-    'description' => 'Shows Lepidoptera that have not been marked adult or immature',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('bg_stageless_leps'),
-    'access arguments' => array('administer BG utilities'),
-    'file' => 'bg.admin.inc',
-  );
-  $items['bugguide/blankhodges'] = array(
-    'title' => 'Show Lepidopterans without Hodges #',
-    'description' => 'Shows Lepidoptera that have not been assigned a Hodges number',
-    'page callback' => 'bugguide_blank_hodges',
-    'access arguments' => array('administer BG utilities'),
-    'file' => 'bugguide.admin.inc',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_block_info().
  */
 function bugguide_block_info() {

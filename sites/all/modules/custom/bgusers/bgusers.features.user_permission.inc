@@ -1388,11 +1388,33 @@ function bgusers_user_default_permissions() {
     'module' => 'filter',
   );
 
+  // Exported permission: 'use text format f'.
+  $permissions['use text format f'] = array(
+    'name' => 'use text format f',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+      'contributing editor' => 'contributing editor',
+      'expert' => 'expert',
+      'spam zapper' => 'spam zapper',
+    ),
+    'module' => 'filter',
+  );
+
+  // Exported permission: 'use text format u'.
+  $permissions['use text format u'] = array(
+    'name' => 'use text format u',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'filter',
+  );
+
   // Exported permission: 'use text format xbbcode'.
   $permissions['use text format xbbcode'] = array(
     'name' => 'use text format xbbcode',
-    'roles' => array(
-    ),
+    'roles' => array(),
     'module' => 'filter',
   );
 
