@@ -9,7 +9,7 @@
  * Menu callback
  */
 function bg_utilities() {
-  $output .= '<h1>' . t('System Utilities') . '</h1>';
+  $output = '<h1>' . t('System Utilities') . '</h1>';
   $output .= '<p>' . t('These are utilities to help maintain the site.');
   $output .= '<p>' . t('<strong>Show Orphaned Nodes</strong> finds nodes whose parent path is broken or missing.');
   $output .= '<p>' . t('<strong>Show Stageless Leps</strong> finds Lepidoptera where neither adult nor immature was checked.');
