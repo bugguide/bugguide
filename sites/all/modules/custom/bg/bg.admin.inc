@@ -9,7 +9,7 @@
  * Menu callback
  */
 function bg_utilities() {
-  $output .= '<h1>' . t('System Utilities') . '</h1>';
+  $output = '<h1>' . t('System Utilities') . '</h1>';
   $output .= '<p>' . t('These are utilities to help maintain the site.');
   $output .= '<p>' . t('<strong>Show Orphaned Nodes</strong> finds nodes whose parent path is broken or missing.');
   $output .= '<p>' . t('<strong>Show Stageless Leps</strong> finds Lepidoptera where neither adult nor immature was checked.');
@@ -169,9 +169,11 @@ function bg_stageless_leps_submit($form, &$form_state) {
 
 /**
  * Menu callback.
+ *
  * Find nodes of type bgpage in Lepidoptera without a Hodges number
  *
- * @return HTML
+ * @return string
+ *   HTML list of nodes of type bgpage in Lepidoptera without a Hodges number.
  */
 function bg_blank_hodges() {
   $output = '<p>' . t('The following are Lepidoptera with Hodges numbers in the title but the submitter forgot to fill out Hodges number field.');
@@ -188,7 +190,7 @@ n.type = 'bgpage' AND
 (p.field_parent_value LIKE '%,57' OR p.field_parent_value LIKE '%,57,%') AND
 t.field_taxon_value = 3400 AND
 n.title REGEXP '[0-9][0-9]' AND
-n.title NOT REGEXP '88'"); // Skip the butterfly called the '88 Butterfly'.
+n.title NOT REGEXP '88'"); ///< Skip the butterfly called the '88 Butterfly'.
 
   foreach ($result as $bgpage) {
     $node = node_load($bgpage->nid);
