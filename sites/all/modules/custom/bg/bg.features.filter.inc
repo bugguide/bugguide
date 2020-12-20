@@ -19,12 +19,12 @@ function bg_filter_default_formats() {
     'weight' => -1,
     'filters' => array(
       'bg_list' => array(
-        'weight' => 0,
+        'weight' => 10,
         'status' => 1,
         'settings' => array(),
       ),
       'bg_thumb' => array(
-        'weight' => 0,
+        'weight' => 20,
         'status' => 1,
         'settings' => array(),
       ),
@@ -36,7 +36,7 @@ function bg_filter_default_formats() {
         ),
       ),
       'xbbcode' => array(
-        'weight' => 0,
+        'weight' => 5,
         'status' => 1,
         'settings' => array(
           'autoclose' => 0,
@@ -176,7 +176,7 @@ function bg_filter_default_formats() {
         ),
       ),
       'filter_html' => array(
-        'weight' => 1,
+        'weight' => 15,
         'status' => 1,
         'settings' => array(
           'allowed_html' => '<a> <br> <em> <strong> <cite> <code> <ul> <ol> <li> <div> <dl> <dt> <dd> <b> <i> <p> <span> <strike>',
@@ -185,12 +185,12 @@ function bg_filter_default_formats() {
         ),
       ),
       'filter_autop' => array(
-        'weight' => 2,
+        'weight' => 25,
         'status' => 1,
         'settings' => array(),
       ),
       'filter_htmlcorrector' => array(
-        'weight' => 10,
+        'weight' => 30,
         'status' => 1,
         'settings' => array(),
       ),
