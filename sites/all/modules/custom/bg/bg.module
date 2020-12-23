@@ -78,6 +78,13 @@ function bg_menu() {
     'access arguments' => array('administer bg utilities'),
     'file' => 'bg.admin.inc',
   );
+  $items['bg/fixup-stage'] = array(
+    'title' => 'Fixup stage - bgimage',
+    'description' => 'Fixup stage - from adult and immature',
+    'page callback' => 'bugguide_fixup_stage',
+    'access arguments' => array('administer bg utilities'),
+    'file' => 'bg.admin.inc',
+  );
 
   return $items;
 }

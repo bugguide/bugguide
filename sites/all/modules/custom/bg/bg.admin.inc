@@ -240,3 +240,80 @@ function bg_fixup_locations_form() {
   }
   return $form;
 }
+
+/**
+ * Menu callback to find nodes bgimages in order to update immature or adult.
+ *
+ * @TODO: Add missing description.
+ *
+ * @return mixed $form
+ */
+function bugguide_fixup_stage() {
+
+  $form['bgimages'] = array(
+    '#prefix' => '<div id="bgimages">',
+    '#suffix' => '</div>',
+    '#tree' => TRUE,
+    '#theme' => 'table',
+    '#header' => array(
+      t('Thumbnail image'),
+      t('Adult'),
+      t('Immature'),
+    ),
+    '#rows' => array(),
+  );
+
+  // original
+  //	$result = db_query("SELECT n.nid FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' AND concat(t.parent,',') like '%,57,%' AND t.adult != 1 AND t.immature != 1 LIMIT 25");
+  // new with parent_idx
+  // @TODO: Remove temporary taxon.
+  $taxon = 57;
+  $result = db_query("SELECT n.nid FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' AND t.parent_idx like '%,$taxon,%' AND t.adult != 1 AND t.immature != 1 LIMIT 25");
+
+  foreach ($result as $key => $record) {
+    $image_thumb = array(
+      '#type' => 'markup',
+      // @TODO: What's the equivalent of bgimage_get_thumb_link().?
+      // '#default_value' => bgimage_get_thumb_link(),
+      '#value' => '@TODO: Add missing image thumbnail.',
+    );
+    $adult = array(
+      '#type' => 'checkbox',
+      '#description' => t('Adult'),
+    );
+    $immature = array(
+      '#type' => 'checkbox',
+      '#description' => t('Immature'),
+    );
+
+    $form['bgimages'][] = array(
+      'image_thumb' => &$image_thumb,
+      'adult' => &$adult,
+      'immature' => &$immature,
+    );
+
+    // Now add references to the fields to the rows that
+    // `theme_table()` will use.
+    //
+    // As we've used references, the table will use the very same
+    // field arrays as the FAPI used above.
+    $form['bgimages']['#rows'][] = array(
+      array('data' => &$image_thumb),
+      array('data' => &$adult),
+      array('data' => &$immature),
+    );
+
+    // Because we've used references we need to `unset()` our
+    // variables. If we don't then every iteration of the loop will
+    // just overwrite the variables we created the first time
+    // through leaving us with a form with 3 copies of the same fields.
+    unset($adult);
+    unset($immature);
+  }
+  $form['update'] = array(
+    '#type' => 'submit',
+    '#value' => t('Update'),
+  );
+
+  return $form;
+}
