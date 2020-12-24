@@ -81,7 +81,8 @@ function bg_menu() {
   $items['bg/fixup-stage'] = array(
     'title' => 'Fixup stage - bgimage',
     'description' => 'Fixup stage - from adult and immature',
-    'page callback' => 'bugguide_fixup_stage',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('bugguide_fixup_stage_form'),
     'access arguments' => array('administer bg utilities'),
     'file' => 'bg.admin.inc',
   );

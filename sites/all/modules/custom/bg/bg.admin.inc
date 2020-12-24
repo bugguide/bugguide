@@ -247,8 +247,9 @@ function bg_fixup_locations_form() {
  * @TODO: Add missing description.
  *
  * @return mixed $form
+ * @throws \Exception
  */
-function bugguide_fixup_stage() {
+function bugguide_fixup_stage_form() {
 
   $form['bgimages'] = array(
     '#prefix' => '<div id="bgimages">',
@@ -270,13 +271,12 @@ function bugguide_fixup_stage() {
   $taxon = 57;
   $result = db_query("SELECT n.nid FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' AND t.parent_idx like '%,$taxon,%' AND t.adult != 1 AND t.immature != 1 LIMIT 25");
 
+  $ids = array();
   foreach ($result as $key => $record) {
-    $image_thumb = array(
-      '#type' => 'markup',
-      // @TODO: What's the equivalent of bgimage_get_thumb_link().?
-      // '#default_value' => bgimage_get_thumb_link(),
-      '#value' => '@TODO: Add missing image thumbnail.',
-    );
+    $ids[] = $record->nid;
+    $bgimage_node = node_load($record->nid);
+    $image_thumb = bgimage_thumb($bgimage_node);
+
     $adult = array(
       '#type' => 'checkbox',
       '#description' => t('Adult'),
@@ -287,7 +287,7 @@ function bugguide_fixup_stage() {
     );
 
     $form['bgimages'][] = array(
-      'image_thumb' => &$image_thumb,
+      //'image_thumb' => &$image_thumb,
       'adult' => &$adult,
       'immature' => &$immature,
     );
@@ -307,13 +307,41 @@ function bugguide_fixup_stage() {
     // variables. If we don't then every iteration of the loop will
     // just overwrite the variables we created the first time
     // through leaving us with a form with 3 copies of the same fields.
+    unset($image_thumb);
     unset($adult);
     unset($immature);
   }
+  $form['ids'] = array(
+    '#type' => 'value',
+    '#value' => $ids,
+  );
+
   $form['update'] = array(
     '#type' => 'submit',
     '#value' => t('Update'),
   );
 
   return $form;
+}
+
+/**
+ * Submission callback for fixup stage.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function bugguide_fixup_stage_form_submit($form, &$form_state) {
+  foreach ($form_state['values']['ids'] as $key => $bgimage_nid) {
+    if (isset($form_state['values'][$key]['adult']) &&
+      isset($form_state['values'][$key]['immature'])) {
+      if ($form_state['values'][$key]['adult'] == 1) {
+        // @TODO; Add missing node_save for bgimage.
+        db_query('UPDATE {bgimage} SET adult = 1 WHERE nid LIKE "$bgimage_nid"');
+      }
+      elseif ($form_state['values'][$key]['immature'] == 1) {
+        // @TODO; Add missing node_save for bgimage.
+        db_query('UPDATE {bgimage} SET immature = 1 WHERE nid LIKE "$bgimage_nid"');
+      }
+    }
+  }
 }
