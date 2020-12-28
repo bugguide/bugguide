@@ -257,6 +257,7 @@ function bugguide_fixup_stage_form() {
     '#tree' => TRUE,
     '#theme' => 'table',
     '#header' => array(
+      t('Nid'),
       t('Thumbnail image'),
       t('Adult'),
       t('Immature'),
@@ -287,7 +288,6 @@ function bugguide_fixup_stage_form() {
     );
 
     $form['bgimages'][] = array(
-      //'image_thumb' => &$image_thumb,
       'adult' => &$adult,
       'immature' => &$immature,
     );
@@ -298,6 +298,7 @@ function bugguide_fixup_stage_form() {
     // As we've used references, the table will use the very same
     // field arrays as the FAPI used above.
     $form['bgimages']['#rows'][] = array(
+      array('data' => l($bgimage_node->nid, 'node/' . $bgimage_node->nid . '/edit')),
       array('data' => &$image_thumb),
       array('data' => &$adult),
       array('data' => &$immature),
@@ -332,16 +333,21 @@ function bugguide_fixup_stage_form() {
  */
 function bugguide_fixup_stage_form_submit($form, &$form_state) {
   foreach ($form_state['values']['ids'] as $key => $bgimage_nid) {
-    if (isset($form_state['values'][$key]['adult']) &&
-      isset($form_state['values'][$key]['immature'])) {
-      if ($form_state['values'][$key]['adult'] == 1) {
-        // @TODO; Add missing node_save for bgimage.
-        db_query('UPDATE {bgimage} SET adult = 1 WHERE nid LIKE "$bgimage_nid"');
+    if (isset($form_state['values']['bgimages'][$key]['adult']) &&
+      isset($form_state['values']['bgimages'][$key]['immature'])) {
+      $bgimage_node = node_load($bgimage_nid);
+      if (!isset($bgimage_node->field_bgimage_life_stage[LANGUAGE_NONE])) {
+        $bgimage_node->field_bgimage_life_stage[LANGUAGE_NONE] = array();
       }
-      elseif ($form_state['values'][$key]['immature'] == 1) {
-        // @TODO; Add missing node_save for bgimage.
-        db_query('UPDATE {bgimage} SET immature = 1 WHERE nid LIKE "$bgimage_nid"');
+      if ($form_state['values']['bgimages'][$key]['adult'] == 1) {
+        $bgimage_node->field_bgimage_life_stage[LANGUAGE_NONE][] = array('value' => 'adult');
+        db_query("UPDATE {bgimage} SET adult = 1 WHERE nid LIKE '$bgimage_nid'");
       }
+      if ($form_state['values']['bgimages'][$key]['immature'] == 1) {
+        $bgimage_node->field_bgimage_life_stage[LANGUAGE_NONE][] =  array('value' => 'immature');
+        db_query("UPDATE {bgimage} SET immature = 1 WHERE nid LIKE '$bgimage_nid'");
+      }
+      node_save($bgimage_node);
     }
   }
 }
