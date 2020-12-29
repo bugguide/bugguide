@@ -273,6 +273,7 @@ function bugguide_fixup_stage_form() {
   // visiting the bgimage node.
   // @TODO: Let's remove this once we finish the MVP product the web application
   // And use instead a taxon textfield search instead.
+  // This will be done in https://github.com/bugguide/bugguide/issues/163
   $taxon = (int) arg(2);
   $result = db_query("SELECT n.nid FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' AND t.parent_idx like '%,$taxon,%' AND t.adult != 1 AND t.immature != 1 LIMIT 25");
 
