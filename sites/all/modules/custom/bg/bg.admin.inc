@@ -346,11 +346,14 @@ function bugguide_fixup_stage_form_submit($form, &$form_state) {
       }
       if ($form_state['values']['bgimages'][$key]['adult'] == 1) {
         $bgimage_node->field_bgimage_life_stage[LANGUAGE_NONE][] = array('value' => 'adult');
+        watchdog('bg', 'Setting life stage to adult for node %nid', array('%nid' => $bgimage_nid));
       }
       if ($form_state['values']['bgimages'][$key]['immature'] == 1) {
         $bgimage_node->field_bgimage_life_stage[LANGUAGE_NONE][] =  array('value' => 'immature');
+        watchdog('bg', 'Setting life stage to immature for node %nid', array('%nid' => $bgimage_nid));
       }
       node_save($bgimage_node);
     }
   }
+  drupal_set_message('Data has been updated.');
 }
