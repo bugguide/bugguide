@@ -346,11 +346,9 @@ function bugguide_fixup_stage_form_submit($form, &$form_state) {
       }
       if ($form_state['values']['bgimages'][$key]['adult'] == 1) {
         $bgimage_node->field_bgimage_life_stage[LANGUAGE_NONE][] = array('value' => 'adult');
-        db_query("UPDATE {bgimage} SET adult = 1 WHERE nid LIKE '$bgimage_nid'");
       }
       if ($form_state['values']['bgimages'][$key]['immature'] == 1) {
         $bgimage_node->field_bgimage_life_stage[LANGUAGE_NONE][] =  array('value' => 'immature');
-        db_query("UPDATE {bgimage} SET immature = 1 WHERE nid LIKE '$bgimage_nid'");
       }
       node_save($bgimage_node);
     }
