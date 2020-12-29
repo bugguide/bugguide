@@ -268,8 +268,10 @@ function bugguide_fixup_stage_form() {
   // original
   //	$result = db_query("SELECT n.nid FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' AND concat(t.parent,',') like '%,57,%' AND t.adult != 1 AND t.immature != 1 LIMIT 25");
   // new with parent_idx
-  // @TODO: Remove temporary taxon.
-  $taxon = 57;
+  // For instance given the taxon 57 I get thumbnail image, adult and immature
+  // So I can decide which one is adult or immature based on image or by
+  // visiting the bgimage node.
+  $taxon = (int) arg(2);
   $result = db_query("SELECT n.nid FROM {node} n, {bgimage} t WHERE t.nid = n.nid AND n.type = 'bgimage' AND n.status = '1' AND t.parent_idx like '%,$taxon,%' AND t.adult != 1 AND t.immature != 1 LIMIT 25");
 
   $ids = array();
