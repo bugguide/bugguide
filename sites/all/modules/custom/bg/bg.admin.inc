@@ -9,12 +9,17 @@
  * Menu callback
  */
 function bg_utilities() {
-  $output = '<h1>' . t('System Utilities') . '</h1>';
-  $output .= '<p>' . t('These are utilities to help maintain the site.');
-  $output .= '<p>' . t('<strong>Show Orphaned Nodes</strong> finds nodes whose parent path is broken or missing.');
-  $output .= '<p>' . t('<strong>Show Stageless Leps</strong> finds Lepidoptera where neither adult nor immature was checked.');
-  $output .= '<p>' . t('<strong>Show Leps Without Hodges #</strong> finds Lepidoptera where numbers appear in title but Hodges field is blank.');
-  return $output;
+  $items = array();
+  $output = '<div class="content">';
+  $output .= t('These are utilities to help maintain the site.');
+  $items[] = t('<strong> <a href="@bguri">Show Orphaned Nodes</a></strong> finds nodes whose parent path is broken or missing.', array('@bguri' => 'bg/orphans'));
+  $items[] = t('<strong> <a href="@bguri">Show images with error</a></strong> find images that have country names in county field.', array('@bguri' => 'bg/badlocations'));
+  $items[] = t('<strong><a href="@bguri">Show Stageless Leps</a></strong> finds Lepidoptera where neither adult nor immature was checked.', array('@bguri' => 'bg/lepstage'));
+  $items[] = t('<strong><a href="@bguri">Show Leps Without Hodges #</a></strong> finds Lepidoptera where numbers appear in title but Hodges field is blank.', array('@bguri' => 'bg/blankhodges'));
+  $items[] = t('<strong><a href="@bguri">Select if Immature or Adult?</a></strong> finds bgimages to figure it adult or immature.', array('@bguri' => 'bg/fixup-stage'));
+  $output .= '</div>';
+
+  return $output . theme('item_list', array('items' => $items));
 }
 
 /**
