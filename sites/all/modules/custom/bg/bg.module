@@ -39,51 +39,51 @@ function bg_theme() {
  * Implements hook_menu().
  */
 function bg_menu() {
-  $items['admin/config/bg'] = array(
-    'title' => 'Bugguide',
+  $items['bg'] = array(
+    'title' => 'Editor Utilities',
     'description' => 'BugGuide system utilities',
-    'weight' => 0,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
+    'page callback' => 'bg_utilities',
+    'access arguments' => array('administer bg utilities'),
+    'expanded' => 1,
     'file' => 'bg.admin.inc',
   );
-  $items['admin/config/bg/orphans'] = array(
+  $items['bg/orphans'] = array(
     'title' => 'Show orphaned nodes',
     'description' => 'Shows pages, images, links, and references with no parent',
     'page callback' => 'bg_orphans',
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('administer bg utilities'),
     'file' => 'bg.admin.inc',
   );
-  $items['admin/config/bg/badlocations'] = array(
+  $items['bg/badlocations'] = array(
     'title' => 'Images with error: country name in county field',
     'description' => 'Shows images that have country names in county field',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('bg_fixup_locations_form'),
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('administer bg utilities'),
     'file' => 'bg.admin.inc',
   );
 
-  $items['admin/config/bg/lepstage'] = array(
+  $items['bg/lepstage'] = array(
     'title' => 'Show stageless Leps',
     'description' => 'Shows Lepidoptera that have not been marked adult or immature',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('bg_stageless_leps'),
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('administer bg utilities'),
     'file' => 'bg.admin.inc',
   );
-  $items['admin/config/bg/blankhodges'] = array(
+  $items['bg/blankhodges'] = array(
     'title' => 'Show Lepidopterans without Hodges #',
     'description' => 'Shows Lepidoptera that have not been assigned a Hodges number',
     'page callback' => 'bg_blank_hodges',
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('administer bg utilities'),
     'file' => 'bg.admin.inc',
   );
-  $items['admin/config/bg/fixup-stage'] = array(
+  $items['bg/fixup-stage'] = array(
     'title' => 'Fixup stage - bgimage',
     'description' => 'Fixup stage - from adult and immature',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('bugguide_fixup_stage_form'),
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('administer bg utilities'),
     'file' => 'bg.admin.inc',
   );
 
@@ -127,6 +127,10 @@ function bg_permission() {
       'title' => t('View badges denoting privileged roles'),
       'description' => t('Make visible which other users have enhanced privileges.'),
     ),
+    'administer bg utilities' => array(
+      'title' => t('Administer bg utilities'),
+      'description' => t('Perform bg maintenance tasks'),
+    )
   );
 }
 
