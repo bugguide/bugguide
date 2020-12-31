@@ -195,15 +195,6 @@ function bgusers_user_default_permissions() {
     'module' => 'panels',
   );
 
-  // Exported permission: 'administer bg utilities'.
-  $permissions['administer bg utilities'] = array(
-    'name' => 'administer bg utilities',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'bg',
-  );
-
   // Exported permission: 'administer blocks'.
   $permissions['administer blocks'] = array(
     'name' => 'administer blocks',
