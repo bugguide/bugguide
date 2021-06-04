@@ -664,6 +664,15 @@ a:hover,
   list-style: none;
 }
 
+/* The border around the representative images will align with the rightmost image,
+ * not the right side of the page which would leave a big white area.
+ */
+
+.field-name-bgpage-browse .card,
+.field-name-bgpage-representative-images .card {
+  display: inline-block;
+}
+
 /* --------------------- */
 /* ## COMMENTS
 /* --------------------- */
