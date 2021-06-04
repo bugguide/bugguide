@@ -757,3 +757,7 @@ a:hover,
 .bg-image-list img {
   margin: 0 !important;
 }
+
+.bg-image-list .columns {
+  align-items: flex-end;
+}
