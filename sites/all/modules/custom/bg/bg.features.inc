@@ -53,7 +53,7 @@ function bg_image_default_styles() {
         'name' => 'image_scale',
         'data' => array(
           'width' => 125,
-          'height' => '',
+          'height' => 125,
           'upscale' => 0,
         ),
         'weight' => 1,
