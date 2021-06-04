@@ -761,3 +761,7 @@ a:hover,
 .bg-image-list .columns {
   align-items: flex-end;
 }
+
+.bg-image-list .column {
+    padding: 0.15rem;
+}
