@@ -98,7 +98,14 @@ function _bgpage_browse($field) {
       if (!empty($child_doc->matches)) {
         $output .= '<div class="card-content p-3 bg-image-list"><ul class="columns is-mobile is-multiline">';
         foreach ($child_doc->matches as $image_doc) {
-          $output .= '<li class="column is-narrow m-0">' . $image_doc->ss_bgimage_thumbnail . '</li>';
+          if (!isset($image_doc->ss_bgimage_thumbnail)) {
+            // This happens when an entity has been indexed but an image for that entity has not.
+            //drupal_set_message('No ss_bgimage_thumbnail property on '. print_r($image_doc));
+            $output .= '<li class="column is-narrow m-0">' . '(Not Yet Indexed)' . '</li>';
+          }
+          else {
+            $output .= '<li class="column is-narrow m-0">' . $image_doc->ss_bgimage_thumbnail . '</li>';
+          }
         }
         $output .= '</ul></div>';
       }
