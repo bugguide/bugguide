@@ -17,7 +17,7 @@
       </a>
     </li>
     <li>
-      <a class="button is-tan mr-2" href="https://github.com/bugguide/issues/issues">
+      <a class="button is-tan mr-2" href="https://github.com/bugguide/bugguide/issues">
         <span class="icon">
           <span class="fa fa-bug" aria-hidden="true"></span>
         </span>
