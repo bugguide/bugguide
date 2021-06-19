@@ -13,8 +13,8 @@ function bg_apachesolr_environments() {
   $environment = new stdClass();
   $environment->api_version = 1;
   $environment->env_id = 'solr';
-  $environment->name = 'db1 solr server';
-  $environment->url = 'http://db1.ent.iastate.edu:8983/solr/bugguide';
+  $environment->name = 'bgsolr server';
+  $environment->url = 'http://overridden-in-settings.ent.iastate.edu:8983/solr/bugguide';
   $environment->service_class = '';
   $environment->conf = array(
     'apachesolr_direct_commit' => 0,
