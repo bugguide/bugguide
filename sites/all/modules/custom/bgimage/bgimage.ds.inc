@@ -210,8 +210,8 @@ function bgimage_ds_custom_fields_info() {
   $ds_field->ui_limit = 'bgimage|*';
   $ds_field->properties = array(
     'code' => array(
-      'value' => '[node:field_bgimage_location], [node:field_bgimage_county], [node:field_bgimage_location_code]',
-      'format' => 'f',
+      'value' => '<?php echo implode(", ", array_filter(array("[node:field_bgimage_location]", "[node:field_bgimage_county]", "[node:field_bgimage_location_code]"))); ?>',
+      'format' => 'php_code',
     ),
     'use_token' => 1,
   );
