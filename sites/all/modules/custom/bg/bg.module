@@ -351,36 +351,17 @@ function bg_preprocess_page(&$vars) {
       }
     }
 
-    // If we are viewing an individual book_reference, set the active tab to Books
-    // instead of Info.
-    if ($node->type == 'book_reference') {
-      if (isset($vars['tabs']['#primary']) && is_array($vars['tabs']['#primary'])) {
-        $i = 0;
-        foreach ($vars['tabs']['#primary'] as $item) {
-          if ($item['#link']['title'] == 'Info') {
-            unset($vars['tabs']['#primary'][$i]['#active']);
-          }
-          if ($item['#link']['title'] == 'Books') {
-            $vars['tabs']['#primary'][$i]['#active'] = 1;
-          }
-        $i++;
-        }
-      }
-    }
-
-    if ($node->type == 'bgimage') {
-      if (isset($vars['tabs']['#primary']) && is_array($vars['tabs']['#primary'])) {
-        $i = 0;
-        foreach ($vars['tabs']['#primary'] as $item) {
-          if ($item['#link']['title'] == 'Info') {
-            unset($vars['tabs']['#primary'][$i]['#active']);
-          }
-          if ($item['#link']['title'] == 'Images') {
-            $vars['tabs']['#primary'][$i]['#active'] = 1;
-          }
-        $i++;
-        }
-      }
+    # Manually set the active tab to match expectations for certain node types.
+    switch($node->type) {
+      case 'book_reference':
+        _bg_set_active_tab_by_title($vars['tabs'], 'Books');
+        break;
+      case 'bglink':
+        _bg_set_active_tab_by_title($vars['tabs'], 'Links');
+        break;
+      case 'bgimage':
+        _bg_set_active_tab_by_title($vars['tabs'], 'Images');
+        break;
     }
 
     // Set breadcrumb for bgpage, bgimage and book reference nodes.
@@ -422,6 +403,30 @@ function bg_preprocess_page(&$vars) {
     if (isset($node->type) && in_array($node->type, array('bgpage', 'bgimage'))) {
       // Changes title for both node title and title bar.
       drupal_set_title(_bg_get_title_classification($node));
+    }
+  }
+}
+
+/**
+ * Change the active tab from 'Info' to the tab with the given title.
+ *
+ * @param array $tabs
+ *   Page tabs data, as in bg_preprocess_page.
+ *
+ * @param string $tab_title
+ *   The title of the tab to be set to active.
+ */
+function _bg_set_active_tab_by_title(&$tabs, $tab_title) {
+  if (isset($tabs['#primary']) && is_array($tabs['#primary'])) {
+    $i = 0;
+    foreach ($tabs['#primary'] as $item) {
+      if ($item['#link']['title'] == 'Info') {
+        unset($tabs['#primary'][$i]['#active']);
+      }
+      if ($item['#link']['title'] == $tab_title) {
+        $tabs['#primary'][$i]['#active'] = 1;
+      }
+      $i++;
     }
   }
 }
