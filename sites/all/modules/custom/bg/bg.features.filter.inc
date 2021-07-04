@@ -29,14 +29,14 @@ function bg_filter_default_formats() {
         'settings' => array(),
       ),
       'filter_url' => array(
-        'weight' => 0,
+        'weight' => 5,
         'status' => 1,
         'settings' => array(
           'filter_url_length' => 72,
         ),
       ),
       'xbbcode' => array(
-        'weight' => 5,
+        'weight' => 0,
         'status' => 1,
         'settings' => array(
           'autoclose' => 0,
