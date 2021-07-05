@@ -301,7 +301,7 @@ function bgimage_node_validate($node, $form, &$form_state) {
       else {
         $full_parent = bgimage_get_full_parent($parent);
         if ($full_parent === FALSE) {
-          if ($parent == BG_ID_REQUEST_NID || $parent == BG_FRASS_NID) {
+          if ($parent == BG_ID_REQUEST_NID || $parent == BG_FRASS_NID || $parent == BG_ROOT_NID) {
             $form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] = $parent;
           }
           else {
