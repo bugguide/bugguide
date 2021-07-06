@@ -890,9 +890,9 @@ function bgimage_block_view($delta = '') {
     ));
   }
 
-  $current_node = menu_get_object('node');
-  if (!empty($current_node) && in_array($current_node->type, array('bgpage', 'bgimage'))) {
-    $links[] = l(t('<span class="icon is-small"><span class="fa fa-long-arrow-right" aria-hidden="true"></span></span><span>Move'), 'bgimage/move/' . $current_node->nid, array(
+  $current_menu_item = menu_get_item();
+  if (!empty($current_menu_item) && $current_menu_item['path'] == "node/%/bgimage") {
+    $links[] = l(t('<span class="icon is-small"><span class="fa fa-long-arrow-right" aria-hidden="true"></span></span><span>Move'), 'bgimage/move/' . arg(1), array(
       'attributes' => array(
         'title' => t('Move these images to the taxonomy of the current page.'),
         'class' => 'clip-move button is-small',
