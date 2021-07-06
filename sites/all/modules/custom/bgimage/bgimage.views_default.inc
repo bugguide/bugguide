@@ -349,7 +349,7 @@ function bgimage_views_default_views() {
   $handler->display->display_options['fields']['field_bgimage_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_bgimage_image']['settings'] = array(
     'image_style' => 'bg_small',
-    'image_link' => '',
+    'image_link' => 'content',
   );
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
