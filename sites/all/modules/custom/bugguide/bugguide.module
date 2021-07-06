@@ -6,6 +6,9 @@ define('BG_ID_REQUEST_NID', 6);
 // Node ID of Frass
 define('BG_FRASS_NID', 9410);
 
+// Node ID of the root node
+define('BG_ROOT_NID', 3);
+
 /**
  * @file
  * The bugguide module provides bugguide-specific functionality.
