@@ -12,6 +12,9 @@
 function bgpage_tree($nid) {
   $query = drupal_get_query_parameters();
   $node = node_load($nid);
+  if (!$node) {
+    return MENU_NOT_FOUND;
+  }
   $output = '';
 
   // First, create the filter that loads parent taxons plus the current one.
@@ -80,6 +83,9 @@ function bgpage_tree($nid) {
  */
 function bgpage_browse($nid) {
   $node = node_load($nid);
+  if (!$node) {
+    return MENU_NOT_FOUND;
+  }
   return node_view($node, 'browse');
 }
 
@@ -93,6 +99,9 @@ function bgpage_browse($nid) {
  */
 function bgpage_images($nid) {
   $node = node_load($nid);
+  if (!$node) {
+    return MENU_NOT_FOUND;
+  }
   return node_view($node, 'images');
 }
 
