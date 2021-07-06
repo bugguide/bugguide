@@ -184,6 +184,7 @@ function bgpage_menu_local_tasks_alter(&$data, $route_name) {
 
       case 'bgimage':
       case 'book_reference':
+      case 'bglink':
         $parentpath = $route_name['page_arguments'][0]->field_parent[LANGUAGE_NONE][0]['value'];
         $parents = explode(',', $parentpath);
         if (count($parents) > 0) {
