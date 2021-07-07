@@ -114,6 +114,10 @@ function bgpage_images($nid) {
  *   The nid of the bgpage node.
  */
 function bgpage_bgref($nid) {
+  $node = node_load($nid);
+  if (!$node) {
+    return MENU_NOT_FOUND;
+  }
   return views_embed_view('all_books', 'by_bgpage', $nid);
 }
 
@@ -126,5 +130,9 @@ function bgpage_bgref($nid) {
  *   The nid of the bgpage node.
  */
 function bgpage_bglink($nid) {
+  $node = node_load($nid);
+  if (!$node) {
+    return MENU_NOT_FOUND;
+  }
   return views_embed_view('links', 'by_bgpage', $nid);
 }
