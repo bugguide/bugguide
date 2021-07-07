@@ -106,7 +106,7 @@ function bgpage_images($nid) {
 }
 
 /**
- * Shows images for a bgpage node.
+ * Shows book references for a bgpage node.
  *
  * Traverses the tree in a Breadth-first way showing bgrefs for each leaf.
  *
