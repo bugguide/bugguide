@@ -278,6 +278,54 @@ function bgimage_ds_fields_info($entity_type) {
 }
 
 /**
+ * Implements hook_field_formatter_info().
+ */
+function bgimage_field_formatter_info() {
+  $formatters = array(
+    'bgimage_conditional_link_formatter' => array(
+      'label' => t('Image Conditional Link'),
+      'field types' => array('image'),
+      'settings' => array('image_style' => 'bg_large', 'image_link' => ''),
+    ),
+  );
+
+  return $formatters;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function bgimage_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  // Check if the formatter involves a link.
+  if ($display['settings']['image_link'] == 'content') {
+    $uri = entity_uri($entity_type, $entity);
+  }
+  elseif ($entity->type == 'bgimage' && count($items) == 1) {
+    // Provide a link to the fullsize image if either the user created the image
+    // or they have the right permission.
+    global $user;
+    if ($items[0]['uid'] == $user->uid || user_access('view fullsize bgimages')) {
+      $uri = array(
+        'path' => file_create_url($items[0]['uri']),
+        'options' => array(),
+      );
+    }
+  }
+
+  foreach ($items as $delta => $item) {
+    $element[$delta] = array(
+      '#theme' => 'image_formatter',
+      '#item' => $item,
+      '#image_style' => $display['settings']['image_style'],
+      '#path' => isset($uri) ? $uri : '',
+    );
+  }
+
+  return $element;
+}
+
+/**
  * Implements hook_node_validate().
  */
 function bgimage_node_validate($node, $form, &$form_state) {
