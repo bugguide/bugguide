@@ -86,7 +86,7 @@ function drush_bgmigrate_users() {
     $license_details = isset($data['license_details']) ? $data['license_details'] : '';
     if ($license_details) {
       $account->field_user_content_license_add[LANGUAGE_NONE][0]['value'] = $license_details;
-      $account->field_user_biography[LANGUAGE_NONE][0]['format'] = 'f';
+      $account->field_user_content_license_add[LANGUAGE_NONE][0]['format'] = 'f';
     }
     
     // subscriptions_auto
