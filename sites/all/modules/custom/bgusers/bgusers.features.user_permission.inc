@@ -892,6 +892,8 @@ function bgusers_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
+      'senior editor' => 'senior editor',
+      'spam zapper' => 'spam zapper',
     ),
     'module' => 'node',
   );
@@ -914,6 +916,8 @@ function bgusers_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
+      'senior editor' => 'senior editor',
+      'spam zapper' => 'spam zapper',
     ),
     'module' => 'node',
   );
