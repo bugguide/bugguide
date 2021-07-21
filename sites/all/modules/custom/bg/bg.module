@@ -135,6 +135,37 @@ function bg_permission() {
 }
 
 /**
+ * Implements hook_comment_view_alter().
+ */
+function bg_comment_view_alter(&$build) {
+  if (isset($build['links']['comment']['#links']['comment-edit'])) {
+    if (user_access('administer comments')) {
+      return;
+    }
+    if (_bg_comment_has_replies($build['#comment']->cid)) {
+      unset($build['links']['comment']['#links']['comment-edit']);
+    }
+  }
+
+}
+
+/**
+ * Test whether or not a comment has been replied to.
+ *
+ * @param $cid
+ *   The comment id.
+ * @return
+ *   True if the comment has been replied to.
+ */
+function _bg_comment_has_replies($cid) {
+  $comment_with_pid = db_query('SELECT cid FROM {comment} WHERE pid = :pid AND status = :status', array(
+    ':pid' => $cid,
+    ':status' => COMMENT_PUBLISHED,
+  ))->fetchField();
+  return $comment_with_pid === false ? false : true;
+}
+
+/**
  * Implements hook_filter_info().
  */
 function bg_filter_info() {
