@@ -62,6 +62,15 @@ function bgimage_menu() {
     'file' => 'bgimage.pages.inc',
   );
 
+  $items['bgimage/quiet_move/%node'] = array(
+    'title' => 'Quietly moves images in the clipboard to the current page',
+    'page callback' => 'bgimage_move_tagged',
+    'page arguments' => array(2, true),
+    'access arguments' => array('quiet move all bgimages'),
+    'type' => MENU_CALLBACK,
+    'file' => 'bgimage.pages.inc',
+  );
+
   $items['bgimage/link'] = array(
     'title' => 'Image tagging',
     'page callback' => 'bgimage_link_tagged',
@@ -875,7 +884,7 @@ function bgimage_block_view($delta = '') {
     $links[] = l(t('<span class="icon is-small"><span class="fa fa-times" aria-hidden="true"></span></span><span>Remove all</span>'), 'bgimage/untag_all', array(
       'attributes' => array(
         'title' => t('Remove these images from the clipboard'),
-        'class' => 'clip-remove-all button is-small mr-1',
+        'class' => 'clip-remove-all button is-small mr-1 mb-1',
         ),
       'query' => array('destination' => current_path()),
       'html' => TRUE,
@@ -886,7 +895,7 @@ function bgimage_block_view($delta = '') {
     $links[] = l(t('<span class="icon is-small"><span class="fa fa-link" aria-hidden="true"></span></span><span>Link</span>'), 'bgimage/link', array(
       'attributes' => array(
         'title' => t('Link together these images of the same specimen.'),
-        'class' => 'clip-link button is-small mr-1',
+        'class' => 'clip-link button is-small mr-1 mb-1',
         ),
       'query' => array('destination' => current_path()),
       'html' => TRUE,
@@ -898,13 +907,22 @@ function bgimage_block_view($delta = '') {
     $links[] = l(t('<span class="icon is-small"><span class="fa fa-long-arrow-right" aria-hidden="true"></span></span><span>Move'), 'bgimage/move/' . $current_node->nid, array(
       'attributes' => array(
         'title' => t('Move these images to the taxonomy of the current page.'),
-        'class' => 'clip-move button is-small',
+        'class' => 'clip-move button is-small mr-1 mb-1',
         ),
       'html' => TRUE,
     ));
+    if (user_access('quiet move all bgimages')) {
+      $links[] = l(t('<span class="icon is-small"><span class="fa fa-long-arrow-right" aria-hidden="true"></span></span><span>Quiet move'), 'bgimage/quiet_move/' . $current_node->nid, array(
+        'attributes' => array(
+          'title' => t('Quietly move these images to the taxonomy of the current page.'),
+          'class' => 'clip-move button is-small mb-1',
+          ),
+        'html' => TRUE,
+      ));
+    }
   }
 
-  $content .= '<div class="panel-block">'. implode(' ', $links) . '</div>';
+  $content .= '<div class="panel-block flex-wrap">'. implode(' ', $links) . '</div>';
 
   return array(
     'subject' => t('Clipboard'),
