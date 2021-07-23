@@ -1102,6 +1102,16 @@ function bgusers_user_default_permissions() {
     'module' => 'bgimage',
   );
 
+  // Exported permission: 'quiet move all bgimages'.
+  $permissions['quiet move all bgimages'] = array(
+    'name' => 'quiet move all bgimages',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'senior editor' => 'senior editor',
+    ),
+    'module' => 'bgimage',
+  );
+
   // Exported permission: 'post comments'.
   $permissions['post comments'] = array(
     'name' => 'post comments',

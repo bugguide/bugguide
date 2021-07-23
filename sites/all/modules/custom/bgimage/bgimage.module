@@ -122,6 +122,9 @@ function bgimage_permission() {
     'move all bgimages' => array(
       'title' => 'Move all bgimages',
     ),
+    'quiet move all bgimages' => array(
+      'title' => 'Quiet move all bgimages',
+    ),
     'link all bgimages' => array(
       'title' => 'Link bgimage nodes',
     ),
