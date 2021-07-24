@@ -404,12 +404,12 @@ function bgimage_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'hidden',
-        'module' => 'image',
+        'module' => 'bgimage',
         'settings' => array(
           'image_link' => '',
           'image_style' => 'bg_large',
         ),
-        'type' => 'image',
+        'type' => 'bgimage_conditional_link_formatter',
         'weight' => 0,
       ),
       'homepage' => array(
