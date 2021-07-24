@@ -108,7 +108,7 @@ function bgimage_move_tagged($node) {
           'comment_body' => array(
             LANGUAGE_NONE => array(
               0 => array (
-                'value' => 'Moved from ' . l($old_parent_title, "node/$old_parent_nid"),
+                'value' => 'Moved from ' . l($old_parent_title, "node/$old_parent_nid") . '.',
                 'format' => 'f',
               ),
             ),
