@@ -98,7 +98,7 @@ function bgimage_move_tagged($node) {
           'nid' => $bgimage_node->nid,
           'cid' => 0,
           'pid' => 0,
-          'uid' => 1,
+          'uid' => $user->uid,
           'mail' => '',
           'is_anonymous' => 0,
           'homepage' => '',
@@ -108,8 +108,8 @@ function bgimage_move_tagged($node) {
           'comment_body' => array(
             LANGUAGE_NONE => array(
               0 => array (
-                'value' => 'Moved from ' . l($old_parent_title, "node/$old_parent_nid"),
-                'format' => 1,
+                'value' => 'Moved from ' . l($old_parent_title, "node/$old_parent_nid") . '.',
+                'format' => 'f',
               ),
             ),
           ),
