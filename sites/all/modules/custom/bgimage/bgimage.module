@@ -932,7 +932,7 @@ function bgimage_get_series($nid) {
   }
 
   // Next, extract the whole series of nids.
-  $nids = db_query('SELECT nid FROM {bgimage_series} WHERE series = :nid', array(':nid' => $nid))->fetchCol();
+  $nids = db_query('SELECT nid FROM {bgimage_series} WHERE series = :nid ORDER BY weight', array(':nid' => $nid))->fetchCol();
 
   return $nids;
 }
