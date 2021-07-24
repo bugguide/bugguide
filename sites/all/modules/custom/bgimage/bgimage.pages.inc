@@ -200,6 +200,34 @@ function bgimage_link_tagged() {
 }
 
 /**
+ * Unlinks the images in an image series.
+ *
+ * @param int $nid
+ *   The nid of one of the images in the series to be unlinked.
+ */
+function bgimage_unlink_image_series($nid) {
+  global $user;
+  $nid = (int) $nid;
+
+  $node = node_load($nid);
+  if ($node && (($node->uid == $user->uid) || user_access("link all bgimages"))) {
+    $dead_series_nid = db_query('SELECT series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $nid))->fetchCol();
+    if ($dead_series_nid) {
+      db_delete('bgimage_series')
+        ->condition('series', $dead_series_nid)
+        ->execute();
+      watchdog('bgimage', "Unlinked series '$dead_series_nid[0]'", array(), WATCHDOG_NOTICE, l(t("view post"), 'node/' . $nid));
+      drupal_set_message(t('Images were unlinked.'));
+      drupal_goto('node/' . $nid);
+    }
+  }
+
+  // Something wasn't right, most likely a permission error.
+  drupal_set_message(t('You must be the owner of these images in order to unlink them.'), 'warning');
+  drupal_goto('node/' . $nid);
+}
+
+/**
  * Redirects to a form to add an image for a bgpage.
  *
  * @param int $nid
