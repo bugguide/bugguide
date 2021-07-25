@@ -33,3 +33,17 @@ function bglink_menu() {
 
   return $items;
 }
+
+/**
+ * Implements hook_node_validate().
+ */
+function bglink_node_validate($node, $form, &$form_state) {
+  if ($node->type != 'bglink') {
+    return;
+  }
+
+  drupal_load('module', 'bg');
+
+  // Attempt to set the full parent based on our calling nid.
+  bg_node_validate_set_parent($form_state, arg(3));
+}
