@@ -621,6 +621,8 @@ a:hover,
 
 /* + Add images (of this individual) */
 .page-node-bgimage .action-links a:before,
+.page-node-bgref .action-links a:before,
+.page-node-bglink .action-links a:before,
 .node-type-bgimage .action-links a:before {
   content: '\f067'; /* fa-plus */
   font-family: 'FontAwesome';
@@ -634,7 +636,9 @@ a:hover,
   font-size: 0.75rem;
 }
 
-.page-node-bgimage .action-links a {
+.page-node-bgimage .action-links a,
+.page-node-bgref .action-links a,
+.page-node-bglink .action-links a {
   margin-bottom: 1rem;
 }
 
