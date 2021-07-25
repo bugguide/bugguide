@@ -346,36 +346,11 @@ function bgimage_node_validate($node, $form, &$form_state) {
   if ($node->type != 'bgimage') {
     return;
   }
-  // Need a bg_str_ends_with from bg.module
+
   drupal_load('module', 'bg');
 
-  // Set parent.
-  if ($form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] == '') {
-    $potential_parent = arg(3); // node/add/bgimage/1234
-    if ($potential_parent === NULL) {
-      form_set_error('field_bgimage_parent', 'bgimage is unable to continue without a parent.');
-    }
-    else {
-      $parent = (int)$potential_parent;
-      if ($parent == 0) {
-        form_set_error('field_bgimage_parent', 'bgimage could not make sense of parent.');
-      }
-      else {
-        $full_parent = bgimage_get_full_parent($parent);
-        if ($full_parent === FALSE) {
-          if ($parent == BG_ID_REQUEST_NID || $parent == BG_FRASS_NID || $parent == BG_ROOT_NID) {
-            $form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] = $parent;
-          }
-          else {
-            form_set_error('field_parent', 'bgimage: No such parent.');
-          }
-        }
-        else {
-          $form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] = $full_parent . ',' . $parent;
-        }
-      }
-    }
-  }
+  // Attempt to set the full parent based on our calling nid.
+  bg_node_validate_set_parent($form_state, arg(3));
 
   if ($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid'] == 0) {
     form_set_error('field_bgimage_image', 'Did you forget to attach an image? Please attach one and resubmit.');
@@ -805,17 +780,6 @@ function bgimage_original_from_derivative_path($scheme, $target) {
 
   return $scheme . '://' . 'raw/' . $prefix . $obfuscated . '.jpg';
   // public://raw/ELI/RTZ/ELIRTZ8RTL8RZH4ROLXZALIZNLYLCZQRYZMRFZ0RCZIROZRZCLMZRH0RFZFL3ZRZOZ.jpg
-}
-
-/**
- * Given a nid return a comma-delimited string of parents.
- *
- * @param int $nid
- * @return string e.g., 52,124,2234,32234
- */
-function bgimage_get_full_parent($nid) {
-  $parent = db_query("SELECT field_parent_value FROM {field_data_field_parent} WHERE entity_id = :nid", array(':nid' => $nid))->fetchField();
-  return $parent;
 }
 
 /**
