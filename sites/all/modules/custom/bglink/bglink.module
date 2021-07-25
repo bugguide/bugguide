@@ -15,3 +15,21 @@ function bglink_views_query_alter(&$view, &$query) {
     _bgpage_views_query_alter_for_field_parent($view, $query);
   }
 }
+
+/**
+ * Implements hook_menu().
+ */
+function bglink_menu() {
+  $items = array();
+
+  $items['node/%bgpage_node/bglink/add'] = array(
+    'title' => 'Add link',
+    'page callback' => 'bglink_add_link',
+    'page arguments' => array(1),
+    'access arguments' => array('create bglink content'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'bglink.pages.inc',
+  );
+
+  return $items;
+}

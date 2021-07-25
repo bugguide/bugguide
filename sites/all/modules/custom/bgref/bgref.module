@@ -15,3 +15,21 @@ function bgref_views_query_alter(&$view, &$query) {
     _bgpage_views_query_alter_for_field_parent($view, $query);
   }
 }
+
+/**
+ * Implements hook_menu().
+ */
+function bgref_menu() {
+  $items = array();
+
+  $items['node/%bgpage_node/bgref/add'] = array(
+    'title' => 'Add book',
+    'page callback' => 'bgref_add_ref',
+    'page arguments' => array(1),
+    'access arguments' => array('create book_reference content'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'bgref.pages.inc',
+  );
+
+  return $items;
+}
