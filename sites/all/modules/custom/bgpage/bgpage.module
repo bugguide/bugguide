@@ -8,13 +8,15 @@ include_once 'bgpage.features.inc';
 function bgpage_menu() {
   $items = array();
 
+  // Note: The View/Info tab has a default weight of -10.
+
   // Taxonomy tab.
   $items['node/%bgpage_node/tree'] = array(
     'title' => 'Taxonomy',
     'page callback' => 'bgpage_tree',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
-    'weight' => -1,
+    'weight' => -12,
     'type' => MENU_LOCAL_TASK,
     'file' => 'bgpage.pages.inc',
   );
@@ -25,7 +27,7 @@ function bgpage_menu() {
     'page callback' => 'bgpage_browse',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
-    'weight' => 1,
+    'weight' => -11,
     'type' => MENU_LOCAL_TASK,
     'file' => 'bgpage.pages.inc',
   );
@@ -41,10 +43,10 @@ function bgpage_menu() {
     'file' => 'bgpage.pages.inc',
   );
 
-  // Books tab.
-  $items['node/%bgpage_node/bgref'] = array(
-    'title' => 'Books',
-    'page callback' => 'bgpage_bgref',
+  // Links tab.
+  $items['node/%bgpage_node/bglink'] = array(
+    'title' => 'Links',
+    'page callback' => 'bgpage_bglink',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
     'weight' => 2,
@@ -52,10 +54,10 @@ function bgpage_menu() {
     'file' => 'bgpage.pages.inc',
   );
 
-  // Links tab.
-  $items['node/%bgpage_node/bglink'] = array(
-    'title' => 'Links',
-    'page callback' => 'bgpage_bglink',
+  // Books tab.
+  $items['node/%bgpage_node/bgref'] = array(
+    'title' => 'Books',
+    'page callback' => 'bgpage_bgref',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
     'weight' => 3,
