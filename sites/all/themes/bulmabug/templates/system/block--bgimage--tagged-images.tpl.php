@@ -50,7 +50,7 @@
 
   <?php print render($title_prefix); ?>
 <?php if ($block->subject): ?>
-  <h2<?php print $title_attributes; ?> class="panel-heading"><span class="icon is-medium"><span class="fa fa-clipboard"></span></span><?php print $block->subject ?></span></h2>
+  <h2<?php print $title_attributes; ?> class="panel-heading"><span class="icon is-medium"><span class="fa fa-clipboard"></span></span><span><?php print $block->subject ?></span></h2>
 <?php endif;?>
   <?php print render($title_suffix); ?>
 
