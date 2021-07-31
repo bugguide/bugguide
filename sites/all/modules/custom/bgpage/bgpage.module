@@ -190,11 +190,12 @@ function bgpage_menu_local_tasks_alter(&$data, $route_name) {
         $parentpath = $route_name['page_arguments'][0]->field_parent[LANGUAGE_NONE][0]['value'];
         $parents = explode(',', $parentpath);
         if (count($parents) > 0) {
+          $info_tab_index = 2;
           $parent_nid = $parents[count($parents) - 1];
-          $data['tabs'][0]['output'][0]['#link']['href'] = 'node/' . $parent_nid;
+          $data['tabs'][0]['output'][$info_tab_index]['#link']['href'] = 'node/' . $parent_nid;
 
           // Also, the Info tab should not look like it is selected.
-          unset($data['tabs'][0]['output'][0]['#active']);
+          unset($data['tabs'][0]['output'][$info_tab_index]['#active']);
         }
       }
   }
