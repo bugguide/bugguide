@@ -489,9 +489,47 @@ function bgimage_node_delete($node) {
     return;
   }
 
+  // Note that we are inside node_delete()'s database transaction.
+
   // Delete row from bgimage table.
   db_delete('bgimage')
     ->condition('nid', $node->nid)
+    ->execute();
+
+  // Update the series table if needed.
+  $deleted_nid = $node->nid;
+  $result = db_query('SELECT weight, series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $deleted_nid))->fetchAssoc();
+  if (!$result) {
+    return;
+  }
+
+  $series_base = $result['series'];
+  $deleted_weight = $result['weight'];
+  $series_nodes = db_query('SELECT nid, weight FROM {bgimage_series} WHERE series = :series', array(':series' => $series_base))->fetchAllAssoc('weight', PDO::FETCH_ASSOC);
+  if (count($series_nodes) <= 2) {
+    // There are only two images in the series and we're deleting one, so the
+    // series record should be removed.
+    db_delete('bgimage_series')
+      ->condition('series', $series_base)
+      ->execute();
+    return;
+  }
+
+  // If the node we're deleting is the base of the series, then we'll need to
+  // set a new series base on every node in the series.
+  $series_base = $series_base == $deleted_nid ? $series_nodes['1']['nid'] : $series_base;
+  foreach ($series_nodes as $series_node) {
+    if ($series_node['weight'] <= $deleted_weight) {
+      continue;
+    }
+    db_update('bgimage_series')
+      ->fields(array('series' => $series_base, 'weight' => $series_node['weight'] - 1))
+      ->condition('nid', $series_node['nid'])
+      ->execute();
+  }
+
+  db_delete('bgimage_series')
+    ->condition('nid', $deleted_nid)
     ->execute();
 }
 
