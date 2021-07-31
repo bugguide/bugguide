@@ -839,7 +839,8 @@ function bgimage_clone_node_alter(&$node, $context) {
     // Remove "Clone of".
     $node->title = str_replace('Clone of ', '', $node->title);
     // Add the original nid in order to update bgimage_series.
-    $node->original_nid = $context['original_node']->nid;
+    $base_nid = _bgimage_get_series_base($context['original_node']->nid);
+    $node->original_nid = $base_nid ? $base_nid : $context['original_node']->nid;
   }
 }
 
