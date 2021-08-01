@@ -21,7 +21,7 @@ function bgapi_get_tree($id) {
     'self' => 'https://bugguide.net/node/view/' . $nid,
   );
 
-  $tree = bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Common name)', NULL, $json = TRUE);
+  $tree = bg_create_taxonomic_breadcrumb($node, '', $guidebc = 'Scientific name (Common name)', NULL, $json = TRUE);
 
   if (!$tree) {
     $error = array(
@@ -64,7 +64,7 @@ function bgapi_get_tree_vocab($id) {
     'self' => 'https://bugguide.net/node/view/' . $nid,
   );
 
-  $tree = bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Common name)', NULL, $json = TRUE);
+  $tree = bg_create_taxonomic_breadcrumb($node, '', $guidebc = 'Scientific name (Common name)', NULL, $json = TRUE);
   $output = '';
 
   if (isset($tree['Species']) && isset($tree['Genus'])) {

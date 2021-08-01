@@ -172,12 +172,18 @@ function bg_str_ends_with($str, $sub) {
  * @param string $guidebc
  *   Defines which format to use to render each taxon name (common, scientific or both).
  *   This is a field on the user entity which users choose by editing their profile.
+ * @param string $type
+ *   The link type of breadcrumbs desired: tree, bgpage, info, bgimage, bglink,
+ *   bgref, bgmap, or '' - '' can only be used if $json is TRUE ($type and $json
+ *   are mutually exclusive parameters).
  * @param integer $from
- *   If the breadcrumb should not start at Home / Guide then specify which
- *   the nid of the taxon it should start from.
- * @return array of links with title and href.
+ *   If the breadcrumb should not start at Home / Guide then specify the nid of
+ *   the taxon it should start from.
+ * @param boolean $json
+ *   Return a taxon_name => taxon_value array instead of links if true.
+ * @return array of links with title and href, where each link is of the specified $type.
  */
-function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Common name)', $from = NULL, $json = FALSE) {
+function bg_create_taxonomic_breadcrumb($node, $type = 'info', $guidebc = 'Scientific name (Common name)', $from = NULL, $json = FALSE) {
   global $TAXON_NAMES;
   global $TAXON_IDS;
 
@@ -208,6 +214,7 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
   if (isset($result['node'])) {
     $nids = array_keys($result['node']);
     $nodes = entity_load('node', $nids);
+    $link_type = $type == 'info' ? '' : '/' . $type;
 
     $start_building = $from ? FALSE : TRUE;
     foreach($nodes as $parent_node) {
@@ -291,7 +298,7 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
         $json_array[$taxon] = empty($scientific_name) ? $common : $scientific_name;
       }
       else {
-        $bc[] = l($linktext, 'node/' . $parent_node->nid);
+        $bc[] = l($linktext, 'node/' . $parent_node->nid . $link_type);
       }
     }
   }
@@ -388,14 +395,27 @@ function bg_preprocess_page(&$vars) {
           }
         }
       }
+      // Find the active tab in order to give breadcrumb links that context.
+      $tab_context = 'info';
+      foreach ($vars['tabs']['#primary'] as $tab) {
+        if (isset($tab['#active']) && $tab['#active']) {
+          $tab_path = $tab['#link']['path'];
+          // Extract the 'bgimage' from 'node/%/bgimage'.
+          $last_slash = strrchr($tab_path, '/');
+          if ($last_slash) {
+            $tab_path = substr($last_slash, 1);
+            $tab_context = $tab_path == 'view' ? 'info' : $tab_path;
+          }
+        }
+      }
       // Adjust the format of each crumb to respect user pref if user is logged in.
       if (user_is_logged_in()) {
         $account = user_load($user->uid);
         $guidebc = isset($account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value']) ? $account->field_user_breadcrumb_format[LANGUAGE_NONE][0]['value'] : 'Scientific name (Common name)';
-        $breadcrumbs = bg_create_taxonomic_breadcrumb($node, $guidebc);
+        $breadcrumbs = bg_create_taxonomic_breadcrumb($node, $tab_context, $guidebc);
       }
       else {
-        $breadcrumbs = bg_create_taxonomic_breadcrumb($node);
+        $breadcrumbs = bg_create_taxonomic_breadcrumb($node, $tab_context);
       }
       drupal_set_breadcrumb($breadcrumbs);
     }
