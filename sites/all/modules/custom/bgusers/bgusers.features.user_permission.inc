@@ -983,7 +983,7 @@ function bgusers_user_default_permissions() {
   $permissions['edit own comments'] = array(
     'name' => 'edit own comments',
     'roles' => array(
-      'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'comment',
   );
