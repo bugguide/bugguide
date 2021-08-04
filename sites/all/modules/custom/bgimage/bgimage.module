@@ -815,7 +815,8 @@ function bgimage_clone_node_alter(&$node, $context) {
     // Remove "Clone of".
     $node->title = str_replace('Clone of ', '', $node->title);
     // Add the original nid in order to update bgimage_series.
-    $node->original_nid = $context['original_node']->nid;
+    $base_nid = _bgimage_get_series_base($context['original_node']->nid);
+    $node->original_nid = $base_nid ? $base_nid : $context['original_node']->nid;
   }
 }
 
@@ -957,6 +958,22 @@ function bgimage_block_view($delta = '') {
 }
 
 /**
+ * Returns the base series nid (i.e. the first image in the series) for a given
+ * nid.
+ *
+ * @param int $nid
+ *   The nid of a node that belongs to a series.
+ * return int|NULL
+ *   The series nid if $nid belongs to a series, or NULL if not.
+ */
+function _bgimage_get_series_base($nid) {
+  // First, check if there are related images.
+  $result = db_query('SELECT series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $nid))->fetchAssoc();
+  // fetchAssoc() returns FALSE if no results, otherwise an associative array.
+  return $result ? $result['series'] : NULL;
+}
+
+/**
  * Returns a series of images given an nid.
  *
  * @param int $nid
@@ -965,21 +982,13 @@ function bgimage_block_view($delta = '') {
  *   An array of nids or NULL if the nid does not belong to a series.
  */
 function bgimage_get_series($nid) {
-  // First, check if there are related images.
-  $result = db_query('SELECT nid, series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $nid))->fetchAssoc();
-  // fetchAssoc() returns FALSE if no results, otherwise an associative array.
-  if (!$result) {
-    return;
+  $series_base_nid = _bgimage_get_series_base($nid);
+  if (!$series_base_nid) {
+    return NULL;
   }
 
-  // Then, find out if the series is based on this nid or a different one.
-  $nid = $result['nid'];
-  if ($nid != $result['series']) {
-    $nid = $result['series'];
-  }
-
-  // Next, extract the whole series of nids.
-  $nids = db_query('SELECT nid FROM {bgimage_series} WHERE series = :nid ORDER BY weight', array(':nid' => $nid))->fetchCol();
+  // Next, extract the nids of all the images in the series.
+  $nids = db_query('SELECT nid FROM {bgimage_series} WHERE series = :nid ORDER BY weight', array(':nid' => $series_base_nid))->fetchCol();
 
   return $nids;
 }
