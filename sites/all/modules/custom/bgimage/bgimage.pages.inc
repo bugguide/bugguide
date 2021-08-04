@@ -69,7 +69,7 @@ function bgimage_untag($node) {
 /**
  * Menu callback. Move an image from the clipboard to this location.
  */
-function bgimage_move_tagged($node) {
+function bgimage_move_tagged($node, $quiet = false) {
   global $user;
 
   $tagged_images = explode(',', $_SESSION['tagged_images']);
@@ -87,6 +87,12 @@ function bgimage_move_tagged($node) {
         // Update parent field for this image.
         $bgimage_wrapper->field_parent->set($path);
         $bgimage_wrapper->save();
+
+        // If we're doing a quiet move then don't produce an autocomment. Moves
+        // to Frass are never quiet.
+        if ($quiet && $node_wrapper->nid != BG_FRASS_NID) {
+          continue;
+        }
 
         // Log a message and leave a comment registering the movement.
         watchdog("bgimage", 'bgimage: moved image @title to path @path', array(
