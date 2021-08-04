@@ -66,11 +66,11 @@ function bulmabug_preprocess_item_list(&$vars) {
   // keyboard to go to the previous or next page.
   foreach ($vars['items'] as &$item) {
     if (isset($item['class']) && in_array('pager-previous', $item['class'])) {
-      $item['data'] = str_replace('Go to previous page', 'Or use your left-arrow key', $item['data']);
+      $item['data'] = str_replace('Go to previous page', 'Go to previous page (or use your left-arrow key)', $item['data']);
       continue;
     }
     if (isset($item['class']) && in_array('pager-next', $item['class'])) {
-      $item['data'] = str_replace('Go to next page', 'Or use your right-arrow key', $item['data']);
+      $item['data'] = str_replace('Go to next page', 'Go to next page (or use your right-arrow key)', $item['data']);
       continue;
     }
   }
