@@ -196,6 +196,59 @@ function bg_str_ends_with($str, $sub) {
 }
 
 /**
+ * Attempt to set the full parent on a form submission given a potential parent
+ * nid.
+ *
+ * This function assumes the parent form field is named 'field_parent' and calls
+ * form_set_error on that field if the potential parent provided is unsuitable.
+ *
+ * @param array $form_state
+ *   Form state as in hook_node_validate.
+ * @param string $potential_parent
+ *   A potential parent nid (as in '5' if the parent is '3,4,5')
+ */
+function bg_node_validate_set_parent(&$form_state, $potential_parent) {
+  if ($form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] != '') {
+    return;
+  }
+
+  if (!$potential_parent) {
+    form_set_error('field_parent', 'Unable to continue without a parent.');
+    return;
+  }
+
+  $parent = (int)$potential_parent;
+  if ($parent == 0) {
+    form_set_error('field_parent', "Can't make sense of parent.");
+    return;
+  }
+
+  $full_parent = bg_get_full_parent($parent);
+  if ($full_parent) {
+    $form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] = $full_parent . ',' . $parent;
+  }
+  else {
+    if ($parent == BG_ID_REQUEST_NID || $parent == BG_FRASS_NID || $parent == BG_ROOT_NID) {
+      $form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] = $parent;
+    }
+    else {
+      form_set_error('field_parent', 'No such parent.');
+    }
+  }
+}
+
+/**
+ * Given a nid return a comma-delimited string of parents.
+ *
+ * @param int $nid
+ * @return string e.g., 52,124,2234,32234
+ */
+function bg_get_full_parent($nid) {
+  $parent = db_query("SELECT field_parent_value FROM {field_data_field_parent} WHERE entity_id = :nid", array(':nid' => $nid))->fetchField();
+  return $parent;
+}
+
+/**
  * Build a one-line taxonomic linked breadcrumb.
  *
  * @param object $node
