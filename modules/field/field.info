@@ -10,8 +10,3 @@ files[] = tests/field.test
 dependencies[] = field_sql_storage
 required = TRUE
 stylesheets[all][] = theme/field.css
-
-; Information added by Drupal.org packaging script on 2021-06-02
-version = "7.81"
-project = "drupal"
-datestamp = "1622633234"

@@ -11,8 +11,3 @@ files[] = system.updater.inc
 files[] = system.test
 required = TRUE
 configure = admin/config/system
-
-; Information added by Drupal.org packaging script on 2021-06-02
-version = "7.81"
-project = "drupal"
-datestamp = "1622633234"
