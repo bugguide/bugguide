@@ -80,10 +80,12 @@ function bgimage_menu() {
   );
 
   $items['bgimage/unlink'] = array(
-    'title' => 'Image tagging',
-    'page callback' => 'bgimage_unlink_tagged',
+    'title' => 'Unlinks a series of images',
+    'page callback' => 'bgimage_unlink_image_series',
+    'page arguments' => array(2),
     'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
+    'file' => 'bgimage.pages.inc',
   );
 
   $items['bgimage/untag_all'] = array(

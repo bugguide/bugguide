@@ -120,23 +120,36 @@ function _bgimage_field_related_images($field) {
     return;
   }
 
-  // Render as a list of image teasers.
-
   $output = '<div class="bgimage-related-actions mb-2">';
   if (user_access('use image clipboard')) {
     $output .= l(
-      'Add all images to clipboard', 
-      'bgimage/tag/' . $node->nid . '/all', 
+      t('Add all images to clipboard'),
+      'bgimage/tag/' . $node->nid . '/all',
       array(
         'attributes' => array(
-        'class' => 'button is-small',
-        'role' => 'button',
+          'class' => 'button is-small mr-1',
+          'role' => 'button',
         ),
         'query' => array(
           'destination' => current_path()
-          )
         )
-      );
+      )
+    );
+  }
+
+  global $user;
+  if ($node->uid == $user->uid || user_access('link all bgimages')) {
+    $output .= l(
+      t('Unlink images'),
+      'bgimage/unlink/' . $node->nid,
+      array(
+        'attributes' => array(
+          'class' => 'button is-small bgimage-related-action-unlink',
+          'role' => 'button',
+          'title' => t('Unlink all the images below'),
+        ),
+      )
+    );
   }
   $output .= '</div>';
 
