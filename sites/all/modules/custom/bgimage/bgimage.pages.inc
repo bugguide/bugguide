@@ -90,7 +90,7 @@ function bgimage_move_tagged($node, $quiet = false) {
 
         // If we're doing a quiet move then don't produce an autocomment. Moves
         // to Frass are never quiet.
-        if ($quiet && $node_wrapper->nid != BG_FRASS_NID) {
+        if ($quiet && $node_wrapper->nid->value() != BG_FRASS_NID) {
           continue;
         }
 
