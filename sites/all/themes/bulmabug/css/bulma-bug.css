@@ -660,6 +660,41 @@ a:hover,
 }
 
 /* --------------------- */
+/* ## LINKS TAB
+/* --------------------- */
+
+.bg-link_title-link {
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.bg-link_byline {
+  margin-bottom: 0.5rem;
+}
+
+.node-type-bglink .bg-link_byline {
+  margin-bottom: 0;
+}
+
+.bg-link_byline span,
+.bg-link_byline .field {
+  margin-bottom: 0;
+}
+
+.bg-link_byline div,
+.bg-link_updated div {
+  display: inline;
+}
+
+.bg-link_links {
+  display: flex;
+}
+
+.bg-link_links_link {
+  margin-right: 0.5rem;
+}
+
+/* --------------------- */
 /* ## GUIDE PAGE
 /* --------------------- */
 
