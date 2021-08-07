@@ -49,7 +49,7 @@ function bglink_field_default_field_instances() {
     'bundle' => 'bglink',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'A BugGuide link.',
+    'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -294,7 +294,6 @@ function bglink_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('A BugGuide link.');
   t('Comment');
   t('Description');
   t('Link');
