@@ -784,3 +784,10 @@ a:hover,
 .bg-image-list .column {
     padding: 0.15rem;
 }
+
+@media screen and (min-width: 1024px) {
+  /* Override bulma to account for the long label of the county field. */
+  #field-bgimage-county-add-more-wrapper .form-type-textfield {
+    display: block;
+  }
+}
