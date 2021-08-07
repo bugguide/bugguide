@@ -15,7 +15,7 @@ function bgref_field_default_field_instances() {
     'bundle' => 'book_reference',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Feel free to include your opinions about this book.',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -42,7 +42,7 @@ function bgref_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'body',
-    'label' => 'Body',
+    'label' => 'Remarks',
     'required' => FALSE,
     'settings' => array(
       'display_summary' => TRUE,
@@ -443,8 +443,9 @@ function bgref_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Feel free to include your opinions about this book.');
   t('Author');
-  t('Body');
+  t('Remarks');
   t('ISBN');
   t('Parent');
   t('Publisher');
