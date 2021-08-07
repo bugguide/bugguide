@@ -64,7 +64,7 @@ function bgpage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 16,
+      'weight' => 12,
     ),
   );
 
