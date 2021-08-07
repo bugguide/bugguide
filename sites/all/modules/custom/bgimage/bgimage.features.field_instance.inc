@@ -349,7 +349,7 @@ function bgimage_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_bgimage_id',
-    'label' => 'ID',
+    'label' => 'Identifier',
     'required' => 0,
     'settings' => array(
       'better_formats' => array(
@@ -638,7 +638,7 @@ function bgimage_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_bgimage_location_code',
-    'label' => 'Location Code',
+    'label' => 'State/Province',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -966,7 +966,7 @@ function bgimage_field_default_field_instances() {
   t('Date taken');
   t('Date taken, if known (mm/dd/yy). Only specify this for wild specimens.');
   t('Feel free to elaborate on this image or to share observations you made while taking it. You need not include a copyright notice, sex of the subject, or the scientific name; if appropriate, these will all appear automatically (check the preview).');
-  t('ID');
+  t('Identifier');
   t('If known, otherwise leave blank. Do not include the word \'County\' or \'Parish\' here as the system will provide that as needed.');
   t('If you don\'t know for sure, don\'t check it. For example: for caterpillars check immature and for butterflies and moths check adult. If an image shows more than one life stage, check each one.');
   t('If you don\'t know for sure, don\'t check it. If the photo shows mating behavior, check both male and female.');
@@ -974,7 +974,7 @@ function bgimage_field_default_field_instances() {
   t('Image');
   t('Life stage');
   t('Location');
-  t('Location Code');
+  t('State/Province');
   t('Optional. An identifier for your own use. If you choose something unique here from your own records, you can easily find this image later using search.');
   t('Parent');
   t('Photographic Quality');
