@@ -892,6 +892,8 @@ function bgusers_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
+      'senior editor' => 'senior editor',
+      'spam zapper' => 'spam zapper',
     ),
     'module' => 'node',
   );
@@ -914,6 +916,8 @@ function bgusers_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
+      'senior editor' => 'senior editor',
+      'spam zapper' => 'spam zapper',
     ),
     'module' => 'node',
   );
@@ -960,6 +964,8 @@ function bgusers_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'contributing editor' => 'contributing editor',
+      'senior editor' => 'senior editor',
+      'spam zapper' => 'spam zapper',
     ),
     'module' => 'node',
   );
@@ -977,7 +983,7 @@ function bgusers_user_default_permissions() {
   $permissions['edit own comments'] = array(
     'name' => 'edit own comments',
     'roles' => array(
-      'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'comment',
   );
@@ -1092,6 +1098,16 @@ function bgusers_user_default_permissions() {
       'contributing editor' => 'contributing editor',
       'senior editor' => 'senior editor',
       'spam zapper' => 'spam zapper',
+    ),
+    'module' => 'bgimage',
+  );
+
+  // Exported permission: 'quiet move all bgimages'.
+  $permissions['quiet move all bgimages'] = array(
+    'name' => 'quiet move all bgimages',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'senior editor' => 'senior editor',
     ),
     'module' => 'bgimage',
   );

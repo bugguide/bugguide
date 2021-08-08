@@ -5,8 +5,3 @@ version = VERSION
 core = 7.x
 hidden = TRUE
 dependencies[] = system_incompatible_core_version_test
-
-; Information added by Drupal.org packaging script on 2021-04-21
-version = "7.80"
-project = "drupal"
-datestamp = "1619021862"

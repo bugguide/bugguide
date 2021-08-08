@@ -49,7 +49,7 @@ function bglink_field_default_field_instances() {
     'bundle' => 'bglink',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'A BugGuide link.',
+    'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -91,7 +91,7 @@ function bglink_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => -4,
+      'weight' => -3,
     ),
   );
 
@@ -156,7 +156,7 @@ function bglink_field_default_field_instances() {
       'module' => 'link',
       'settings' => array(),
       'type' => 'link_field',
-      'weight' => -1,
+      'weight' => -4,
     ),
   );
 
@@ -236,7 +236,7 @@ function bglink_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => -2,
+      'weight' => -1,
     ),
   );
 
@@ -288,13 +288,12 @@ function bglink_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 1,
+      'weight' => -2,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('A BugGuide link.');
   t('Comment');
   t('Description');
   t('Link');

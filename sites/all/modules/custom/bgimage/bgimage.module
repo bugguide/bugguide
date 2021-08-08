@@ -62,6 +62,15 @@ function bgimage_menu() {
     'file' => 'bgimage.pages.inc',
   );
 
+  $items['bgimage/quiet_move/%node'] = array(
+    'title' => 'Quietly moves images in the clipboard to the current page',
+    'page callback' => 'bgimage_move_tagged',
+    'page arguments' => array(2, true),
+    'access arguments' => array('quiet move all bgimages'),
+    'type' => MENU_CALLBACK,
+    'file' => 'bgimage.pages.inc',
+  );
+
   $items['bgimage/link'] = array(
     'title' => 'Image tagging',
     'page callback' => 'bgimage_link_tagged',
@@ -71,10 +80,12 @@ function bgimage_menu() {
   );
 
   $items['bgimage/unlink'] = array(
-    'title' => 'Image tagging',
-    'page callback' => 'bgimage_unlink_tagged',
+    'title' => 'Unlinks a series of images',
+    'page callback' => 'bgimage_unlink_image_series',
+    'page arguments' => array(2),
     'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
+    'file' => 'bgimage.pages.inc',
   );
 
   $items['bgimage/untag_all'] = array(
@@ -121,6 +132,9 @@ function bgimage_permission() {
     ),
     'move all bgimages' => array(
       'title' => 'Move all bgimages',
+    ),
+    'quiet move all bgimages' => array(
+      'title' => 'Quiet move all bgimages',
     ),
     'link all bgimages' => array(
       'title' => 'Link bgimage nodes',
@@ -278,42 +292,79 @@ function bgimage_ds_fields_info($entity_type) {
 }
 
 /**
+ * Implements hook_field_formatter_info().
+ */
+function bgimage_field_formatter_info() {
+  $formatters = array(
+    'bgimage_conditional_link_formatter' => array(
+      'label' => t('Image Conditional Link'),
+      'field types' => array('image'),
+      'settings' => array('image_style' => 'bg_large', 'image_link' => ''),
+    ),
+  );
+
+  return $formatters;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function bgimage_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  // Check if the formatter involves a link.
+  if ($display['settings']['image_link'] == 'content') {
+    $uri = entity_uri($entity_type, $entity);
+  }
+  elseif ($entity->type == 'bgimage' && count($items) == 1) {
+    // Provide a link to the fullsize image if either the user created the image
+    // or they have the right permission.
+    global $user;
+    if ($items[0]['uid'] == $user->uid || user_access('view fullsize bgimages')) {
+      $uri = array(
+        'path' => file_create_url($items[0]['uri']),
+        'options' => array(),
+      );
+    }
+  }
+
+  foreach ($items as $delta => $item) {
+    $element[$delta] = array(
+      '#theme' => 'image_formatter',
+      '#item' => $item,
+      '#image_style' => $display['settings']['image_style'],
+      '#path' => isset($uri) ? $uri : '',
+    );
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_form() by wrapping the default.
+ */
+function bgimage_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  return image_field_formatter_settings_form($field, $instance, $view_mode, $form,$form_state);
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary() by wrapping the default.
+ */
+function bgimage_field_formatter_settings_summary($field, $instance, $view_mode) {
+  return image_field_formatter_settings_summary($field, $instance, $view_mode);
+}
+
+/**
  * Implements hook_node_validate().
  */
 function bgimage_node_validate($node, $form, &$form_state) {
   if ($node->type != 'bgimage') {
     return;
   }
-  // Need a bg_str_ends_with from bg.module
+
   drupal_load('module', 'bg');
 
-  // Set parent.
-  if ($form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] == '') {
-    $potential_parent = arg(3); // node/add/bgimage/1234
-    if ($potential_parent === NULL) {
-      form_set_error('field_bgimage_parent', 'bgimage is unable to continue without a parent.');
-    }
-    else {
-      $parent = (int)$potential_parent;
-      if ($parent == 0) {
-        form_set_error('field_bgimage_parent', 'bgimage could not make sense of parent.');
-      }
-      else {
-        $full_parent = bgimage_get_full_parent($parent);
-        if ($full_parent === FALSE) {
-          if ($parent == BG_ID_REQUEST_NID || $parent == BG_FRASS_NID) {
-            $form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] = $parent;
-          }
-          else {
-            form_set_error('field_parent', 'bgimage: No such parent.');
-          }
-        }
-        else {
-          $form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'] = $full_parent . ',' . $parent;
-        }
-      }
-    }
-  }
+  // Attempt to set the full parent based on our calling nid.
+  bg_node_validate_set_parent($form_state, arg(3));
 
   if ($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid'] == 0) {
     form_set_error('field_bgimage_image', 'Did you forget to attach an image? Please attach one and resubmit.');
@@ -427,9 +478,47 @@ function bgimage_node_delete($node) {
     return;
   }
 
+  // Note that we are inside node_delete()'s database transaction.
+
   // Delete row from bgimage table.
   db_delete('bgimage')
     ->condition('nid', $node->nid)
+    ->execute();
+
+  // Update the series table if needed.
+  $deleted_nid = $node->nid;
+  $result = db_query('SELECT weight, series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $deleted_nid))->fetchAssoc();
+  if (!$result) {
+    return;
+  }
+
+  $series_base = $result['series'];
+  $deleted_weight = $result['weight'];
+  $series_nodes = db_query('SELECT nid, weight FROM {bgimage_series} WHERE series = :series', array(':series' => $series_base))->fetchAllAssoc('weight', PDO::FETCH_ASSOC);
+  if (count($series_nodes) <= 2) {
+    // There are only two images in the series and we're deleting one, so the
+    // series record should be removed.
+    db_delete('bgimage_series')
+      ->condition('series', $series_base)
+      ->execute();
+    return;
+  }
+
+  // If the node we're deleting is the base of the series, then we'll need to
+  // set a new series base on every node in the series.
+  $series_base = $series_base == $deleted_nid ? $series_nodes['1']['nid'] : $series_base;
+  foreach ($series_nodes as $series_node) {
+    if ($series_node['weight'] <= $deleted_weight) {
+      continue;
+    }
+    db_update('bgimage_series')
+      ->fields(array('series' => $series_base, 'weight' => $series_node['weight'] - 1))
+      ->condition('nid', $series_node['nid'])
+      ->execute();
+  }
+
+  db_delete('bgimage_series')
+    ->condition('nid', $deleted_nid)
     ->execute();
 }
 
@@ -746,17 +835,6 @@ function bgimage_original_from_derivative_path($scheme, $target) {
 }
 
 /**
- * Given a nid return a comma-delimited string of parents.
- *
- * @param int $nid
- * @return string e.g., 52,124,2234,32234
- */
-function bgimage_get_full_parent($nid) {
-  $parent = db_query("SELECT field_parent_value FROM {field_data_field_parent} WHERE entity_id = :nid", array(':nid' => $nid))->fetchField();
-  return $parent;
-}
-
-/**
  * Implements hook_clone_node_alter().
  *
  * @param $node
@@ -777,7 +855,8 @@ function bgimage_clone_node_alter(&$node, $context) {
     // Remove "Clone of".
     $node->title = str_replace('Clone of ', '', $node->title);
     // Add the original nid in order to update bgimage_series.
-    $node->original_nid = $context['original_node']->nid;
+    $base_nid = _bgimage_get_series_base($context['original_node']->nid);
+    $node->original_nid = $base_nid ? $base_nid : $context['original_node']->nid;
   }
 }
 
@@ -872,7 +951,7 @@ function bgimage_block_view($delta = '') {
     $links[] = l(t('<span class="icon is-small"><span class="fa fa-times" aria-hidden="true"></span></span><span>Remove all</span>'), 'bgimage/untag_all', array(
       'attributes' => array(
         'title' => t('Remove these images from the clipboard'),
-        'class' => 'clip-remove-all button is-small mr-1',
+        'class' => 'clip-remove-all button is-small mr-1 mb-1',
         ),
       'query' => array('destination' => current_path()),
       'html' => TRUE,
@@ -883,30 +962,55 @@ function bgimage_block_view($delta = '') {
     $links[] = l(t('<span class="icon is-small"><span class="fa fa-link" aria-hidden="true"></span></span><span>Link</span>'), 'bgimage/link', array(
       'attributes' => array(
         'title' => t('Link together these images of the same specimen.'),
-        'class' => 'clip-link button is-small mr-1',
+        'class' => 'clip-link button is-small mr-1 mb-1',
         ),
       'query' => array('destination' => current_path()),
       'html' => TRUE,
     ));
   }
 
-  $current_menu_item = menu_get_item();
-  if (!empty($current_menu_item) && $current_menu_item['path'] == "node/%/bgimage") {
-    $links[] = l(t('<span class="icon is-small"><span class="fa fa-long-arrow-right" aria-hidden="true"></span></span><span>Move'), 'bgimage/move/' . arg(1), array(
+  $current_node = menu_get_object('node');
+  if (!empty($current_node) && in_array($current_node->type, array('bgpage', 'bgimage'))) {
+    $links[] = l(t('<span class="icon is-small"><span class="fa fa-long-arrow-right" aria-hidden="true"></span></span><span>Move</span>'), 'bgimage/move/' . $current_node->nid, array(
       'attributes' => array(
         'title' => t('Move these images to the taxonomy of the current page.'),
-        'class' => 'clip-move button is-small',
+        'class' => 'clip-move button is-small mr-1 mb-1',
         ),
       'html' => TRUE,
     ));
+    if (user_access('quiet move all bgimages')) {
+      $links[] = l(t('<span class="icon is-small"><span class="fa fa-long-arrow-right" aria-hidden="true"></span></span><span>Quiet move</span>'), 'bgimage/quiet_move/' . $current_node->nid, array(
+        'attributes' => array(
+          'title' => t('Quietly move these images to the taxonomy of the current page.'),
+          'class' => 'clip-move button is-small mb-1',
+          ),
+        'html' => TRUE,
+      ));
+    }
   }
 
-  $content .= '<div class="panel-block">'. implode(' ', $links) . '</div>';
+  $content .= '<div class="panel-block flex-wrap">'. implode(' ', $links) . '</div>';
 
   return array(
     'subject' => t('Clipboard'),
     'content' => $content,
   );
+}
+
+/**
+ * Returns the base series nid (i.e. the first image in the series) for a given
+ * nid.
+ *
+ * @param int $nid
+ *   The nid of a node that belongs to a series.
+ * return int|NULL
+ *   The series nid if $nid belongs to a series, or NULL if not.
+ */
+function _bgimage_get_series_base($nid) {
+  // First, check if there are related images.
+  $result = db_query('SELECT series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $nid))->fetchAssoc();
+  // fetchAssoc() returns FALSE if no results, otherwise an associative array.
+  return $result ? $result['series'] : NULL;
 }
 
 /**
@@ -918,21 +1022,13 @@ function bgimage_block_view($delta = '') {
  *   An array of nids or NULL if the nid does not belong to a series.
  */
 function bgimage_get_series($nid) {
-  // First, check if there are related images.
-  $result = db_query('SELECT nid, series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $nid))->fetchAssoc();
-  // fetchAssoc() returns FALSE if no results, otherwise an associative array.
-  if (!$result) {
-    return;
+  $series_base_nid = _bgimage_get_series_base($nid);
+  if (!$series_base_nid) {
+    return NULL;
   }
 
-  // Then, find out if the series is based on this nid or a different one.
-  $nid = $result['nid'];
-  if ($nid != $result['series']) {
-    $nid = $result['series'];
-  }
-
-  // Next, extract the whole series of nids.
-  $nids = db_query('SELECT nid FROM {bgimage_series} WHERE series = :nid', array(':nid' => $nid))->fetchCol();
+  // Next, extract the nids of all the images in the series.
+  $nids = db_query('SELECT nid FROM {bgimage_series} WHERE series = :nid ORDER BY weight', array(':nid' => $series_base_nid))->fetchCol();
 
   return $nids;
 }

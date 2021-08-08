@@ -158,6 +158,9 @@ function bgmap_page($nid) {
   }
   
   $node = node_load($nid);
+  if (!$node) {
+    return MENU_NOT_FOUND;
+  }
   drupal_add_js('https://calc.bugwoodcloud.org/static/js/iframe.js', 'external');
   $output = '<div id="iframecontainer"><iframe src="https://maps.eddmaps.org/bugguidestate/?node=' . $node->nid . '" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" height="500" width="960" scrolling="no" seamless></iframe></div>';
   $output .= '<div id="iframecontainer"><iframe src="https://maps.eddmaps.org/bugguide/?node=' . $node->nid . '" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" height="500" width="960" scrolling="no" seamless></iframe></div>';

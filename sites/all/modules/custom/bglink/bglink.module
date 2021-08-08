@@ -15,3 +15,44 @@ function bglink_views_query_alter(&$view, &$query) {
     _bgpage_views_query_alter_for_field_parent($view, $query);
   }
 }
+
+/**
+ * Implements hook_menu().
+ */
+function bglink_menu() {
+  $items = array();
+
+  $items['node/%bgpage_node/bglink/add'] = array(
+    'title' => 'Add link',
+    'page callback' => 'bglink_add_link',
+    'page arguments' => array(1),
+    'access arguments' => array('create bglink content'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'bglink.pages.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function bglink_form_bglink_node_form_alter(&$form, &$form_state, $form_id) {
+  if (!user_access('view raw parents')) {
+    $form['field_parent']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_node_validate().
+ */
+function bglink_node_validate($node, $form, &$form_state) {
+  if ($node->type != 'bglink') {
+    return;
+  }
+
+  drupal_load('module', 'bg');
+
+  // Attempt to set the full parent based on our calling nid.
+  bg_node_validate_set_parent($form_state, arg(3));
+}

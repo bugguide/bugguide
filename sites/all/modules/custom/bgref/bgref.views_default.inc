@@ -36,7 +36,7 @@ function bgref_views_default_views() {
     'title' => 'title',
     'field_book_reference_author' => 'field_book_reference_author',
   );
-  $handler->display->display_options['style_options']['default'] = 'title';
+  $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
     'nid' => array(
       'sortable' => 1,

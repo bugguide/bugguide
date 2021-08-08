@@ -69,7 +69,7 @@ function bgimage_untag($node) {
 /**
  * Menu callback. Move an image from the clipboard to this location.
  */
-function bgimage_move_tagged($node) {
+function bgimage_move_tagged($node, $quiet = false) {
   global $user;
 
   $tagged_images = explode(',', $_SESSION['tagged_images']);
@@ -93,6 +93,12 @@ function bgimage_move_tagged($node) {
         $bgimage_wrapper->field_parent->set($path);
         $bgimage_wrapper->save();
 
+        // If we're doing a quiet move then don't produce an autocomment. Moves
+        // to Frass are never quiet.
+        if ($quiet && $node_wrapper->nid->value() != BG_FRASS_NID) {
+          continue;
+        }
+
         // Log a message and leave a comment registering the movement.
         watchdog("bgimage", 'bgimage: moved image @title to path @path', array(
           '@title' => $bgimage_node->title,
@@ -103,7 +109,7 @@ function bgimage_move_tagged($node) {
           'nid' => $bgimage_node->nid,
           'cid' => 0,
           'pid' => 0,
-          'uid' => 1,
+          'uid' => $user->uid,
           'mail' => '',
           'is_anonymous' => 0,
           'homepage' => '',
@@ -113,8 +119,8 @@ function bgimage_move_tagged($node) {
           'comment_body' => array(
             LANGUAGE_NONE => array(
               0 => array (
-                'value' => 'Moved from ' . l($old_parent_title, "node/$old_parent_nid"),
-                'format' => 1,
+                'value' => 'Moved from ' . l($old_parent_title, "node/$old_parent_nid") . '.',
+                'format' => 'f',
               ),
             ),
           ),
@@ -202,6 +208,34 @@ function bgimage_link_tagged() {
   drupal_set_message(t('You must be the owner of all the images in the clipboard in order to link them.', 'warning'));
   $destination = drupal_get_destination();
   drupal_goto($destination['destination']);
+}
+
+/**
+ * Unlinks the images in an image series.
+ *
+ * @param int $nid
+ *   The nid of one of the images in the series to be unlinked.
+ */
+function bgimage_unlink_image_series($nid) {
+  global $user;
+  $nid = (int) $nid;
+
+  $node = node_load($nid);
+  if ($node && (($node->uid == $user->uid) || user_access("link all bgimages"))) {
+    $dead_series_nid = db_query('SELECT series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $nid))->fetchCol();
+    if ($dead_series_nid) {
+      db_delete('bgimage_series')
+        ->condition('series', $dead_series_nid)
+        ->execute();
+      watchdog('bgimage', "Unlinked series '$dead_series_nid[0]'", array(), WATCHDOG_NOTICE, l(t("view post"), 'node/' . $nid));
+      drupal_set_message(t('Images were unlinked.'));
+      drupal_goto('node/' . $nid);
+    }
+  }
+
+  // Something wasn't right, most likely a permission error.
+  drupal_set_message(t('You must be the owner of these images in order to unlink them.'), 'warning');
+  drupal_goto('node/' . $nid);
 }
 
 /**

@@ -8,8 +8,3 @@ files[] = user.test
 required = TRUE
 configure = admin/config/people
 stylesheets[all][] = user.css
-
-; Information added by Drupal.org packaging script on 2021-04-21
-version = "7.80"
-project = "drupal"
-datestamp = "1619021862"

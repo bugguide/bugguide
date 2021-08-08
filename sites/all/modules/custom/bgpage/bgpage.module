@@ -8,13 +8,15 @@ include_once 'bgpage.features.inc';
 function bgpage_menu() {
   $items = array();
 
+  // Note: The View/Info tab has a default weight of -10.
+
   // Taxonomy tab.
   $items['node/%bgpage_node/tree'] = array(
     'title' => 'Taxonomy',
     'page callback' => 'bgpage_tree',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
-    'weight' => -1,
+    'weight' => -12,
     'type' => MENU_LOCAL_TASK,
     'file' => 'bgpage.pages.inc',
   );
@@ -25,7 +27,7 @@ function bgpage_menu() {
     'page callback' => 'bgpage_browse',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
-    'weight' => 1,
+    'weight' => -11,
     'type' => MENU_LOCAL_TASK,
     'file' => 'bgpage.pages.inc',
   );
@@ -41,10 +43,10 @@ function bgpage_menu() {
     'file' => 'bgpage.pages.inc',
   );
 
-  // Books tab.
-  $items['node/%bgpage_node/bgref'] = array(
-    'title' => 'Books',
-    'page callback' => 'bgpage_bgref',
+  // Links tab.
+  $items['node/%bgpage_node/bglink'] = array(
+    'title' => 'Links',
+    'page callback' => 'bgpage_bglink',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
     'weight' => 2,
@@ -52,10 +54,10 @@ function bgpage_menu() {
     'file' => 'bgpage.pages.inc',
   );
 
-  // Links tab.
-  $items['node/%bgpage_node/bglink'] = array(
-    'title' => 'Links',
-    'page callback' => 'bgpage_bglink',
+  // Books tab.
+  $items['node/%bgpage_node/bgref'] = array(
+    'title' => 'Books',
+    'page callback' => 'bgpage_bgref',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
     'weight' => 3,
@@ -184,14 +186,16 @@ function bgpage_menu_local_tasks_alter(&$data, $route_name) {
 
       case 'bgimage':
       case 'book_reference':
+      case 'bglink':
         $parentpath = $route_name['page_arguments'][0]->field_parent[LANGUAGE_NONE][0]['value'];
         $parents = explode(',', $parentpath);
         if (count($parents) > 0) {
+          $info_tab_index = 2;
           $parent_nid = $parents[count($parents) - 1];
-          $data['tabs'][0]['output'][0]['#link']['href'] = 'node/' . $parent_nid;
+          $data['tabs'][0]['output'][$info_tab_index]['#link']['href'] = 'node/' . $parent_nid;
 
           // Also, the Info tab should not look like it is selected.
-          unset($data['tabs'][0]['output'][0]['#active']);
+          unset($data['tabs'][0]['output'][$info_tab_index]['#active']);
         }
       }
   }
@@ -596,7 +600,8 @@ function bgpage_fetch_classification($nid, $filter) {
  * '3,878075,52,57,81',
  * '3,878075,52,57,81,156',
  * '3,878075,52,57,81,156,43480',
- * '3,878075,52,57,81,156,43480,483723')) OR (field_parent_value LIKE '3,878075,52,57,81,156,43480,483723,347,%' ESCAPE '\\') ) AND
+ * '3,878075,52,57,81,156,43480,483723,
+ * '3,878075,52,57,81,156,43480,483723,347')) OR (field_parent_value LIKE '3,878075,52,57,81,156,43480,483723,347,%' ESCAPE '\\') ) AND
  * (( (node.status = '1') AND (node.type IN  ('book_reference')) AND (field_data_field_parent.field_parent_value LIKE '%' ESCAPE '\\') )))
  * ORDER BY field_parent_value != '3,878075,52,57,81,156,43480,483723,347', LENGTH(field_parent_value) DESC, node_created DESC
  * LIMIT 25 OFFSET 0
@@ -611,12 +616,16 @@ function bgpage_fetch_classification($nid, $filter) {
  * @see bglink.module
  */
 function _bgpage_views_query_alter_for_field_parent(&$view, &$query) {
-  $node = node_load($view->args[0]);
+  $nid = $view->args[0];
+  $node = node_load($nid);
   if (!isset($node->field_parent[LANGUAGE_NONE][0]['value'])) {
     return;
   }
   $parent_paths = array();
-  $parent_path = $node->field_parent[LANGUAGE_NONE][0]['value'];
+  // We want to include refs/links whose parent is this node - in fact we want
+  // to prioritize those - so include this node in the parent path.
+  $parent_path = $node->field_parent[LANGUAGE_NONE][0]['value'] . ',' . $nid;
+
   $parent = '';
   foreach (explode(',', $parent_path) as $nid) {
     if ($parent) {
@@ -635,15 +644,18 @@ function _bgpage_views_query_alter_for_field_parent(&$view, &$query) {
       ),
       array(
         'field' => 'field_parent_value',
-        'value' => $parent_path . ',' . $node->nid . ',%',
+        'value' => $parent_path . ',%',
         'operator' => 'LIKE',
       )
     ),
     'type' => 'OR',
   );
   array_unshift($query->where, $where_condition);
+
+  // The following is equivalent to:
+  // ORDER BY field_parent_value != '$parent_path' ASC, LENGTH(field_parent_value) DESC
   $order_by = array(
-    'field' => "field_parent_value != '$parent_path,$node->nid', LENGTH(field_parent_value)",
+    'field' => "field_parent_value != '$parent_path', LENGTH(field_parent_value)",
     'direction' => 'DESC',
   );
   array_unshift($query->orderby, $order_by);

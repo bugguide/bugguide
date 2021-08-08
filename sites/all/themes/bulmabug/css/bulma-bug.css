@@ -621,6 +621,8 @@ a:hover,
 
 /* + Add images (of this individual) */
 .page-node-bgimage .action-links a:before,
+.page-node-bgref .action-links a:before,
+.page-node-bglink .action-links a:before,
 .node-type-bgimage .action-links a:before {
   content: '\f067'; /* fa-plus */
   font-family: 'FontAwesome';
@@ -634,7 +636,9 @@ a:hover,
   font-size: 0.75rem;
 }
 
-.page-node-bgimage .action-links a {
+.page-node-bgimage .action-links a,
+.page-node-bgref .action-links a,
+.page-node-bglink .action-links a {
   margin-bottom: 1rem;
 }
 
@@ -647,6 +651,16 @@ a:hover,
   font-family: 'FontAwesome';
   display: inline-block;
   margin-right: 0.5rem;
+}
+
+/* The unlink button gets its own icon. */
+
+.bgimage-related-actions .bgimage-related-action-unlink:before {
+  content: '\f127';
+}
+
+.bgimage-related-actions a {
+  margin-bottom: 0.75rem;
 }
 
 /* --------------------- */
@@ -773,4 +787,11 @@ a:hover,
 
 .bg-image-list .column {
     padding: 0.15rem;
+}
+
+@media screen and (min-width: 1024px) {
+  /* Override bulma to account for the long label of the county field. */
+  #field-bgimage-county-add-more-wrapper .form-type-textfield {
+    display: block;
+  }
 }

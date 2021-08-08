@@ -12,6 +12,9 @@
 function bgpage_tree($nid) {
   $query = drupal_get_query_parameters();
   $node = node_load($nid);
+  if (!$node) {
+    return MENU_NOT_FOUND;
+  }
   $output = '';
 
   // First, create the filter that loads parent taxons plus the current one.
@@ -80,6 +83,9 @@ function bgpage_tree($nid) {
  */
 function bgpage_browse($nid) {
   $node = node_load($nid);
+  if (!$node) {
+    return MENU_NOT_FOUND;
+  }
   return node_view($node, 'browse');
 }
 
@@ -93,11 +99,14 @@ function bgpage_browse($nid) {
  */
 function bgpage_images($nid) {
   $node = node_load($nid);
+  if (!$node) {
+    return MENU_NOT_FOUND;
+  }
   return node_view($node, 'images');
 }
 
 /**
- * Shows images for a bgpage node.
+ * Shows book references for a bgpage node.
  *
  * Traverses the tree in a Breadth-first way showing bgrefs for each leaf.
  *
@@ -105,6 +114,10 @@ function bgpage_images($nid) {
  *   The nid of the bgpage node.
  */
 function bgpage_bgref($nid) {
+  $node = node_load($nid);
+  if (!$node) {
+    return MENU_NOT_FOUND;
+  }
   return views_embed_view('all_books', 'by_bgpage', $nid);
 }
 
@@ -117,5 +130,9 @@ function bgpage_bgref($nid) {
  *   The nid of the bgpage node.
  */
 function bgpage_bglink($nid) {
+  $node = node_load($nid);
+  if (!$node) {
+    return MENU_NOT_FOUND;
+  }
   return views_embed_view('links', 'by_bgpage', $nid);
 }
