@@ -74,8 +74,13 @@ function bgimage_move_tagged($node, $quiet = false) {
 
   $tagged_images = explode(',', $_SESSION['tagged_images']);
   $node_wrapper = entity_metadata_wrapper('node', $node);
-  if ($node_wrapper->field_parent->value()) {
-    $path = $node_wrapper->field_parent->value();
+  if ($node_wrapper->field_parent->value() || $node_wrapper->nid->value() == BG_ROOT_NID) {
+    // Compute the new parent for the images being moved - their direct parent
+    // will be $node.
+    $path = $node_wrapper->nid->value();
+    if ($node_wrapper->field_parent->value()) {
+      $path = $node_wrapper->field_parent->value() . "," . $path;
+    }
     $bgimage_nodes = node_load_multiple($tagged_images);
     foreach ($bgimage_nodes as $bgimage_node) {
       if (($user->uid == $bgimage_node->uid) || user_access('move all bgimages')) {
