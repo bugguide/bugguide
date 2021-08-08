@@ -120,7 +120,7 @@ function _bgimage_field_related_images($field) {
     return;
   }
 
-  $output = '<div class="bgimage-related-actions mb-2">';
+  $output = '<div class="bgimage-related-actions">';
   if (user_access('use image clipboard')) {
     $output .= l(
       t('Add all images to clipboard'),

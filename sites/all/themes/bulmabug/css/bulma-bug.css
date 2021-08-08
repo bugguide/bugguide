@@ -659,6 +659,10 @@ a:hover,
   content: '\f127';
 }
 
+.bgimage-related-actions a {
+  margin-bottom: 0.75rem;
+}
+
 /* --------------------- */
 /* ## GUIDE PAGE
 /* --------------------- */
