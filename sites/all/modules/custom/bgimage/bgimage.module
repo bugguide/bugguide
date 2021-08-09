@@ -1053,17 +1053,17 @@ function bgimage_form_bgimage_node_form_alter(&$form, &$form_state) {
  */
 function bgimage_views_pre_render(&$view) {
   // For recent images views with display block show just 4 recent images
-  // that doesn't contain parent value 6.
+  // that doesn't contain ID Request as a parent.
   if (($view->name === 'recent_images') && ($view->current_display == 'block')) {
-    $nids_not_containing_parent_6 = 0;
+    $nids_not_in_id_request = 0;
     foreach ($view->result as $key => $record) {
       $node = node_load($record->nid);
-      // If DOESN'T contain PARENT value 6.
       $parent_value = bg_get_first_parent_nid($node);
-      if ($parent_value === '6' && $nids_not_containing_parent_6 < 4) {
-        $nids_not_containing_parent_6++;
+      if ($parent_value && $parent_value != BG_ID_REQUEST_NID && $nids_not_in_id_request < 4) {
+        $nids_not_in_id_request++;
       }
       else {
+        // Remove ID Request result.
         unset($view->result[$key]);
       }
     }
