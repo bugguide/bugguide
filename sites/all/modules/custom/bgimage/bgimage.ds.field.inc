@@ -97,9 +97,11 @@ function _bgimage_field_title_classification($field) {
 
   // Find the grandparent's scientific name.
   $grandparent_nid = bg_get_parent_nid($parent_node);
-  $bgpage_gp_wrapper = entity_metadata_wrapper('node', $grandparent_nid);
-  if (!empty($bgpage_gp_wrapper->id)) {
-    $grandparent_classification = $bgpage_gp_wrapper->field_scientific_name->value();
+  if ($grandparent_nid) {
+    $bgpage_gp_wrapper = entity_metadata_wrapper('node', $grandparent_nid);
+    if (!empty($bgpage_gp_wrapper->id)) {
+      $grandparent_classification = $bgpage_gp_wrapper->field_scientific_name->value();
+    }
   }
 
   return '<h2>' . check_plain($node->title) . ' &ndash; ' . $grandparent_classification . ' ' . $parent_classification . '</h2>';
