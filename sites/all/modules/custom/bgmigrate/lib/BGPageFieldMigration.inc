@@ -35,7 +35,7 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
     $query = db_select('bgpage_archive', 'bgp');
     $query->join('field_data_body', 'fdb', 'fdb.entity_id = bgp.nid');
     $query->join('node', 'n', 'fdb.entity_id = n.nid');
-    $query->fields('bgp', array('nid', 'parent', 'scientific_name', 'names', 'counts', 'size', 'id', 'raynge', 'habitat', 'season', 'food', 'life_cycle', 'pronunciation', 'etymology', 'synonyms', 'see_also', 'print_references', 'web_references', 'taxon', 'hodges_number', 'uids', 'location_codes'))
+    $query->fields('bgp', array('nid', 'parent', 'images', 'scientific_name', 'names', 'counts', 'size', 'id', 'raynge', 'habitat', 'season', 'food', 'life_cycle', 'pronunciation', 'etymology', 'synonyms', 'see_also', 'print_references', 'web_references', 'taxon', 'hodges_number', 'uids', 'location_codes'))
           ->fields('fdb', array('body_value'));
     $query->addField('n', 'title');
     $this->source = new MigrateSourceSQL($query, array());
@@ -84,6 +84,7 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
     $this->addFieldMapping('field_print_references:format')->defaultValue('f');
     $this->addFieldMapping('field_internet_references', 'web_references');
     $this->addFieldMapping('field_internet_references:format')->defaultValue('f');
+    $this->addFieldMapping('field_representative_images', 'images');
 
     $this->addUnmigratedDestinations(array(
       'uid',
@@ -104,7 +105,6 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
       'body:format',
       'body:language',
       'field_bgimage_image',
-      'field_representative_images',
       'comment',
     ));
   }
