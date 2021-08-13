@@ -1060,6 +1060,17 @@ function bgimage_views_pre_render(&$view) {
       $node = node_load($record->nid);
       $parent_value = bg_get_first_parent_nid($node);
       if ($parent_value && $parent_value != BG_ID_REQUEST_NID && $nids_not_in_id_request < 4) {
+        $series_base = _bgimage_get_series_base($record->nid);
+        // (1) nid is not a member of a series and $series_base is NULL - keep
+        // (2) nid is a member of the series and the series base - keep
+        // (3) nid is a member of the series but not the series base - discard
+        // To match (3) a result is present in $series_base and it is not the nid of the
+        // record. Nest this if() so that series queries are only done on nids that have
+        // passed the other tests.
+        if ($series_base && $record->nid != $series_base) {
+          unset($view->result[$key]);
+          continue;
+        }
         $nids_not_in_id_request++;
       }
       else {
