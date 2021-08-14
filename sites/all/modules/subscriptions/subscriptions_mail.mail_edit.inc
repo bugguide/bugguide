@@ -336,6 +336,9 @@ function _subscriptions_mail_preview_form(array $values) {
     $data['template']['subscriptions_comment_body'] = $comment_template;
   }
   $body = mail_edit_format($body_template, $data, array('language' => $language));
+  if (variable_get('subscriptions_showmailkeys', FALSE)) {
+    $body .= '| ' . $mailkey . "\n";
+  }
   switch ($preview_mode) {
     case 'text':
       $body = drupal_html_to_text($body);

@@ -233,44 +233,6 @@ function subscriptions_taxonomy_data(array &$data, $node, array $queue_item) {
 }
 
 /**
- * Implements hook_taxonomy().
- *
- * Remove taxonomy subscriptions when the underlying terms or vocabularies are removed.
- *
- * @param $op
- * @param $type
- * @param $array
- *
- * @return
- *
- * @ingroup hooks
- */
-function subscriptions_taxonomy_taxonomy($op, $type, $array) {
-  if ($op != 'delete') {
-    return;
-  }
-  switch ($type) {
-    case 'term':
-      $tid = $array['tid'];
-      db_delete('subscriptions_queue')
-        ->condition('module', 'node')
-        ->condition('field', 'tid')
-        ->condition('value', $tid)
-        ->execute();
-      subscriptions_delete_for_all_users('node', 'tid', $tid);
-      break;
-    case 'taxonomy_vocabulary':
-      $vid = $array['vid'];
-      foreach (array('omitted', 'restricted') as $key) {
-        $array = variable_get('subscriptions_' . $key . '_taxa', array());
-        unset($array[$vid]);
-        variable_set('subscriptions_' . $key . '_taxa', $array);
-      }
-      break;
-  }
-}
-
-/**
  * Implements hook_disable().
  *
  * Remove our queue items.
@@ -284,3 +246,17 @@ function subscriptions_taxonomy_disable() {
     ->execute();
 }
 
+/**
+ * Implements hook_taxonomy_term_delete().
+ *
+ * Removes the corresponding records from the Subscriptions tables.
+ */
+function subscriptions_taxonomy_taxonomy_term_delete($term) {
+  foreach (array('subscriptions', 'subscriptions_queue') as $table) {
+    db_delete($table)
+      ->condition('module', 'node')
+      ->condition('field', 'tid')
+      ->condition('value', $term->tid)
+      ->execute();
+  }
+}

@@ -26,3 +26,51 @@ function subscriptions_taxonomy_update_last_removed() {
 function subscriptions_taxonomy_uninstall() {
 }
 
+/**
+ * Remove orphaned taxonomy term subscriptions records.
+ */
+function subscriptions_taxonomy_update_7001() {
+  // Fetch all existing term ids.
+  $taxonomy_tids = db_select('taxonomy_term_data', 'ttd')
+    ->fields('ttd', array('tid'))
+    ->execute()
+    ->fetchCol();
+
+  // Fetch all tids from subscriptions table.
+  $subscriptions_tids = db_select('subscriptions', 'sub')
+    ->fields('sub', array('value'))
+    ->distinct('sub.value')
+    ->condition('module', 'node')
+    ->condition('field', 'tid')
+    ->execute()
+    ->fetchCol();
+
+  // Fetch all tids from subscriptions_queue table.
+  $subscriptions_queue_tids = db_select('subscriptions_queue', 'subq')
+    ->fields('subq', array('value'))
+    ->distinct('subq.value')
+    ->condition('module', 'node')
+    ->condition('field', 'tid')
+    ->execute()
+    ->fetchCol();
+
+  // Delete orphaned entries from subscriptions table.
+  $subscriptions_tids_diff = array_diff($subscriptions_tids, $taxonomy_tids);
+  if (!empty($subscriptions_tids_diff)) {
+    db_delete('subscriptions')
+      ->condition('module', 'node')
+      ->condition('field', 'tid')
+      ->condition('value', $subscriptions_tids_diff)
+      ->execute();
+  }
+
+  // Delete orphaned entries from subscriptions_queue table.
+  $subscriptions_queue_tids_diff = array_diff($subscriptions_queue_tids, $taxonomy_tids);
+  if (!empty($subscriptions_queue_tids_diff)) {
+    db_delete('subscriptions_queue')
+      ->condition('module', 'node')
+      ->condition('field', 'tid')
+      ->condition('value', $subscriptions_tids_diff)
+      ->execute();
+  }
+}

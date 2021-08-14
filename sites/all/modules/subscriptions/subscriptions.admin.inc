@@ -512,20 +512,30 @@ function _subscriptions_user_suspend_form_submit(array $form, array &$form_state
         ->execute();
       $suspended = 0;
     }
-    db_update('subscriptions_user')
-      ->fields(array(
-          'suspended' => $suspended,
-        ))
-      ->condition('uid', $uid)
-      ->execute();
-    db_update('subscriptions_queue')
-      ->fields(array(
-          'suspended' => $suspended,
-        ))
-      ->condition('uid', $uid)
-      ->execute();
+    _subscriptions_user_suspend($uid, $suspended);
     drupal_set_message(t('The changes have been saved.'));
   }
+}
+
+/**
+ * Update the user's suspend state.
+ *
+ * @param int $uid
+ * @param int $suspend
+ */
+function _subscriptions_user_suspend($uid, $suspended) {
+  db_update('subscriptions_user')
+    ->fields(array(
+        'suspended' => $suspended,
+      ))
+    ->condition('uid', $uid)
+    ->execute();
+  db_update('subscriptions_queue')
+    ->fields(array(
+        'suspended' => $suspended,
+      ))
+    ->condition('uid', $uid)
+    ->execute();
 }
 
 /**

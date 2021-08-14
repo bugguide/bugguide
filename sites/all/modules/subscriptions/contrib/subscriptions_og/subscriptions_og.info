@@ -1,10 +1,10 @@
-name = Taxonomy Subscriptions
-description = Allows users to subscribe to taxonomy terms.
-package = "Subscriptions"
+name = Organic Groups Subscriptions
+description = Allows users to subscribe to all content (nodes) posted to an organic group.
+package = Organic groups
 
 dependencies[] = subscriptions
 dependencies[] = subscriptions_content
-dependencies[] = taxonomy
+dependencies[] = og
 
 core = 7.x
 

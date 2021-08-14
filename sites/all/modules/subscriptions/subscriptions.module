@@ -175,7 +175,7 @@ function subscriptions_menu() {
       'file' => 'subscriptions.admin.inc',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('subscriptions_page_form', SUBSCRIPTIONS_CONFIG_PATH_LEVEL + 2, $stype),
-      'access arguments' => array('administer site configuration'),
+      'access callback' => '_subscriptions_bulk_or_site_access',
       'weight' => $weight,
     );
     $items[SUBSCRIPTIONS_CONFIG_PATH . '/userdefaults/' . $stype]['title'] = $data['title'];
@@ -254,6 +254,16 @@ function _subscriptions_access($account, $access = NULL) {
 function _subscriptions_bulk_access() {
   return user_access('bulk-administer user subscriptions') && !empty($_SESSION['subscriptions']['bulk_op']);
 }
+
+/*
+ * Access callback for bulk operations or site configuration.
+ *
+ * @returns: bool
+ */
+function _subscriptions_bulk_or_site_access() {
+  return _subscriptions_bulk_access() || user_access('administer site configuration');
+}
+
 
 /**
  * Implements hook_permission().
@@ -337,6 +347,37 @@ function subscriptions_user_insert(array $edit, &$account, $category) {
 }
 
 /**
+ * Implements hook_user_update().
+ *
+ * Suspend notifications if the user is blocked.
+ *
+ * @param array $edit
+ * @param object $account
+ * @param null $category
+ *
+ * @ingroup hooks
+ */
+function subscriptions_user_update(&$edit, $account, $category) {
+  if ($account->status === '0' && $account->original->status === '1') {
+    // User is being blocked.
+    _subscriptions_module_load_include('subscriptions', 'admin.inc');
+    _subscriptions_user_suspend($account->uid, 2);
+  }
+}
+
+/**
+ * Implements hook_user_cancel().
+ *
+ * @param array $edit
+ * @param object $account
+ *
+ * @ingroup hooks
+ */
+function subscriptions_user_cancel($edit, $account) {
+  subscriptions_user_delete($account);
+}
+
+/**
  * Implements hook_user_delete().
  *
  * @param object $account
@@ -344,6 +385,9 @@ function subscriptions_user_insert(array $edit, &$account, $category) {
  * @ingroup hooks
  */
 function subscriptions_user_delete($account) {
+  db_delete('subscriptions_queue')
+    ->condition('uid', $account->uid)
+    ->execute();
   db_delete('subscriptions_user')
     ->condition('uid', $account->uid)
     ->execute();
@@ -478,9 +522,14 @@ function subscriptions_queue(array $event) {
         $select->innerJoin('subscriptions_user', 'su', 's.recipient_uid = su.uid');
         $select->innerJoin('users', 'u', 'su.uid = u.uid');
         $select->leftJoin('subscriptions_last_sent', 'sls', 'su.uid = sls.uid AND s.send_interval = sls.send_interval');
+
         if (!empty($query['join'])) {
-          $select->innerJoin($query['join']['table'], $query['join']['alias'], $query['join']['on']);
+          $joins = isset($query['join']['table']) ? array($query['join']) : $query['join'];
+          foreach ($joins as $join) {
+            $select->innerJoin($join['table'], $join['alias'], $join['on']);
+          }
         }
+
         $select
           ->fields('u', array('uid', 'name', 'language'))
           ->fields('s', array('module', 'field', 'value', 'author_uid', 'send_interval'))
@@ -495,13 +544,14 @@ function subscriptions_queue(array $event) {
           // author-specific subscriptions trigger on comments, when the node author is subscribed to:
           ->condition('s.author_uid', array(($module == 'node' && $event['type'] == 'comment' && isset($event['node']->uid) ? $event['node']->uid : $event['uid']) , -1), 'IN')
           ->groupBy('u.uid');
-        if (db_driver() == 'pgsql' || db_driver() == 'sqlsrv') {
-          $select
-            ->groupBy('u.uid')->groupBy('u.name')->groupBy('u.language')
-            ->groupBy('s.module')->groupBy('s.field')->groupBy('s.value')->groupBy('s.author_uid')->groupBy('s.send_interval')
-            ->groupBy('su.digest')->groupBy('su.suspended')
-            ->groupBy('last_sent');
-        }
+
+        // #2798015: "only_full_group_by" becomes standard in MySQL 5.7,
+        // just as for pgsql and sqlsrv.
+        $select
+          ->groupBy('u.uid')->groupBy('u.name')->groupBy('u.language')
+          ->groupBy('s.module')->groupBy('s.field')->groupBy('s.value')->groupBy('s.author_uid')->groupBy('s.send_interval')
+          ->groupBy('su.digest')->groupBy('su.suspended')
+          ->groupBy('last_sent');
 
         if (!empty($query['where'])) {
           foreach ($query['where'] as $cond) {
@@ -625,7 +675,13 @@ function subscriptions_delete_form(array $form, array &$form_state, $module, $fi
   $form['data'] = array('#type' => 'value', '#value' => array($module, $field, $value, $author_uid, $recipient_uid));
   // We might be called from subscriptions_del_form() and don't want to submit to subscriptions_del_form_submit():
   $form['#submit'][] = 'subscriptions_delete_form_submit';
-  return confirm_form($form, t('Are you sure you want to unsubscribe?'), '<front>', NULL, t('Unsubscribe'));
+  return confirm_form(
+    $form,
+    t('Are you sure you want to unsubscribe?'),
+    '<front>',
+    t('You can always resubscribe later. Any pending notifications may be lost.'),
+    t('Unsubscribe')
+  );
 }
 
 /**
@@ -1034,5 +1090,12 @@ function subscriptions_coder_ignore() {
     'path'        => drupal_get_path('module', 'subscriptions'),
     'line prefix' => drupal_get_path('module', 'subscriptions') . '/',
   );
+}
+
+/**
+ * Implements hook_user_cancel_methods_alter().
+ */
+function subscriptions_user_cancel_methods_alter(&$methods) {
+  $methods['user_cancel_reassign']['title'] .= ' &mdash; <span class="warning">' . t('WARNING: Reassigning content and comments may trigger unwanted Subscriptions notifications!') . '</span>';
 }
 

@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Organic Groups Subscriptions module installation.
+ */
+
+/**
+ * Implements hook_disable().
+ */
+function subscriptions_og_disable() {
+  // Removes our queue items.
+  db_delete('subscriptions_queue')
+    ->condition('module', 'node')
+    ->condition('field', 'group_audience')
+    ->execute();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function subscriptions_og_uninstall() {
+  variable_del('subscriptions_og_autosubscribe');
+}

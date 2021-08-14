@@ -48,13 +48,18 @@ function _subscriptions_mail_cron() {
       break;  // No more ready queue items, terminate loop.
     }
 
+    if (!$subscriber = user_load($queue_item['uid'])) {
+      $watchdog('subscriptions', t('Subscriber %uid not found.', array('%uid' => $queue_item['uid'])), NULL, WATCHDOG_WARNING);
+      continue;
+    }
+
     $saved_user     = $user;
     $saved_language = $language;
     drupal_save_session(FALSE);
-    $user      = user_load($queue_item['uid']);
-    $lang_code = $language->language;
     // Clear the term cache to avoid getting a different user's set of terms.
     entity_load('taxonomy_term', array(), array(), TRUE);
+    $lang_code = $language->language;
+    $user      = $subscriber;
 
     $digest_data                      = array('subs' => array('type' => 'digest'));
     $watchdog_variables['%user_name'] = $user->name;
@@ -159,8 +164,10 @@ function _subscriptions_mail_cron() {
     drupal_save_session(TRUE);
   }
 
-  // Clear the term cache again for the next cron client.
-  entity_load('taxonomy_term', array(), array(), TRUE);
+  if (module_exists('taxonomy')) {
+    // Clear the term cache again for the next cron client.
+    entity_load('taxonomy_term', array(), array(), TRUE);
+  }
 
   if ($single_count + $digest_count + $single_failed + $digest_failed > 0) {
     $current_seconds = timer_read('page')/1000;
@@ -372,16 +379,24 @@ function _subscriptions_mail_mail_alter(array &$message) {
     }
     $message['body'][0] = $msg;
   }
-  
-  if (variable_get('subscriptions_showmailkeys', 0)) {
-    $prefix = substr($message['body'][0], 0, 2);
-    $prefix = ( $prefix[1] == ' ' ? $prefix : '' );
-    $message['body'][0] = $message['body'][0] . $prefix . $message['id'] . "\n";
-  }
+
+  $message['body'][0] = _subscriptions_mail_add_mailkey($message['body'][0], $message['id'], $message['language']->language);
 
   /* Comment this line for debugging...
   dpm($message, 'drupal_mail() is disabled in subscriptions_mail_mail_alter(); this would be sent');
   $message['to'] = '';
   /**/
+}
+
+/**
+ * Helper function to add the mailkey if enabled.
+ */
+function _subscriptions_mail_add_mailkey($body, $mailkey, $language = NULL) {
+  if (variable_get('subscriptions_showmailkeys', 0)) {
+    $prefix = substr($body, 0, 2);
+    $prefix = ( $prefix[1] == ' ' ? $prefix : '' );
+    $body .= $prefix . $mailkey . (empty($language) ? '' : '/' . $language) . "\n";
+  }
+  return $body;
 }
 

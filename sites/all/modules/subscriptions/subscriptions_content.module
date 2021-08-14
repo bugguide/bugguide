@@ -737,19 +737,21 @@ function subscriptions_content_load_node(array &$subs) {
  * @return bool
  */
 function subscriptions_content_load_comment(array &$subs) {
-  $cid = $subs['load_args'];
-  $sqid = $subs['sqid'];
-  /** @var $nid int */
-  if ($nid = db_query('SELECT nid FROM {comment} WHERE cid = :cid', array(':cid' => $cid))->fetchField()) {
-    if ($subs['module'] != 'node' || $subs['field'] != 'nid') {
-      // Only if we're processing a node/nid queue item should we cut off
-      // the comments at an update item, otherwise not.
-      $sqid = NULL;
-    }
-    _subscriptions_module_load_include('subscriptions_content', 'notify.inc');
-    if (($node = _subscriptions_content_load($nid, $sqid)) && !empty($node->_subscriptions_comments)) {
-      $subs['object'] = $node;
-      return TRUE;
+  if (module_exists('comment')) {
+    $cid = $subs['load_args'];
+    $sqid = $subs['sqid'];
+    /** @var $nid int */
+    if ($nid = db_query('SELECT nid FROM {comment} WHERE cid = :cid', array(':cid' => $cid))->fetchField()) {
+      if ($subs['module'] != 'node' || $subs['field'] != 'nid') {
+        // Only if we're processing a node/nid queue item should we cut off
+        // the comments at an update item, otherwise not.
+        $sqid = NULL;
+      }
+      _subscriptions_module_load_include('subscriptions_content', 'notify.inc');
+      if (($node = _subscriptions_content_load($nid, $sqid)) && !empty($node->_subscriptions_comments)) {
+        $subs['object'] = $node;
+        return TRUE;
+      }
     }
   }
   return FALSE;

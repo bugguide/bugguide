@@ -116,6 +116,14 @@ function subscriptions_token_info() {
       ),
     ),
   );
+  if (module_exists('date')) {
+    $info['tokens']['subs']['dates'] = array(
+      'name' => t('Dates'),
+      'description' => t('The array of dates in the specified !Date field.', array('!Date' => t('Date'))),
+      'type' => 'subs_list<date>',
+      'dynamic' => TRUE,
+    );
+  }
   if (module_exists('file')) {
     $info['tokens']['subs']['files'] = array(
       'name' => t('Files'),
@@ -136,6 +144,12 @@ function subscriptions_token_info() {
     'name' => t('Texts'),
     'description' => t('The single value or array of values in the specified field, represented as text.'),
     'type' => 'array',
+    'dynamic' => TRUE,
+  );
+  $info['tokens']['subs']['users'] = array(
+    'name' => t('Users'),
+    'description' => t('The array of users in the specified !User_reference field.', array('!User_reference' => t('User reference'))),
+    'type' => 'subs_list<user>',
     'dynamic' => TRUE,
   );
   return $info;
@@ -275,6 +289,9 @@ function subscriptions_tokens($type, array $tokens, array $data = array(), array
         case 'count':
           $replacements[$original] = count($keys);
           break;
+        case 'count-1':
+          $replacements[$original] = count($keys) - 1;
+          break;
         case 'keys':
           $replacements[$original] = token_render_array($keys, $options);
           break;
@@ -352,9 +369,11 @@ function subscriptions_tokens($type, array $tokens, array $data = array(), array
   }
 
   $field_types = array(
+    'dates' => 'subs_list<date>',             // dates:field_DATE
     'files' => 'subs_list<file>',             // files:field_FILE
     'terms' => 'subs_list<term>',             // terms:field_TERM
     'texts' => 'array',                       // texts:field_TEXT
+    'users' => 'subs_list<user>',             // users:field_USER
   );
 
   // Entity field tokens.
@@ -410,6 +429,14 @@ function subscriptions_tokens($type, array $tokens, array $data = array(), array
                           $tids[] = $term['tid'];
                         }
                         $objs = taxonomy_term_load_multiple($tids);
+                        break;
+                      case 'users':
+                        // User references are stored as uids only.
+                        $uids = array();
+                        foreach ($field_items as $user_ref) {
+                          $uids[] = $user_ref['target_id'];
+                        }
+                        $objs = user_load_multiple($uids);
                         break;
                       default:
                         foreach ($field_items as $key => $item) {

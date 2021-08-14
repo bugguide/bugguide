@@ -1,0 +1,310 @@
+<?php
+
+/**
+ * @file
+ * Allow users to subscribe to content posted to an organic group.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function subscriptions_og_permission() {
+  return array(
+    'og subscribe' => array(
+      'title' => t('Subscribe to notifications for Organic Groups'),
+      'description' => t('Allows users to receive alerts when new content is posted to an Organic group.'),
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_subscriptions().
+ */
+function subscriptions_og_subscriptions($op, $arg0 = NULL, $arg1 = NULL, $arg2 = NULL) {
+  switch ($op) {
+    case 'types':
+      $types['og'] = array(
+        'title' => 'Groups',
+        'access' => 'og subscribe',
+        'permission' => array(
+          'title' => t('Subscribe to notifications for Organic Groups'),
+        ),
+        'page' => 'subscriptions_og_page',
+        'fields' => array('node', 'group_audience'),
+        'weight' => -10,
+      );
+      return $types;
+
+    // Queue: Define parameters used by Subscriptions to query which
+    // subscriptions should be sent.
+    case 'queue':
+      if ($arg0['module'] == 'node') {
+        $node = $arg0['node'];
+
+        // Filter on subscriptions where the value is equal to the GID
+        // of any group that the newly saved $node is posted to.
+        $params['node']['group_audience'] = array(
+          'join' => array(
+            array(
+              'table' => 'og_membership',
+              'alias' => 'ga',
+              'on' => "s.value = ga.gid AND ga.group_type = 'node'",
+            ),
+            // Filter on active OG members.
+            array(
+              'table' => 'og_membership',
+              'alias' => 'ga_user',
+              'on' => "s.value = ga_user.gid AND u.uid = ga_user.etid",
+            ),
+          ),
+          'where' => array(
+            array('ga.etid', $node->nid, '='),
+            array('ga.entity_type', 'node', '='),
+            array('ga.state', OG_STATE_ACTIVE, '='),
+            array('ga_user.entity_type', 'user', '='),
+            array('ga_user.state', OG_STATE_ACTIVE, '='),
+          ),
+          'groupby' => 'ga.etid',
+        );
+
+        if ($arg0['type'] == 'comment') {
+          $params['node']['group_audience']['where'][] = array('s.send_comments', 1, '=');
+        }
+        elseif ($arg0['type'] == 'node' && $arg0['action'] == 'update') {
+          $params['node']['group_audience']['where'][] = array('s.send_updates', 1, '=');
+        }
+
+        return $params;
+      }
+      break;
+
+    case 'fields':
+      // $arg0 is module.
+      if ($arg0 == 'node' || $arg0 == 'comment') {
+        return array(
+          'group_audience' => array(
+            'data_function' => 'subscriptions_content_data',
+            'subs_mod' => 'subscriptions_og',
+            'subs_type' => t('group'),
+            'mailkey' => 'group-type-',
+          ),
+        );
+      }
+      break;
+
+    case 'mailkeys':
+      $mailkeys = array();
+      $og_bundles = og_get_all_group_bundle();
+      foreach ($og_bundles['node'] as $node_type => $node_name) {
+        $mailkeys['group-type-' . $node_type] = t('Notifications for group content posted to %type groups', array('%type' => $node_name));
+      }
+      return $mailkeys;
+
+    case 'mailkey_alter':
+      if ($arg0 == 'group-type-') {
+        $groups = og_get_entity_groups('node', $arg1);
+        // We take only the first group to which this node is posted. This won't
+        // be correct if this node is posted to multiple, different group types.
+        if (!empty($groups) && !empty($groups['node'])) {
+          $group = node_load(current($groups['node']));
+          return 'group-type-' . $group->type;
+        }
+      }
+      break;
+
+    case 'token_types':
+      if (strpos($arg0, 'group-type-') === 0) {
+        return array('node', 'comment');
+      }
+      break;
+
+    case 'node_options':
+      // $arg1 is the current node.
+      $options = array();
+      if (og_is_group('node', $arg1)) {
+        $options['group_audience'][] = array(
+          'name' => t('To content posted in %name', array('%name' => $arg1->title)),
+          'link' => 'node/' . $arg1->nid,
+          'params' => array(
+            'module' => 'node',
+            'field' => 'group_audience',
+            'value' => $arg1->nid,
+          ),
+        );
+      }
+      return $options;
+  }
+  return NULL;
+}
+
+/**
+ * Defines a user's overview of which groups she is subscribed to.
+ *
+ * @param array $form
+ *   The form array.
+ * @param int $uid
+ *   The user's UID.
+ *
+ * @return array
+ *   The form array.
+ */
+function subscriptions_og_page(array $form, $uid) {
+  $account = user_load($uid);
+
+  // Load all active OG subscriptions for this user.
+  $query = db_select('subscriptions', 's', array('fetch' => PDO::FETCH_ASSOC));
+  $result = $query
+    ->fields('s', array(
+      'value',
+      'send_interval',
+      'author_uid',
+      'send_comments',
+      'send_updates',
+    ))
+    ->condition('s.module', 'node')
+    ->condition('s.field', 'group_audience')
+    ->condition('s.recipient_uid', $uid)
+    ->orderBy('s.author_uid')
+    ->execute();
+  foreach ($result as $s) {
+    $subscriptions[$s['value']][$s['author_uid']] = $s;
+  }
+
+  $form[0] = array(
+    '#theme' => 'subscriptions_form_table',
+  );
+  $defaults = array();
+
+  $groups = og_get_all_group('node');
+  $groups = node_load_multiple($groups);
+  usort($groups, '_subscriptions_og_compare_groups');
+
+  foreach ($groups as $group) {
+    // Check that the user is a member of this group.
+    if (!og_is_member('node', $group->nid, 'user', $account) && !user_access('administer group')) {
+      continue;
+    }
+
+    // Add the active subscriptions.
+    $group_name = check_plain($group->title);
+
+    if (!isset($subscriptions[$group->nid][-1])) {
+      // author-less item is missing -- add it here.
+      $subscriptions[$group->nid][-1] = array(
+        'send_interval' => _subscriptions_get_setting('send_interval', $uid),
+        'send_comments' => _subscriptions_get_setting('send_comments', $uid),
+        'send_updates' => _subscriptions_get_setting('send_updates', $uid),
+        'author_uid' => FALSE,
+      );
+    }
+    foreach ($subscriptions[$group->nid] as $author_uid => $subscription) {
+      subscriptions_form_helper($form[0], $defaults, $author_uid, $group->nid, $group_name, $subscription);
+    }
+  }
+
+  if (isset($form[0]['checkboxes'])) {
+    $form[0]['defaults'] = array(
+      '#type' => 'value',
+      '#value' => $defaults,
+    );
+    subscriptions_form_column_filter($form[0], $uid);
+  }
+  else {
+    $form = array(
+      array(
+        '#markup' => t('There are no available groups to subscribe to.'),
+      ),
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Implements hook_form_FROM_ID_alter().
+ *
+ * Adds checkbox to allow enable/disable autosubscriptions.
+ */
+function subscriptions_og_form_subscriptions_settings_form_alter(&$form, &$form_state, $form_id) {
+  $form['subscriptions_og'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Organic Groups subscriptions'),
+    '#collapsible' => TRUE,
+    '#weight' => -8,
+  );
+  $form['subscriptions_og']['subscriptions_og_autosubscribe'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Automatically subscribe/unsubscribe members of an organic group',
+    '#default_value' => variable_get('subscriptions_og_autosubscribe', FALSE),
+    '#description' => t('Automatically subscribe or unsubscribe users as the join or leave an organic group. This will not create subscriptions for existing organic group members.'),
+  );
+}
+
+/**
+ * Implements hook_og_membership_insert().
+ */
+function subscriptions_og_og_membership_insert($og_membership) {
+  $autosubscribe = variable_get('subscriptions_og_autosubscribe', FALSE);
+  if ($autosubscribe && $og_membership->group_type == 'node' && $og_membership->entity_type == 'user') {
+    $send_interval = _subscriptions_get_setting('send_interval', $og_membership->etid);
+    $send_updates = _subscriptions_get_setting('send_updates', $og_membership->etid);
+    $send_comments = _subscriptions_get_setting('send_comments', $og_membership->etid);
+
+    subscriptions_write_subscription(
+      // Module.
+      'node',
+      // Field.
+      'group_audience',
+      // Value.
+      $og_membership->gid,
+      // Author uid.
+      -1,
+      // Recipient.
+      $og_membership->etid,
+      // Send interval.
+      $send_interval,
+      // Send updates.
+      $send_updates,
+      // Send comments.
+      $send_comments
+    );
+  }
+}
+
+/**
+ * Implements hook_og_membership_delete().
+ */
+function subscriptions_og_og_membership_delete($og_membership) {
+  $autosubscribe = variable_get('subscriptions_og_autosubscribe', FALSE);
+  if ($autosubscribe && $og_membership->group_type == 'node' && $og_membership->entity_type == 'user') {
+    subscriptions_delete(
+      // Recipient.
+      $og_membership->etid,
+      // Module.
+      'node',
+      // Field.
+      'group_audience',
+      // Value.
+      $og_membership->gid
+    );
+  }
+}
+
+/**
+ * Helper function so sort organic groups.
+ *
+ * Intended for use with usort() and similar functions.
+ *
+ * @param object $first
+ *   An organic group node.
+ * @param object $second
+ *   An organic group node.
+ *
+ * @return int
+ *   < 0 if $first comes before $second, > 0 if $second comes before $first, and
+ *   0 if they are equal in sorting order.
+ */
+function _subscriptions_og_compare_groups($first, $second) {
+  return strcmp($first->title, $second->title);
+}
