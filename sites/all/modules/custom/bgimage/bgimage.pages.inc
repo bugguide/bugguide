@@ -13,7 +13,7 @@
  *   Optional parameter to specify if we should add this image or
  *   all the images in the series to the Clipboard.
  */
-function bgimage_tag($node, $all = NULL) {
+function bgimage_clip($node, $all = NULL) {
   global $user;
 
   if (!$all) {
@@ -23,9 +23,10 @@ function bgimage_tag($node, $all = NULL) {
     $nids = bgimage_get_series($node->nid);
   }
 
+
   if (!empty($_SESSION['clipboard_images'])) {
-    $tagged_nids = explode(',', $_SESSION['clipboard_images']);
-    $nids = array_unique(array_merge($tagged_nids, $nids));
+    $clipboard_nids = explode(',', $_SESSION['clipboard_images']);
+    $nids = array_unique(array_merge($clipboard_nids, $nids));
   }
 
   $_SESSION['clipboard_images'] = implode(',', $nids);
@@ -37,7 +38,7 @@ function bgimage_tag($node, $all = NULL) {
 /**
  * Removes all images from the clipboard.
  */
-function bgimage_untag_all() {
+function bgimage_unclip_all() {
   $_SESSION['clipboard_images'] = NULL;
 
   $destination = drupal_get_destination();
@@ -45,19 +46,19 @@ function bgimage_untag_all() {
 }
 
 /**
- * Removes and image from the clipboard.
+ * Removes an image from the clipboard.
  */
-function bgimage_untag($node) {
+function bgimage_unclip($node) {
   if ($_SESSION['clipboard_images']) {
-    $tagged_images = explode(',', $_SESSION['clipboard_images']);
-    if (in_array($node->nid, $tagged_images)) {
-      unset($tagged_images[array_search($node->nid, $tagged_images)]);
-      if (count($tagged_images) == 0) {
-        // That was the only tagged image.
+    $clipped_images = explode(',', $_SESSION['clipboard_images']);
+    if (in_array($node->nid, $clipped_images)) {
+      unset($clipped_images[array_search($node->nid, $clipped_images)]);
+      if (count($clipped_images) == 0) {
+        // That was the only clipped image.
         $_SESSION['clipboard_images'] = NULL;
       }
       else {
-        $_SESSION['clipboard_images'] = implode(',', $tagged_images);
+        $_SESSION['clipboard_images'] = implode(',', $clipped_images);
       }
     }
   }
