@@ -911,8 +911,21 @@ function bgimage_block_info() {
  * https://bulma.io/documentation/components/panel/
  */
 function bgimage_block_view($delta = '') {
-  if (empty($_SESSION['tagged_images'])) {
+  // We only want to show the Clipboard on bgimage nodes and on the
+  // 'node/%/bgimage' path.
+  $current_menu_item = menu_get_item();
+  if (!$current_menu_item || empty($_SESSION['tagged_images'])) {
     return array();
+  }
+  if ($current_menu_item['path'] != "node/%/bgimage") {
+    $args = arg();
+    if (!(count($args) == 2 && $args[0] == 'node' && is_numeric($args[1]))) {
+      return array();
+    }
+    $node = node_load($args[1]);
+    if (!$node || $node->type != 'bgimage') {
+      return array();
+    }
   }
 
   // We return images wrapped by divs, and the controls.
@@ -969,7 +982,6 @@ function bgimage_block_view($delta = '') {
     ));
   }
 
-  $current_menu_item = menu_get_item();
   if (!empty($current_menu_item) && $current_menu_item['path'] == "node/%/bgimage") {
     $current_nid = (int) arg(1);
     $links[] = l(t('<span class="icon is-small"><span class="fa fa-long-arrow-right" aria-hidden="true"></span></span><span>Move'), 'bgimage/move/' . $current_nid, array(
