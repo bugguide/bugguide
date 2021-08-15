@@ -55,7 +55,7 @@ function bgimage_menu() {
 
   $items['bgimage/move/%node'] = array(
     'title' => 'Moves images in the clipboard to the current page',
-    'page callback' => 'bgimage_move_tagged',
+    'page callback' => 'bgimage_move_clipped',
     'page arguments' => array(2),
     'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
@@ -64,7 +64,7 @@ function bgimage_menu() {
 
   $items['bgimage/quiet_move/%node'] = array(
     'title' => 'Quietly moves images in the clipboard to the current page',
-    'page callback' => 'bgimage_move_tagged',
+    'page callback' => 'bgimage_move_clipped',
     'page arguments' => array(2, true),
     'access arguments' => array('quiet move all bgimages'),
     'type' => MENU_CALLBACK,
