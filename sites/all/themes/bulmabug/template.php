@@ -58,7 +58,7 @@ function bulmabug_preprocess_comment(&$variables) {
  * Implements hook_preprocess_HOOK.
  */
 function bulmabug_preprocess_item_list(&$vars) {
-  if (!in_array('pager', $vars['attributes']['class']) || !isset($vars['items'])) {
+  if (!isset($vars['attributes']['class']) || !in_array('pager', $vars['attributes']['class']) || !isset($vars['items'])) {
     return;
   }
 
