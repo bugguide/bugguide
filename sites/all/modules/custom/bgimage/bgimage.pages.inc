@@ -23,12 +23,12 @@ function bgimage_tag($node, $all = NULL) {
     $nids = bgimage_get_series($node->nid);
   }
 
-  if (!empty($_SESSION['tagged_images'])) {
-    $tagged_nids = explode(',', $_SESSION['tagged_images']);
+  if (!empty($_SESSION['clipboard_images'])) {
+    $tagged_nids = explode(',', $_SESSION['clipboard_images']);
     $nids = array_unique(array_merge($tagged_nids, $nids));
   }
 
-  $_SESSION['tagged_images'] = implode(',', $nids);
+  $_SESSION['clipboard_images'] = implode(',', $nids);
 
   $destination = drupal_get_destination();
   drupal_goto($destination['destination']);
@@ -38,7 +38,7 @@ function bgimage_tag($node, $all = NULL) {
  * Removes all images from the clipboard.
  */
 function bgimage_untag_all() {
-  $_SESSION['tagged_images'] = NULL;
+  $_SESSION['clipboard_images'] = NULL;
 
   $destination = drupal_get_destination();
   drupal_goto($destination['destination']);
@@ -48,16 +48,16 @@ function bgimage_untag_all() {
  * Removes and image from the clipboard.
  */
 function bgimage_untag($node) {
-  if ($_SESSION['tagged_images']) {
-    $tagged_images = explode(',', $_SESSION['tagged_images']);
+  if ($_SESSION['clipboard_images']) {
+    $tagged_images = explode(',', $_SESSION['clipboard_images']);
     if (in_array($node->nid, $tagged_images)) {
       unset($tagged_images[array_search($node->nid, $tagged_images)]);
       if (count($tagged_images) == 0) {
         // That was the only tagged image.
-        $_SESSION['tagged_images'] = NULL;
+        $_SESSION['clipboard_images'] = NULL;
       }
       else {
-        $_SESSION['tagged_images'] = implode(',', $tagged_images);
+        $_SESSION['clipboard_images'] = implode(',', $tagged_images);
       }
     }
   }
@@ -72,7 +72,7 @@ function bgimage_untag($node) {
 function bgimage_move_tagged($node, $quiet = false) {
   global $user;
 
-  $tagged_images = explode(',', $_SESSION['tagged_images']);
+  $tagged_images = explode(',', $_SESSION['clipboard_images']);
   $node_wrapper = entity_metadata_wrapper('node', $node);
   if ($node_wrapper->field_parent->value() || $node_wrapper->nid->value() == BG_ROOT_NID) {
     // Compute the new parent for the images being moved - their direct parent
@@ -141,7 +141,7 @@ function bgimage_move_tagged($node, $quiet = false) {
     drupal_set_message($message);
 
     // Erase clipboard.
-    $_SESSION['tagged_images'] = NULL;
+    $_SESSION['clipboard_images'] = NULL;
   }
 
   drupal_goto('node/' . $node->nid);
@@ -155,10 +155,10 @@ function bgimage_move_tagged($node, $quiet = false) {
 function bgimage_link_tagged() {
   global $user;
 
-  if (empty($_SESSION['tagged_images'])) {
+  if (empty($_SESSION['clipboard_images'])) {
     drupal_goto('<front>');
   }
-  $tagged_list = $_SESSION['tagged_images'];
+  $tagged_list = $_SESSION['clipboard_images'];
   $nids = explode(',', $tagged_list);
 
   // Discover whether the images are from the same user.
@@ -199,7 +199,7 @@ function bgimage_link_tagged() {
     }
     watchdog('bgimage', "linked '$tagged_list'", array(), WATCHDOG_NOTICE, l(t('view post'), "node/" . $node->nid));
     drupal_set_message(t('Images were linked together.'));
-    $_SESSION['tagged_images'] = NULL;
+    $_SESSION['clipboard_images'] = NULL;
     // Redirect to the last image in the clipboard so the series can be seen.
     drupal_goto('node/' . $node->nid);
   }

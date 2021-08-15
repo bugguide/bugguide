@@ -911,14 +911,14 @@ function bgimage_block_info() {
  * https://bulma.io/documentation/components/panel/
  */
 function bgimage_block_view($delta = '') {
-  if (empty($_SESSION['tagged_images'])) {
+  if (empty($_SESSION['clipboard_images'])) {
     return array();
   }
 
   // We return images wrapped by divs, and the controls.
   global $user;
   $content = '';
-  $nids = explode(',', $_SESSION['tagged_images']);
+  $nids = explode(',', $_SESSION['clipboard_images']);
   $clip_count = 0;
   $same_uid = TRUE;
   $nodes = node_load_multiple($nids);
