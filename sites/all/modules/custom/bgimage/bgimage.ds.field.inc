@@ -52,20 +52,25 @@ function _bgimage_field_copyright($field) {
   }
 
   $node = $field['entity'];
-  $year = '';
-  $user_name = '';
 
   // Extract the year when the photo was taken.
-  $node_wrapper = entity_metadata_wrapper('node', $node->nid);
+  $year = '';
+  $node_wrapper = entity_metadata_wrapper('node', $node);
   $date_taken = $node_wrapper->field_bgimage_date->value();
   if (!empty($date_taken)) {
     $year = date('Y', $date_taken);
   }
 
-  // Extract the user's name.
-  $user_wrapper = entity_metadata_wrapper('user', $node->uid);
-  $user_name = bguserfields_get_name($user_wrapper);
-    return 'Copyright &copy; ' . $year . ' ' . l($user_name, 'user/' . $node->uid);
+  // Check if a copyright owner was specified.
+  $copyright_owner = $node_wrapper->field_bgimage_copyright_owner->value();
+  if (!$copyright_owner) {
+    $user_wrapper = entity_metadata_wrapper('user', $node->uid);
+    $user_name = bguserfields_get_name($user_wrapper);
+    // Return as a link to the user.
+    $copyright_owner = l($user_name, 'user/' . $node->uid);
+  }
+
+  return 'Copyright &copy; ' . $year . ' ' . $copyright_owner;
 }
 
 /**
