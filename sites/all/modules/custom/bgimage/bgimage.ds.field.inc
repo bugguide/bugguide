@@ -5,7 +5,7 @@
  */
 
 /**
- * Callback to render photo number.
+ * Callback to add an image to the clipboard.
  */
 function _bgimage_field_clip($field) {
   if ($field['view_mode'] != 'full') {
