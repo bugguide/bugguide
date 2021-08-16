@@ -898,7 +898,7 @@ function bgimage_view_tagged() {
  * Implements hook_block_info().
  */
 function bgimage_block_info() {
-  $blocks['tagged_images'] = array(
+  $blocks['clipped_images'] = array(
      'info' => t('Image Clipboard'),
      'cache' => DRUPAL_NO_CACHE,
    );

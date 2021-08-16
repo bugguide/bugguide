@@ -12,10 +12,10 @@ function bg_default_fe_block_settings() {
 
   $export['version'] = '2.0';
 
-  $export['bgimage-tagged_images'] = array(
+  $export['bgimage-clipped_images'] = array(
     'cache' => -1,
     'custom' => 0,
-    'delta' => 'tagged_images',
+    'delta' => 'clipped_images',
     'module' => 'bgimage',
     'node_types' => array(),
     'pages' => '<front>',
