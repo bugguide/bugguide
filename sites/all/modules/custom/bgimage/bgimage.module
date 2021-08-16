@@ -887,10 +887,10 @@ function bgimage_clone_access_alter(&$access, $node) {
 }
 
 /**
- * Menu callback. View all tagged images at regular size for comparison.
+ * Menu callback. View all clipped images at regular size for comparison.
  * See preprocess function below.
  */
-function bgimage_view_tagged() {
+function bgimage_view_clipped() {
   return theme('photo_comparison');
 }
 
