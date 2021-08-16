@@ -7,7 +7,7 @@
 /**
  * Callback to render photo number.
  */
-function _bgimage_field_tag($field) {
+function _bgimage_field_clip($field) {
   if ($field['view_mode'] != 'full') {
     return;
   }

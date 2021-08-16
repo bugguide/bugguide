@@ -230,11 +230,11 @@ function bgimage_ds_fields_info($entity_type) {
   $fields = array();
 
   if ($entity_type == 'node') {
-    $fields['bgimage_tag'] = array(
+    $fields['bgimage_clip'] = array(
       'title' => t('Add to clipboard'),
       'description' => t('Adds an image to the clipboard.'),
       'field_type' => DS_FIELD_TYPE_FUNCTION,
-      'function' => '_bgimage_field_tag',
+      'function' => '_bgimage_field_clip',
       'file' => drupal_get_path('module', 'bgimage') . '/bgimage.ds.field.inc',
     );
 
