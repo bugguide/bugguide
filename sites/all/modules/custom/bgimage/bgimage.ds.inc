@@ -48,7 +48,7 @@ function bgimage_ds_field_settings_info() {
       'label' => 'hidden',
       'format' => 'ds_time_ago',
     ),
-    'bgimage_tag' => array(
+    'bgimage_clip' => array(
       'weight' => '3',
       'label' => 'hidden',
       'format' => 'default',
@@ -254,7 +254,7 @@ function bgimage_ds_layout_settings_info() {
         0 => 'field_bgimage_image',
         1 => 'bgimage_photo_number',
         2 => 'bgimage_copyright',
-        3 => 'bgimage_tag',
+        3 => 'bgimage_clip',
         4 => 'bgimage_related',
         5 => 'bgimage_title_classification',
         6 => 'body',
@@ -283,7 +283,7 @@ function bgimage_ds_layout_settings_info() {
       'field_bgimage_image' => 'top_grow_first',
       'bgimage_photo_number' => 'top_grow_first',
       'bgimage_copyright' => 'top_grow_first',
-      'bgimage_tag' => 'top_grow_first',
+      'bgimage_clip' => 'top_grow_first',
       'bgimage_related' => 'top_grow_first',
       'bgimage_title_classification' => 'top_grow_first',
       'body' => 'top_grow_first',

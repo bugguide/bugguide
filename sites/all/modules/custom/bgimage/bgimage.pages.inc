@@ -13,7 +13,7 @@
  *   Optional parameter to specify if we should add this image or
  *   all the images in the series to the Clipboard.
  */
-function bgimage_tag($node, $all = NULL) {
+function bgimage_clip($node, $all = NULL) {
   global $user;
 
   if (!$all) {
@@ -23,12 +23,13 @@ function bgimage_tag($node, $all = NULL) {
     $nids = bgimage_get_series($node->nid);
   }
 
-  if (!empty($_SESSION['tagged_images'])) {
-    $tagged_nids = explode(',', $_SESSION['tagged_images']);
-    $nids = array_unique(array_merge($tagged_nids, $nids));
+
+  if (!empty($_SESSION['clipboard_images'])) {
+    $clipboard_nids = explode(',', $_SESSION['clipboard_images']);
+    $nids = array_unique(array_merge($clipboard_nids, $nids));
   }
 
-  $_SESSION['tagged_images'] = implode(',', $nids);
+  $_SESSION['clipboard_images'] = implode(',', $nids);
 
   $destination = drupal_get_destination();
   drupal_goto($destination['destination']);
@@ -37,27 +38,27 @@ function bgimage_tag($node, $all = NULL) {
 /**
  * Removes all images from the clipboard.
  */
-function bgimage_untag_all() {
-  $_SESSION['tagged_images'] = NULL;
+function bgimage_unclip_all() {
+  $_SESSION['clipboard_images'] = NULL;
 
   $destination = drupal_get_destination();
   drupal_goto($destination['destination']);
 }
 
 /**
- * Removes and image from the clipboard.
+ * Removes an image from the clipboard.
  */
-function bgimage_untag($node) {
-  if ($_SESSION['tagged_images']) {
-    $tagged_images = explode(',', $_SESSION['tagged_images']);
-    if (in_array($node->nid, $tagged_images)) {
-      unset($tagged_images[array_search($node->nid, $tagged_images)]);
-      if (count($tagged_images) == 0) {
-        // That was the only tagged image.
-        $_SESSION['tagged_images'] = NULL;
+function bgimage_unclip($node) {
+  if ($_SESSION['clipboard_images']) {
+    $clipped_images = explode(',', $_SESSION['clipboard_images']);
+    if (in_array($node->nid, $clipped_images)) {
+      unset($clipped_images[array_search($node->nid, $clipped_images)]);
+      if (count($clipped_images) == 0) {
+        // That was the only clipped image.
+        $_SESSION['clipboard_images'] = NULL;
       }
       else {
-        $_SESSION['tagged_images'] = implode(',', $tagged_images);
+        $_SESSION['clipboard_images'] = implode(',', $clipped_images);
       }
     }
   }
@@ -69,10 +70,10 @@ function bgimage_untag($node) {
 /**
  * Menu callback. Move an image from the clipboard to this location.
  */
-function bgimage_move_tagged($node, $quiet = false) {
+function bgimage_move_clipped($node, $quiet = false) {
   global $user;
 
-  $tagged_images = explode(',', $_SESSION['tagged_images']);
+  $clipboard_images = explode(',', $_SESSION['clipboard_images']);
   $node_wrapper = entity_metadata_wrapper('node', $node);
   if ($node_wrapper->field_parent->value() || $node_wrapper->nid->value() == BG_ROOT_NID) {
     // Compute the new parent for the images being moved - their direct parent
@@ -81,7 +82,7 @@ function bgimage_move_tagged($node, $quiet = false) {
     if ($node_wrapper->field_parent->value()) {
       $path = $node_wrapper->field_parent->value() . "," . $path;
     }
-    $bgimage_nodes = node_load_multiple($tagged_images);
+    $bgimage_nodes = node_load_multiple($clipboard_images);
     foreach ($bgimage_nodes as $bgimage_node) {
       if (($user->uid == $bgimage_node->uid) || user_access('move all bgimages')) {
         $bgimage_wrapper = entity_metadata_wrapper('node', $bgimage_node);
@@ -137,37 +138,37 @@ function bgimage_move_tagged($node, $quiet = false) {
     }
 
     // Notify the user.
-    $message = format_plural(count($tagged_images), 'The image on the clipboard was successfully moved.', 'The images on the clipboard were successfully moved.');
+    $message = format_plural(count($clipboard_images), 'The image on the clipboard was successfully moved.', 'The images on the clipboard were successfully moved.');
     drupal_set_message($message);
 
     // Erase clipboard.
-    $_SESSION['tagged_images'] = NULL;
+    $_SESSION['clipboard_images'] = NULL;
   }
 
   drupal_goto('node/' . $node->nid);
 }
 
 /**
- * Adds tagged image(s) to an image series.
+ * Adds clipboard image(s) to an image series.
  *
  * The "link" link appears only if all images were submitted by the same user.
  */
-function bgimage_link_tagged() {
+function bgimage_link_clipped() {
   global $user;
 
-  if (empty($_SESSION['tagged_images'])) {
+  if (empty($_SESSION['clipboard_images'])) {
     drupal_goto('<front>');
   }
-  $tagged_list = $_SESSION['tagged_images'];
-  $nids = explode(',', $tagged_list);
+  $clipped_list = $_SESSION['clipboard_images'];
+  $nids = explode(',', $clipped_list);
 
   // Discover whether the images are from the same user.
   $nodes = node_load_multiple($nids);
-  $tagged_count = 0;
+  $clipped_count = 0;
   $same_uid = TRUE;
   foreach ($nodes as $node) {
-    $tagged_count++;
-    if ($tagged_count == 1) {
+    $clipped_count++;
+    if ($clipped_count == 1) {
       $uid = $node->uid;
     }
     else if ($uid != $node->uid) {
@@ -176,7 +177,7 @@ function bgimage_link_tagged() {
   }
 
   // Check and proceed to link them.
-  if (($tagged_count > 1) && $same_uid && (($uid == $user->uid) || user_access('link all bgimages'))) {
+  if (($clipped_count > 1) && $same_uid && (($uid == $user->uid) || user_access('link all bgimages'))) {
     $weight = 0;
     foreach ($nodes as $node) {
       $dead_series_nid = db_query('SELECT series FROM {bgimage_series} WHERE nid = :nid', array(':nid' => $node->nid))->fetchCol();
@@ -197,9 +198,9 @@ function bgimage_link_tagged() {
         ->execute();
       $weight++;
     }
-    watchdog('bgimage', "linked '$tagged_list'", array(), WATCHDOG_NOTICE, l(t('view post'), "node/" . $node->nid));
+    watchdog('bgimage', "linked '$clipped_list'", array(), WATCHDOG_NOTICE, l(t('view post'), "node/" . $node->nid));
     drupal_set_message(t('Images were linked together.'));
-    $_SESSION['tagged_images'] = NULL;
+    $_SESSION['clipboard_images'] = NULL;
     // Redirect to the last image in the clipboard so the series can be seen.
     drupal_goto('node/' . $node->nid);
   }

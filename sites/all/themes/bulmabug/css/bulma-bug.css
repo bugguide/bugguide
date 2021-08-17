@@ -534,7 +534,7 @@ a:hover,
   font-weight: bold;
 }
 
-.node-bgimage.view-mode-full .field-name-bgimage-tag,
+.node-bgimage.view-mode-full .field-name-bgimage-clip,
 .node-bgimage.view-mode-full .field-name-bgimage-related {
   clear: both;
 }
@@ -645,7 +645,7 @@ a:hover,
 /* Add to clipboard */
 /* These already have the button class, so just add icon. */
 
-.field-name-bgimage-tag a:before,
+.field-name-bgimage-clip a:before,
 .bgimage-related-actions a:before {
   content: '\f0ea';
   font-family: 'FontAwesome';

@@ -5,9 +5,9 @@
  */
 
 /**
- * Callback to render photo number.
+ * Callback to add an image to the clipboard.
  */
-function _bgimage_field_tag($field) {
+function _bgimage_field_clip($field) {
   if ($field['view_mode'] != 'full') {
     return;
   }
@@ -19,7 +19,7 @@ function _bgimage_field_tag($field) {
   $node = $field['entity'];
   return l(
     'Add to clipboard', 
-    'bgimage/tag/' . $node->nid, 
+    'bgimage/clip/' . $node->nid,
     array(
       'attributes' => array(
         'class' => 'button is-small',
@@ -131,7 +131,7 @@ function _bgimage_field_related_images($field) {
   if (user_access('use image clipboard')) {
     $output .= l(
       t('Add all images to clipboard'),
-      'bgimage/tag/' . $node->nid . '/all',
+      'bgimage/clip/' . $node->nid . '/all',
       array(
         'attributes' => array(
           'class' => 'button is-small mr-1',

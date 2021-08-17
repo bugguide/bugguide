@@ -35,18 +35,18 @@ function bgimage_menu_alter(&$items) {
 function bgimage_menu() {
   $items = array();
 
-  $items['bgimage/tag/%node'] = array(
+  $items['bgimage/clip/%node'] = array(
     'title' => 'Adds an image to the Clipboard',
-    'page callback' => 'bgimage_tag',
+    'page callback' => 'bgimage_clip',
     'page arguments' => array(2),
     'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
     'file' => 'bgimage.pages.inc',
   );
 
-  $items['bgimage/untag/%node'] = array(
+  $items['bgimage/unclip/%node'] = array(
     'title' => 'Removes an image from the clipboard',
-    'page callback' => 'bgimage_untag',
+    'page callback' => 'bgimage_unclip',
     'page arguments' => array(2),
     'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
@@ -55,7 +55,7 @@ function bgimage_menu() {
 
   $items['bgimage/move/%node'] = array(
     'title' => 'Moves images in the clipboard to the current page',
-    'page callback' => 'bgimage_move_tagged',
+    'page callback' => 'bgimage_move_clipped',
     'page arguments' => array(2),
     'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
@@ -64,7 +64,7 @@ function bgimage_menu() {
 
   $items['bgimage/quiet_move/%node'] = array(
     'title' => 'Quietly moves images in the clipboard to the current page',
-    'page callback' => 'bgimage_move_tagged',
+    'page callback' => 'bgimage_move_clipped',
     'page arguments' => array(2, true),
     'access arguments' => array('quiet move all bgimages'),
     'type' => MENU_CALLBACK,
@@ -72,8 +72,8 @@ function bgimage_menu() {
   );
 
   $items['bgimage/link'] = array(
-    'title' => 'Image tagging',
-    'page callback' => 'bgimage_link_tagged',
+    'title' => 'Links images on the clipboard',
+    'page callback' => 'bgimage_link_clipped',
     'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
     'file' => 'bgimage.pages.inc',
@@ -88,9 +88,9 @@ function bgimage_menu() {
     'file' => 'bgimage.pages.inc',
   );
 
-  $items['bgimage/untag_all'] = array(
+  $items['bgimage/unclip_all'] = array(
     'title' => 'Removes images from the Clipboard',
-    'page callback' => 'bgimage_untag_all',
+    'page callback' => 'bgimage_unclip_all',
     'access arguments' => array('use image clipboard'),
     'type' => MENU_CALLBACK,
     'file' => 'bgimage.pages.inc',
@@ -230,11 +230,11 @@ function bgimage_ds_fields_info($entity_type) {
   $fields = array();
 
   if ($entity_type == 'node') {
-    $fields['bgimage_tag'] = array(
+    $fields['bgimage_clip'] = array(
       'title' => t('Add to clipboard'),
       'description' => t('Adds an image to the clipboard.'),
       'field_type' => DS_FIELD_TYPE_FUNCTION,
-      'function' => '_bgimage_field_tag',
+      'function' => '_bgimage_field_clip',
       'file' => drupal_get_path('module', 'bgimage') . '/bgimage.ds.field.inc',
     );
 
@@ -887,10 +887,10 @@ function bgimage_clone_access_alter(&$access, $node) {
 }
 
 /**
- * Menu callback. View all tagged images at regular size for comparison.
+ * Menu callback. View all clipped images at regular size for comparison.
  * See preprocess function below.
  */
-function bgimage_view_tagged() {
+function bgimage_view_clipped() {
   return theme('photo_comparison');
 }
 
@@ -898,7 +898,7 @@ function bgimage_view_tagged() {
  * Implements hook_block_info().
  */
 function bgimage_block_info() {
-  $blocks['tagged_images'] = array(
+  $blocks['clipped_images'] = array(
      'info' => t('Image Clipboard'),
      'cache' => DRUPAL_NO_CACHE,
    );
@@ -911,14 +911,14 @@ function bgimage_block_info() {
  * https://bulma.io/documentation/components/panel/
  */
 function bgimage_block_view($delta = '') {
-  if (empty($_SESSION['tagged_images'])) {
+  if (empty($_SESSION['clipboard_images'])) {
     return array();
   }
 
   // We return images wrapped by divs, and the controls.
   global $user;
   $content = '';
-  $nids = explode(',', $_SESSION['tagged_images']);
+  $nids = explode(',', $_SESSION['clipboard_images']);
   $clip_count = 0;
   $same_uid = TRUE;
   $nodes = node_load_multiple($nids);
@@ -933,7 +933,7 @@ function bgimage_block_view($delta = '') {
     $rendered_image = theme('image_style', array('path' => $node->field_bgimage_image[LANGUAGE_NONE][0]['uri'], 'style_name' => 'bg_small'));
     $content .= '<li class="mb-2 mr-2">';
     $content .= '<a class="is-block" href="' . url('node/' . $node->nid) . '" title="' . check_plain($node->title) . '">' . $rendered_image  . '</a>';
-    $content .= l(t('<span class="icon is-small"><span class="fa fa-times" aria-hidden="true"></span></span><span>Remove</span>'), 'bgimage/untag/' . $node->nid, array(
+    $content .= l(t('<span class="icon is-small"><span class="fa fa-times" aria-hidden="true"></span></span><span>Remove</span>'), 'bgimage/unclip/' . $node->nid, array(
       'attributes' => array(
         'title' => t('Remove this image from the clipboard'),
         'class' => 'clip-remove button is-small',
@@ -948,7 +948,7 @@ function bgimage_block_view($delta = '') {
 
   $links = array();
   if ($clip_count > 1) {
-    $links[] = l(t('<span class="icon is-small"><span class="fa fa-times" aria-hidden="true"></span></span><span>Remove all</span>'), 'bgimage/untag_all', array(
+    $links[] = l(t('<span class="icon is-small"><span class="fa fa-times" aria-hidden="true"></span></span><span>Remove all</span>'), 'bgimage/unclip_all', array(
       'attributes' => array(
         'title' => t('Remove these images from the clipboard'),
         'class' => 'clip-remove-all button is-small mr-1 mb-1',
