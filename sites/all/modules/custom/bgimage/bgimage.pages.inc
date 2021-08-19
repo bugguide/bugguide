@@ -206,7 +206,7 @@ function bgimage_link_clipped() {
   }
 
   // Could not link images. Return to where we were.
-  drupal_set_message(t('You must be the owner of all the images in the clipboard in order to link them.', 'warning'));
+  drupal_set_message(t('You must be the owner of all the images in the clipboard in order to link them.'), 'warning');
   $destination = drupal_get_destination();
   drupal_goto($destination['destination']);
 }
