@@ -62,6 +62,13 @@ function bgref_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_book_reference';
+  $strongarm->value = 0;
+  $export['diff_show_preview_changes_node_book_reference'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_node__book_reference';
   $strongarm->value = array(
     'view_modes' => array(

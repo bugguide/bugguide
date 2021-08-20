@@ -76,6 +76,13 @@ function bglink_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_bglink';
+  $strongarm->value = 0;
+  $export['diff_show_preview_changes_node_bglink'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_node__bglink';
   $strongarm->value = array(
     'view_modes' => array(
