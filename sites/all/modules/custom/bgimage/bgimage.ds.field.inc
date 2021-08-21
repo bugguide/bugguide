@@ -11,14 +11,15 @@ function _bgimage_field_clip($field) {
   if ($field['view_mode'] != 'full') {
     return;
   }
-  
-  if (!user_access('use image clipboard')) {
+
+  global $user;
+  $node = $field['entity'];
+  if (!_user_can_add_node_to_clipboard($user, $node)) {
     return;
   }
 
-  $node = $field['entity'];
   return l(
-    'Add to clipboard', 
+    'Add to clipboard',
     'bgimage/clip/' . $node->nid,
     array(
       'attributes' => array(
@@ -31,6 +32,11 @@ function _bgimage_field_clip($field) {
     )
   );
 }
+
+function _user_can_add_node_to_clipboard($user, $node) {
+  return ($user->uid == $node->uid && user_access('use image clipboard')) || user_access('move all bgimages') || user_access('link all bgimages');
+}
+
 /**
  * Callback to render photo number.
  */
@@ -127,8 +133,9 @@ function _bgimage_field_related_images($field) {
     return;
   }
 
+  global $user;
   $output = '<div class="bgimage-related-actions">';
-  if (user_access('use image clipboard')) {
+  if (_user_can_add_node_to_clipboard($user, $node)) {
     $output .= l(
       t('Add all images to clipboard'),
       'bgimage/clip/' . $node->nid . '/all',
@@ -144,7 +151,6 @@ function _bgimage_field_related_images($field) {
     );
   }
 
-  global $user;
   if ($node->uid == $user->uid || user_access('link all bgimages')) {
     $output .= l(
       t('Unlink images'),
