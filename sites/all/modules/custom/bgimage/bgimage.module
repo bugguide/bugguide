@@ -970,7 +970,7 @@ function bgimage_block_view($delta = '') {
   }
 
   $current_menu_item = menu_get_item();
-  if (!empty($current_menu_item) && $current_menu_item['path'] == "node/%/bgimage") {
+  if (!empty($current_menu_item) && $current_menu_item['path'] == "node/%/bgimage" && ($same_uid || user_access('move all bgimages'))) {
     $current_nid = (int) arg(1);
     $links[] = l(t('<span class="icon is-small"><span class="fa fa-long-arrow-right" aria-hidden="true"></span></span><span>Move'), 'bgimage/move/' . $current_nid, array(
       'attributes' => array(
