@@ -958,7 +958,7 @@ function bgimage_block_view($delta = '') {
     ));
   }
 
-  if ($same_uid || user_access('link all bgimages')) {
+  if ($clip_count > 1 && ($same_uid || user_access('link all bgimages'))) {
     $links[] = l(t('<span class="icon is-small"><span class="fa fa-link" aria-hidden="true"></span></span><span>Link</span>'), 'bgimage/link', array(
       'attributes' => array(
         'title' => t('Link together these images of the same specimen.'),
