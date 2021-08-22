@@ -7,6 +7,24 @@
 include_once 'bguserfields.features.inc';
 
 /**
+ * Implements hook_menu().
+ */
+function bguserfields_menu() {
+  $items = array();
+
+  $items['zap/%'] = array(
+    'title' => 'Zap user',
+    'page callback' => 'zap_user',
+    'page arguments' => array(1),
+    'access arguments' => array('zap spam'),
+    'type' => MENU_CALLBACK,
+    'file' => 'bguserfields.pages.inc',
+  );
+
+  return $items;
+}
+
+/**
  * Implements hook_menu_alter().
  */
 function bguserfields_menu_alter(&$items) {
