@@ -1528,5 +1528,15 @@ function bgusers_user_default_permissions() {
     'module' => 'bgpage',
   );
 
+  // Exported permission: 'zap spam'.
+  $permissions['zap spam'] = array(
+    'name' => 'zap spam',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'spam zapper' => 'spam zapper',
+    ),
+    'module' => 'bguserfields',
+  );
+
   return $permissions;
 }

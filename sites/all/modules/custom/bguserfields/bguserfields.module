@@ -48,6 +48,17 @@ function bguserfields_views_pre_render($view) {
 }
 
 /**
+ * Implements hook_permission().
+ */
+function bguserfields_permission() {
+  return array(
+    'zap spam' => array(
+      'title' => 'Zap users who spam',
+    ),
+  );
+}
+
+/**
  * Returns the user's full name or its username.
  *
  * @param object $user_wrapper
