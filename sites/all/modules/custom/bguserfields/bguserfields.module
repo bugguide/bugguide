@@ -59,6 +59,43 @@ function bguserfields_permission() {
 }
 
 /**
+ * Implements hook_user_view_alter().
+ */
+function bguserfields_user_view_alter(&$build) {
+  if ($build['#view_mode'] != 'full') {
+    return;
+  }
+
+  if (user_access('zap spam') && isset($build['#account']->uid)) {
+    $uid = $build['#account']->uid;
+    // We shim the zap button onto the end of the license information since
+    // that's the only field guaranteed to be populated.
+    $license = $build['field_user_content_license'][0]['#markup'];
+    $license .= '<br /><br />';
+
+    // Add comment counts.
+    $comments_count = db_query('SELECT COUNT(cid) FROM {comment} WHERE uid = :uid', array(':uid' => $uid))->fetchField();
+    $unpublished_comments_count = db_query('SELECT COUNT(cid) FROM {comment} WHERE uid = :uid AND status <> 1', array(':uid' => $uid))->fetchField();
+    $license .= l($comments_count . ' comments submitted by this contributor', 'user/' . $uid . '/comments') . ' (' . $unpublished_comments_count . ' unpublished)<br />';
+
+    // Add node counts.
+    $node_count = db_query('SELECT COUNT(nid) FROM {node} WHERE uid = :uid', array(':uid' => $uid))->fetchField();
+    $unpublished_node_count = db_query('SELECT COUNT(nid) FROM {node} WHERE uid = :uid AND status <> 1', array(':uid' => $uid))->fetchField();
+    $license .= l($node_count . ' nodes submitted by this contributor', 'user/' . $uid . '/content') . ' (' . $unpublished_node_count . ' unpublished)<br />';
+
+    $spam_zap_link = l(t('Zap user as spammer'), 'zap/' . $uid, array(
+      'attributes' => array(
+        'onclick' => 'return confirm("Are you sure you want to zap user ' . $uid . '?");',
+        'class' => array('button'),
+      )
+    ));
+    $license .= $spam_zap_link . '<br /><br />';
+
+    $build['field_user_content_license'][0]['#markup'] = $license;
+  }
+}
+
+/**
  * Returns the user's full name or its username.
  *
  * @param object $user_wrapper
