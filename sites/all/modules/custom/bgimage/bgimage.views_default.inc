@@ -882,6 +882,11 @@ function bgimage_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'bgimage' => 'bgimage',
   );
+  /* Filter criterion: Content: Published status */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = '1';
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
