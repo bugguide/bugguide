@@ -96,6 +96,53 @@ function bguserfields_user_view_alter(&$build) {
 }
 
 /**
+ * Implements hook_mail().
+ */
+function bguserfields_mail($key, &$message, $params) {
+  if (isset($params['subject'])) {
+    $message['subject'] = $params['subject'];
+  }
+
+  if (isset($params['body'])) {
+    $message['body'][] = $params['body'];
+  }
+
+  if (isset($params['headers']) && is_array($params['headers'])) {
+    $message['headers'] = array_merge($message['headers'], $params['headers']);
+  }
+}
+
+/**
+ * Send an email.
+ *
+ * @param string $from
+ * @param string $to
+ * @param string $subject
+ * @param string $body
+ * @param array $headers
+ *   An associative array of email header fields.
+ *
+ * @see drupal_mail()
+ */
+function bguserfields_send_mail($from, $to, $subject, $body, $headers) {
+  if (!$from || !$to) {
+    return;
+  }
+
+  if (!$headers) {
+    $headers = array();
+  }
+
+  $params = array(
+    'subject' => $subject,
+    'body' => $body,
+    'headers' => $headers,
+  );
+
+  drupal_mail('bguserfields', '', $to, 'en', $params, $from, TRUE);
+}
+
+/**
  * Returns the user's full name or its username.
  *
  * @param object $user_wrapper
