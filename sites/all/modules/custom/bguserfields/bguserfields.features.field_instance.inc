@@ -89,7 +89,7 @@ function bguserfields_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 3,
+        'weight' => 4,
       ),
     ),
     'entity_type' => 'user',
@@ -154,9 +154,10 @@ function bguserfields_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 8,
+        'type' => 'text_default',
+        'weight' => 3,
       ),
     ),
     'entity_type' => 'user',
@@ -194,7 +195,7 @@ function bguserfields_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 4,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'user',
@@ -256,9 +257,8 @@ function bguserfields_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => 2,
       ),
     ),
@@ -328,9 +328,10 @@ function bguserfields_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 13,
+        'type' => 'text_default',
+        'weight' => 2,
       ),
     ),
     'entity_type' => 'user',
