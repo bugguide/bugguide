@@ -20,9 +20,9 @@ function bguserfields_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'email',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'email_default',
+        'type' => 'text_default',
         'weight' => 1,
       ),
     ),
@@ -31,15 +31,16 @@ function bguserfields_field_default_field_instances() {
     'label' => 'Public e-mail address',
     'required' => 0,
     'settings' => array(
+      'text_processing' => 0,
       'user_register_form' => 0,
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'email',
+      'module' => 'text',
       'settings' => array(
         'size' => 60,
       ),
-      'type' => 'email_textfield',
+      'type' => 'text_textfield',
       'weight' => 3,
     ),
   );
