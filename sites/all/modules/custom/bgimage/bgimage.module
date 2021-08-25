@@ -1132,9 +1132,9 @@ function _bgimage_save_and_sync_submit($form, &$form_state) {
       'field_bgimage_copyright_owner'
     );
     foreach ($simple_values as $simple_value) {
-      if (isset($form_state['values'][$simple_value]['und'][0]['value'])) {
-        if ($form_state['values'][$simple_value]['und'][0]['value'] != '') {
-          $wrapper->$simple_value->set($form_state['values'][$simple_value]['und'][0]['value']);
+      if (isset($form_state['values'][$simple_value][LANGUAGE_NONE][0]['value'])) {
+        if ($form_state['values'][$simple_value][LANGUAGE_NONE][0]['value'] != '') {
+          $wrapper->$simple_value->set($form_state['values'][$simple_value][LANGUAGE_NONE][0]['value']);
         }
         elseif ($simple_value != 'field_bgimage_location_code') {
           // If you store an empty string for a field, it will cause the field
@@ -1150,8 +1150,8 @@ function _bgimage_save_and_sync_submit($form, &$form_state) {
       'field_bgimage_sex', 'field_bgimage_life_stage'
     );
     foreach ($multivalue_fields as $multivalue_field) {
-      if (isset($form_state['values'][$multivalue_field]['und'])) {
-        $value = $form_state['values'][$multivalue_field]['und'];
+      if (isset($form_state['values'][$multivalue_field][LANGUAGE_NONE])) {
+        $value = $form_state['values'][$multivalue_field][LANGUAGE_NONE];
         // Multivalue fields contain one array element for each item that was
         // checked; if the first value is NULL that means nothing was checked.
         if ($value[0]['value'] == NULL) {
@@ -1165,13 +1165,13 @@ function _bgimage_save_and_sync_submit($form, &$form_state) {
     // Setting dates using entity_metadata_wrapper is buggy for dates before
     // 1/1/1970 (i.e. dates with negative unix timestamp), so avoid that route -
     // see the discussion at https://github.com/bugguide/bugguide/pull/276.
-    if (isset($form_state['values']['field_bgimage_date']['und'][0]) &&
-        is_array($form_state['values']['field_bgimage_date']['und'][0]) &&
-        array_key_exists('value', $form_state['values']['field_bgimage_date']['und'][0])) {
+    if (isset($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]) &&
+        is_array($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]) &&
+        array_key_exists('value', $form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0])) {
       $series_node = $wrapper->value();
       // $wrapper->save() below calls node_save, so we won't do so here.
-      if ($form_state['values']['field_bgimage_date']['und'][0]['value'] !== NULL) {
-        $series_node->field_bgimage_date[LANGUAGE_NONE][0]['value'] = $form_state['values']['field_bgimage_date']['und'][0]['value'];
+      if ($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value'] !== NULL) {
+        $series_node->field_bgimage_date[LANGUAGE_NONE][0]['value'] = $form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value'];
       }
       else {
         // A NULL 'value' indicates that the date input in the form was empty,
