@@ -48,6 +48,22 @@ function bguserfields_views_pre_render($view) {
 }
 
 /**
+ * Implements hook_user_view_alter().
+ */
+function bguserfields_user_view_alter(&$build) {
+  if ($build['#view_mode'] != 'full') {
+    return;
+  }
+
+  // Display the public email as a mailto: link (even though it may not be a
+  // valid email address).
+  if (isset($build['field_email'][0]['#markup'])) {
+    $email = check_url($build['field_email'][0]['#markup']);
+    $build['field_email'][0]['#markup'] = l($email, 'mailto:' . $email);
+  }
+}
+
+/**
  * Returns the user's full name or its username.
  *
  * @param object $user_wrapper
