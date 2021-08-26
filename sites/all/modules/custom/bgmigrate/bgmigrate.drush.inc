@@ -46,7 +46,7 @@ function drush_bgmigrate_users() {
     
     $homepage = isset($data['homepage']) ? $data['homepage'] : '';
     if ($homepage) {
-      $account->field_user_homepage[LANGUAGE_NONE][0]['value'] = $homepage;
+      $account->field_user_homepage[LANGUAGE_NONE][0]['url'] = $homepage;
     }
     
     // contact
@@ -98,7 +98,7 @@ function drush_bgmigrate_users() {
     // bugguide_homepage
     $bg_homepage = isset($data['bugguide_homepage']) ? $data['bugguide_homepage'] : '';
     if ($bg_homepage) {
-      $account->field_user_bg_homepage[LANGUAGE_NONE][0]['url'] = $bg_homepage;
+      $account->field_user_bg_homepage[LANGUAGE_NONE][0]['value'] = $bg_homepage;
     }
         
     // TODO
