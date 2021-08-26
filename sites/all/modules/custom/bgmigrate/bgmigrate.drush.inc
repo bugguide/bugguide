@@ -41,7 +41,7 @@ function drush_bgmigrate_users() {
     
     $public_email = isset($data['public_email']) ? $data['public_email'] : '';
     if ($public_email) {
-      $account->field_email[LANGUAGE_NONE][0]['email'] = $public_email;
+      $account->field_email[LANGUAGE_NONE][0]['value'] = $public_email;
     }
     
     $homepage = isset($data['homepage']) ? $data['homepage'] : '';
