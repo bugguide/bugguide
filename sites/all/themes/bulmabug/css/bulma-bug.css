@@ -663,6 +663,12 @@ a:hover,
   margin-bottom: 0.75rem;
 }
 
+input#edit-submit-save-and-sync {
+  background-color: var(--primary);
+  border-color: transparent;
+  color: #fff;
+}
+
 /* --------------------- */
 /* ## GUIDE PAGE
 /* --------------------- */
