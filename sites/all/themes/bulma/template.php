@@ -125,7 +125,7 @@ function bulma_form_alter(&$form, &$form_state, $form_id) {
     case 'user_pass':
       $form['#attributes']['class'][] = 'card card-form';
       $form['user_icon']['#prefix'] = '<div class="card-content">';
-      $form['user_icon']['#markup'] = '<div class="user-icon text-align-center"><i class="material-icons text-disabled">vpn_key</i></div>';
+      $form['user_icon']['#markup'] = '<div aria-hidden="true"><i class="fa fa-key"></i></div>';
       $form['user_icon']['#weight'] = -15;
       $form['name']['#title'] = NULL;
       $form['name']['#attributes']['placeholder'] = t('Login or E-mail');
@@ -137,7 +137,7 @@ function bulma_form_alter(&$form, &$form_state, $form_id) {
     case 'user_register_form':
       $form['#attributes']['class'][] = 'card card-form';
       $form['user_icon']['#prefix'] = '<div class="card-content">';
-      $form['user_icon']['#markup'] = '<div class="user-icon text-align-center"><i class="material-icons text-disabled">account_circle</i></div>';
+      $form['user_icon']['#markup'] = '<div aria-hidden="true"><i class="fa fa-user-circle"></i></div>';
       $form['user_icon']['#weight'] = -15;
       $form['account']['name']['#title'] = NULL;
       $form['account']['name']['#attributes']['placeholder'] = t('Login');
