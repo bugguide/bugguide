@@ -18,7 +18,8 @@ function _bguserfields_field_contributed_images($field) {
     return;
   }
 
-  return l($total_images . ' images submitted by this contributor', '/user/' . $user->uid . '/images');
+  $link_title = format_plural($total_images, '1 image submitted by this contributor', '@count images submitted by this contributor');
+  return l($link_title, '/user/' . $user->uid . '/images');
 }
 
 /**
@@ -34,5 +35,6 @@ function _bguserfields_field_contributed_comments($field) {
     return;
   }
 
-  return l($total_comments . ' comments submitted by this contributor', '/user/' . $user->uid . '/comments');
+  $link_title = format_plural($total_comments, '1 comment submitted by this contributor', '@count comments submitted by this contributor');
+  return l($link_title, '/user/' . $user->uid . '/comments');
 }
