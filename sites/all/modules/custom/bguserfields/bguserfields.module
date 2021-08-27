@@ -7,6 +7,24 @@
 include_once 'bguserfields.features.inc';
 
 /**
+ * Implements hook_menu().
+ */
+function bguserfields_menu() {
+  $items = array();
+
+  $items['zap/%'] = array(
+    'title' => 'Zap user',
+    'page callback' => 'zap_user',
+    'page arguments' => array(1),
+    'access arguments' => array('zap spam'),
+    'type' => MENU_CALLBACK,
+    'file' => 'bguserfields.pages.inc',
+  );
+
+  return $items;
+}
+
+/**
  * Implements hook_menu_alter().
  */
 function bguserfields_menu_alter(&$items) {
@@ -48,6 +66,17 @@ function bguserfields_views_pre_render($view) {
 }
 
 /**
+ * Implements hook_permission().
+ */
+function bguserfields_permission() {
+  return array(
+    'zap spam' => array(
+      'title' => 'Zap users who spam',
+    ),
+  );
+}
+
+/**
  * Implements hook_user_view_alter().
  */
 function bguserfields_user_view_alter(&$build) {
@@ -61,6 +90,81 @@ function bguserfields_user_view_alter(&$build) {
     $email = check_url($build['field_email'][0]['#markup']);
     $build['field_email'][0]['#markup'] = l($email, 'mailto:' . $email);
   }
+  
+  if (user_access('zap spam') && isset($build['#account']->uid)) {
+    $uid = $build['#account']->uid;
+    // We shim the zap button onto the end of the license information since
+    // that's the only field guaranteed to be populated.
+    $license = $build['field_user_content_license'][0]['#markup'];
+    $license .= '<br /><br />';
+
+    // Add comment counts.
+    $comments_count = db_query('SELECT COUNT(cid) FROM {comment} WHERE uid = :uid', array(':uid' => $uid))->fetchField();
+    $unpublished_comments_count = db_query('SELECT COUNT(cid) FROM {comment} WHERE uid = :uid AND status <> 1', array(':uid' => $uid))->fetchField();
+    $license .= l($comments_count . ' comments submitted by this contributor', 'user/' . $uid . '/comments') . ' (' . $unpublished_comments_count . ' unpublished)<br />';
+
+    // Add node counts.
+    $node_count = db_query('SELECT COUNT(nid) FROM {node} WHERE uid = :uid', array(':uid' => $uid))->fetchField();
+    $unpublished_node_count = db_query('SELECT COUNT(nid) FROM {node} WHERE uid = :uid AND status <> 1', array(':uid' => $uid))->fetchField();
+    $license .= l($node_count . ' nodes submitted by this contributor', 'user/' . $uid . '/content') . ' (' . $unpublished_node_count . ' unpublished)<br />';
+
+    $spam_zap_link = l(t('Zap user as spammer'), 'zap/' . $uid, array(
+      'attributes' => array(
+        'onclick' => 'return confirm("Are you sure you want to zap user ' . $uid . '?");',
+        'class' => array('button'),
+      )
+    ));
+    $license .= $spam_zap_link . '<br /><br />';
+
+    $build['field_user_content_license'][0]['#markup'] = $license;
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function bguserfields_mail($key, &$message, $params) {
+  if (isset($params['subject'])) {
+    $message['subject'] = $params['subject'];
+  }
+
+  if (isset($params['body'])) {
+    $message['body'][] = $params['body'];
+  }
+
+  if (isset($params['headers']) && is_array($params['headers'])) {
+    $message['headers'] = array_merge($message['headers'], $params['headers']);
+  }
+}
+
+/**
+ * Send an email.
+ *
+ * @param string $from
+ * @param string $to
+ * @param string $subject
+ * @param string $body
+ * @param array $headers
+ *   An associative array of email header fields.
+ *
+ * @see drupal_mail()
+ */
+function bguserfields_send_mail($from, $to, $subject, $body, $headers) {
+  if (!$from || !$to) {
+    return;
+  }
+
+  if (!$headers) {
+    $headers = array();
+  }
+
+  $params = array(
+    'subject' => $subject,
+    'body' => $body,
+    'headers' => $headers,
+  );
+
+  drupal_mail('bguserfields', '', $to, 'en', $params, $from, TRUE);
 }
 
 /**
