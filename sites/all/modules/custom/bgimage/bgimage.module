@@ -1036,13 +1036,151 @@ function bgimage_get_series($nid) {
 
 /**
  * Implements hook_form_FORM_ID_alter().
- *
- * Only allow users with Administer content permission to edit some fields.
  */
 function bgimage_form_bgimage_node_form_alter(&$form, &$form_state) {
+  // Only allow users with Administer content permission to edit some fields.
   if (!user_access('administer nodes')) {
     $form['field_parent']['#access'] = FALSE;
     $form['field_bgimage_base']['#access'] = FALSE;
+  }
+
+  // Add a second submit button which allows the user to apply (most of) the
+  // settings in the current form to all images in this series, but only if
+  // we're currently cloning an image or this image is already one in a series.
+  $clone_submission = isset($form['#node']->original_nid);
+
+  // Figure out which nid to use to test for other images in this series.
+  $series_test_nid = NULL;
+  if (isset($form['#node']->nid)) {
+    $series_test_nid = $form['#node']->nid;
+  }
+  elseif ($clone_submission) {
+    // $form['#node']->nid will be NULL for a cloned node whose nid hasn't been
+    // assigned yet. In that case, we should be $clone_submission, and we'll get
+    // our series info from the nid we were cloned from.
+    $series_test_nid = $form['#node']->original_nid;
+  }
+  $series = $series_test_nid ? bgimage_get_series($series_test_nid) : NULL;
+
+  if ($clone_submission || $series !== NULL) {
+    $other_images_count = 0;
+    if ($series === NULL) {
+      // If $series === NULL then there was no series, so we're the first clone of
+      // an image, i.e. there's one other image in this series.
+      if ($clone_submission) {
+        $other_images_count = 1;
+      }
+    }
+    else {
+      // If this wasn't a clone submission then the current image is already
+      // included in the series.
+      $other_images_count = $clone_submission ? count($series) : count($series) - 1;
+    }
+
+    if ($other_images_count > 0) {
+      $form['actions']['save-and-sync'] = array(
+        '#type' => 'submit',
+        '#value' => t('Save & Sync'),
+        '#attributes' => array('id' => 'edit-submit-save-and-sync'),
+        '#weight' => 8,
+        '#submit' => array('node_form_submit', '_bgimage_save_and_sync_submit'),
+      );
+
+      $save_and_sync_markup = format_plural($other_images_count, '<div><b>Save & Sync</b> will use information on this form (except Identifier, Image, Remarks and Tags) to update the information on the other submission of this individual.</div>', '<div><b>Save & Sync</b> will use information on this form (except Identifier, Image, Remarks and Tags) to update the information on the other @count submissions of this individual.</div>');
+      $form['actions']['#suffix'] = $save_and_sync_markup;
+    }
+  }
+}
+
+function _bgimage_save_and_sync_submit($form, &$form_state) {
+  if (!isset($form_state['triggering_element']['#value']) || $form_state['triggering_element']['#value'] != 'Save & Sync') {
+    return;
+  }
+
+  $form_nid = isset($form['#node']->nid) ? $form['#node']->nid : NULL;
+  $series_nids = array();
+  if ($form_nid) {
+    $series_nids = bgimage_get_series($form_nid);
+    if ($series_nids == NULL) {
+      return;
+    }
+  }
+  elseif (isset($form['#node']->original_nid)) {
+    // The submitted node is a not-yet-inserted clone, so get the image series
+    // of the node cloned from.
+    $series_nids = bgimage_get_series($form['#node']->original_nid);
+    if (!$series_nids) {
+      // This cloned node is the second in the series, so the series hasn't been
+      // saved in the database yet - just use the original as our series.
+      $series_nids = array($form['#node']->original_nid);
+    }
+  }
+
+  foreach ($series_nids as $nid) {
+    if ($nid == $form_nid) {
+      continue;
+    }
+    $wrapper = entity_metadata_wrapper('node', $nid);
+
+    if (isset($form_state['build_info']['args']['0']->title)) {
+      $wrapper->title->set($form_state['build_info']['args']['0']->title);
+    }
+
+    $simple_values = array(
+      'field_bgimage_location_code', 'field_bgimage_county',
+      'field_bgimage_location', 'field_bgimage_size',
+      'field_bgimage_copyright_owner'
+    );
+    foreach ($simple_values as $simple_value) {
+      if (isset($form_state['values'][$simple_value][LANGUAGE_NONE][0]['value'])) {
+        if ($form_state['values'][$simple_value][LANGUAGE_NONE][0]['value'] != '') {
+          $wrapper->$simple_value->set($form_state['values'][$simple_value][LANGUAGE_NONE][0]['value']);
+        }
+        elseif ($simple_value != 'field_bgimage_location_code') {
+          // If you store an empty string for a field, it will cause the field
+          // to be displayed on a bgimage page even though there's no value to
+          // display - instead what we want to do here is remove the field for
+          // this image from the database.
+          $wrapper->$simple_value->set(NULL);
+        }
+      }
+    }
+
+    $multivalue_fields = array(
+      'field_bgimage_sex', 'field_bgimage_life_stage'
+    );
+    foreach ($multivalue_fields as $multivalue_field) {
+      if (isset($form_state['values'][$multivalue_field][LANGUAGE_NONE])) {
+        $value = $form_state['values'][$multivalue_field][LANGUAGE_NONE];
+        // Multivalue fields contain one array element for each item that was
+        // checked; if the first value is NULL that means nothing was checked.
+        if ($value[0]['value'] == NULL) {
+          // Need to use an empty array to unset a multivalue field.
+          $value = array();
+        }
+        $wrapper->$multivalue_field->set($value);
+      }
+    }
+
+    // Setting dates using entity_metadata_wrapper is buggy for dates before
+    // 1/1/1970 (i.e. dates with negative unix timestamp), so avoid that route -
+    // see the discussion at https://github.com/bugguide/bugguide/pull/276.
+    if (isset($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]) &&
+        is_array($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]) &&
+        array_key_exists('value', $form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0])) {
+      $series_node = $wrapper->value();
+      // $wrapper->save() below calls node_save, so we won't do so here.
+      if ($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value'] !== NULL) {
+        $series_node->field_bgimage_date[LANGUAGE_NONE][0]['value'] = $form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value'];
+      }
+      else {
+        // A NULL 'value' indicates that the date input in the form was empty,
+        // so remove this date field from the database.
+        unset($series_node->field_bgimage_date[LANGUAGE_NONE][0]);
+      }
+    }
+
+    $wrapper->save();
   }
 }
 

@@ -19,7 +19,7 @@ function bguserfields_ds_field_settings_info() {
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
     'bguserfields_contributed_images' => array(
-      'weight' => '5',
+      'weight' => '7',
       'label' => 'hidden',
       'format' => 'default',
     ),
@@ -47,21 +47,23 @@ function bguserfields_ds_layout_settings_info() {
       'ds_content' => array(
         0 => 'field_user_full_name',
         1 => 'field_email',
-        2 => 'field_user_default_county',
-        3 => 'field_user_biography',
-        4 => 'field_user_content_license',
-        5 => 'bguserfields_contributed_images',
+        2 => 'field_user_homepage',
+        3 => 'field_user_contact_info',
+        4 => 'field_user_biography',
+        5 => 'field_user_content_license',
         6 => 'field_user_content_license_add',
+        7 => 'bguserfields_contributed_images',
       ),
     ),
     'fields' => array(
       'field_user_full_name' => 'ds_content',
       'field_email' => 'ds_content',
-      'field_user_default_county' => 'ds_content',
+      'field_user_homepage' => 'ds_content',
+      'field_user_contact_info' => 'ds_content',
       'field_user_biography' => 'ds_content',
       'field_user_content_license' => 'ds_content',
-      'bguserfields_contributed_images' => 'ds_content',
       'field_user_content_license_add' => 'ds_content',
+      'bguserfields_contributed_images' => 'ds_content',
     ),
     'classes' => array(),
     'wrappers' => array(

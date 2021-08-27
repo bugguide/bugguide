@@ -84,6 +84,13 @@ function bguserfields_user_view_alter(&$build) {
     return;
   }
 
+  // Display the public email as a mailto: link (even though it may not be a
+  // valid email address).
+  if (isset($build['field_email'][0]['#markup'])) {
+    $email = check_url($build['field_email'][0]['#markup']);
+    $build['field_email'][0]['#markup'] = l($email, 'mailto:' . $email);
+  }
+  
   if (user_access('zap spam') && isset($build['#account']->uid)) {
     $uid = $build['#account']->uid;
     // We shim the zap button onto the end of the license information since
