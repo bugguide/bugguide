@@ -46,6 +46,14 @@ function bguserfields_ds_fields_info($entity_type) {
       'file' => drupal_get_path('module', 'bguserfields') . '/bguserfields.ds.field.inc',
     );
 
+    $fields['bguserfields_contributed_comments'] = array(
+      'title' => t('Total contributed comments'),
+      'description' => t('Renders a link to contributed comments by a user.'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bguserfields_field_contributed_comments',
+      'file' => drupal_get_path('module', 'bguserfields') . '/bguserfields.ds.field.inc',
+    );
+
     return array($entity_type => $fields);
   }
   return;

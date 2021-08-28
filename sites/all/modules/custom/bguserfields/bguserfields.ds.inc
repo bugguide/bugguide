@@ -23,6 +23,11 @@ function bguserfields_ds_field_settings_info() {
       'label' => 'hidden',
       'format' => 'default',
     ),
+    'bguserfields_contributed_comments' => array(
+      'weight' => '8',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
   );
   $export['user|user|default'] = $ds_fieldsetting;
 
@@ -53,6 +58,7 @@ function bguserfields_ds_layout_settings_info() {
         5 => 'field_user_content_license',
         6 => 'field_user_content_license_add',
         7 => 'bguserfields_contributed_images',
+        8 => 'bguserfields_contributed_comments',
       ),
     ),
     'fields' => array(
@@ -64,6 +70,7 @@ function bguserfields_ds_layout_settings_info() {
       'field_user_content_license' => 'ds_content',
       'field_user_content_license_add' => 'ds_content',
       'bguserfields_contributed_images' => 'ds_content',
+      'bguserfields_contributed_comments' => 'ds_content',
     ),
     'classes' => array(),
     'wrappers' => array(
