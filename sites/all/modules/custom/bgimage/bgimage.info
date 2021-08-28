@@ -32,7 +32,6 @@ features[ds_field_settings][] = node|bgimage|recent
 features[ds_fields][] = divider_1
 features[ds_fields][] = divider_2
 features[ds_fields][] = divider_3
-features[ds_fields][] = location_combined
 features[ds_fields][] = recent_images
 features[ds_layout_settings][] = node|bgimage|default
 features[ds_layout_settings][] = node|bgimage|homepage

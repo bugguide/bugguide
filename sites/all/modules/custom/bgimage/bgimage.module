@@ -286,6 +286,14 @@ function bgimage_ds_fields_info($entity_type) {
       'file' => drupal_get_path('module', 'bgimage') . '/bgimage.ds.field.inc',
     );
 
+    $fields['location_combined'] = array(
+      'title' => t('Location'),
+      'description' => t('Combine the location fields'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => '_bgimage_field_location_combined',
+      'file' => drupal_get_path('module', 'bgimage') . '/bgimage.ds.field.inc',
+    );
+
     return array($entity_type => $fields);
   }
   return;

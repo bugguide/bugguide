@@ -238,3 +238,34 @@ function _bgimage_field_taxonomy_path($field) {
   // Render links.
   return implode(' &raquo; ', $breadcrumbs);
 }
+
+/**
+ * Callback to render a combination of the location fields.
+ */
+function _bgimage_field_location_combined($field) {
+  if (!in_array($field['view_mode'], array('full', 'recent', 'teaser'))) {
+    return;
+  }
+
+  $node = $field['entity'];
+  $node_wrapper = entity_metadata_wrapper('node', $node);
+
+  $location = $node_wrapper->field_bgimage_location->value();
+  $county = $node_wrapper->field_bgimage_county->value();
+  $location_code = $node_wrapper->field_bgimage_location_code->value();
+
+  // Don't display 'Unknown' as the state/province.
+  $state_province = '';
+  if ($location_code != 'ZZ') {
+    $location_code_info = field_info_field('field_bgimage_location_code');
+    $state_province = $location_code_info['settings']['allowed_values'][$location_code];
+  }
+
+  $combined_location = implode(", ", array_filter(array($location, $county, $state_province)));
+  if (!$combined_location) {
+    // Recent doesn't include a 'Location:' label, so add more context in that case.
+    $combined_location = $field['view_mode'] == 'recent' ? t('Location unknown') : t('Unknown');
+  }
+
+  return $combined_location;
+}
