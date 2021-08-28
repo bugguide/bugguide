@@ -90,7 +90,13 @@ function bguserfields_user_view_alter(&$build) {
     $email = check_url($build['field_email'][0]['#markup']);
     $build['field_email'][0]['#markup'] = l($email, 'mailto:' . $email);
   }
-  
+
+  if ($build['field_user_content_license']['#items'][0]['value'] == 'CUSTOM') {
+    // Leave the text blank instead of unsetting the field since the label for
+    // this field is used for the additional license info field as well.
+    $build['field_user_content_license'][0]['#markup'] = '';
+  }
+
   if (user_access('zap spam') && isset($build['#account']->uid)) {
     $uid = $build['#account']->uid;
     // We shim the zap button onto the end of the license information since
