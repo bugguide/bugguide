@@ -201,24 +201,6 @@ function bgimage_ds_custom_fields_info() {
 
   $ds_field = new stdClass();
   $ds_field->api_version = 1;
-  $ds_field->field = 'location_combined';
-  $ds_field->label = 'Location';
-  $ds_field->field_type = 5;
-  $ds_field->entities = array(
-    'node' => 'node',
-  );
-  $ds_field->ui_limit = 'bgimage|*';
-  $ds_field->properties = array(
-    'code' => array(
-      'value' => '[node:field_bgimage_location], [node:field_bgimage_county], [node:field_bgimage_location_code]',
-      'format' => 'f',
-    ),
-    'use_token' => 1,
-  );
-  $export['location_combined'] = $ds_field;
-
-  $ds_field = new stdClass();
-  $ds_field->api_version = 1;
   $ds_field->field = 'recent_images';
   $ds_field->label = 'Recent images';
   $ds_field->field_type = 6;
