@@ -574,6 +574,12 @@ label {
   font-size: 0.9em;
 }
 
+.form-item input.error,
+.form-item textarea.error,
+.form-item select.error {
+  border: 2px solid #ed541d;
+}
+
 /* --- Filter Wrapper --- */
 
 .filter-wrapper {
