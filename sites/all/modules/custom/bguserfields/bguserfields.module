@@ -133,6 +133,19 @@ function bguserfields_form_user_register_form_alter(&$form, &$form_state, $form_
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function bguserfields_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  $form['#validate'][] = '_bguserfields_user_form_validate';
+}
+
+function _bguserfields_user_form_validate($form, $form_state) {
+  if ($form_state['values']['field_user_content_license'][LANGUAGE_NONE][0]['value'] == 'CUSTOM' && $form_state['values']['field_user_content_license_add'][LANGUAGE_NONE][0]['value'] == '') {
+    form_set_error('field_user_content_license_add', t("You must add 'Additional license information' when your 'Contributed content license terms' is set to Custom."));
+  }
+}
+
+/**
  * Implements hook_mail().
  */
 function bguserfields_mail($key, &$message, $params) {
