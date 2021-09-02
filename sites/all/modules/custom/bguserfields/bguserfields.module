@@ -121,6 +121,18 @@ function bguserfields_user_view_alter(&$build) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function bguserfields_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['field_user_content_license']['#access'])) {
+    $form['field_user_content_license']['#access'] = FALSE;
+  }
+  if (isset($form['field_user_breadcrumb_format']['#access'])) {
+    $form['field_user_breadcrumb_format']['#access'] = FALSE;
+  }
+}
+
+/**
  * Implements hook_mail().
  */
 function bguserfields_mail($key, &$message, $params) {
