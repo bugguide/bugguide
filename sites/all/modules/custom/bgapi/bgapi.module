@@ -14,10 +14,9 @@ function bgapi_menu() {
   
   $items['bgapi'] = array(
     'title' => 'Get tree',
-    'description' => 'BugGuide system utilities',
-    'page callback' => 'drupal_goto',
+    'description' => 'Default API page',
+    'page callback' => 'bgapi_default',
     'access arguments' => array('access content'),
-    'page arguments' => array('https://bugguide.net/node/view/1401565'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['bgapitree'] = array(
@@ -38,4 +37,19 @@ function bgapi_menu() {
   );
   
   return $items;
+}
+
+/**
+ * A request for https://api.bugguide.net/foo.txt will be intercepted by Apache which will
+ * attempt to serve the file out of bgapi/foo.txt if foo.txt exists. Note there is no
+ * Drupal involvement in that situation.
+ *
+ * If the request is for https://api.bugguide.net/does/not/exist.txt the request will
+ * be handled by Drupal in this function.
+ *
+ * Since nothing exists programmatically yet the user (or more likely, bot) is
+ * redirected to the current doc page on how to use the API.
+ */
+function bgapi_default() {
+  drupal_goto('https://bugguide.net/node/view/1401565');
 }
