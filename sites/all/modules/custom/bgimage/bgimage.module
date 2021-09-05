@@ -652,9 +652,9 @@ function bgimage_thumb_link($node) {
  * Implements hook_field_widget_form_alter().
  */
 function bgimage_preprocess_image_widget(&$variables) {
-  // Removes the 'Upload' button and source image URL from the bgimage image field.
   if ($variables['element']['#field_name'] == 'field_bgimage_image') {
-    $variables['element']['upload_button']['#access'] = FALSE;
+    // The filename that is shown is not the user's filename but rather our long
+    // random string filename, so don't show it.
     $variables['element']['filename']['#access'] = FALSE;
   }
 }
@@ -1043,6 +1043,119 @@ function bgimage_get_series($nid) {
 }
 
 /**
+ * This is a #process function for the image field of the bgimage_node_form -
+ * the file module's upload functionality is added through #process functions
+ * (file_managed_file_process in particular for the AJAX code we're dealing with
+ * here) which get processed after hook_form_alter calls, so another #process
+ * function is the only way to alter that upload code.
+ *
+ * @param array $element
+ *   The field_bgimage_image portion of the bgimage_node_form.
+ *
+ * @see file_managed_file_process().
+ */
+function field_bgimage_image_process($element, $form_state, $form) {
+  // We're wrapping managed_file's upload AJAX with our own so that we can add
+  // extra functionality.
+  unset($element['upload_button']['#ajax']['path']);
+  $element['upload_button']['#ajax']['callback'] = 'bgimage_image_ajax_callback';
+  return $element;
+}
+
+/**
+ * For unknown reasons the $form passed to our AJAX callback has all of the CSS
+ * ids bumped, so for example instead of an id of 'edit-field-bgimage-date' an
+ * element would have an id of 'edit-field-bgimage-date--2'. This function
+ * reverts all of those ids back to their expected values.
+ *
+ * @param array $form
+ *   The structured array on which to revert ids.
+ */
+function _bgimage_reset_form_date_ids(&$form) {
+  $form['field_bgimage_date']['#id'] = 'edit-field-bgimage-date';
+  $form['field_bgimage_date'][LANGUAGE_NONE]['#prefix'] = '<div id="field-bgimage-date-add-more-wrapper">';
+  $form['field_bgimage_date'][LANGUAGE_NONE][0]['value']['#id']= 'edit-field-bgimage-date-und-0-value';
+  $form['field_bgimage_date'][LANGUAGE_NONE][0]['value']['date']['#id'] = 'edit-field-bgimage-date-und-0-value-datepicker-popup-0';
+}
+
+/**
+ * Drupal AJAX callback function which wraps the managed-file file upload AJAX
+ * code. Our addition to that functionality is to update the date field in the
+ * $form using EXIF data from the uploaded image (when it includes a date taken
+ * value).
+ *
+ * @param array $form
+ *   The form on which the AJAX call has been made.
+ *
+ * @return array
+ *   An array of Drupal AJAX commands for updating the form.
+ *
+ * @see file_ajax_upload();
+ * @see file_save_upload();
+ */
+function bgimage_image_ajax_callback($form, $form_state) {
+  _bgimage_reset_form_date_ids($form);
+
+  // Let the managed-file upload code do its AJAX work, which includes uploading
+  // the file. The return value is an array of Drupal AJAX commands for updating
+  // the field_bgimage_image form element.
+  $ajax_commands = file_ajax_upload('field_bgimage_image', 'und', '0', $form['form_build_id']['#value']);
+
+  // If the file upload was successful then there should be exactly one file in
+  // $_FILES, but if the user clicked the 'Upload' button with no file selected
+  // then there will be none. If the file was the wrong type or too large then
+  // we'll find it here but not below when we try to find it in the database.
+  $form_field_name = 'field_bgimage_image_und_0';
+  if (empty($_FILES['files']['name'][$form_field_name])) {
+    return $ajax_commands;
+  }
+
+  global $user;
+  // The $filename here needs to match that in file_save_upload, which is where
+  // our file was actually saved.
+  $filename = trim(drupal_basename($_FILES['files']['name'][$form_field_name]), '.');
+  // We don't have direct access to the uri of the file that was just uploaded,
+  // so we do our best to guess - if we can't find the file we expect uploaded
+  // in the past 5 seconds, we assume it's not there.
+  $timestamp = REQUEST_TIME - 5;
+  $file_uri = db_query('SELECT uri FROM {file_managed} WHERE filename = :filename AND uid = :uid AND timestamp > :timestamp ORDER BY timestamp DESC',
+    array(
+      ':filename' => $filename,
+      ':uid' => $user->uid,
+      ':timestamp' => $timestamp)
+    )->fetchField();
+  if (!$file_uri) {
+    // We'll wind up here if the file didn't validate (wrong extension or too
+    // large).
+    return $ajax_commands;
+  }
+
+  $exif = _exif_get_data_from_file_uri(_exif_get_class(), $file_uri);
+  if (isset($exif['exif']['datetime'])) {
+    $exif_date = $exif['exif']['datetime'];
+    // The EXIF standard for datetime is "YYYY:MM:DD HH:MM:SS", but the exif
+    // module formats it as "YYYY-MM-DDTHH:MM:SS" - strip off the time portion,
+    // leaving just the date.
+    $exif_date = substr($exif_date, 0, 10);
+    // Now put it in the format the date picker expects.
+    $exif_date = date_create_from_format('Y-m-d', $exif_date)->format('j M Y');
+    $form['field_bgimage_date'][LANGUAGE_NONE][0]['value']['date']['#value'] = $exif_date;
+
+    // Re-render just the date field to replace the current markup.
+    $new_date_markup = drupal_render($form['field_bgimage_date']);
+
+    // It's not clear if/how these js settings are used, but file_ajax_upload
+    // does it, so we do too.
+    $js = drupal_add_js();
+    $settings = drupal_array_merge_deep_array($js['settings']['data']);
+    // Create the Drupal AJAX command for replacing the current date field.
+    $ajax_commands['#commands'][] = ajax_command_replace('#edit-field-bgimage-date', $new_date_markup, $settings);
+  }
+
+  return $ajax_commands;
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function bgimage_form_bgimage_node_form_alter(&$form, &$form_state) {
@@ -1051,6 +1164,10 @@ function bgimage_form_bgimage_node_form_alter(&$form, &$form_state) {
     $form['field_parent']['#access'] = FALSE;
     $form['field_bgimage_base']['#access'] = FALSE;
   }
+
+  // Add an additional #process function on the image field so that we can alter
+  // the results of other #process functions which run after hook_form_alter.
+  $form['field_bgimage_image'][LANGUAGE_NONE][0]['#process'][] = 'field_bgimage_image_process';
 
   // Add a second submit button which allows the user to apply (most of) the
   // settings in the current form to all images in this series, but only if
