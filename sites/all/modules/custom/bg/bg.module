@@ -683,20 +683,23 @@ function _bg_node_process_display_suite_field_cite_html(&$build) {
  * Get citation html like: (1), (2), (3), (4).
  *
  * For instance given the following text:
- * "Right Solidago [node:20] contains caterpillas [node:50] and pupa [node:7040]"
+ * "Right Solidago [cite:20] contains caterpillars [cite:50] and pupa [cite:7040]"
  * Should convert to the following text:
- * "Right Solidago (1) contains host plants with caterpillas (2) and pupa (3)."
+ * "Right Solidago (1) contains host plants with caterpillars (2) and pupa (3)."
  * Every cite number contains a link to the node id.
+ * The cite format is '[cite:nid,p1,p2]', where nid is a node id number and p1 and
+ * p2 are optional page numbers. ('citeall' instead of 'cite' is accepted for
+ * historical reasons, but not documented or publicised.)
  *
  * @param string $text
  *   The html text
  * @param array &$citation_nids
- *   The citation node ids. We can use later citation_nids
- *   so we can have a generation of "cites worked" which is
- *   used in _bg_get_add_works_cited_html().
+ *   An array of the cited node ids found in $text; passed by reference and
+ *   appended to by this function so that citations can be accumulated over
+ *   multiple calls, to be passed to _bg_get_add_works_cited_html().
  *
- * @return string|string[]|null
- *   The correct markup text cited linkeable to nodes.
+ * @return string
+ *   The original $text with '[cite:]'s transformed to numbered links to nodes.
  *
  * @see _bg_get_add_works_cited_html().
  */
@@ -707,13 +710,17 @@ function _bg_get_citations_html($text, &$citation_nids) {
     $replace = array();
     // Loop citation matches and replace them by links of type "Some reference(2)".
     foreach ($match[2] as $idx => $nid) {
+      $wrapper = entity_metadata_wrapper('node', $nid);
+      if (!$wrapper->value()) {
+        // Invalid nodes in '[cite:]'s don't get transformed.
+        continue;
+      }
       $find[] = $match[0][$idx];
       if (!in_array($nid, $citation_nids)) {
         $citation_nids[] = $nid;
       }
       // Extract citation index so we can show it as "(7)" in the text.
       $citation_index = array_search($nid, $citation_nids);
-      $bgref_node = node_load($nid);
       $first_page = '';
       $last_page = '';
       $pages = '';
@@ -734,12 +741,38 @@ function _bg_get_citations_html($text, &$citation_nids) {
           ':first_page' => $first_page
         ));
       }
-      $title = $bgref_node->title;
-      if ($bgref_node->name) {
-        $title .= t(', by :author_name', array(
-          ':author_name' => $bgref_node->name
-        ));
-        $title .= $pages;
+
+      $title = $wrapper->title->value();
+      switch ($wrapper->type->value()) {
+        case 'bgimage':
+          // The name of the user who submitted the image.
+          $author = bguserfields_get_name($wrapper->author);
+          if ($author) {
+            $title .= t(', submitted by :author', array(
+              ':author' => $author
+            ));
+          }
+          break;
+        case 'book_reference':
+          $author = $wrapper->field_book_reference_author->value();
+          if ($author) {
+            $title .= t(', by :author_name', array(
+              ':author_name' => $author
+            ));
+          }
+          $title .= $pages;
+          break;
+        case 'bglink':
+          $link = $wrapper->field_bglink_link->url->value();
+          // Put the pages before the link in this case since the link may be long.
+          $title .= $pages;
+          if ($link) {
+            $title .= ', ' . $link;
+          }
+          break;
+        case 'bgpage':
+          // $title is the taxon in this case; that's all we want.
+          break;
       }
       $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid, array('attributes' => array('title' => $title))) . ')</span>';
     }
