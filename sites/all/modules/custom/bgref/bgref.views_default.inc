@@ -100,6 +100,9 @@ function bgref_views_default_views() {
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'All Books';
   $handler->display->display_options['path'] = 'bgref/all';
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
 
   /* Display: Books */
   $handler = $view->new_display('block', 'Books', 'by_bgpage');
