@@ -130,6 +130,38 @@ function bguserfields_form_user_register_form_alter(&$form, &$form_state, $form_
   if (isset($form['field_user_breadcrumb_format']['#access'])) {
     $form['field_user_breadcrumb_format']['#access'] = FALSE;
   }
+
+  // Add a simple check to make sure it's a person submitting the form.
+  $form['sitename'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#description' => 'To prove that you are a living being and not software, enter the name of this site which you can find at the upper left of this page, <b>then an exclamation mark</b>.',
+    '#weight' => 20,
+    '#title' => t('Site'),
+    '#title_display' => 'invisible',
+    '#attributes' => array('placeholder' => t('Site')),
+  );
+
+  $form['#validate'][] = '_bguserfields_validate_user_register_form';
+}
+
+function _bguserfields_validate_user_register_form($form, $form_state) {
+  if (strtoupper($form_state['values']['sitename']) == 'BUGGUIDE!') {
+    return;
+  }
+
+  // If form submission failed because the username or email already exists then
+  // assume we're dealing with a human and give them another try on the site
+  // name; otherwise we assume it's a bot and redirect.
+  $form_errors = form_get_errors();
+  $name_is_taken = isset($form_errors['name']) && strpos($form_errors['name'], 'is already taken') !== FALSE;
+  $mail_is_taken = isset($form_errors['mail']) && strpos($form_errors['mail'], 'is already registered') !== FALSE;
+  if ($name_is_taken || $mail_is_taken) {
+    form_set_error('sitename', t('Please input the site name as described in the instructions.'));
+    return;
+  }
+
+  drupal_goto('help', array('reg' => 'n'));
 }
 
 /**
