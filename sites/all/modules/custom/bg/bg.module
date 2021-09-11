@@ -323,21 +323,29 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
         // breadcrumb. Don't do this for $json.
         // Do this:  ... / Muscini / Musca / Musca domestica (House Fly)
         // Not this: ... / Muscini / Musca / domestica (House Fly)
-        if ($taxon == 'Species' && !$json) {
+        if (($taxon == 'Species' || $taxon == 'Subspecies') && !$json) {
           // We are rendering, e.g., domestica and we need the Musca in Musca domestica.
           // A parent of this node has it and we already loaded it in $nodes,
           // which we are currently looping through. Peek into the scientific
           // name field of a parent in order to get the genus name and prepend.
           // Caution: do not assume that the immediate parent is a genus; see node/162470
           // Go back up the tree looking for a genus. When we find one, grab
-          // the genus name.
+          // the genus name. Similarly for subspecies we need to find the
+          // species and genus.
           $reverse_nids = array_reverse($nids);
           foreach ($reverse_nids as $rnid) {
             if (!empty($nodes[$rnid]->{'field_taxon'}) &&
-                isset($nodes[$rnid]->{'field_taxon'}[LANGUAGE_NONE][0]['value']) &&
-                $nodes[$rnid]->{'field_taxon'}[LANGUAGE_NONE][0]['value'] == $TAXON_IDS['Genus']) {
-              // Found a genus.
-              $scientific_name = $nodes[$rnid]->{'field_scientific_name'}[LANGUAGE_NONE][0]['value'] . ' ' . $scientific_name;
+                isset($nodes[$rnid]->{'field_taxon'}[LANGUAGE_NONE][0]['value'])) {
+              if ($taxon == 'Subspecies' && $nodes[$rnid]->{'field_taxon'}[LANGUAGE_NONE][0]['value'] == $TAXON_IDS['Species']) {
+                // Found a species to go with a subspecies.
+                $scientific_name = $nodes[$rnid]->{'field_scientific_name'}[LANGUAGE_NONE][0]['value'] . ' ' . $scientific_name;
+                continue;
+              }
+              if ($nodes[$rnid]->{'field_taxon'}[LANGUAGE_NONE][0]['value'] == $TAXON_IDS['Genus']) {
+                // Found a genus.
+                $scientific_name = $nodes[$rnid]->{'field_scientific_name'}[LANGUAGE_NONE][0]['value'] . ' ' . $scientific_name;
+                break;
+              }
             }
           }
         }
