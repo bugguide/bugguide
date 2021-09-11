@@ -483,10 +483,16 @@ function bg_preprocess_page(&$vars) {
       }
       drupal_set_breadcrumb($breadcrumbs);
     }
-    // Set breadcrumb for bgpage, bgimage and book reference nodes.
+
     if (isset($node->type) && in_array($node->type, array('bgpage', 'bgimage'))) {
-      // Changes title for both node title and title bar.
-      drupal_set_title(_bg_get_title_classification($node));
+      list($title_no_markup, $title_markup) = _bg_get_title_classification($node);
+      // Sets the title bar title; we override the node title below.
+      drupal_set_title($title_no_markup);
+      // drupal_set_title doesn't handle markup, so as a hack workaround we
+      // set the markup title here instead - from here it will be passed
+      // directly to our page template instead of going through
+      // drupal_set_title.
+      $vars['title'] = $title_markup;
     }
   }
 }
@@ -883,10 +889,11 @@ function bg_block_view($delta = '') {
  * Variations are shown in https://github.com/bugguide/bugguide/issues/25
  *
  * @param stdClass $node
- * The node object.
+ *   The node object.
  *
- * @return string
- *   The new title classification.
+ * @return @array
+ *   A two-element array: the first element is the new title classification with
+ *   no markup, the second element is with markup.
  *
  * @throws \EntityFieldQueryException
  */
@@ -910,24 +917,29 @@ function _bg_get_title_classification($node) {
         if (!empty($scientific_names_from_all_taxa['Subspecies'])) {
           $full_scientific_name .= ' ' . $scientific_names_from_all_taxa['Subspecies'];
         }
+
         if (empty($common_name) || $full_scientific_name === $common_name) {
-          return "$taxon_name $full_scientific_name";
+          return array("$taxon_name $full_scientific_name",
+            "$taxon_name <i>$full_scientific_name</i>");
         }
         elseif (!empty($common_name) && $full_scientific_name !== $common_name) {
-          return "$taxon_name $full_scientific_name - $common_name";
+          return array("$taxon_name $full_scientific_name - $common_name",
+            "$taxon_name <i>$full_scientific_name</i> - $common_name");
         }
     }
     if (empty($common_name) || $scientific_name === $common_name) {
-      return $taxon_name . ' ' . $scientific_name;
+      return array($taxon_name . ' ' . $scientific_name,
+        $taxon_name . ' ' . $scientific_name);
     }
     elseif (!empty($common_name) && $scientific_name !== $common_name) {
-      return "$taxon_name $scientific_name - $common_name";
+      return array("$taxon_name $scientific_name - $common_name",
+        "$taxon_name $scientific_name - $common_name");
     }
   }
   else {
     // This is a No Taxon node.
     // No Taxon nodes use only the common name, not the scientific name.
-    return "$common_name";
+    return array($common_name, $common_name);
   }
 }
 
