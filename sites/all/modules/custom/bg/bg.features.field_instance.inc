@@ -47,7 +47,7 @@ of a website. By default, a <em>page</em> entry does not allow visitor comments 
     'label' => 'Body',
     'required' => 0,
     'settings' => array(
-      'display_summary' => TRUE,
+      'display_summary' => FALSE,
       'text_processing' => 1,
       'user_register_form' => FALSE,
     ),
