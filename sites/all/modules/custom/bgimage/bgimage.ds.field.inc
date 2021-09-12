@@ -76,40 +76,81 @@ function _bgimage_field_copyright($field) {
 /**
  * Callback to render title and classification.
  *
- * The scientific name is built of the image's grandparent and parent.
- * For example, for image 334290, whose parents are
- * 3,878075,52,57,82,44054,29246,13329,44077,10981,334494, we extract
- * the scientific name of 334494 and 10981, which are schaefferalis
- * and Petrophila respectivelly. Finally, we render the name as
- * Petrophila schaefferalis.
+ * If the taxon level of the $field's node is at least Genus (even if it's a No
+ * Taxon node), then we display the scientific name of the node: genus, species,
+ * and/or subspecies, depending on the taxon level of the node; otherwise only
+ * the node title is displayed.
  */
 function _bgimage_field_title_classification($field) {
+  global $TAXON_NAMES;
+  global $TAXON_IDS;
   if ($field['view_mode'] != 'full') {
     return;
   }
 
   $node = $field['entity'];
-  $parent_classification = '';
-  $grandparent_classification = '';
-
-  // Find the immediate parent's scientific name.
   $parent_nid = bg_get_parent_nid($node);
-  $parent_node = node_load($parent_nid);
-  if (!empty($parent_node)) {
-    $bgpage_wrapper = entity_metadata_wrapper('node', $parent_node);
-    $parent_classification = $bgpage_wrapper->field_scientific_name->value();
+  if (!$parent_nid) {
+    return '<h2>' . check_plain($node->title) . '</h2>';
   }
 
-  // Find the grandparent's scientific name.
-  $grandparent_nid = bg_get_parent_nid($parent_node);
-  if ($grandparent_nid) {
-    $bgpage_gp_wrapper = entity_metadata_wrapper('node', $grandparent_nid);
-    if (!empty($bgpage_gp_wrapper->id)) {
-      $grandparent_classification = $bgpage_gp_wrapper->field_scientific_name->value();
+  $parent = node_load($parent_nid);
+  if (!empty($parent->field_taxon) && isset($parent->field_taxon[LANGUAGE_NONE][0]['value'])) {
+    $taxon_id = $parent->field_taxon[LANGUAGE_NONE][0]['value'];
+  }
+  else {
+    return '<h2>' . check_plain($node->title) . '</h2>';
+  }
+
+  // If the current taxon id is genus or higher, include the genus in the title;
+  // if it's species or higher, include genus and species;
+  // if it's subspecies or higher, include genus species and subspecies;
+  // otherwise don't include the taxon in the title.
+  $scientific_name = '';
+  if ($taxon_id >= $TAXON_IDS['Genus']) {
+    $parent_nids = explode(',', $node->field_parent[LANGUAGE_NONE][0]['value']);
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'bgpage')
+      ->propertyCondition('nid', $parent_nids, 'IN')
+      ->fieldOrderBy('field_taxon', 'value', 'DESC');
+    $result = $query->execute();
+    if (isset($result['node'])) {
+      $parent_nids = array_keys($result['node']);
+      foreach ($parent_nids as $parent_nid) {
+        $parent_node = node_load($parent_nid);
+        if (!empty($parent_node->field_taxon) &&
+            isset($parent_node->field_taxon[LANGUAGE_NONE][0]['value'])) {
+          // The spacing on the taxa assumes that if one taxon is used, all
+          // higher taxa will be used as well.
+          if ($parent_node->field_taxon[LANGUAGE_NONE][0]['value'] == $TAXON_IDS['Subspecies']) {
+            $scientific_name = ' ' . $parent_node->field_scientific_name[LANGUAGE_NONE][0]['value'];
+            continue;
+          }
+          if ($parent_node->field_taxon[LANGUAGE_NONE][0]['value'] == $TAXON_IDS['Species']) {
+            $scientific_name = ' ' . $parent_node->field_scientific_name[LANGUAGE_NONE][0]['value'] . $scientific_name;
+            continue;
+          }
+          if ($parent_node->field_taxon[LANGUAGE_NONE][0]['value'] == $TAXON_IDS['Genus']) {
+            $scientific_name = $parent_node->field_scientific_name[LANGUAGE_NONE][0]['value'] . $scientific_name;
+            break;
+          }
+        }
+      }
     }
   }
 
-  return '<h2>' . check_plain($node->title) . ' &ndash; ' . $grandparent_classification . ' ' . $parent_classification . '</h2>';
+  if ($scientific_name) {
+    if ($node->title == $scientific_name) {
+      return '<h2><i>' . $scientific_name . '</i></h2>';
+    }
+    else {
+      return '<h2>' . check_plain($node->title) . ' &ndash; <i>' . $scientific_name . '</i></h2>';
+    }
+  }
+  else {
+    return '<h2>' . check_plain($node->title) . '</h2>';
+  }
 }
 
 /**
