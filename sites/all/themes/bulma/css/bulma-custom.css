@@ -299,6 +299,17 @@ a.card-footer-item {
 }
 
 /* -------------------- */
+/* ## CITATIONS
+/* -------------------- */
+
+.citation {
+  vertical-align: top;
+  font-size: smaller;
+  display: inline;
+  color: #999;
+}
+
+/* -------------------- */
 /* ## BUTTONS & ACTION LINKS
 /* -------------------- */
 
