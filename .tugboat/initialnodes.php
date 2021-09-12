@@ -129,6 +129,7 @@ node_object_prepare($node);  //Set some default values
 
 $node->title = 'Chelicerata';
 $node->body[$node->language][0]['value'] = 'The Chelicerata.';
+$node->field_scientific_name[$node->language][0]['value'] = 'Chelicerata';
 
 $node->status = 1;   // (1 or 0): published or unpublished
 $node->promote = 0;  // (1 or 0): promoted to front page or not
@@ -150,6 +151,8 @@ node_object_prepare($node);  //Set some default values
 
 $node->title = 'Arachnida';
 $node->body[$node->language][0]['value'] = 'The Arachnida.';
+$node->field_scientific_name[$node->language][0]['value'] = 'Arachnida';
+$node->field_common_name[$node->language][0]['value'] = 'Arachnids';
 
 $node->status = 1;   // (1 or 0): published or unpublished
 $node->promote = 0;  // (1 or 0): promoted to front page or not
