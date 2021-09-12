@@ -790,43 +790,69 @@ function _bg_get_citations_html($text, &$citation_nids) {
 }
 
 /**
- * Get the works cited in html.
+ * Retun an html list of works cited.
  *
  * @param array $citation_nids
  *   The citation node ids.
  *
  * @return string|null
- *   The text already cited.
+ *   An html ordered list of works cited, or NULL if there were no citations.
  */
 function _bg_get_add_works_cited_html($citation_nids) {
   if (!$citation_nids) {
     return NULL;
   }
-  // List citations at field bgpge_citations.
+
   $list_items = '<ol>';
-  $cited_nodes = node_load_multiple($citation_nids);
-  foreach ($cited_nodes as $bgref_node) {
-    if (!empty($bgref_node)) {
-      $list_items .= '<li>' . l($bgref_node->title, 'node/' . $bgref_node->nid, array('attributes' => array('title' => $bgref_node->title)));
-      // Append book details if they are available.
-      $book_details = array();
-      if (!empty($bgref_node->field_book_reference_author['und'][0])) {
-        $book_details[] = $bgref_node->field_book_reference_author['und'][0]['safe_value'];
-      }
-      if (!empty($bgref_node->field_book_reference_year['und'][0])) {
-        $book_details[] = $bgref_node->field_book_reference_year['und'][0]['value'];
-      }
-      if (!empty($bgref_node->field_book_reference_publisher['und'][0])) {
-        $book_details[] = $bgref_node->field_book_reference_publisher['und'][0]['safe_value'];
-      }
-      if (count($book_details)) {
-        $list_items .= '</br>' . implode('. ', $book_details) . '.';
-      }
-      $list_items .= '</li>';
+  $list_not_empty = FALSE;
+  foreach ($citation_nids as $nid) {
+    $wrapper = entity_metadata_wrapper('node', $nid);
+    if (!$wrapper->value()) {
+      continue;
     }
+    $list_items .= '<li>' . l($wrapper->title->value(), 'node/' . $wrapper->nid->value(),
+      array('attributes' => array('title' => $wrapper->title->value())));
+    $list_not_empty = TRUE;
+
+    switch ($wrapper->type->value()) {
+      case 'bgimage':
+        $submitter = bguserfields_get_name($wrapper->author);
+        if ($submitter) {
+          $list_items .= t(', submitted by @submitter.', array(
+            '@submitter' => $submitter,
+          ));
+        }
+        break;
+      case 'book_reference':
+        // Append book details if they are available.
+        $book_details = array();
+        if ($wrapper->field_book_reference_author->value()) {
+          $book_details[] = $wrapper->field_book_reference_author->value(array('sanitize' => TRUE));
+        }
+        if ($wrapper->field_book_reference_year->value()) {
+          $book_details[] = $wrapper->field_book_reference_year->value();
+        }
+        if ($wrapper->field_book_reference_publisher->value()) {
+          $book_details[] = $wrapper->field_book_reference_publisher->value(array('sanitize' => TRUE));
+        }
+
+        if (count($book_details)) {
+          $list_items .= '<br>' . implode('. ', $book_details) . '.';
+        }
+        break;
+      case 'bglink':
+        $link = $wrapper->field_bglink_link->url->value();
+        $list_items .= '<br>' . l($link, $link);
+        break;
+      case 'bgpage':
+        // We just display the taxon title in this case.
+        break;
+    }
+    $list_items .= '</li>';
   }
   $list_items .= '</ol>';
-  return $list_items;
+
+  return $list_not_empty ? $list_items : NULL;
 }
 
 /**
