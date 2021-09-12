@@ -413,7 +413,7 @@ function bg_preprocess_page(&$vars) {
         ($pid == BG_ID_REQUEST_NID) || // Image in ID Request
         ($pid == BG_FRASS_NID) ||      // Image in Frass
         $vars['is_front'] ||           // Front page
-        $node->type == 'page'          // Content of type page
+        !in_array($node->type, array('bgimage', 'bgpage', 'bglink', 'book_reference'))
         ) {
       $keep = array();
 
