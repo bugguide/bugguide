@@ -827,13 +827,15 @@ function _bg_get_add_works_cited_html($citation_nids) {
         // Append book details if they are available.
         $book_details = array();
         if ($wrapper->field_book_reference_author->value()) {
-          $book_details[] = $wrapper->field_book_reference_author->value(array('sanitize' => TRUE));
+          $author = $wrapper->field_book_reference_author->value(array('sanitize' => TRUE));
+          $book_details[] = substr($author, -1) == '.' ? substr($author, 0, -1) : $author;
         }
         if ($wrapper->field_book_reference_year->value()) {
           $book_details[] = $wrapper->field_book_reference_year->value();
         }
         if ($wrapper->field_book_reference_publisher->value()) {
-          $book_details[] = $wrapper->field_book_reference_publisher->value(array('sanitize' => TRUE));
+          $publisher = $wrapper->field_book_reference_publisher->value(array('sanitize' => TRUE));
+          $book_details[] = substr($publisher, -1) == '.' ? substr($publisher, 0, -1) : $publisher;
         }
 
         if (count($book_details)) {
