@@ -782,7 +782,7 @@ function _bg_get_citations_html($text, &$citation_nids) {
           // $title is the taxon in this case; that's all we want.
           break;
       }
-      $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid, array('attributes' => array('title' => $title))) . ')</span>';
+      $replace[] = '<span class="citation">(' . l($citation_index + 1, 'node/' . $nid, array('attributes' => array('title' => $title))) . ')</span>';
     }
     return str_replace($find, $replace, $text);
   }
