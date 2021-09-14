@@ -248,3 +248,67 @@ function bgimage_unlink_image_series($nid) {
 function bgimage_add_image($nid) {
   drupal_goto('node/add/bgimage/' . $nid);
 }
+
+/**
+ * Display a pager of all of the images of this node and all of its
+ * descendants, ordered by date submitted and formatted in teaser form.
+ *
+ * @param $nid
+ *   The image listing will be restricted to this node and its descendants.
+ */
+function bgimage_recent($nid) {
+  $nid = (int) $nid;
+  if (!$nid) {
+    drupal_goto('<front>');
+  }
+
+  $parent = node_load($nid);
+  if (!$parent || $parent->type != 'bgpage') {
+    watchdog('bgimage', "bgimage_recent() cannot load node nid '%nid'", array('%nid' => $nid), WATCHDOG_ERROR);
+    drupal_goto('<front>');
+  }
+
+  // The title will be completed in bg_preprocess_page, where a markuped taxon
+  // will be added.
+  drupal_set_title(t('Recent Images Placed in '));
+
+  $path = isset($parent->field_parent[LANGUAGE_NONE][0]['value']) ? $parent->field_parent[LANGUAGE_NONE][0]['value'] : '';
+  $path = $path ? $path . ',' . $nid : $nid;
+
+  $query = db_select('node', 'n')->extend('PagerDefault');
+  $query->addField('n', 'nid');
+  $query->join('field_data_field_parent', 'p', 'n.nid = p.entity_id');
+  $query->condition('n.type', 'bgimage')
+        ->condition('n.status', 1)
+        ->condition('p.field_parent_value', $path . '%', 'LIKE')
+        ->orderBy('n.created', 'DESC');
+
+  // Behind the scenes PagerDefault has added a limit and offset to our query
+  // (partly based on any 'page' query parameter in the current url) - get the
+  // current batch of nids.
+  $result = $query->execute();
+
+  $output = '';
+  $images_found = FALSE;
+  foreach ($result as $record) {
+    $node = node_load($record->nid);
+    if (!$node) {
+      continue;
+    }
+    $node_array = node_view($node, 'teaser');
+    $output .= drupal_render($node_array);
+    $images_found = TRUE;
+  }
+
+  if ($images_found) {
+    // TODO: a feed for every taxon.
+    // $feed_url = url('rss.xml', array('absolute' => TRUE));
+    // drupal_add_feed($feed_url, variable_get('site_name', 'Drupal') .' '. t('RSS'));
+    $output .= '<p>' . theme('pager') . '</p>';
+  }
+  else {
+    $output .= '<br>There are currently no images to display here.';
+  }
+
+  return $output;
+}

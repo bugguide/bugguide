@@ -630,6 +630,16 @@ a:hover,
   margin-right: 0.5rem;
 }
 
+.page-node-bgimage .action-links li {
+  display: inline;
+}
+
+/* The Recent images button */
+
+.page-node-bgimage .action-links li:nth-child(2) a:before {
+  content: '\f061'; /* fa-arrow-right */
+}
+
 .node-type-bgimage .action-links a {
   /* is-small */
   border-radius: 2px;

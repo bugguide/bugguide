@@ -113,6 +113,15 @@ function bgimage_menu() {
     'file' => 'bgimage.pages.inc',
   );
 
+  $items['node/%bgpage_node/bgimage/recent'] = array(
+    'title' => 'Recent images',
+    'page callback' => 'bgimage_recent',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'bgimage.pages.inc',
+  );
+
   return $items;
 }
 

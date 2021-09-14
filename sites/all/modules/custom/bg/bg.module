@@ -494,9 +494,13 @@ function bg_preprocess_page(&$vars) {
 
     if (isset($node->type) && in_array($node->type, array('bgpage', 'bgimage'))) {
       list($title_no_markup, $title_markup) = _bg_get_title_classification($node);
+      if ($node->type == 'bgpage' && drupal_get_title() == 'Recent Images Placed in ') {
+        $title_no_markup = 'Recent Images Placed in ' . $title_no_markup;
+        $title_markup = 'Recent Images Placed in ' . $title_markup;
+      }
       // Sets the title bar title; we override the node title below.
       drupal_set_title($title_no_markup);
-      // drupal_set_title doesn't handle markup, so as a hack workaround we
+      // drupal_set_title doesn't handle markup, so as a workaround we
       // set the markup title here instead - from here it will be passed
       // directly to our page template instead of going through
       // drupal_set_title.
