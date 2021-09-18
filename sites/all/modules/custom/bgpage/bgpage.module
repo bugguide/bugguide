@@ -199,7 +199,7 @@ function bgpage_menu_local_tasks_alter(&$data, $route_name) {
       case 'bglink':
         $parentpath = $route_name['page_arguments'][0]->field_parent[LANGUAGE_NONE][0]['value'];
         $parents = explode(',', $parentpath);
-        if (count($parents) > 0) {
+        if (count($parents) > 0 && $parents[0] != BG_ID_REQUEST_NID && $parents[0] != BG_FRASS_NID) {
           $info_tab_index = 2;
           $parent_nid = $parents[count($parents) - 1];
           $data['tabs'][0]['output'][$info_tab_index]['#link']['href'] = 'node/' . $parent_nid;
