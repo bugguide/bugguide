@@ -430,14 +430,18 @@ function bg_preprocess_page(&$vars) {
             $keep[] = $item;
           }
           elseif ($item['#link']['path'] == 'node/%/view') {
-            $item['#link']['title'] = t('View');
-            $keep[] = $item;
+            if ($nid != BG_ID_REQUEST_NID && $nid != BG_FRASS_NID) {
+              $item['#link']['title'] = t('View');
+              $keep[] = $item;
+            }
           }
         }
 
         $vars['tabs']['#primary'] = array();
-        foreach ($keep as $item) {
-          $vars['tabs']['#primary'][] = $item;
+        if (count($keep) > 1) {
+          foreach ($keep as $item) {
+            $vars['tabs']['#primary'][] = $item;
+          }
         }
       }
     }
