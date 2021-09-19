@@ -48,6 +48,11 @@ function bglink_ds_field_settings_info() {
       'label' => 'hidden',
       'format' => 'ds_post_date_medium',
     ),
+    'bgsubscriptions_subscriptions' => array(
+      'weight' => '5',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
   );
   $export['node|bglink|default'] = $ds_fieldsetting;
 
@@ -78,7 +83,8 @@ function bglink_ds_layout_settings_info() {
         5 => 'post_date',
         6 => 'changed_date',
         7 => 'field_tags',
-        8 => 'comments',
+        8 => 'bgsubscriptions_subscriptions',
+        9 => 'comments',
       ),
     ),
     'fields' => array(
@@ -90,6 +96,7 @@ function bglink_ds_layout_settings_info() {
       'post_date' => 'ds_content',
       'changed_date' => 'ds_content',
       'field_tags' => 'ds_content',
+      'bgsubscriptions_subscriptions' => 'ds_content',
       'comments' => 'ds_content',
     ),
     'classes' => array(),

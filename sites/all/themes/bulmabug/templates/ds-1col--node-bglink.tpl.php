@@ -14,4 +14,6 @@
 
 <?php print render($content['field_tags']); ?>
 
+<?php print render($content['bgsubscriptions_subscriptions']); ?>
+
 <?php print render($content['comments']); ?>
