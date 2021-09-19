@@ -12,9 +12,4 @@
 	<span>Last updated </span><?php print render($content['changed_date']); ?>
 </div>
 
-<?php print render($content['node_links']); ?>
-<?php print $node_links; ?>
-
 <?php print render($content['comments']); ?>
-
-<details><pre><?php print_r($content); ?></pre></details>
