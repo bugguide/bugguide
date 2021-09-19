@@ -31,24 +31,35 @@
     <div class="bg-link_roots mb-3">
       <a href="https://bugguide.net/node/view/3/bglink" title="Phylum">Placeholder&nbsp;(Placeholder)</a> » <a href="https://bugguide.net/node/view/878075/bglink" title="Subphylum">Placeholder&nbsp;(Placeholder)</a> » <a href="https://bugguide.net/node/view/52/bglink" title="Class">Placeholder&nbsp;(Placeholder)</a> » <a href="https://bugguide.net/node/view/60/bglink" title="Order">Placeholder&nbsp;(Placeholder)</a>
     </div>
-    <h2 class="bg-link_title title is-5 mb-2"><?php print $fields['title']->content; ?></h2> 
+    <h2 class="bg-link_title title is-5 mb-2"><?php print $fields['title']->content; ?></h2>
     <div class="bg-link_body content">
       <?php print $fields['body']->content; ?>
     </div>
     <div class="bg-link_byline is-size-7">
       Contributed by <?php print $fields['name']->content; ?> on <?php print $fields['created']->content; ?>
     </div>
-    <div class="bg-link_links">
-      <div class="bg-link_links_link">
+
+    <ul class="links inline">
+      <li>
         <?php print $fields['view_node']->content; ?>
-      </div>
-      <div class="bg-link_links_link">
+      </li>
+      <li>
         <?php print $fields['field_bglink_link']->content; ?>
-      </div>
-      <div class="bg-link_links_link">
+      </li>
+      <?php if ((int) $fields['comment_count']->raw > 0): ?>
+        <li>
+          <?php print $fields['comment_count']->content; ?>
+        </li>
+      <?php endif; ?>
+      <?php if ((int) $fields['new_comments']->raw > 0): ?>
+        <li>
+          <?php print $fields['new_comments']->content; ?>
+        </li>
+      <?php endif; ?>
+      <li>
         <?php print $fields['comments_link']->content; ?>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </div>
 

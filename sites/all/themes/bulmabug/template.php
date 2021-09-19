@@ -6,6 +6,39 @@ function bulmabug_preprocess_page(&$vars) {
   $vars['current_database'] = $GLOBALS['databases']['default']['default']['database'];
 }
 
+function bulmabug_preprocess_views_view_field(&$variables, $hook) {
+  if ($variables['view']->name != 'links') {
+    return;
+  }
+
+  // You can't format_plural using 'Rewrite results' in the UI, so we do it here
+  // instead.
+  if (isset($variables['field']->field) && $variables['field']->field == 'new_comments') {
+    $output = '';
+    // New comments aren't tracked for anonymous users, so check first.
+    if (isset($variables['row']->node_new_comments)) {
+      $new_comment_count = $variables['row']->node_new_comments;
+      if ($new_comment_count > 0) {
+        $title = format_plural($new_comment_count, '1 new comment', '@count new comments');
+        $nid = $variables['row']->nid;
+        $output = l($title, '/node/' . $nid, array('fragment' => 'new', 'attributes' => array('title' => t('Jump to the first new comment of this posting.'))));
+      }
+      $variables['output'] = $output;
+    }
+  }
+
+  if (isset($variables['field']->field) && $variables['field']->field == 'comment_count') {
+    $output = '';
+    $comment_count = $variables['row']->node_comment_statistics_comment_count;
+    if ($comment_count > 0) {
+      $title = format_plural($comment_count, '1 comment', '@count comments');
+      $nid = $variables['row']->nid;
+      $output = l($title, '/node/' . $nid, array('fragment' => 'comments', 'attributes' => array('title' => t('Jump to the first comment of this posting.'))));
+    }
+    $variables['output'] = $output;
+  }
+}
+
 /**
  * Implements theme_breadcrumb().
  *
