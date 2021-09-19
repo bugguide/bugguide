@@ -12,4 +12,6 @@
 	<span>Last updated </span><?php print render($content['changed_date']); ?>
 </div>
 
+<?php print render($content['field_tags']); ?>
+
 <?php print render($content['comments']); ?>

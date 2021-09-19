@@ -244,12 +244,19 @@ function bglink_field_default_field_instances() {
     'bundle' => 'bglink',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Enter terms separated by commas. Do not prefix terms with a hash (#). Terms should describe and can be used to group content. Examples: green, feathery, mating, gathering2017, subterranean.',
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
+        'module' => 'editablefields',
+        'settings' => array(
+          'click_to_edit' => 1,
+          'click_to_edit_style' => 'button',
+          'empty_text' => '',
+          'fallback_format' => 'taxonomy_term_reference_link',
+          'fallback_settings' => array(),
+        ),
+        'type' => 'editable',
         'weight' => 29,
       ),
       'homepage' => array(

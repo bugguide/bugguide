@@ -77,7 +77,8 @@ function bglink_ds_layout_settings_info() {
         4 => 'author',
         5 => 'post_date',
         6 => 'changed_date',
-        7 => 'comments',
+        7 => 'field_tags',
+        8 => 'comments',
       ),
     ),
     'fields' => array(
@@ -88,6 +89,7 @@ function bglink_ds_layout_settings_info() {
       'author' => 'ds_content',
       'post_date' => 'ds_content',
       'changed_date' => 'ds_content',
+      'field_tags' => 'ds_content',
       'comments' => 'ds_content',
     ),
     'classes' => array(),
