@@ -11,6 +11,14 @@ function bulmabug_preprocess_views_view_field(&$variables, $hook) {
     return;
   }
 
+  if (isset($variables['field']->field) && $variables['field']->field == 'comments_link' && user_access('post comments')) {
+    // The comment module doesn't show the 'Add new comment' link if there
+    // aren't any comments yet, so we just always add it here instead (as long
+    // as the user is logged in).
+    $nid = $variables['row']->nid;
+    $variables['output'] = l(t('Add new comment'), '/node/' . $nid, array('fragment' => 'comment-form', 'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.'))));
+  }
+
   // You can't format_plural using 'Rewrite results' in the UI, so we do it here
   // instead.
   if (isset($variables['field']->field) && $variables['field']->field == 'new_comments') {
