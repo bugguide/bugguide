@@ -39,7 +39,7 @@
       Contributed by <?php print $fields['name']->content; ?> on <?php print $fields['created']->content; ?>
     </div>
 
-    <ul class="links inline">
+    <ul class="links inline flex-wrap">
       <li>
         <?php print $fields['view_node']->content; ?>
       </li>
