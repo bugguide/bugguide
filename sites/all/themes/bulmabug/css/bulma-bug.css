@@ -828,6 +828,10 @@ input#edit-submit-save-and-sync {
 /* ## MISC
 /* --------------------- */
 
+.node-authoring-data {
+  margin-bottom: 0.75rem;
+}
+
 .bg-image-list img {
   margin: 0 !important;
 }
