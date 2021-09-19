@@ -29,7 +29,7 @@
 <div class="card mb-3">
   <div class="card-content p-3">
     <div class="bg-link_roots mb-3">
-      <a href="https://bugguide.net/node/view/3/bglink" title="Phylum">Placeholder&nbsp;(Placeholder)</a> » <a href="https://bugguide.net/node/view/878075/bglink" title="Subphylum">Placeholder&nbsp;(Placeholder)</a> » <a href="https://bugguide.net/node/view/52/bglink" title="Class">Placeholder&nbsp;(Placeholder)</a> » <a href="https://bugguide.net/node/view/60/bglink" title="Order">Placeholder&nbsp;(Placeholder)</a>
+      <?php print $fields['breadcrumbs']->content; ?>
     </div>
     <h2 class="bg-link_title title is-5 mb-2"><?php print $fields['title']->content; ?></h2>
     <div class="bg-link_body content">

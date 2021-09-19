@@ -45,6 +45,20 @@ function bulmabug_preprocess_views_view_field(&$variables, $hook) {
     }
     $variables['output'] = $output;
   }
+
+  if (isset($variables['field']->field) && $variables['field']->options['ui_name'] == 'Breadcrumbs') {
+    // Add a taxonomic path.
+    $node = node_load($variables['row']->nid);
+    $bc = bg_create_taxonomic_breadcrumb($node);
+    if (empty($bc)) {
+      $variables['output'] = '';
+    }
+    else {
+      // Remove the Home link.
+      array_shift($bc);
+      $variables['output'] = implode(' &raquo; ', $bc);
+    }
+  }
 }
 
 /**

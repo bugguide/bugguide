@@ -125,6 +125,14 @@ function bglink_views_default_views() {
   $handler->display->display_options['fields']['new_comments']['label'] = '';
   $handler->display->display_options['fields']['new_comments']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['new_comments']['link_to_comment'] = FALSE;
+  /* Field: Breadcrumbs */
+  $handler->display->display_options['fields']['breadcrumbs']['id'] = 'breadcrumbs';
+  $handler->display->display_options['fields']['breadcrumbs']['table'] = 'views';
+  $handler->display->display_options['fields']['breadcrumbs']['field'] = 'nothing';
+  $handler->display->display_options['fields']['breadcrumbs']['ui_name'] = 'Breadcrumbs';
+  $handler->display->display_options['fields']['breadcrumbs']['label'] = '';
+  $handler->display->display_options['fields']['breadcrumbs']['alter']['text'] = 'Set in code.';
+  $handler->display->display_options['fields']['breadcrumbs']['element_label_colon'] = FALSE;
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
