@@ -65,12 +65,6 @@ function bglink_views_default_views() {
   $handler->display->display_options['fields']['comments_link']['field'] = 'comments_link';
   $handler->display->display_options['fields']['comments_link']['label'] = '';
   $handler->display->display_options['fields']['comments_link']['element_label_colon'] = FALSE;
-  /* Field: Content: Author uid */
-  $handler->display->display_options['fields']['uid']['id'] = 'uid';
-  $handler->display->display_options['fields']['uid']['table'] = 'node';
-  $handler->display->display_options['fields']['uid']['field'] = 'uid';
-  $handler->display->display_options['fields']['uid']['label'] = '';
-  $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
   /* Field: Content: Comment count */
   $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
   $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
@@ -92,12 +86,6 @@ function bglink_views_default_views() {
   $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['created']['date_format'] = 'bg_short_F_j_Y';
   $handler->display->display_options['fields']['created']['second_date_format'] = 'bg_short_F_j_Y';
-  /* Field: Content: Author */
-  $handler->display->display_options['fields']['field_book_reference_author']['id'] = 'field_book_reference_author';
-  $handler->display->display_options['fields']['field_book_reference_author']['table'] = 'field_data_field_book_reference_author';
-  $handler->display->display_options['fields']['field_book_reference_author']['field'] = 'field_book_reference_author';
-  $handler->display->display_options['fields']['field_book_reference_author']['label'] = '';
-  $handler->display->display_options['fields']['field_book_reference_author']['element_label_colon'] = FALSE;
   /* Field: Content: Link */
   $handler->display->display_options['fields']['field_bglink_link']['id'] = 'field_bglink_link';
   $handler->display->display_options['fields']['field_bglink_link']['table'] = 'field_data_field_bglink_link';
