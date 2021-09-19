@@ -1,6 +1,6 @@
 <div class="content">
 	<div class="bg-link_title-link">
-		Visit: <a href="<?php print render($content['field_bg_link']); ?>"><?php print $title ?></a>
+		Visit: <a href="<?php print $variables['field_bglink_link'][0]['url']; ?>"><?php print $variables['field_bglink_link'][0]['url']; ?></a>
 	</div>
 	<?php print render($content['body']); ?>
 </div>
