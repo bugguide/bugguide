@@ -790,6 +790,17 @@ input#edit-submit-save-and-sync {
 }
 
 /* --------------------- */
+/* ## CREATE/EDIT FORMS
+/* --------------------- */
+
+/* This element is meant to display information about available text formats,
+ * but we only ever allow one, so the element is always empty but still takes
+ * up space. */
+#edit-body-und-0-format {
+  display: none;
+}
+
+/* --------------------- */
 /* ## MISC
 /* --------------------- */
 
