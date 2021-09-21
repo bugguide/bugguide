@@ -800,6 +800,10 @@ input#edit-submit-save-and-sync {
   display: none;
 }
 
+.node-bgimage-form .form-type-checkbox {
+  display: inline-block;
+}
+
 /* --------------------- */
 /* ## MISC
 /* --------------------- */
