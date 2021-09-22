@@ -1073,17 +1073,6 @@ function bgimage_form_bgimage_node_form_alter(&$form, &$form_state) {
     $form['field_bgimage_base']['#access'] = FALSE;
   }
 
-  // If this is a cloned node and the original node had no date set, then do the
-  // same for this node (otherwise today's date is used as a default).
-  if (isset($form['clone_from_original_nid']['#value'])) {
-    $original_nid = $form['clone_from_original_nid']['#value'];
-    $original_node = node_load($original_nid);
-    if ($original_node && !$original_node->field_bgimage_date) {
-      unset($form['field_bgimage_date'][LANGUAGE_NONE][0]['#default_value']);
-      $form['field_bgimage_date'][LANGUAGE_NONE][0]['#default_value'] = array('value' => '');
-    }
-  }
-
   // Add a second submit button which allows the user to apply (most of) the
   // settings in the current form to all images in this series, but only if
   // we're currently cloning an image or this image is already one in a series.
