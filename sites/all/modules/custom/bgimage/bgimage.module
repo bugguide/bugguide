@@ -1053,6 +1053,17 @@ function bgimage_get_series($nid) {
 }
 
 /**
+ * Implements hook_date_text_process_alter().
+ */
+function bgimage_date_text_process_alter(&$element, $form_state, $context) {
+  if (isset($element['date']['#description'])) {
+    // Hide the 'Format: 9/22/21' help text since we provide our own format
+    // hint in our field description.
+    unset($element['date']['#description']);
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function bgimage_form_bgimage_node_form_alter(&$form, &$form_state) {
