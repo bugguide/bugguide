@@ -815,6 +815,13 @@ input#edit-submit-save-and-sync {
   display: inline-block;
 }
 
+/* The margins for these classes seem to be meant for dates with settings we're
+ * not using, so just reset them to 0. */
+.node-bgimage-form .form-type-date-text,
+.node-bgimage-form .form-item-field-bgimage-date-und-0-value-date {
+  margin-bottom: 0;
+}
+
 /* This element is meant to display information about available text formats,
  * but we only ever allow one, so the element is always empty but still takes
  * up space. */
