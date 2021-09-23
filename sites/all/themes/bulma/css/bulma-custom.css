@@ -169,6 +169,15 @@ a.card-footer-item {
   max-width: 100%;
 }
 
+/* Overrule bulma and make breadcrumbs selectable. */
+.breadcrumb {
+    -webkit-touch-callout: unset;
+    -webkit-user-select: unset;
+    -moz-user-select: unset;
+    -ms-user-select: unset;
+    user-select: unset;
+}
+
 /* -------------------- */
 /* ## PANELS
 /* -------------------- */
