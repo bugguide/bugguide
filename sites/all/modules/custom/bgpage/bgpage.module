@@ -155,8 +155,8 @@ function bgpage_menu_alter(&$items) {
  * @see bg_preprocess_page()
  */
 function bgpage_menu_local_tasks_alter(&$data, $route_name) {
-  // Don't show bgpage local tasks when editing or deleting a node.
-  if (in_array($route_name['path'], array('node/%/edit', 'node/%/delete'))) {
+  // Don't show bgpage local tasks when editing or cloning or deleting a node.
+  if (in_array($route_name['path'], array('node/%/edit', 'node/%/clone/%', 'node/%/delete'))) {
     $local_tasks_to_remove = array();
     foreach ($data['tabs'][0]['output'] as $index => $local_task) {
       if (in_array($local_task['#link']['title'], array('Taxonomy', 'Browse', 'Images', 'Books', 'Links', 'Data'))) {
