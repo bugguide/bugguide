@@ -16,7 +16,7 @@ function bugguide_install() {
     array('title' => 'Home', 'path' => '<front>'),
     array('title' => 'Guide', 'path' => 'node/3/bgpage'),
     array('title' => 'ID Request', 'path' => 'node/6/bgimage'),
-    array('title' => 'Recent', 'path' => 'recent'),
+    array('title' => 'Recent', 'path' => 'node'),
     array('title' => 'Frass', 'path' => 'node/9410/bgimage'),
     array('title' => 'Forums', 'path' => 'forum'),
     array('title' => 'Donate', 'path' => 'node/17109'),

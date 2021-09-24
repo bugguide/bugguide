@@ -108,7 +108,7 @@ $node->field_counts[$node->language][0]['value'] = 'Worldwide:[Cite:1028573][cit
 +15 classes';
 
 $node->status = 1;   // (1 or 0): published or unpublished
-$node->promote = 0;  // (1 or 0): promoted to front page or not
+$node->promote = 1;  // (1 or 0): promoted to front page or not
 $node->sticky = 0;  // (1 or 0): sticky at top of lists or not
 $node->comment = 1;  // 2 = comments open, 1 = comments closed, 0 = comments hidden
 // Add author of the node
@@ -132,7 +132,7 @@ $node->body[$node->language][0]['value'] = 'The Chelicerata.';
 $node->field_scientific_name[$node->language][0]['value'] = 'Chelicerata';
 
 $node->status = 1;   // (1 or 0): published or unpublished
-$node->promote = 0;  // (1 or 0): promoted to front page or not
+$node->promote = 1;  // (1 or 0): promoted to front page or not
 $node->sticky = 0;  // (1 or 0): sticky at top of lists or not
 $node->comment = 1;  // 2 = comments open, 1 = comments closed, 0 = comments hidden
 // Add author of the node
@@ -155,7 +155,7 @@ $node->field_scientific_name[$node->language][0]['value'] = 'Arachnida';
 $node->field_common_name[$node->language][0]['value'] = 'Arachnids';
 
 $node->status = 1;   // (1 or 0): published or unpublished
-$node->promote = 0;  // (1 or 0): promoted to front page or not
+$node->promote = 1;  // (1 or 0): promoted to front page or not
 $node->sticky = 0;  // (1 or 0): sticky at top of lists or not
 $node->comment = 1;  // 2 = comments open, 1 = comments closed, 0 = comments hidden
 // Add author of the node

@@ -399,9 +399,16 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
 function bg_preprocess_page(&$vars) {
   global $user;
 
+  $current_path = request_path();
   // Don't change the path in administrative pages.
-  if (path_is_admin(current_path())) {
+  if (path_is_admin($current_path)) {
     return;
+  }
+
+  if ($current_path == 'node') {
+    // We're viewing the 'Recent' menu item, so add a 'Recent' breadcrumb.
+    $bc = array(l('Home', ''), l('Recent', 'node'));
+    drupal_set_breadcrumb($bc);
   }
 
   // Check that we have an nid in the path.
