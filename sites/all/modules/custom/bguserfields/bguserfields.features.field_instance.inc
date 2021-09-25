@@ -41,7 +41,7 @@ function bguserfields_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 3,
+      'weight' => -6,
     ),
   );
 
@@ -74,7 +74,7 @@ function bguserfields_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 9,
+      'weight' => 1,
     ),
   );
 
@@ -108,7 +108,7 @@ function bguserfields_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 5,
+      'weight' => -2,
     ),
   );
 
@@ -142,7 +142,7 @@ function bguserfields_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 11,
+      'weight' => 2,
     ),
   );
 
@@ -176,7 +176,7 @@ function bguserfields_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 14,
+      'weight' => -3,
     ),
   );
 
@@ -210,7 +210,7 @@ function bguserfields_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 13,
+      'weight' => -4,
     ),
   );
 
@@ -245,7 +245,7 @@ function bguserfields_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 6,
+      'weight' => -1,
     ),
   );
 
@@ -279,7 +279,7 @@ function bguserfields_field_default_field_instances() {
         'rows' => 3,
       ),
       'type' => 'text_textarea',
-      'weight' => 7,
+      'weight' => 0,
     ),
   );
 
@@ -312,7 +312,7 @@ function bguserfields_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 12,
+      'weight' => 4,
     ),
   );
 
@@ -342,7 +342,7 @@ function bguserfields_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 15,
+      'weight' => 3,
     ),
   );
 
@@ -376,7 +376,7 @@ function bguserfields_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 2,
+      'weight' => -7,
     ),
   );
 
@@ -431,7 +431,7 @@ function bguserfields_field_default_field_instances() {
       'module' => 'link',
       'settings' => array(),
       'type' => 'link_field',
-      'weight' => 4,
+      'weight' => -5,
     ),
   );
 
