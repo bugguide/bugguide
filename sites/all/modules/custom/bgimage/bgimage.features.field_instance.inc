@@ -303,14 +303,14 @@ function bgimage_field_default_field_instances() {
       'module' => 'date',
       'settings' => array(
         'increment' => 15,
-        'input_format' => 'n/j/y',
+        'input_format' => 'n/j/Y',
         'input_format_custom' => '',
         'label_position' => 'above',
-        'no_fieldset' => 1,
+        'no_fieldset' => 0,
         'text_parts' => array(),
         'year_range' => '1902:+0',
       ),
-      'type' => 'date_text',
+      'type' => 'date_popup',
       'weight' => 4,
     ),
   );
