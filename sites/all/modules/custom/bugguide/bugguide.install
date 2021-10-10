@@ -33,5 +33,11 @@ function bugguide_install() {
     menu_link_save($item);
   }
 
-
+  $path_aliases = array(
+    array('source' => 'node/' . BG_ID_REQUEST_NID . '/bgimage', 'alias' => 'id-request'),
+    array('source' => 'node/' . BG_FRASS_NID . '/bgimage', 'alias' => 'frass'),
+  );
+  foreach ($path_aliases as $path) {
+    path_save($path);
+  }
 }
