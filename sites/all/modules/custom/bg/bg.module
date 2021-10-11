@@ -266,7 +266,7 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
   global $TAXON_IDS;
 
   // If the node has no parent field a taxonomic breadcrumb is not sane.
-  if (!isset($node->field_parent[LANGUAGE_NONE][0]['value'])) {
+  if (empty($node->field_parent[LANGUAGE_NONE][0]['value'])) {
     return array();
   }
 
@@ -383,7 +383,8 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
         $json_array[$taxon] = empty($scientific_name) ? $common : $scientific_name;
       }
       else {
-        $bc[] = l($linktext, 'node/' . $parent_node->nid);
+        $link = ($parent_node->nid == BG_ID_REQUEST_NID || $parent_node->nid == BG_FRASS_NID) ? 'node/' . $parent_node->nid . '/bgimage' : 'node/' . $parent_node->nid;
+        $bc[] = l($linktext, $link);
       }
     }
   }
