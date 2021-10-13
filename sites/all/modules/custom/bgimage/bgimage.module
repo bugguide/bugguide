@@ -1141,7 +1141,7 @@ function bgimage_image_ajax_callback($form, $form_state) {
     return $ajax_commands;
   }
 
-  $exif = _exif_get_data_from_file_uri(_exif_get_class(), $file_uri);
+  $exif = @_exif_get_data_from_file_uri(_exif_get_class(), $file_uri);
   if (isset($exif['exif']['datetime'])) {
     $exif_date = $exif['exif']['datetime'];
     // The EXIF standard for datetime is "YYYY:MM:DD HH:MM:SS", but the exif
