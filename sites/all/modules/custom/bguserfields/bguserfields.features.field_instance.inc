@@ -90,7 +90,7 @@ function bguserfields_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 4,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'user',
@@ -146,6 +146,40 @@ function bguserfields_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_user_city_state_country'.
+  $field_instances['user-user-field_user_city_state_country'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Care to share where you live?',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 4,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_user_city_state_country',
+    'label' => 'City, state, country',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 14,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_user_contact_info'.
   $field_instances['user-user-field_user_contact_info'] = array(
     'bundle' => 'user',
@@ -196,7 +230,7 @@ function bguserfields_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 5,
+        'weight' => 6,
       ),
     ),
     'entity_type' => 'user',
@@ -227,7 +261,7 @@ function bguserfields_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 6,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'user',
@@ -279,6 +313,36 @@ function bguserfields_field_default_field_instances() {
       ),
       'type' => 'text_textfield',
       'weight' => 12,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_user_default_location_code'.
+  $field_instances['user-user-field_user_default_location_code'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Image submissions will use this by default.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 13,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_user_default_location_code',
+    'label' => 'Default State/Province',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 15,
     ),
   );
 
@@ -376,9 +440,12 @@ function bguserfields_field_default_field_instances() {
   t('Additional license information');
   t('Biography');
   t('BugGuide Homepage');
+  t('Care to share where you live?');
+  t('City, state, country');
   t('Contact Information');
   t('Contributed content license terms');
   t('Default County/Parish/District/Region');
+  t('Default State/Province');
   t('Full Name');
   t('Homepage');
   t('If you chose Custom license terms, provide more specific license information here.');

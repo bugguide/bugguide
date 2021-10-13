@@ -93,8 +93,8 @@ function _bgpage_browse($field) {
     foreach ($children_docs as $child_doc) {
       $node = node_load($child_doc->entity_id);
       // @TODO: Work on title classification by using apache solr query instead.
-      $title = _bg_get_title_classification($node);
-      $output .= '<div class="card mb-3"><div class="card-header"><h2 class="card-header-title"><a href="' . url('node/' . $child_doc->entity_id . '/bgpage') . '" title="' . $title . '">' . $title . ' <span class="icon"><span class="fa fa-angle-right" aria-hidden="true"></span></span></a></h2></div>';
+      list($title_no_markup, $title_markup) = _bg_get_title_classification($node);
+      $output .= '<div class="card mb-3"><div class="card-header"><h2 class="card-header-title"><a href="' . url('node/' . $child_doc->entity_id . '/bgpage') . '" title="' . $title_no_markup . '">' . $title_markup . ' <span class="icon"><span class="fa fa-angle-right" aria-hidden="true"></span></span></a></h2></div>';
       if (!empty($child_doc->matches)) {
         $output .= '<div class="card-content p-3 bg-image-list"><ul class="columns is-mobile is-multiline">';
         foreach ($child_doc->matches as $image_doc) {

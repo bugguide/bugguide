@@ -155,8 +155,8 @@ function bgpage_menu_alter(&$items) {
  * @see bg_preprocess_page()
  */
 function bgpage_menu_local_tasks_alter(&$data, $route_name) {
-  // Don't show bgpage local tasks when editing or deleting a node.
-  if (in_array($route_name['path'], array('node/%/edit', 'node/%/delete'))) {
+  // Don't show bgpage local tasks when editing or cloning or deleting a node.
+  if (in_array($route_name['path'], array('node/%/edit', 'node/%/clone/%', 'node/%/delete'))) {
     $local_tasks_to_remove = array();
     foreach ($data['tabs'][0]['output'] as $index => $local_task) {
       if (in_array($local_task['#link']['title'], array('Taxonomy', 'Browse', 'Images', 'Books', 'Links', 'Data'))) {
@@ -174,6 +174,16 @@ function bgpage_menu_local_tasks_alter(&$data, $route_name) {
     return;
   }
 
+  // Don't show the 'Recent images' button on ID Request or Frass.
+  if ($route_name['path'] == 'node/%/bgimage' && ($route_name['map'][1] == BG_ID_REQUEST_NID || $route_name['map'][1] == BG_FRASS_NID)) {
+    foreach ($data['actions']['output'] as $index => $action) {
+      if ($action['#link']['path'] == 'node/%/bgimage/recent') {
+        unset($data['actions']['output'][$index]);
+        break;
+      }
+    }
+  }
+
   // When looking at a bgimage node or book_reference, the Info tab should not link
   // to the nid of the bgimage node, but to its parent (which will be a bgpage node).
   if ($route_name['path'] == 'node/%' && isset($route_name['page_arguments'][0]->type)) {
@@ -189,7 +199,7 @@ function bgpage_menu_local_tasks_alter(&$data, $route_name) {
       case 'bglink':
         $parentpath = $route_name['page_arguments'][0]->field_parent[LANGUAGE_NONE][0]['value'];
         $parents = explode(',', $parentpath);
-        if (count($parents) > 0) {
+        if (count($parents) > 0 && $parents[0] != BG_ID_REQUEST_NID && $parents[0] != BG_FRASS_NID) {
           $info_tab_index = 2;
           $parent_nid = $parents[count($parents) - 1];
           $data['tabs'][0]['output'][$info_tab_index]['#link']['href'] = 'node/' . $parent_nid;
@@ -263,6 +273,9 @@ function bgpage_node_form_validate(&$form, &$form_state) {
 
   $scientific_name = NULL;
 
+  // Make sure we're using clean common and scientific names.
+  $form_state['values']['field_scientific_name'][LANGUAGE_NONE][0]['value'] = trim($form_state['values']['field_scientific_name'][LANGUAGE_NONE][0]['value']);
+  $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'] = trim($form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value']);
   $values = $form_state['values'];
 
   if (!isset($TAXON_NAMES[$values['field_taxon'][LANGUAGE_NONE][0]['value']])) {
@@ -273,34 +286,35 @@ function bgpage_node_form_validate(&$form, &$form_state) {
   }
 
   if ($taxon_name == t('No Taxon')) {
-    // TODO this should really hide the field in form_alter()
-
     // Check if this is a duplicate entry.
-    // TODO update for D7
-    //$nid = db_result(db_query("SELECT n.nid FROM {node} n JOIN {bgpage} p ON p.nid = n.nid WHERE n.title = '%s' AND p.parent = '%s' AND n.nid != %d", $node->title, $node->parent, $node->nid));
-    // Criteria: has same parent, also has same title, also is not this node (if editing)
-    $query = new EntityFieldQuery;
-    $query->entityCondition('entity_type', 'node')
-          ->entityCondition('bundle', 'bgpage')
-          ->propertyCondition('title', $values['title'])
-          ->fieldCondition('field_parent', 'value', $values['field_parent'][LANGUAGE_NONE][0]['value']);
-    // Existing nodes have nids.
-    // In that case we want the query to exclude the nid of this node
-    // because it is silly to alert that this node has the same title as this node.
-    if (isset($values['nid'])) {
-      $query->propertyCondition('nid', $values['nid'], '<>');
-    }
-    $result = $query->execute();
-    if (!empty($result['node'])) {
-      foreach ($result['node'] as $nid => $info) {
-        form_set_error('', t('There is a <a href="!link" target="_blank">guide page</a> with that title and parent.', array(
-          '!link' => url('node/' . $nid),
-        )));
+    // Criteria: has same parent, also has same title, also is not this node (if editing).
+    // The title for a No Taxon node is the common name; if it doesn't exist
+    // then we'll fail validation when we validate the common name below.
+    if ($values['field_common_name'][LANGUAGE_NONE][0]['value']) {
+      $title = $values['field_common_name'][LANGUAGE_NONE][0]['value'];
+      $query = new EntityFieldQuery;
+      $query->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'bgpage')
+            ->propertyCondition('title', $title)
+            ->fieldCondition('field_parent', 'value', $values['field_parent'][LANGUAGE_NONE][0]['value']);
+      // Existing nodes have nids.
+      // In that case we want the query to exclude the nid of this node
+      // because it is silly to alert that this node has the same title as this node.
+      if (isset($values['nid'])) {
+        $query->propertyCondition('nid', $values['nid'], '<>');
+      }
+      $result = $query->execute();
+      if (!empty($result['node'])) {
+        foreach ($result['node'] as $nid => $info) {
+          form_set_error('', t('There is a <a href="!link" target="_blank">guide page</a> with that title and parent.', array(
+            '!link' => url('node/' . $nid),
+          )));
+        }
       }
     }
   }
   elseif (isset($values['field_scientific_name'][LANGUAGE_NONE][0]['value'])) {
-    $scientific_name = trim($values['field_scientific_name'][LANGUAGE_NONE][0]['value']);
+    $scientific_name = $values['field_scientific_name'][LANGUAGE_NONE][0]['value'];
     if (!$scientific_name) {
       form_set_error('field_scientific_name', t('You must specify a scientific name.'));
     }
@@ -369,10 +383,14 @@ function bgpage_node_form_validate(&$form, &$form_state) {
   // Common name field is required, as it becomes the node title.
   // If it has not been entered by the user, build it.
   if ($values['field_common_name'][LANGUAGE_NONE][0]['value'] == '') {
-    // Populating a common name for Species and Subspecies includes the Genus name.
-    // E.g., 1668198 is a subspecies so even though the scientific name is nevadensis
-    // the common name value would be Zootermopsis nevadensis nevadensis.
-    if (($taxon_name == "Species") || ($taxon_name == "Subspecies")) {
+    if ($taxon_name == t('No Taxon')) {
+      form_set_error('field_common_name', t('A common name is required for No Taxon pages.'));
+    }
+    elseif (($taxon_name == "Species") || ($taxon_name == "Subspecies")) {
+      // Populating a common name for Species and Subspecies includes the Genus
+      // name. E.g., 1668198 is a subspecies so even though the scientific name
+      // is nevadensis the common name value would be Zootermopsis nevadensis
+      // nevadensis.
       $nids = explode(',', $values['field_parent'][LANGUAGE_NONE][0]['value']);
       if (isset($values['nid'])) {
         $nids = array_merge($nids, array($values['nid']));

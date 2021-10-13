@@ -113,6 +113,15 @@ function bgimage_menu() {
     'file' => 'bgimage.pages.inc',
   );
 
+  $items['node/%bgpage_node/bgimage/recent'] = array(
+    'title' => 'Recent images',
+    'page callback' => 'bgimage_recent',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'bgimage.pages.inc',
+  );
+
   return $items;
 }
 
@@ -862,6 +871,7 @@ function bgimage_clone_node_alter(&$node, $context) {
     $node->field_bgimage_image = array(LANGUAGE_NONE => array());
     // Remove "Clone of".
     $node->title = str_replace('Clone of ', '', $node->title);
+    drupal_set_title($node->title);
     // Add the original nid in order to update bgimage_series.
     $base_nid = _bgimage_get_series_base($context['original_node']->nid);
     $node->original_nid = $base_nid ? $base_nid : $context['original_node']->nid;
@@ -1153,6 +1163,17 @@ function bgimage_image_ajax_callback($form, $form_state) {
   }
 
   return $ajax_commands;
+}
+
+/**
+ * Implements hook_date_text_process_alter().
+ */
+function bgimage_date_text_process_alter(&$element, $form_state, $context) {
+  if (isset($element['date']['#description'])) {
+    // Hide the 'Format: 9/22/21' help text since we provide our own format
+    // hint in our field description.
+    unset($element['date']['#description']);
+  }
 }
 
 /**
