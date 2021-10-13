@@ -1149,7 +1149,7 @@ function bgimage_image_ajax_callback($form, $form_state) {
     // leaving just the date.
     $exif_date = substr($exif_date, 0, 10);
     // Now put it in the format the date picker expects.
-    $exif_date = date_create_from_format('Y-m-d', $exif_date)->format('j M Y');
+    $exif_date = date_create_from_format('Y-m-d', $exif_date)->format('n/j/Y');
     $form['field_bgimage_date'][LANGUAGE_NONE][0]['value']['date']['#value'] = $exif_date;
 
     // Re-render just the date field to replace the current markup.
