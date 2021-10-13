@@ -1108,36 +1108,22 @@ function bgimage_image_ajax_callback($form, $form_state) {
   _bgimage_reset_form_date_ids($form);
 
   // Let the managed-file upload code do its AJAX work, which includes uploading
-  // the file. The return value is an array of Drupal AJAX commands for updating
-  // the field_bgimage_image form element.
+  // the file and marking its files_managed record temporary (status = 0).
+  // The return value is an array of Drupal AJAX commands for updating the
+  // field_bgimage_image form element.
   $ajax_commands = file_ajax_upload('field_bgimage_image', 'und', '0', $form['form_build_id']['#value']);
 
-  // If the file upload was successful then there should be exactly one file in
-  // $_FILES, but if the user clicked the 'Upload' button with no file selected
-  // then there will be none. If the file was the wrong type or too large then
-  // we'll find it here but not below when we try to find it in the database.
-  $form_field_name = 'field_bgimage_image_und_0';
-  if (empty($_FILES['files']['name'][$form_field_name])) {
+  // User clicked Extract image data button with no file selected, or selected a
+  // non-jpg file. Do nothing.
+  if (!isset($form_state['field']['field_bgimage_image'][LANGUAGE_NONE]['items'][0]['fid'])) {
     return $ajax_commands;
   }
 
-  global $user;
-  // The $filename here needs to match that in file_save_upload, which is where
-  // our file was actually saved.
-  $filename = trim(drupal_basename($_FILES['files']['name'][$form_field_name]), '.');
-  // We don't have direct access to the uri of the file that was just uploaded,
-  // so we do our best to guess - if we can't find the file we expect uploaded
-  // in the past 5 seconds, we assume it's not there.
-  $timestamp = REQUEST_TIME - 5;
-  $file_uri = db_query('SELECT uri FROM {file_managed} WHERE filename = :filename AND uid = :uid AND timestamp > :timestamp ORDER BY timestamp DESC',
-    array(
-      ':filename' => $filename,
-      ':uid' => $user->uid,
-      ':timestamp' => $timestamp)
-    )->fetchField();
+  $fid = $form_state['field']['field_bgimage_image'][LANGUAGE_NONE]['items'][0]['fid'];
+  $file_uri = file_load($fid)->uri;
   if (!$file_uri) {
-    // We'll wind up here if the file didn't validate (wrong extension or too
-    // large).
+    // Somehow the temporary file record did not make it into the files_managed
+    // database table. Perhaps upload was interrupted. Do nothing.
     return $ajax_commands;
   }
 
