@@ -665,6 +665,7 @@ function bgimage_preprocess_image_widget(&$variables) {
     // The filename that is shown is not the user's filename but rather our long
     // random string filename, so don't show it.
     $variables['element']['filename']['#access'] = FALSE;
+    $variables['element']['upload_button']['#value'] = t('Extract image data');
   }
 }
 
