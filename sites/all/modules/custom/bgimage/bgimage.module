@@ -630,7 +630,7 @@ function bgimage_thumb($node) {
 
   // This is what legacy BugGuide used, before image styles:
   // $obfuscate = image_obfuscate($base . $node->nid . "?l=125");
-  $obfuscate = image_obfuscate($base . $node->nid);
+  $obfuscate = image_obfuscate($base);
   $prefix = bgimage_get_prefix($obfuscate);
   // $uri = public://raw/MZA/LMZ/MZALMZWLLZELSRWLFL9LKRJZLZ6LYL9LRZJZHZ9L0R3Z3LDZGRTLERDLHZCLHZULXZ9LFLWLFL.jpg
   $uri = 'public://raw/' . $prefix . $obfuscate  .'.jpg';
