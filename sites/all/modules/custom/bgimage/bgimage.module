@@ -386,6 +386,13 @@ function bgimage_node_validate($node, $form, &$form_state) {
   if ($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid'] == 0) {
     form_set_error('field_bgimage_image', 'Did you forget to attach an image? Please attach one and resubmit.');
   }
+  elseif (isset($form_state['complete form']['field_bgimage_image'][LANGUAGE_NONE][0]['#file']->uri) &&
+    substr($form_state['complete form']['field_bgimage_image'][LANGUAGE_NONE][0]['#file']->uri, 0, 13) != 'public://raw/') {
+    // A new image is being uploaded: we need to create a new base so that
+    // the new image gets a new uri so that the browser doesn't load an image
+    // at the old uri from cache instead of loading the new image.
+    $form_state['values']['field_bgimage_base'][LANGUAGE_NONE][0]['value'] = bgimage_generate_uuid();
+  }
 
   if (strtotime($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value']) > time()) {
     form_set_error('field_bgimage_date', 'The date taken cannot be in the future.');
@@ -431,7 +438,6 @@ function bgimage_node_insert($node) {
   // Mirror information to bgimage table for scalability.
   // Note that we are inside node_save()'s database transaction.
   $fields = _bgimage_prepare($node);
-  $fields['base'] = $node->bgimage_uuid;
   $result = db_insert('bgimage')
     ->fields($fields)
     ->execute();
@@ -699,8 +705,7 @@ function _bgimage_obfuscate_uploaded_image(&$node) {
   // Even though the image field is required, during migration it may not be
   // present.
   if (isset($node->field_bgimage_image[LANGUAGE_NONE])) {
-    $node->bgimage_uuid = bgimage_generate_uuid();
-    $obfuscate = image_obfuscate($node->bgimage_uuid);
+    $obfuscate = image_obfuscate($node->{'field_bgimage_base'}[LANGUAGE_NONE][0]['value']);
     $prefix = bgimage_get_prefix($obfuscate);
     $directory = 'public://raw/' . $prefix;
     if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
@@ -709,9 +714,14 @@ function _bgimage_obfuscate_uploaded_image(&$node) {
     }
 
     $file = file_load($node->{'field_bgimage_image'}[LANGUAGE_NONE][0]['fid']);
-    // Move file into scalable file area, e.g.
-    // files/raw/7H3/HEH/7H3HEHUZ6H3HMLUZ8LWZUHLRUHVZMLZR5LAZ8LUZ6HBH0L6Z4H6ZLLOHIHBHQL5Z8H.jpg
-    file_move($file, $directory . $obfuscate . '.jpg');
+    $destination = $directory . $obfuscate . '.jpg';
+    // A file with uri == $destination is a file we've already processed and
+    // moved; avoid an error by not trying to replace it with itself.
+    if ($file->uri != $destination) {
+      // Move file into scalable file area, e.g.
+      // files/raw/7H3/HEH/7H3HEHUZ6H3HMLUZ8LWZUHLRUHVZMLZR5LAZ8LUZ6HBH0L6Z4H6ZLLOHIHBHQL5Z8H.jpg
+      file_move($file, $destination);
+    }
   }
 }
 
@@ -765,6 +775,7 @@ function _bgimage_prepare($node) {
     'nid' => $node->nid,
     'parent' => $wrapper->field_parent->value() ? $wrapper->field_parent->value() : 0,
     'parent_idx' => $wrapper->field_parent->value() . ',',
+    'base' => $wrapper->field_bgimage_base->value(),
     'id' => $wrapper->field_bgimage_id->value(),
     'date_taken' => $wrapper->field_bgimage_date->value(),
     'width' => $width,
@@ -867,8 +878,9 @@ function bgimage_original_from_derivative_path($scheme, $target) {
  */
 function bgimage_clone_node_alter(&$node, $context) {
   if ($context['method'] == 'prepopulate') {
-    // Don't prepopulate the image field.
+    // Don't prepopulate the image field or the base field.
     $node->field_bgimage_image = array(LANGUAGE_NONE => array());
+    $node->field_bgimage_base = array(LANGUAGE_NONE => array());
     // Remove "Clone of".
     $node->title = str_replace('Clone of ', '', $node->title);
     drupal_set_title($node->title);
