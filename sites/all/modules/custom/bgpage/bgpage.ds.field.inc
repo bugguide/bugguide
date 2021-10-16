@@ -232,6 +232,11 @@ function bgpage_representative_images($field) {
       $representative_images__nids = explode(',', $field_representative_images_value);
       foreach ($representative_images__nids as $representative_images__nid) {
         $bgimage__node = node_load($representative_images__nid);
+        if (!$bgimage__node) {
+          // Maybe a representative image was deleted?
+          watchdog('bgpage', 'Could not load representative image !rnid for node !nid', array('!rnid' => $representative_images__nid, '!nid' => $node->nid), WATCHDOG_NOTICE);
+          continue;
+        }
         // We do this to simulate this as apache solr fetching documents.
         // in order to merge them later.
         $document__representative_image = new stdClass();
