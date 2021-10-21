@@ -152,9 +152,8 @@ function _bgpage_images($field) {
     $query->addParam('fl', 'entity_id,label,ss_bgimage_thumbnail,ss_bgimage_classification,is_bgimage_immediate_parent,sm_bgimage_parents,sm_bgimage_breadcrumbs');
     // Sort by classification (full list of parents including bgimage nid at the end),
     // and then by rating.
-    $query->addParam('sort', 'ss_bgimage_classification desc');
-    $query->addParam('sort', 'is_bgimage_rating_avg desc');
-    $query->addParam('sort', 'is_bgimage_rating_count desc');
+    $query->addParam('sort', 'ss_bgimage_classification asc');
+    $query->addParam('sort', 'entity_id desc');
     // Set paging and results per page.
     $query->page = pager_find_page();
     $query->addParam('rows', $results_per_page);

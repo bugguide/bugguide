@@ -192,10 +192,8 @@ function bgimage_apachesolr_index_document_build_node($document, $entity, $env_i
   // Classification field used for sorting.
   $classification = '';
   if (!empty($entity->field_parent[LANGUAGE_NONE][0]['value'])) {
-    $classification = $entity->field_parent[LANGUAGE_NONE][0]['value'] . ',';
+    $document->addField('ss_bgimage_classification', $entity->field_parent[LANGUAGE_NONE][0]['value']);
   }
-  $classification .= $entity->nid;
-  $document->addField('ss_bgimage_classification', $classification);
 
   // Image thumbnail.
   $node_wrapper = entity_metadata_wrapper('node', $entity);
