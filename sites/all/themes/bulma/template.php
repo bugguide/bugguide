@@ -127,7 +127,8 @@ function bulma_form_alter(&$form, &$form_state, $form_id) {
       $form['user_icon']['#prefix'] = '<div class="card-content">';
       $form['user_icon']['#markup'] = '<div aria-hidden="true"><i class="fa fa-key"></i></div>';
       $form['user_icon']['#weight'] = -15;
-      $form['name']['#title'] = NULL;
+      $form['name']['#title'] = t('Login or E-mail');
+      $form['name']['#title_display'] = 'invisible';
       $form['name']['#attributes']['placeholder'] = t('Login or E-mail');
       $form['actions']['#attributes']['class'][] = 'card-item card-actions divider-top';
       $form['actions']['submit']['#attributes']['class'][] = 'btn-accent';
@@ -139,9 +140,11 @@ function bulma_form_alter(&$form, &$form_state, $form_id) {
       $form['user_icon']['#prefix'] = '<div class="card-content">';
       $form['user_icon']['#markup'] = '<div aria-hidden="true"><i class="fa fa-user-circle"></i></div>';
       $form['user_icon']['#weight'] = -15;
-      $form['account']['name']['#title'] = NULL;
+      $form['account']['name']['#title'] = t('Login');
+      $form['account']['name']['#title_display'] = 'invisible';
       $form['account']['name']['#attributes']['placeholder'] = t('Login');
-      $form['account']['mail']['#title'] = NULL;
+      $form['account']['mail']['#title'] = t('E-Mail');
+      $form['account']['mail']['#title_display'] = 'invisible';
       $form['account']['mail']['#attributes']['placeholder'] = t('E-mail');
       $form['actions']['#attributes']['class'][] = 'card-item card-actions divider-top';
       $form['actions']['submit']['#attributes']['class'][] = 'btn-accent';

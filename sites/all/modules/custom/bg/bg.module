@@ -323,21 +323,29 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
         // breadcrumb. Don't do this for $json.
         // Do this:  ... / Muscini / Musca / Musca domestica (House Fly)
         // Not this: ... / Muscini / Musca / domestica (House Fly)
-        if ($taxon == 'Species' && !$json) {
+        if (($taxon == 'Species' || $taxon == 'Subspecies') && !$json) {
           // We are rendering, e.g., domestica and we need the Musca in Musca domestica.
           // A parent of this node has it and we already loaded it in $nodes,
           // which we are currently looping through. Peek into the scientific
           // name field of a parent in order to get the genus name and prepend.
           // Caution: do not assume that the immediate parent is a genus; see node/162470
           // Go back up the tree looking for a genus. When we find one, grab
-          // the genus name.
+          // the genus name. Similarly for subspecies we need to find the
+          // species and genus.
           $reverse_nids = array_reverse($nids);
           foreach ($reverse_nids as $rnid) {
             if (!empty($nodes[$rnid]->{'field_taxon'}) &&
-                isset($nodes[$rnid]->{'field_taxon'}[LANGUAGE_NONE][0]['value']) &&
-                $nodes[$rnid]->{'field_taxon'}[LANGUAGE_NONE][0]['value'] == $TAXON_IDS['Genus']) {
-              // Found a genus.
-              $scientific_name = $nodes[$rnid]->{'field_scientific_name'}[LANGUAGE_NONE][0]['value'] . ' ' . $scientific_name;
+                isset($nodes[$rnid]->{'field_taxon'}[LANGUAGE_NONE][0]['value'])) {
+              if ($taxon == 'Subspecies' && $nodes[$rnid]->{'field_taxon'}[LANGUAGE_NONE][0]['value'] == $TAXON_IDS['Species']) {
+                // Found a species to go with a subspecies.
+                $scientific_name = $nodes[$rnid]->{'field_scientific_name'}[LANGUAGE_NONE][0]['value'] . ' ' . $scientific_name;
+                continue;
+              }
+              if ($nodes[$rnid]->{'field_taxon'}[LANGUAGE_NONE][0]['value'] == $TAXON_IDS['Genus']) {
+                // Found a genus.
+                $scientific_name = $nodes[$rnid]->{'field_scientific_name'}[LANGUAGE_NONE][0]['value'] . ' ' . $scientific_name;
+                break;
+              }
             }
           }
         }
@@ -391,9 +399,16 @@ function bg_create_taxonomic_breadcrumb($node, $guidebc = 'Scientific name (Comm
 function bg_preprocess_page(&$vars) {
   global $user;
 
+  $current_path = request_path();
   // Don't change the path in administrative pages.
-  if (path_is_admin(current_path())) {
+  if (path_is_admin($current_path)) {
     return;
+  }
+
+  if ($current_path == 'node') {
+    // We're viewing the 'Recent' menu item, so add a 'Recent' breadcrumb.
+    $bc = array(l('Home', ''), l('Recent', 'node'));
+    drupal_set_breadcrumb($bc);
   }
 
   // Check that we have an nid in the path.
@@ -423,8 +438,10 @@ function bg_preprocess_page(&$vars) {
             $keep[] = $item;
           }
           elseif ($item['#link']['path'] == 'node/%/view') {
-            $item['#link']['title'] = t('View');
-            $keep[] = $item;
+            if ($nid != BG_ID_REQUEST_NID && $nid != BG_FRASS_NID) {
+              $item['#link']['title'] = t('View');
+              $keep[] = $item;
+            }
           }
         }
 
@@ -489,10 +506,20 @@ function bg_preprocess_page(&$vars) {
       }
       drupal_set_breadcrumb($breadcrumbs);
     }
-    // Set breadcrumb for bgpage, bgimage and book reference nodes.
+
     if (isset($node->type) && in_array($node->type, array('bgpage', 'bgimage'))) {
-      // Changes title for both node title and title bar.
-      drupal_set_title(_bg_get_title_classification($node));
+      list($title_no_markup, $title_markup) = _bg_get_title_classification($node);
+      if ($node->type == 'bgpage' && drupal_get_title() == 'Recent Images Placed in ') {
+        $title_no_markup = 'Recent Images Placed in ' . $title_no_markup;
+        $title_markup = 'Recent Images Placed in ' . $title_markup;
+      }
+      // Sets the title bar title; we override the node title below.
+      drupal_set_title($title_no_markup);
+      // drupal_set_title doesn't handle markup, so as a workaround we
+      // set the markup title here instead - from here it will be passed
+      // directly to our page template instead of going through
+      // drupal_set_title.
+      $vars['title'] = $title_markup;
     }
   }
 }
@@ -689,20 +716,23 @@ function _bg_node_process_display_suite_field_cite_html(&$build) {
  * Get citation html like: (1), (2), (3), (4).
  *
  * For instance given the following text:
- * "Right Solidago [node:20] contains caterpillas [node:50] and pupa [node:7040]"
+ * "Right Solidago [cite:20] contains caterpillars [cite:50] and pupa [cite:7040]"
  * Should convert to the following text:
- * "Right Solidago (1) contains host plants with caterpillas (2) and pupa (3)."
+ * "Right Solidago (1) contains host plants with caterpillars (2) and pupa (3)."
  * Every cite number contains a link to the node id.
+ * The cite format is '[cite:nid,p1,p2]', where nid is a node id number and p1 and
+ * p2 are optional page numbers. ('citeall' instead of 'cite' is accepted for
+ * historical reasons, but not documented or publicised.)
  *
  * @param string $text
  *   The html text
  * @param array &$citation_nids
- *   The citation node ids. We can use later citation_nids
- *   so we can have a generation of "cites worked" which is
- *   used in _bg_get_add_works_cited_html().
+ *   An array of the cited node ids found in $text; passed by reference and
+ *   appended to by this function so that citations can be accumulated over
+ *   multiple calls, to be passed to _bg_get_add_works_cited_html().
  *
- * @return string|string[]|null
- *   The correct markup text cited linkeable to nodes.
+ * @return string
+ *   The original $text with '[cite:]'s transformed to numbered links to nodes.
  *
  * @see _bg_get_add_works_cited_html().
  */
@@ -713,13 +743,17 @@ function _bg_get_citations_html($text, &$citation_nids) {
     $replace = array();
     // Loop citation matches and replace them by links of type "Some reference(2)".
     foreach ($match[2] as $idx => $nid) {
+      $wrapper = entity_metadata_wrapper('node', $nid);
+      if (!$wrapper->value()) {
+        // Invalid nodes in '[cite:]'s don't get transformed.
+        continue;
+      }
       $find[] = $match[0][$idx];
       if (!in_array($nid, $citation_nids)) {
         $citation_nids[] = $nid;
       }
       // Extract citation index so we can show it as "(7)" in the text.
       $citation_index = array_search($nid, $citation_nids);
-      $bgref_node = node_load($nid);
       $first_page = '';
       $last_page = '';
       $pages = '';
@@ -740,14 +774,40 @@ function _bg_get_citations_html($text, &$citation_nids) {
           ':first_page' => $first_page
         ));
       }
-      $title = $bgref_node->title;
-      if ($bgref_node->name) {
-        $title .= t(', by :author_name', array(
-          ':author_name' => $bgref_node->name
-        ));
-        $title .= $pages;
+
+      $title = $wrapper->title->value();
+      switch ($wrapper->type->value()) {
+        case 'bgimage':
+          // The name of the user who submitted the image.
+          $author = bguserfields_get_name($wrapper->author);
+          if ($author) {
+            $title .= t(', submitted by :author', array(
+              ':author' => $author
+            ));
+          }
+          break;
+        case 'book_reference':
+          $author = $wrapper->field_book_reference_author->value();
+          if ($author) {
+            $title .= t(', by :author_name', array(
+              ':author_name' => $author
+            ));
+          }
+          $title .= $pages;
+          break;
+        case 'bglink':
+          $link = $wrapper->field_bglink_link->url->value();
+          // Put the pages before the link in this case since the link may be long.
+          $title .= $pages;
+          if ($link) {
+            $title .= ', ' . $link;
+          }
+          break;
+        case 'bgpage':
+          // $title is the taxon in this case; that's all we want.
+          break;
       }
-      $replace[] = '<span class="bgpage-citation">(' . l($citation_index + 1, 'node/' . $nid, array('attributes' => array('title' => $title))) . ')</span>';
+      $replace[] = '<span class="citation">(' . l($citation_index + 1, 'node/' . $nid, array('attributes' => array('title' => $title))) . ')</span>';
     }
     return str_replace($find, $replace, $text);
   }
@@ -755,43 +815,71 @@ function _bg_get_citations_html($text, &$citation_nids) {
 }
 
 /**
- * Get the works cited in html.
+ * Retun an html list of works cited.
  *
  * @param array $citation_nids
  *   The citation node ids.
  *
  * @return string|null
- *   The text already cited.
+ *   An html ordered list of works cited, or NULL if there were no citations.
  */
 function _bg_get_add_works_cited_html($citation_nids) {
   if (!$citation_nids) {
     return NULL;
   }
-  // List citations at field bgpge_citations.
+
   $list_items = '<ol>';
-  $cited_nodes = node_load_multiple($citation_nids);
-  foreach ($cited_nodes as $bgref_node) {
-    if (!empty($bgref_node)) {
-      $list_items .= '<li>' . l($bgref_node->title, 'node/' . $bgref_node->nid, array('attributes' => array('title' => $bgref_node->title)));
-      // Append book details if they are available.
-      $book_details = array();
-      if (!empty($bgref_node->field_book_reference_author['und'][0])) {
-        $book_details[] = $bgref_node->field_book_reference_author['und'][0]['safe_value'];
-      }
-      if (!empty($bgref_node->field_book_reference_year['und'][0])) {
-        $book_details[] = $bgref_node->field_book_reference_year['und'][0]['value'];
-      }
-      if (!empty($bgref_node->field_book_reference_publisher['und'][0])) {
-        $book_details[] = $bgref_node->field_book_reference_publisher['und'][0]['safe_value'];
-      }
-      if (count($book_details)) {
-        $list_items .= '</br>' . implode('. ', $book_details) . '.';
-      }
-      $list_items .= '</li>';
+  $list_not_empty = FALSE;
+  foreach ($citation_nids as $nid) {
+    $wrapper = entity_metadata_wrapper('node', $nid);
+    if (!$wrapper->value()) {
+      continue;
     }
+    $list_items .= '<li>' . l($wrapper->title->value(), 'node/' . $wrapper->nid->value(),
+      array('attributes' => array('title' => $wrapper->title->value())));
+    $list_not_empty = TRUE;
+
+    switch ($wrapper->type->value()) {
+      case 'bgimage':
+        $submitter = bguserfields_get_name($wrapper->author);
+        if ($submitter) {
+          $list_items .= t(', submitted by @submitter.', array(
+            '@submitter' => $submitter,
+          ));
+        }
+        break;
+      case 'book_reference':
+        // Append book details if they are available.
+        $book_details = array();
+        if ($wrapper->field_book_reference_author->value()) {
+          $author = $wrapper->field_book_reference_author->value(array('sanitize' => TRUE));
+          $book_details[] = substr($author, -1) == '.' ? substr($author, 0, -1) : $author;
+        }
+        if ($wrapper->field_book_reference_year->value()) {
+          $book_details[] = $wrapper->field_book_reference_year->value();
+        }
+        if ($wrapper->field_book_reference_publisher->value()) {
+          $publisher = $wrapper->field_book_reference_publisher->value(array('sanitize' => TRUE));
+          $book_details[] = substr($publisher, -1) == '.' ? substr($publisher, 0, -1) : $publisher;
+        }
+
+        if (count($book_details)) {
+          $list_items .= '<br>' . implode('. ', $book_details) . '.';
+        }
+        break;
+      case 'bglink':
+        $link = $wrapper->field_bglink_link->url->value();
+        $list_items .= '<br>' . l($link, $link);
+        break;
+      case 'bgpage':
+        // We just display the taxon title in this case.
+        break;
+    }
+    $list_items .= '</li>';
   }
   $list_items .= '</ol>';
-  return $list_items;
+
+  return $list_not_empty ? $list_items : NULL;
 }
 
 /**
@@ -856,10 +944,11 @@ function bg_block_view($delta = '') {
  * Variations are shown in https://github.com/bugguide/bugguide/issues/25
  *
  * @param stdClass $node
- * The node object.
+ *   The node object.
  *
- * @return string
- *   The new title classification.
+ * @return @array
+ *   A two-element array: the first element is the new title classification with
+ *   no markup, the second element is with markup.
  *
  * @throws \EntityFieldQueryException
  */
@@ -883,24 +972,29 @@ function _bg_get_title_classification($node) {
         if (!empty($scientific_names_from_all_taxa['Subspecies'])) {
           $full_scientific_name .= ' ' . $scientific_names_from_all_taxa['Subspecies'];
         }
+
         if (empty($common_name) || $full_scientific_name === $common_name) {
-          return "$taxon_name $full_scientific_name";
+          return array("$taxon_name $full_scientific_name",
+            "$taxon_name <i>$full_scientific_name</i>");
         }
         elseif (!empty($common_name) && $full_scientific_name !== $common_name) {
-          return "$taxon_name $full_scientific_name - $common_name";
+          return array("$taxon_name $full_scientific_name - $common_name",
+            "$taxon_name <i>$full_scientific_name</i> - $common_name");
         }
     }
     if (empty($common_name) || $scientific_name === $common_name) {
-      return $taxon_name . ' ' . $scientific_name;
+      return array($taxon_name . ' ' . $scientific_name,
+        $taxon_name . ' ' . $scientific_name);
     }
     elseif (!empty($common_name) && $scientific_name !== $common_name) {
-      return "$taxon_name $scientific_name - $common_name";
+      return array("$taxon_name $scientific_name - $common_name",
+        "$taxon_name $scientific_name - $common_name");
     }
   }
   else {
     // This is a No Taxon node.
     // No Taxon nodes use only the common name, not the scientific name.
-    return "$common_name";
+    return array($common_name, $common_name);
   }
 }
 

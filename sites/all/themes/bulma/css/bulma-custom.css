@@ -169,6 +169,15 @@ a.card-footer-item {
   max-width: 100%;
 }
 
+/* Overrule bulma and make breadcrumbs selectable. */
+.breadcrumb {
+    -webkit-touch-callout: unset;
+    -webkit-user-select: unset;
+    -moz-user-select: unset;
+    -ms-user-select: unset;
+    user-select: unset;
+}
+
 /* -------------------- */
 /* ## PANELS
 /* -------------------- */
@@ -296,6 +305,17 @@ a.card-footer-item {
 .field .field-label {
   text-align: left;
   margin-right: 1rem;
+}
+
+/* -------------------- */
+/* ## CITATIONS
+/* -------------------- */
+
+.citation {
+  vertical-align: top;
+  font-size: smaller;
+  display: inline;
+  color: #999;
 }
 
 /* -------------------- */
@@ -572,6 +592,12 @@ label {
   grid-column-start: 2;
   margin-top: 0.5rem;
   font-size: 0.9em;
+}
+
+.form-item input.error,
+.form-item textarea.error,
+.form-item select.error {
+  border: 2px solid #ed541d;
 }
 
 /* --- Filter Wrapper --- */

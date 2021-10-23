@@ -630,6 +630,16 @@ a:hover,
   margin-right: 0.5rem;
 }
 
+.page-node-bgimage .action-links li {
+  display: inline;
+}
+
+/* The Recent images button */
+
+.page-node-bgimage .action-links li:nth-child(2) a:before {
+  content: '\f061'; /* fa-arrow-right */
+}
+
 .node-type-bgimage .action-links a {
   /* is-small */
   border-radius: 2px;
@@ -780,6 +790,46 @@ input#edit-submit-save-and-sync {
 }
 
 /* --------------------- */
+/* ## CREATE/EDIT FORMS
+/* --------------------- */
+
+@media screen and (min-width: 1024px) {
+  /* Override bulma to display as block instead of grid. */
+  .node-bgimage-form .form-type-textfield,
+  .node-bgimage-form .form-type-select {
+    display: block;
+    max-width: unset;
+  }
+}
+
+.node-bgimage-form input[type=text] {
+  width:100%;
+}
+
+.node-bgimage-form .form-item:not(.form-type-checkbox) > label
+{
+  display: block;
+}
+
+.node-bgimage-form .form-type-checkbox {
+  display: inline-block;
+}
+
+/* The margins for these classes seem to be meant for dates with settings we're
+ * not using, so just reset them to 0. */
+.node-bgimage-form .form-type-date-text,
+.node-bgimage-form .form-item-field-bgimage-date-und-0-value-date {
+  margin-bottom: 0;
+}
+
+/* This element is meant to display information about available text formats,
+ * but we only ever allow one, so the element is always empty but still takes
+ * up space. */
+#edit-body-und-0-format {
+  display: none;
+}
+
+/* --------------------- */
 /* ## MISC
 /* --------------------- */
 
@@ -793,11 +843,4 @@ input#edit-submit-save-and-sync {
 
 .bg-image-list .column {
     padding: 0.15rem;
-}
-
-@media screen and (min-width: 1024px) {
-  /* Override bulma to account for the long label of the county field. */
-  #field-bgimage-county-add-more-wrapper .form-type-textfield {
-    display: block;
-  }
 }
