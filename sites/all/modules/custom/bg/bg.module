@@ -428,9 +428,15 @@ function bg_preprocess_page(&$vars) {
           }
         }
 
-        $vars['tabs']['#primary'] = array();
-        foreach ($keep as $item) {
-          $vars['tabs']['#primary'][] = $item;
+        // If View is the only tab remaining, empty the tabs array so that page.tpl.php will suppress.
+        if (sizeOf($keep) <= 1 && $keep[0]['#link']['path'] == 'node/%/view') {
+          $vars['tabs'] = array();
+        }
+        else {
+          $vars['tabs']['#primary'] = array();
+          foreach ($keep as $item) {
+            $vars['tabs']['#primary'][] = $item;
+          }
         }
       }
     }
