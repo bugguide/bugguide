@@ -1074,22 +1074,6 @@ function field_bgimage_image_process($element, $form_state, $form) {
 }
 
 /**
- * For unknown reasons the $form passed to our AJAX callback has all of the CSS
- * ids bumped, so for example instead of an id of 'edit-field-bgimage-date' an
- * element would have an id of 'edit-field-bgimage-date--2'. This function
- * reverts all of those ids back to their expected values.
- *
- * @param array $form
- *   The structured array on which to revert ids.
- */
-function _bgimage_reset_form_date_ids(&$form) {
-  $form['field_bgimage_date']['#id'] = 'edit-field-bgimage-date';
-  $form['field_bgimage_date'][LANGUAGE_NONE]['#prefix'] = '<div id="field-bgimage-date-add-more-wrapper">';
-  $form['field_bgimage_date'][LANGUAGE_NONE][0]['value']['#id']= 'edit-field-bgimage-date-und-0-value';
-  $form['field_bgimage_date'][LANGUAGE_NONE][0]['value']['date']['#id'] = 'edit-field-bgimage-date-und-0-value-datepicker-popup-0';
-}
-
-/**
  * Drupal AJAX callback function which wraps the managed-file file upload AJAX
  * code. Our addition to that functionality is to update the date field in the
  * $form using EXIF data from the uploaded image (when it includes a date taken
@@ -1105,8 +1089,6 @@ function _bgimage_reset_form_date_ids(&$form) {
  * @see file_save_upload();
  */
 function bgimage_image_ajax_callback($form, $form_state) {
-  _bgimage_reset_form_date_ids($form);
-
   // Let the managed-file upload code do its AJAX work, which includes uploading
   // the file and marking its files_managed record temporary (status = 0).
   // The return value is an array of Drupal AJAX commands for updating the
@@ -1146,7 +1128,8 @@ function bgimage_image_ajax_callback($form, $form_state) {
     $js = drupal_add_js();
     $settings = drupal_array_merge_deep_array($js['settings']['data']);
     // Create the Drupal AJAX command for replacing the current date field.
-    $ajax_commands['#commands'][] = ajax_command_replace('#edit-field-bgimage-date', $new_date_markup, $settings);
+    // Targeting class field-name-field-bgimage-date.
+    $ajax_commands['#commands'][] = ajax_command_replace('.field-name-field-bgimage-date', $new_date_markup, $settings);
   }
 
   return $ajax_commands;
