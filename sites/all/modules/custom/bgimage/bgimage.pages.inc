@@ -75,7 +75,10 @@ function bgimage_move_clipped($node, $quiet = false) {
 
   $clipboard_images = explode(',', $_SESSION['clipboard_images']);
   $node_wrapper = entity_metadata_wrapper('node', $node);
-  if ($node_wrapper->field_parent->value() || $node_wrapper->nid->value() == BG_ROOT_NID) {
+  if ($node_wrapper->field_parent->value() ||
+      $node_wrapper->nid->value() == BG_ROOT_NID ||
+      $node_wrapper->nid->value() == BG_ID_REQUEST_NID ||
+      $node_wrapper->nid->value() == BG_FRASS_NID) {
     // Compute the new parent for the images being moved - their direct parent
     // will be $node.
     $path = $node_wrapper->nid->value();
@@ -145,7 +148,8 @@ function bgimage_move_clipped($node, $quiet = false) {
     $_SESSION['clipboard_images'] = NULL;
   }
 
-  drupal_goto('node/' . $node->nid);
+  $goto_path = ($node->nid == BG_ID_REQUEST_NID || $node->nid == BG_FRASS_NID) ? 'node/' . $node->nid . '/bgimage' : 'node/' . $node->nid;
+  drupal_goto($goto_path);
 }
 
 /**
