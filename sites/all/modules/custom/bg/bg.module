@@ -427,7 +427,8 @@ function bg_preprocess_page(&$vars) {
         ($nid == BG_FRASS_NID) ||      // Frass
         ($pid == BG_ID_REQUEST_NID) || // Image in ID Request
         ($pid == BG_FRASS_NID) ||      // Image in Frass
-        $node->type == 'page'          // Content of type page
+        $vars['is_front'] ||           // Front page
+        !in_array($node->type, array('bgimage', 'bgpage', 'bglink', 'book_reference'))
         ) {
       $keep = array();
 
@@ -444,8 +445,12 @@ function bg_preprocess_page(&$vars) {
           }
         }
 
-        $vars['tabs']['#primary'] = array();
-        if (count($keep) > 1) {
+        // If View is the only tab remaining, empty the tabs array so that page.tpl.php will suppress.
+        if (sizeOf($keep) <= 1 && $keep[0]['#link']['path'] == 'node/%/view') {
+          $vars['tabs'] = array();
+        }
+        else {
+          $vars['tabs']['#primary'] = array();
           foreach ($keep as $item) {
             $vars['tabs']['#primary'][] = $item;
           }
