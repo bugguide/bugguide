@@ -661,10 +661,11 @@ function bgimage_thumb_link($node) {
  * Implements hook_field_widget_form_alter().
  */
 function bgimage_preprocess_image_widget(&$variables) {
-  // Removes the 'Upload' button and source image URL from the bgimage image field.
   if ($variables['element']['#field_name'] == 'field_bgimage_image') {
-    $variables['element']['upload_button']['#access'] = FALSE;
+    // The filename that is shown is not the user's filename but rather our long
+    // random string filename, so don't show it.
     $variables['element']['filename']['#access'] = FALSE;
+    $variables['element']['upload_button']['#value'] = t('Extract image data');
   }
 }
 
@@ -1053,6 +1054,88 @@ function bgimage_get_series($nid) {
 }
 
 /**
+ * This is a #process function for the image field of the bgimage_node_form -
+ * the file module's upload functionality is added through #process functions
+ * (file_managed_file_process in particular for the AJAX code we're dealing with
+ * here) which get processed after hook_form_alter calls, so another #process
+ * function is the only way to alter that upload code.
+ *
+ * @param array $element
+ *   The field_bgimage_image portion of the bgimage_node_form.
+ *
+ * @see file_managed_file_process().
+ */
+function field_bgimage_image_process($element, $form_state, $form) {
+  // We're wrapping managed_file's upload AJAX with our own so that we can add
+  // extra functionality.
+  unset($element['upload_button']['#ajax']['path']);
+  $element['upload_button']['#ajax']['callback'] = 'bgimage_image_ajax_callback';
+  return $element;
+}
+
+/**
+ * Drupal AJAX callback function which wraps the managed-file file upload AJAX
+ * code. Our addition to that functionality is to update the date field in the
+ * $form using EXIF data from the uploaded image (when it includes a date taken
+ * value).
+ *
+ * @param array $form
+ *   The form on which the AJAX call has been made.
+ *
+ * @return array
+ *   An array of Drupal AJAX commands for updating the form.
+ *
+ * @see file_ajax_upload();
+ * @see file_save_upload();
+ */
+function bgimage_image_ajax_callback($form, $form_state) {
+  // Let the managed-file upload code do its AJAX work, which includes uploading
+  // the file and marking its files_managed record temporary (status = 0).
+  // The return value is an array of Drupal AJAX commands for updating the
+  // field_bgimage_image form element.
+  $ajax_commands = file_ajax_upload('field_bgimage_image', 'und', '0', $form['form_build_id']['#value']);
+
+  // User clicked Extract image data button with no file selected, or selected a
+  // non-jpg file. Do nothing.
+  if (!isset($form_state['field']['field_bgimage_image'][LANGUAGE_NONE]['items'][0]['fid'])) {
+    return $ajax_commands;
+  }
+
+  $fid = $form_state['field']['field_bgimage_image'][LANGUAGE_NONE]['items'][0]['fid'];
+  $file_uri = file_load($fid)->uri;
+  if (!$file_uri) {
+    // Somehow the temporary file record did not make it into the files_managed
+    // database table. Perhaps upload was interrupted. Do nothing.
+    return $ajax_commands;
+  }
+
+  $exif = @_exif_get_data_from_file_uri(_exif_get_class(), $file_uri);
+  if (isset($exif['exif']['datetime'])) {
+    $exif_date = $exif['exif']['datetime'];
+    // The EXIF standard for datetime is "YYYY:MM:DD HH:MM:SS", but the exif
+    // module formats it as "YYYY-MM-DDTHH:MM:SS" - strip off the time portion,
+    // leaving just the date.
+    $exif_date = substr($exif_date, 0, 10);
+    // Now put it in the format the date picker expects.
+    $exif_date = date_create_from_format('Y-m-d', $exif_date)->format('n/j/Y');
+    $form['field_bgimage_date'][LANGUAGE_NONE][0]['value']['date']['#value'] = $exif_date;
+
+    // Re-render just the date field to replace the current markup.
+    $new_date_markup = drupal_render($form['field_bgimage_date']);
+
+    // It's not clear if/how these js settings are used, but file_ajax_upload
+    // does it, so we do too.
+    $js = drupal_add_js();
+    $settings = drupal_array_merge_deep_array($js['settings']['data']);
+    // Create the Drupal AJAX command for replacing the current date field.
+    // Targeting class field-name-field-bgimage-date.
+    $ajax_commands['#commands'][] = ajax_command_replace('.field-name-field-bgimage-date', $new_date_markup, $settings);
+  }
+
+  return $ajax_commands;
+}
+
+/**
  * Implements hook_date_text_process_alter().
  */
 function bgimage_date_text_process_alter(&$element, $form_state, $context) {
@@ -1072,6 +1155,10 @@ function bgimage_form_bgimage_node_form_alter(&$form, &$form_state) {
     $form['field_parent']['#access'] = FALSE;
     $form['field_bgimage_base']['#access'] = FALSE;
   }
+
+  // Add an additional #process function on the image field so that we can alter
+  // the results of other #process functions which run after hook_form_alter.
+  $form['field_bgimage_image'][LANGUAGE_NONE][0]['#process'][] = 'field_bgimage_image_process';
 
   // Add a second submit button which allows the user to apply (most of) the
   // settings in the current form to all images in this series, but only if
