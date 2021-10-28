@@ -29,40 +29,40 @@ function bgpage_tree($nid) {
 
     // Add a link to expand the tree.
     $link = l(
-      t('Expand Tree'), 
-      'node/' . $node->nid . '/tree', 
-      array( 
+      t('Expand Tree'),
+      'node/' . $node->nid . '/tree',
+      array(
         'title' => t('Show everything below this guide page.'),
         'query' => array('expand' => NULL),
         'attributes' => array(
           'class' => array(
-            'button', 
+            'button',
             'is-small',
-            ),
           ),
-        )
-      );
-    }
-    else {
+        ),
+      )
+    );
+  }
+  else {
     $parent_filter = new SolrFilterSubQuery('AND');
     $parent_filter->addFilter('sm_bgpage_parents', $nid);
     $main_filter->addFilterSubQuery($parent_filter);
 
     // Add a link to collapse the tree.
     $link = l(
-      t('Collapse Tree'), 
-      'node/' . $node->nid . '/tree', 
-      array( 
+      t('Collapse Tree'),
+      'node/' . $node->nid . '/tree',
+      array(
         'title' => t('Show the normal view.'),
         'attributes' => array(
           'class' => array(
-            'button', 
+            'button',
             'is-small',
-            ),
           ),
-        )
-      );
-    }
+        ),
+      )
+    );
+  }
 
   // Fetch the tree from Apache Solr.
   $classified_results = bgpage_fetch_classification($node->nid, $main_filter);
