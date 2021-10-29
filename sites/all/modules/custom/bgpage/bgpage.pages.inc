@@ -15,6 +15,8 @@ function bgpage_tree($nid) {
   if (!$node) {
     return MENU_NOT_FOUND;
   }
+
+  $links = array();
   $output = '';
 
   // First, create the filter that loads parent taxons plus the current one.
@@ -28,18 +30,13 @@ function bgpage_tree($nid) {
     $main_filter->addFilterSubQuery($immediate_parent_filter);
 
     // Add a link to expand the tree.
-    $link = l(
+    $links[] = l(
       t('Expand Tree'),
       'node/' . $node->nid . '/tree',
       array(
         'title' => t('Show everything below this guide page.'),
         'query' => array('expand' => NULL),
-        'attributes' => array(
-          'class' => array(
-            'button',
-            'is-small',
-          ),
-        ),
+        'attributes' => array('class' => array('button', 'is-small')),
       )
     );
   }
@@ -49,17 +46,12 @@ function bgpage_tree($nid) {
     $main_filter->addFilterSubQuery($parent_filter);
 
     // Add a link to collapse the tree.
-    $link = l(
+    $links[] = l(
       t('Collapse Tree'),
       'node/' . $node->nid . '/tree',
       array(
         'title' => t('Show the normal view.'),
-        'attributes' => array(
-          'class' => array(
-            'button',
-            'is-small',
-          ),
-        ),
+        'attributes' => array('class' => array('button', 'is-small')),
       )
     );
   }
@@ -67,13 +59,13 @@ function bgpage_tree($nid) {
   // Fetch the tree from Apache Solr.
   $classified_results = bgpage_fetch_classification($node->nid, $main_filter);
 
-  // Render the results.
   if (empty($classified_results)) {
-    $output = '<p>No results found.</p>';
+    return '<p>No results found.</p>';
   }
-  else {
-    $output = bgpage_tree_build($classified_results) .'<p>' . $link . '</p>';
-  }
+
+  $output = bgpage_tree_build($classified_results);
+
+  $output .= '<div class="taxonomy-tree-links"> ' . implode(' ', $links) . '</div>';
 
   return $output;
 }
