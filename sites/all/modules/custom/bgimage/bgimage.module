@@ -777,6 +777,7 @@ function _bgimage_prepare($node) {
     'parent_idx' => $wrapper->field_parent->value() . ',',
     'base' => $wrapper->field_bgimage_base->value(),
     'id' => $wrapper->field_bgimage_id->value(),
+    'location' => $wrapper->field_bgimage_location->value(),
     'date_taken' => $wrapper->field_bgimage_date->value(),
     'width' => $width,
     'height' => $height,
