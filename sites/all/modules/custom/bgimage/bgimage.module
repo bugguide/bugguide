@@ -790,6 +790,7 @@ function _bgimage_prepare($node) {
     'size' => $wrapper->field_bgimage_size->value(),
     'owner' => $wrapper->field_bgimage_copyright_owner->value(),
     'county' => $wrapper->field_bgimage_county->value(),
+    'location_code' => $wrapper->field_bgimage_location_code->value(),
   );
 
   return $fields;
