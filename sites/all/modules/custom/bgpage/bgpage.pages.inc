@@ -10,11 +10,13 @@
  *   The nid of the bgpage node.
  */
 function bgpage_tree($nid) {
-  $query = drupal_get_query_parameters();
   $node = node_load($nid);
   if (!$node) {
     return MENU_NOT_FOUND;
   }
+
+  $mode = arg(3) ? arg(3) : 'normal';
+  $query = drupal_get_query_parameters();
 
   $links = array();
   $output = '';
@@ -29,16 +31,19 @@ function bgpage_tree($nid) {
     $immediate_parent_filter->addFilter('ss_bgpage_immediate_parent', $nid);
     $main_filter->addFilterSubQuery($immediate_parent_filter);
 
-    // Add a link to expand the tree.
-    $links[] = l(
-      t('Expand Tree'),
-      'node/' . $node->nid . '/tree',
-      array(
-        'title' => t('Show everything below this guide page.'),
-        'query' => array('expand' => NULL),
-        'attributes' => array('class' => array('button', 'is-small')),
-      )
-    );
+    // Only offer to expand the tree in normal view mode.
+    if ($mode == 'normal') {
+      // Add a link to expand the tree.
+      $links[] = l(
+        t('Expand Tree'),
+        'node/' . $nid . '/tree',
+        array(
+          'title' => t('Show everything below this guide page.'),
+          'query' => array('expand' => NULL),
+          'attributes' => array('class' => array('button', 'is-small')),
+        )
+      );
+    }
   }
   else {
     $parent_filter = new SolrFilterSubQuery('AND');
@@ -48,7 +53,7 @@ function bgpage_tree($nid) {
     // Add a link to collapse the tree.
     $links[] = l(
       t('Collapse Tree'),
-      'node/' . $node->nid . '/tree',
+      'node/' . $nid . '/tree',
       array(
         'title' => t('Show the normal view.'),
         'attributes' => array('class' => array('button', 'is-small')),
@@ -64,6 +69,32 @@ function bgpage_tree($nid) {
   }
 
   $output = bgpage_tree_build($classified_results);
+
+  global $TAXON_IDS;
+  $node_taxon = $node->field_taxon[LANGUAGE_NONE][0]['value'];
+  if (user_access('create bgpage content') && $node_taxon < $TAXON_IDS['Subspecies']) {
+    if ($mode == 'add') {
+      // Add form for adding new guide page.
+      //$output .= drupal_get_form('bgpage_quickadd_guide_page_form', $node);
+      $links[] = l(
+        t('Normal View'),
+        '/node/' . $nid . '/tree',
+        array(
+          'attributes' => array('class' => array('button', 'is-small')),
+        )
+      );
+    }
+    else {
+      $links[] = l(
+        t('Add Guide'),
+        'node/' . $nid . '/tree/add',
+        array(
+          'title' => t('Add a guide page below this one'),
+          'attributes' => array('class' => array('button', 'is-small')),
+        )
+      );
+    }
+  }
 
   $output .= '<div class="taxonomy-tree-links"> ' . implode(' ', $links) . '</div>';
 
