@@ -75,7 +75,8 @@ function bgpage_tree($nid) {
   if (user_access('create bgpage content') && $node_taxon < $TAXON_IDS['Subspecies']) {
     if ($mode == 'add') {
       // Add form for adding new guide page.
-      //$output .= drupal_get_form('bgpage_quickadd_guide_page_form', $node);
+      $form_array = drupal_get_form('bgpage_quickadd_guide_page_form', $node);
+      $output .= drupal_render($form_array);
       $links[] = l(
         t('Normal View'),
         '/node/' . $nid . '/tree',
@@ -99,6 +100,148 @@ function bgpage_tree($nid) {
   $output .= '<div class="taxonomy-tree-links"> ' . implode(' ', $links) . '</div>';
 
   return $output;
+}
+
+/**
+ * Form for adding a guide page from the taxonomic view.
+ *
+ * @param $node
+ *   The node object of the node to add guide page below.
+ */
+function bgpage_quickadd_guide_page_form($form, $form_state, $node) {
+  $options = bgpage_get_allowed_children($node->field_taxon[LANGUAGE_NONE][0]['value']);
+  $form['taxon'] = array(
+    '#title' => t('Add taxon'),
+    '#type' => 'select',
+    '#options' => $options,
+    '#default_value' => count($options) - 1
+  );
+
+  // We name these form field inputs after their node field names so that we can
+  // share validation code with the full guide page form validation function.
+  $form['field_scientific_name'] = array(
+    '#title' => t('Scientific Name'),
+    '#type' => 'textfield',
+    '#description' => t("Leave blank when choosing 'No Taxon'."),
+  );
+
+  $form['field_common_name'] = array(
+    '#title' => t('Preferred Common Name'),
+    '#type' => 'textfield',
+    '#description' => t('Try to find a unique common name. Otherwise leave this blank and the scientific name will be used.'),
+  );
+
+  $form['original_nid'] = array(
+    '#type' => 'value',
+    '#value' => $node->nid,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Add'),
+  );
+
+  return $form;
+}
+
+function bgpage_quickadd_guide_page_form_validate($form, &$form_state) {
+  $taxon_is_no_taxon = $form['taxon']['#options'][$form_state['values']['taxon']] == 'No Taxon';
+  if ($taxon_is_no_taxon) {
+    if ($form_state['values']['scientific_name'] != '') {
+      form_set_error('scientific_name', t("The scientific name must be blank when choosing 'No Taxon'."));
+    }
+    if ($form_state['values']['common_name'] == '') {
+      form_set_error('title', t("You must provide a common name when choosing 'No Taxon'."));
+    }
+  }
+  elseif ($form_state['values']['scientific_name'] == '') {
+    form_set_error('scientific_name', t("A scientific name is required when the taxon is not 'No Taxon'."));
+  }
+}
+
+function bgpage_quickadd_guide_page_form_submit($form, &$form_state) {
+  global $user, $TAXON_IDS;
+  $parent_node = node_load($form_state['values']['original_nid']);
+  $parent_wrapper = entity_metadata_wrapper('node', $parent_node);
+
+  $new_node_values = array(
+    'type' => 'bgpage',
+    'uid' => $user->uid,
+    'status' => 1,
+    'comment' => 1, // Comments disabled
+    'promoted' => 1
+  );
+  $new_node = entity_create('node', $new_node_values);
+  $new_node_wrapper = entity_metadata_wrapper('node', $new_node);
+
+  $parent = $parent_wrapper->field_parent->value() . ',' . $parent_node->nid;
+  $new_node_wrapper->field_parent->set($parent);
+
+  $taxon_name = $form['taxon']['#options'][$form_state['values']['taxon']];
+  if ($taxon_name == t('No Taxon')) {
+    $new_node_wrapper->field_taxon->set($parent_wrapper->field_taxon->value() + 1);
+  }
+  else {
+    $new_node_wrapper->field_taxon->set($TAXON_IDS[$taxon_name]);
+    $new_node_wrapper->field_scientific_name->set($form_state['values']['field_scientific_name']);
+  }
+
+  // The validation code sets a common name if one wasn't entered, so we'll
+  // always have a common name.
+  $new_node_wrapper->field_common_name->set($form_state['values']['field_common_name']);
+
+  // The title is always the common name.
+  $new_node_wrapper->title->set($new_node_wrapper->field_common_name->value());
+
+  $new_node_wrapper->save();
+
+  watchdog('bgpage', 'added %title', array('%title' => $new_node_wrapper->title->value()), WATCHDOG_NOTICE, 'node/' . $new_node_wrapper->nid->value());
+
+  drupal_set_message(t('Guide page added.'));
+  $form_state['redirect'] = 'node/' . $new_node_wrapper->nid->value();
+}
+
+/**
+ * Given a taxon, return an array of allowed taxa
+ * that may be placed here. E.g., you cannot place
+ * a family into a genus.
+ *
+ * @param $taxon
+ *   A taxon ID from global $TAXON_NAMES.
+ * @return array
+ *   Array of allowed taxon IDs.
+ */
+function bgpage_get_allowed_children($taxon) {
+  global $TAXON_NAMES, $TAXON_IDS;
+  $allowed = array();
+  $allowed[] = 'No Taxon';
+  foreach ($TAXON_NAMES as $taxon_id => $taxon_name)  {
+    if ($taxon_id <= $taxon) {
+      continue;
+    }
+
+    $allowed[] = $taxon_name;
+
+    if (bgpage_is_taxon_required($taxon_name)) {
+      break;
+    }
+  }
+
+  return $allowed;
+}
+
+function bgpage_is_taxon_required($taxon) {
+  switch ($taxon) {
+    case 'Phylum':
+    case 'Class':
+    case 'Order':
+    case 'Family':
+    case 'Genus':
+    case 'Species':
+      return TRUE;
+    default:
+      return FALSE;
+  }
 }
 
 /**
