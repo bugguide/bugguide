@@ -265,6 +265,15 @@ function bgpage_form_bgpage_node_form_alter(&$form, &$form_state, $form_id) {
 
 }
 
+/**
+ * This bgpage node validation code is currently shared by the bgpage quickadd
+ * form and the bgpage node edit form; it assumes the name of the common and
+ * scientific name inputs is field_common_name and field_scientific_name (for
+ * form_set_error purposes).
+ *
+ * This function may make minor fixups to $scientific_name or $common_name, and
+ * may set $common_name if not already set.
+ */
 function _bgpage_shared_form_validate(&$scientific_name, &$common_name, $parent, $taxon, $nid) {
   global $TAXON_NAMES;
 
@@ -274,16 +283,23 @@ function _bgpage_shared_form_validate(&$scientific_name, &$common_name, $parent,
 
   if (!isset($TAXON_NAMES[$taxon])) {
     $taxon_name = t('No Taxon');
+    if ($scientific_name != '') {
+      form_set_error('field_scientific_name', t("The scientific name must be blank when choosing 'No Taxon'."));
+    }
+    if ($common_name == '') {
+      form_set_error('field_common_name', t("You must provide a common name when choosing 'No Taxon'."));
+    }
   }
   else {
     $taxon_name = $TAXON_NAMES[$taxon];
+    if ($scientific_name == '') {
+      form_set_error('field_scientific_name', t("A scientific name is required when the taxon is not 'No Taxon'."));
+    }
   }
 
   if ($taxon_name == t('No Taxon')) {
     // Check if this is a duplicate entry.
     // Criteria: has same parent, also has same title, also is not this node (if editing).
-    // The title for a No Taxon node is the common name; if it doesn't exist
-    // then we'll fail validation when we validate the common name below.
     if ($common_name) {
       $title = $common_name;
       $query = new EntityFieldQuery;
@@ -307,11 +323,8 @@ function _bgpage_shared_form_validate(&$scientific_name, &$common_name, $parent,
       }
     }
   }
-  elseif (isset($scientific_name)) {
-    if (!$scientific_name) {
-      form_set_error('field_scientific_name', t('You must specify a scientific name.'));
-    }
-    elseif (strpos($scientific_name, ' ')) {
+  elseif (!empty($scientific_name)) {
+    if (strpos($scientific_name, ' ')) {
       form_set_error('field_scientific_name', t('Scientific name should be one word only.'));
     }
     elseif (preg_match("/[^A-Za-z-]/", $scientific_name) > 0) {
@@ -376,10 +389,7 @@ function _bgpage_shared_form_validate(&$scientific_name, &$common_name, $parent,
   // Common name field is required, as it becomes the node title.
   // If it has not been entered by the user, build it.
   if ($common_name == '') {
-    if ($taxon_name == t('No Taxon')) {
-      form_set_error('field_common_name', t('A common name is required for No Taxon pages.'));
-    }
-    elseif (($taxon_name == "Species") || ($taxon_name == "Subspecies")) {
+    if (($taxon_name == "Species") || ($taxon_name == "Subspecies")) {
       // Populating a common name for Species and Subspecies includes the Genus
       // name. E.g., 1668198 is a subspecies so even though the scientific name
       // is nevadensis the common name value would be Zootermopsis nevadensis

@@ -145,18 +145,22 @@ function bgpage_quickadd_guide_page_form($form, $form_state, $node) {
 }
 
 function bgpage_quickadd_guide_page_form_validate($form, &$form_state) {
-  $taxon_is_no_taxon = $form['taxon']['#options'][$form_state['values']['taxon']] == 'No Taxon';
-  if ($taxon_is_no_taxon) {
-    if ($form_state['values']['scientific_name'] != '') {
-      form_set_error('scientific_name', t("The scientific name must be blank when choosing 'No Taxon'."));
-    }
-    if ($form_state['values']['common_name'] == '') {
-      form_set_error('title', t("You must provide a common name when choosing 'No Taxon'."));
-    }
-  }
-  elseif ($form_state['values']['scientific_name'] == '') {
-    form_set_error('scientific_name', t("A scientific name is required when the taxon is not 'No Taxon'."));
-  }
+  global $TAXON_IDS;
+  $parent_node = node_load($form_state['values']['original_nid']);
+  $parent = $parent_node->{'field_parent'}[LANGUAGE_NONE][0]['value'] . ',' . $form_state['values']['original_nid'];
+  $taxon_name = $form['taxon']['#options'][$form_state['values']['taxon']];
+  // For validation purposes we don't need to know the taxon id of a new No
+  // Taxon node (that will be determined in the submit function) - for now any
+  // index that's not a key of $TAXON_NAMES will do.
+  $taxon = isset($TAXON_IDS[$taxon_name]) ? $TAXON_IDS[$taxon_name] : -1;
+
+  _bgpage_shared_form_validate(
+    $form_state['values']['field_scientific_name'],
+    $form_state['values']['field_common_name'],
+    $parent,
+    $taxon,
+    NULL,
+  );
 }
 
 function bgpage_quickadd_guide_page_form_submit($form, &$form_state) {
