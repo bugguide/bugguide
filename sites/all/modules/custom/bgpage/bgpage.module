@@ -556,6 +556,8 @@ function bgpage_tree_child($result) {
 
   // Total images under this page.
   $output .= ' (' . $result->is_bgpage_total_images . ')';
+  // Close the bgpage-taxon-desc span.
+  $output .= '</span>';
   return $output;
 }
 
