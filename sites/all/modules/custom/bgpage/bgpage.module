@@ -506,7 +506,7 @@ function bgpage_tree_build($results) {
 
     // Render the element.
     $output .= $indents . bgpage_tree_child($result);
-    $output .= '</br>';
+    $output .= '<br>';
 
   }
 
