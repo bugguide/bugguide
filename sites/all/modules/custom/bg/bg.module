@@ -446,7 +446,7 @@ function bg_preprocess_page(&$vars) {
         }
 
         // If View is the only tab remaining, empty the tabs array so that page.tpl.php will suppress.
-        if (sizeOf($keep) <= 1 && $keep[0]['#link']['path'] == 'node/%/view') {
+        if (sizeOf($keep) == 1 && $keep[0]['#link']['path'] == 'node/%/view') {
           $vars['tabs'] = array();
         }
         else {
