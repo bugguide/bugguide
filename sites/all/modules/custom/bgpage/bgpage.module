@@ -257,7 +257,7 @@ function bgpage_form_bgpage_node_form_alter(&$form, &$form_state, $form_id) {
     $form['field_editors']['#access'] = FALSE;
   }
   if (!user_access('view raw parents')) {
-    $form['field_parents']['#access'] = FALSE;
+    $form['field_parent']['#access'] = FALSE;
   }
 
   // Run our validator after the regular node validator runs.
