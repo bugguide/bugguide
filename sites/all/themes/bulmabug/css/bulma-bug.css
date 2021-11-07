@@ -842,6 +842,12 @@ input#edit-submit-save-and-sync {
   display: none;
 }
 
+#bgpage-quickadd-guide-page-form {
+  border: 1px solid #dbdbdb;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
 /* --------------------- */
 /* ## MISC
 /* --------------------- */
