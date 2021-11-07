@@ -395,9 +395,6 @@ function _bgpage_shared_form_validate(&$scientific_name, &$common_name, $parent,
       // is nevadensis the common name value would be Zootermopsis nevadensis
       // nevadensis.
       $nids = explode(',', $parent);
-      if (isset($nid)) {
-        $nids = array_merge($nids, array($nid));
-      }
       $taxon_key = _bg_get_all_scientific_names_from_all_taxa_of_nids($nids);
       if ($taxon_name == "Species") {
         $common_name = $taxon_key['Genus'] . ' ' . $scientific_name;
