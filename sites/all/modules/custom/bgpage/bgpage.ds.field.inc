@@ -145,6 +145,7 @@ function _bgpage_images($field) {
   // Fetch images who have this node as an ancestor.
   $filter = new SolrFilterSubQuery('AND');
   $filter->addFilter('sm_bgimage_parents', $node->nid);
+  addSessionFilterSubQueries($filter);
   try {
     $query = apachesolr_drupal_query('images', array());
     // Configure query.
@@ -289,11 +290,12 @@ function bgpage_representative_images($field) {
  */
 function _bgpage_search_representative_images_for($bgpage_nid, $limit = 8) {
   // Filter images with this child nid as their parent.
-  $filter_parent = new SolrFilterSubQuery('AND');
-  $filter_parent->addFilter('sm_bgimage_parents', $bgpage_nid);
+  $filter = new SolrFilterSubQuery('AND');
+  $filter->addFilter('sm_bgimage_parents', $bgpage_nid);
+  addSessionFilterSubQueries($filter);
 
   $query = apachesolr_drupal_query('representative_images_' . $bgpage_nid, array());
-  $query->addFilterSubQuery($filter_parent);
+  $query->addFilterSubQuery($filter);
   $query->addParam('fl', 'entity_id,ss_bgimage_thumbnail');
   $query->addParam('rows', $limit);
   $query->addParam('sort', 'is_bgimage_rating_avg desc');
@@ -302,4 +304,45 @@ function _bgpage_search_representative_images_for($bgpage_nid, $limit = 8) {
   // Query Solr and attach images to the child's document.
   list(, $response) = apachesolr_do_query($query);
   return $response->response->docs;
+}
+
+/**
+ * Adds a filter for each filter currently set on $_SESSION.
+ *
+ * @param SolrFilterSubQuery $query
+ *   A SolrFilterSubQuery object on which to add filters.
+ */
+function addSessionFilterSubQueries(&$query) {
+  if (!$query) {
+    return;
+  }
+
+  if (!empty($_SESSION['filter_life_stage'])) {
+    $query->addFilter('sm_field_bgimage_life_stage', $_SESSION['filter_life_stage']);
+  }
+
+  if (!empty($_SESSION['filter_sex'])) {
+    $query->addFilter('sm_field_bgimage_sex', $_SESSION['filter_sex']);
+  }
+
+  if (!empty($_SESSION['filter_state_province'])) {
+    $query->addFilter('sm_field_bgimage_location_code', $_SESSION['filter_state_province']);
+  }
+
+  if (!empty($_SESSION['filter_rated_images_only'])) {
+    $min_rating = (empty($_SESSION['filter_photo_quality']) ? 1 : $_SESSION['filter_photo_quality']) * 20;
+    $range = '[' . $min_rating . ' TO 100]';
+    $query->addFilter('is_bgimage_photo_quality_avg', $range);
+  }
+  elseif (!empty($_SESSION['filter_photo_quality'])) {
+    // Reminder: $_SESSION['filter_photo_quality'] is only set when it's > 1,
+    // and images that haven't been rated are stored with a rating of 0, so
+    // here we need to show images with a rating of 0 OR a
+    // rating > $_SESSION['filter_photo_quality'].
+    $range = '[' . $_SESSION['filter_photo_quality'] * 20 . ' TO 100]';
+    $or_query = new SolrFilterSubQuery('OR');
+    $or_query->addFilter('is_bgimage_photo_quality_avg', 0);
+    $or_query->addFilter('is_bgimage_photo_quality_avg', $range);
+    $query->addFilterSubQuery($or_query);
+  }
 }
