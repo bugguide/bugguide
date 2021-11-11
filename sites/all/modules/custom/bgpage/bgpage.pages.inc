@@ -110,11 +110,14 @@ function bgpage_tree($nid) {
  */
 function bgpage_quickadd_guide_page_form($form, $form_state, $node) {
   $options = bgpage_get_allowed_children($node->field_taxon[LANGUAGE_NONE][0]['value']);
+
+  $soon_to_be_parent = _bg_get_title_classification($node);
   $form['taxon'] = array(
     '#title' => t('Add taxon'),
     '#type' => 'select',
     '#options' => $options,
-    '#default_value' => count($options) - 1
+    '#default_value' => count($options) - 1,
+    '#prefix' => '<div><strong>You are about to add a new taxon under '. $soon_to_be_parent[1] . ':</strong></div>',
   );
 
   // We name these form field inputs after their node field names so that we can
