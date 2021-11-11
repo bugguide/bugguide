@@ -10,11 +10,15 @@
  *   The nid of the bgpage node.
  */
 function bgpage_tree($nid) {
-  $query = drupal_get_query_parameters();
   $node = node_load($nid);
   if (!$node) {
     return MENU_NOT_FOUND;
   }
+
+  $mode = arg(3) ? arg(3) : 'normal';
+  $query = drupal_get_query_parameters();
+
+  $links = array();
   $output = '';
 
   // First, create the filter that loads parent taxons plus the current one.
@@ -27,55 +31,224 @@ function bgpage_tree($nid) {
     $immediate_parent_filter->addFilter('ss_bgpage_immediate_parent', $nid);
     $main_filter->addFilterSubQuery($immediate_parent_filter);
 
-    // Add a link to expand the tree.
-    $link = l(
-      t('Expand Tree'), 
-      'node/' . $node->nid . '/tree', 
-      array( 
-        'title' => t('Show everything below this guide page.'),
-        'query' => array('expand' => NULL),
-        'attributes' => array(
-          'class' => array(
-            'button', 
-            'is-small',
-            ),
-          ),
+    // Only offer to expand the tree in normal view mode.
+    if ($mode == 'normal') {
+      // Add a link to expand the tree.
+      $links[] = l(
+        t('Expand Tree'),
+        'node/' . $nid . '/tree',
+        array(
+          'title' => t('Show everything below this guide page.'),
+          'query' => array('expand' => NULL),
+          'attributes' => array('class' => array('button', 'is-small')),
         )
       );
     }
-    else {
+  }
+  else {
     $parent_filter = new SolrFilterSubQuery('AND');
     $parent_filter->addFilter('sm_bgpage_parents', $nid);
     $main_filter->addFilterSubQuery($parent_filter);
 
     // Add a link to collapse the tree.
-    $link = l(
-      t('Collapse Tree'), 
-      'node/' . $node->nid . '/tree', 
-      array( 
+    $links[] = l(
+      t('Collapse Tree'),
+      'node/' . $nid . '/tree',
+      array(
         'title' => t('Show the normal view.'),
-        'attributes' => array(
-          'class' => array(
-            'button', 
-            'is-small',
-            ),
-          ),
-        )
-      );
-    }
+        'attributes' => array('class' => array('button', 'is-small')),
+      )
+    );
+  }
 
   // Fetch the tree from Apache Solr.
   $classified_results = bgpage_fetch_classification($node->nid, $main_filter);
 
-  // Render the results.
   if (empty($classified_results)) {
-    $output = '<p>No results found.</p>';
-  }
-  else {
-    $output = bgpage_tree_build($classified_results) .'<p>' . $link . '</p>';
+    return '<p>No results found.</p>';
   }
 
+  $output = bgpage_tree_build($classified_results);
+
+  global $TAXON_IDS;
+  $node_taxon = $node->field_taxon[LANGUAGE_NONE][0]['value'];
+  if (user_access('create bgpage content') && $node_taxon < $TAXON_IDS['Subspecies']) {
+    if ($mode == 'add') {
+      // Add form for adding new guide page.
+      $form_array = drupal_get_form('bgpage_quickadd_guide_page_form', $node);
+      $output .= drupal_render($form_array);
+      $links[] = l(
+        t('Normal View'),
+        '/node/' . $nid . '/tree',
+        array(
+          'attributes' => array('class' => array('button', 'is-small')),
+        )
+      );
+    }
+    else {
+      $links[] = l(
+        t('Add Guide'),
+        'node/' . $nid . '/tree/add',
+        array(
+          'title' => t('Add a guide page below this one'),
+          'attributes' => array('class' => array('button', 'is-small')),
+        )
+      );
+    }
+  }
+
+  $output .= '<div class="taxonomy-tree-links"> ' . implode(' ', $links) . '</div>';
+
   return $output;
+}
+
+/**
+ * Form for adding a guide page from the taxonomic view.
+ *
+ * @param $node
+ *   The node object of the node to add guide page below.
+ */
+function bgpage_quickadd_guide_page_form($form, $form_state, $node) {
+  $options = bgpage_get_allowed_children($node->field_taxon[LANGUAGE_NONE][0]['value']);
+
+  $soon_to_be_parent = _bg_get_title_classification($node);
+  $form['taxon'] = array(
+    '#title' => t('Add taxon'),
+    '#type' => 'select',
+    '#options' => $options,
+    '#default_value' => count($options) - 1,
+    '#prefix' => '<div><strong>You are about to add a new taxon under '. $soon_to_be_parent[1] . ':</strong></div>',
+  );
+
+  // We name these form field inputs after their node field names so that we can
+  // share validation code with the full guide page form validation function.
+  $form['field_scientific_name'] = array(
+    '#title' => t('Scientific Name'),
+    '#type' => 'textfield',
+    '#description' => t("Leave blank when choosing 'No Taxon'."),
+  );
+
+  $form['field_common_name'] = array(
+    '#title' => t('Preferred Common Name'),
+    '#type' => 'textfield',
+    '#description' => t('Try to find a unique common name. Otherwise leave this blank and the scientific name will be used.'),
+  );
+
+  $form['original_nid'] = array(
+    '#type' => 'value',
+    '#value' => $node->nid,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Add'),
+  );
+
+  return $form;
+}
+
+function bgpage_quickadd_guide_page_form_validate($form, &$form_state) {
+  global $TAXON_IDS;
+  $parent_node = node_load($form_state['values']['original_nid']);
+  $parent = $parent_node->{'field_parent'}[LANGUAGE_NONE][0]['value'] . ',' . $form_state['values']['original_nid'];
+  $taxon_name = $form['taxon']['#options'][$form_state['values']['taxon']];
+  // For validation purposes we don't need to know the taxon id of a new No
+  // Taxon node (that will be determined in the submit function) - for now any
+  // index that's not a key of $TAXON_NAMES will do.
+  $taxon = isset($TAXON_IDS[$taxon_name]) ? $TAXON_IDS[$taxon_name] : -1;
+
+  _bgpage_shared_form_validate(
+    $form_state['values']['field_scientific_name'],
+    $form_state['values']['field_common_name'],
+    $parent,
+    $taxon,
+    NULL,
+  );
+}
+
+function bgpage_quickadd_guide_page_form_submit($form, &$form_state) {
+  global $user, $TAXON_IDS;
+  $parent_node = node_load($form_state['values']['original_nid']);
+  $parent_wrapper = entity_metadata_wrapper('node', $parent_node);
+
+  $new_node_values = array(
+    'type' => 'bgpage',
+    'uid' => $user->uid,
+    'status' => 1,
+    'comment' => 1, // Comments disabled
+    'promoted' => 1
+  );
+  $new_node = entity_create('node', $new_node_values);
+  $new_node_wrapper = entity_metadata_wrapper('node', $new_node);
+
+  $parent = $parent_wrapper->field_parent->value() . ',' . $parent_node->nid;
+  $new_node_wrapper->field_parent->set($parent);
+
+  $taxon_name = $form['taxon']['#options'][$form_state['values']['taxon']];
+  if ($taxon_name == t('No Taxon')) {
+    $new_node_wrapper->field_taxon->set($parent_wrapper->field_taxon->value() + 1);
+  }
+  else {
+    $new_node_wrapper->field_taxon->set($TAXON_IDS[$taxon_name]);
+    $new_node_wrapper->field_scientific_name->set($form_state['values']['field_scientific_name']);
+  }
+
+  // The validation code sets a common name if one wasn't entered, so we'll
+  // always have a common name.
+  $new_node_wrapper->field_common_name->set($form_state['values']['field_common_name']);
+
+  // The title is always the common name.
+  $new_node_wrapper->title->set($new_node_wrapper->field_common_name->value());
+
+  $new_node_wrapper->save();
+
+  watchdog('bgpage', 'added %title', array('%title' => $new_node_wrapper->title->value()), WATCHDOG_NOTICE, 'node/' . $new_node_wrapper->nid->value());
+
+  drupal_set_message(t('Guide page added.'));
+  $form_state['redirect'] = 'node/' . $new_node_wrapper->nid->value();
+}
+
+/**
+ * Given a taxon, return an array of allowed taxa
+ * that may be placed here. E.g., you cannot place
+ * a family into a genus.
+ *
+ * @param $taxon
+ *   A taxon ID from global $TAXON_NAMES.
+ * @return array
+ *   Array of allowed taxon IDs.
+ */
+function bgpage_get_allowed_children($taxon) {
+  global $TAXON_NAMES, $TAXON_IDS;
+  $allowed = array();
+  $allowed[] = 'No Taxon';
+  foreach ($TAXON_NAMES as $taxon_id => $taxon_name)  {
+    if ($taxon_id <= $taxon) {
+      continue;
+    }
+
+    $allowed[] = $taxon_name;
+
+    if (bgpage_is_taxon_required($taxon_name)) {
+      break;
+    }
+  }
+
+  return $allowed;
+}
+
+function bgpage_is_taxon_required($taxon) {
+  switch ($taxon) {
+    case 'Phylum':
+    case 'Class':
+    case 'Order':
+    case 'Family':
+    case 'Genus':
+    case 'Species':
+      return TRUE;
+    default:
+      return FALSE;
+  }
 }
 
 /**

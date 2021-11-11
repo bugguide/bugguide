@@ -266,65 +266,71 @@ function bgpage_form_bgpage_node_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Form validate callback for bgpage nodes.
+ * This bgpage node validation code is currently shared by the bgpage quickadd
+ * form and the bgpage node edit form; it assumes the name of the common and
+ * scientific name inputs is field_common_name and field_scientific_name (for
+ * form_set_error purposes).
+ *
+ * This function may make minor fixups to $scientific_name or $common_name, and
+ * may set $common_name if not already set.
  */
-function bgpage_node_form_validate(&$form, &$form_state) {
+function _bgpage_shared_form_validate(&$scientific_name, &$common_name, $parent, $taxon, $nid) {
   global $TAXON_NAMES;
 
-  $scientific_name = NULL;
-
   // Make sure we're using clean common and scientific names.
-  $form_state['values']['field_scientific_name'][LANGUAGE_NONE][0]['value'] = trim($form_state['values']['field_scientific_name'][LANGUAGE_NONE][0]['value']);
-  $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'] = trim($form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value']);
-  $values = $form_state['values'];
+  $scientific_name = trim($scientific_name);
+  $common_name = trim($common_name);
 
-  if (!isset($TAXON_NAMES[$values['field_taxon'][LANGUAGE_NONE][0]['value']])) {
+  if (!isset($TAXON_NAMES[$taxon])) {
     $taxon_name = t('No Taxon');
+    if ($scientific_name != '') {
+      form_set_error('field_scientific_name', t("The scientific name must be blank when choosing 'No Taxon'."));
+    }
+    if ($common_name == '') {
+      form_set_error('field_common_name', t("You must provide a common name when choosing 'No Taxon'."));
+    }
   }
   else {
-    $taxon_name = $TAXON_NAMES[$values['field_taxon'][LANGUAGE_NONE][0]['value']];
+    $taxon_name = $TAXON_NAMES[$taxon];
+    if ($scientific_name == '') {
+      form_set_error('field_scientific_name', t("A scientific name is required when the taxon is not 'No Taxon'."));
+    }
   }
 
   if ($taxon_name == t('No Taxon')) {
     // Check if this is a duplicate entry.
     // Criteria: has same parent, also has same title, also is not this node (if editing).
-    // The title for a No Taxon node is the common name; if it doesn't exist
-    // then we'll fail validation when we validate the common name below.
-    if ($values['field_common_name'][LANGUAGE_NONE][0]['value']) {
-      $title = $values['field_common_name'][LANGUAGE_NONE][0]['value'];
+    if ($common_name) {
+      $title = $common_name;
       $query = new EntityFieldQuery;
       $query->entityCondition('entity_type', 'node')
             ->entityCondition('bundle', 'bgpage')
             ->propertyCondition('title', $title)
-            ->fieldCondition('field_parent', 'value', $values['field_parent'][LANGUAGE_NONE][0]['value']);
+            ->fieldCondition('field_parent', 'value', $parent);
       // Existing nodes have nids.
       // In that case we want the query to exclude the nid of this node
       // because it is silly to alert that this node has the same title as this node.
-      if (isset($values['nid'])) {
-        $query->propertyCondition('nid', $values['nid'], '<>');
+      if (isset($nid)) {
+        $query->propertyCondition('nid', $nid, '<>');
       }
       $result = $query->execute();
       if (!empty($result['node'])) {
-        foreach ($result['node'] as $nid => $info) {
+        foreach ($result['node'] as $node_id => $info) {
           form_set_error('', t('There is a <a href="!link" target="_blank">guide page</a> with that title and parent.', array(
-            '!link' => url('node/' . $nid),
+            '!link' => url('node/' . $node_id),
           )));
         }
       }
     }
   }
-  elseif (isset($values['field_scientific_name'][LANGUAGE_NONE][0]['value'])) {
-    $scientific_name = $values['field_scientific_name'][LANGUAGE_NONE][0]['value'];
-    if (!$scientific_name) {
-      form_set_error('field_scientific_name', t('You must specify a scientific name.'));
-    }
-    elseif (strpos($scientific_name, ' ')) {
+  elseif (!empty($scientific_name)) {
+    if (strpos($scientific_name, ' ')) {
       form_set_error('field_scientific_name', t('Scientific name should be one word only.'));
     }
     elseif (preg_match("/[^A-Za-z-]/", $scientific_name) > 0) {
       form_set_error('field_scientific_name', t("Only the letters 'a' to 'z' are allowed."));
     }
-    elseif (($taxon_name == "Superfamily") && !bg_str_ends_with($values['field_scientific_name'][LANGUAGE_NONE][0]['value'], "oidea")) {
+    elseif (($taxon_name == "Superfamily") && !bg_str_ends_with($scientific_name, "oidea")) {
       form_set_error('field_scientific_name', t("A superfamily name should end with 'oidea'."));
     }
     elseif (($taxon_name == "Family") && !bg_str_ends_with($scientific_name, "idae")) {
@@ -339,19 +345,19 @@ function bgpage_node_form_validate(&$form, &$form_state) {
       $query->entityCondition('entity_type', 'node')
           ->entityCondition('bundle', 'bgpage')
           ->fieldCondition('field_scientific_name', 'value', $scientific_name)
-          ->fieldCondition('field_taxon', 'value', $values['field_taxon'][LANGUAGE_NONE][0]['value'])
-          ->fieldCondition('field_parent', 'value', $values['field_parent'][LANGUAGE_NONE][0]['value']);
+          ->fieldCondition('field_taxon', 'value', $taxon)
+          ->fieldCondition('field_parent', 'value', $parent);
       // Existing nodes have nids.
       // In that case we want the query to exclude the nid of this node
       // because it is silly to alert that this node has the same title as this node.
-      if (isset($values['nid'])) {
-        $query->propertyCondition('nid', $values['nid'], '<>');
+      if (isset($nid)) {
+        $query->propertyCondition('nid', $nid, '<>');
       }
       $result = $query->execute();
       if (!empty($result['node'])) {
-        foreach ($result['node'] as $nid => $info) {
+        foreach ($result['node'] as $node_id => $info) {
           form_set_error('', t('There is a <a href="!link" target="_blank">guide page</a> with that scientific name, taxon and parent.', array(
-              '!link' => url('node/' . $nid),
+              '!link' => url('node/' . $node_id),
           )));
         }
       }
@@ -362,18 +368,18 @@ function bgpage_node_form_validate(&$form, &$form_state) {
       $query->entityCondition('entity_type', 'node')
             ->entityCondition('bundle', 'bgpage')
             ->fieldCondition('field_scientific_name', 'value', $scientific_name)
-            ->fieldCondition('field_taxon', 'value', $values['field_taxon'][LANGUAGE_NONE][0]['value']);
+            ->fieldCondition('field_taxon', 'value', $taxon);
       // Existing nodes have nids.
       // In that case we want the query to exclude the nid of this node
       // because it is silly to alert that this node has the same title as this node.
-      if (isset($values['nid'])) {
-        $query->propertyCondition('nid', $values['nid'], '<>');
+      if (isset($nid)) {
+        $query->propertyCondition('nid', $nid, '<>');
       }
       $result = $query->execute();
       if (!empty($result['node'])) {
-        foreach ($result['node'] as $nid => $info) {
+        foreach ($result['node'] as $node_id => $info) {
           form_set_error('', t('There is a <a href="!link" target="_blank">guide page</a> with that scientific name and taxon.', array(
-            '!link' => url('node/' . $nid),
+            '!link' => url('node/' . $node_id),
           )));
         }
       }
@@ -382,38 +388,42 @@ function bgpage_node_form_validate(&$form, &$form_state) {
 
   // Common name field is required, as it becomes the node title.
   // If it has not been entered by the user, build it.
-  if ($values['field_common_name'][LANGUAGE_NONE][0]['value'] == '') {
-    if ($taxon_name == t('No Taxon')) {
-      form_set_error('field_common_name', t('A common name is required for No Taxon pages.'));
-    }
-    elseif (($taxon_name == "Species") || ($taxon_name == "Subspecies")) {
+  if ($common_name == '') {
+    if (($taxon_name == "Species") || ($taxon_name == "Subspecies")) {
       // Populating a common name for Species and Subspecies includes the Genus
       // name. E.g., 1668198 is a subspecies so even though the scientific name
       // is nevadensis the common name value would be Zootermopsis nevadensis
       // nevadensis.
-      $nids = explode(',', $values['field_parent'][LANGUAGE_NONE][0]['value']);
-      if (isset($values['nid'])) {
-        $nids = array_merge($nids, array($values['nid']));
-      }
+      $nids = explode(',', $parent);
       $taxon_key = _bg_get_all_scientific_names_from_all_taxa_of_nids($nids);
       if ($taxon_name == "Species") {
-        $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'] = $taxon_key['Genus'] . ' ' . $scientific_name;
+        $common_name = $taxon_key['Genus'] . ' ' . $scientific_name;
       }
       if ($taxon_name == "Subspecies") {
-        $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'] = $taxon_key['Genus'] . ' ' . $taxon_key['Species'] . ' ' . $scientific_name;
+        $common_name = $taxon_key['Genus'] . ' ' . $taxon_key['Species'] . ' ' . $scientific_name;
       }
     }
     else {
       // Populating a common name for other taxa means just copying the scientific name.
-      $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'] = $scientific_name;
+      $common_name = $scientific_name;
     }
   }
+}
+
+/**
+ * Form validate callback for bgpage nodes.
+ */
+function bgpage_node_form_validate(&$form, &$form_state) {
+  _bgpage_shared_form_validate(
+    $form_state['values']['field_scientific_name'][LANGUAGE_NONE][0]['value'],
+    $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'],
+    $form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'],
+    $form_state['values']['field_taxon'][LANGUAGE_NONE][0]['value'],
+    $form_state['values']['nid'],
+  );
+
   // Synchronize Drupal node title field with common name field.
   $form_state['values']['title'] = $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'];
-
-  // Pass value forward to submit function.
-  $form_state['values']['taxon_name'] = $taxon_name;
-  $form_state['values']['scientific_name'] = $scientific_name;
 }
 
 /**

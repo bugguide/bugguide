@@ -679,6 +679,19 @@ input#edit-submit-save-and-sync {
   color: #fff;
 }
 
+/* Links for actions related to the taxonomy tab. */
+.taxonomy-tree-links {
+  margin-top: 1rem;
+}
+
+.taxonomy-tree-links a {
+  margin-bottom: 0.75rem;
+}
+
+.taxonomy-tree-links a:not(:last-child) {
+  margin-right: 0.25rem;
+}
+
 /* --------------------- */
 /* ## GUIDE PAGE
 /* --------------------- */
@@ -827,6 +840,12 @@ input#edit-submit-save-and-sync {
  * up space. */
 #edit-body-und-0-format {
   display: none;
+}
+
+#bgpage-quickadd-guide-page-form {
+  border: 1px solid #dbdbdb;
+  padding: 1rem;
+  margin-top: 1rem;
 }
 
 /* --------------------- */
