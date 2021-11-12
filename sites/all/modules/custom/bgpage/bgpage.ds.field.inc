@@ -251,7 +251,7 @@ function bgpage_representative_images($field) {
     }
 
     // Render a list of images.
-    $output = '<div class="card mb-3"><div class="card-content p-2  bg-image-list"><ul class="columns is-mobile is-multiline">';
+    $output = '<div class="card"><div class="card-content p-2  bg-image-list"><ul class="columns is-mobile is-multiline">';
     foreach ($documents as $document) {
       if (isset($document->ss_bgimage_thumbnail)) {
         $output .= '<li class="column is-narrow m-0">' . $document->ss_bgimage_thumbnail . '</li>';
