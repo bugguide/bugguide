@@ -419,7 +419,7 @@ function bgpage_node_form_validate(&$form, &$form_state) {
     $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'],
     $form_state['values']['field_parent'][LANGUAGE_NONE][0]['value'],
     $form_state['values']['field_taxon'][LANGUAGE_NONE][0]['value'],
-    $form_state['values']['nid'],
+    $form_state['values']['nid']
   );
 
   // Synchronize Drupal node title field with common name field.
