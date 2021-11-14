@@ -43,7 +43,7 @@ function _bgpage_browse($field) {
     return;
   }
 
-  $output = '';
+  $output = bgpage_display_filters();
   $node = $field['entity'];
   $results_per_page = 5;
 
@@ -137,7 +137,7 @@ function _bgpage_images($field) {
     return;
   }
 
-  $output = '';
+  $output = bgpage_display_filters();
   $results_per_page = 25;
   $node = $field['entity'];
   $node_wrapper = entity_metadata_wrapper('node', $node);
@@ -210,7 +210,7 @@ function _bgpage_images($field) {
     $output .= '<p>' . theme('pager') . '</p>';
   }
   else {
-    $output = 'No images found for this classification.';
+    $output .= t('No images found for this classification.');
   }
   return $output;
 }

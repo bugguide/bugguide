@@ -225,7 +225,7 @@ function bgpage_permission() {
   );
 }
 
-function bgpage_theme() {
+function bgpage_theme($existing, $type, $theme, $path) {
   return array(
     'bgpage_classification' => array(
       'arguments' => array('node' => NULL),
@@ -235,6 +235,10 @@ function bgpage_theme() {
     ),
     'bgpage_taxonomy_reorder' => array(
       'arguments' => array('element' => NULL),
+    ),
+    'bgpage_filters' => array(
+      'template' => 'filters',
+      'path' => $path . '/templates',
     ),
   );
 }
@@ -821,4 +825,16 @@ function bgpage_filters_form_submit($form, $form_state) {
   else {
     unset($_SESSION['filter_rated_images_only']);
   }
+}
+
+/**
+ * Implements template_preprocess_HOOK() for theme bgpage_filters.
+ */
+function template_preprocess_bgpage_filters(&$variables) {
+  // Make the 'filters_form' form available in the 'bgpage_filters' template.
+  $variables['filters_form'] = drupal_get_form('bgpage_filters_form');
+}
+
+function bgpage_display_filters() {
+  return theme('bgpage_filters');
 }
