@@ -201,6 +201,57 @@ a:hover,
   border-color: inherit;
 }
 
+/* --------------------------------- */
+/* ## FILTER OPTIONS NAVBAR AND MENU
+/* --------------------------------- */
+
+/* We're piggybacking on the already existing CSS and javascript for the
+   navbar's menu-toggle button, but we want it on wide screens as well as
+   narrow screens. */
+
+.filters-navbar {
+  /* We're not really displaying this navbar as a bar, so don't set a min height. */
+  min-height: 0;
+  margin-bottom: 1rem;
+}
+
+.filters-navbar .menu-toggle {
+  margin: 0;
+}
+
+.filters-navbar .navbar-menu {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  padding-bottom: 0;
+}
+
+.filters-navbar .navbar-menu.is-active {
+  display: block;
+}
+
+@media screen and (min-width: 1024px) {
+  .filters-navbar.navbar {
+    display: block;
+  }
+
+  .filters-navbar .menu-toggle {
+    display: inline-flex;
+  }
+
+  .filters-navbar .navbar-menu {
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(10,10,10,.1);
+    display: none;
+    padding: 0.5rem;
+    padding-bottom: 0;
+    margin-bottom: 0.5rem;
+    /* If set to 0 as in bulma, this container expands to the combined width
+       of its children, which is not what we want here. */
+    flex-shrink: 1;
+  }
+}
+
 /* -------------------- */
 /* ## SEARCH
 /* -------------------- */
