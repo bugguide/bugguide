@@ -697,7 +697,7 @@ function bgimage_field_default_field_instances() {
     'label' => 'Photographic Quality',
     'required' => 0,
     'settings' => array(
-      'allow_clear' => 0,
+      'allow_clear' => 1,
       'allow_ownvote' => 1,
       'allow_revote' => 1,
       'stars' => 5,
@@ -758,7 +758,7 @@ function bgimage_field_default_field_instances() {
     'label' => 'Representative of Taxon',
     'required' => 0,
     'settings' => array(
-      'allow_clear' => 0,
+      'allow_clear' => 1,
       'allow_ownvote' => 1,
       'allow_revote' => 1,
       'stars' => 5,
