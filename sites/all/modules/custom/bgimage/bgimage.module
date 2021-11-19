@@ -579,7 +579,7 @@ function _bgimage_filter_thumb_process($text, $filter, $format) {
     $img = array();
     foreach ($result as $img) {
       // $n is the occurrence number
-      $n = $map[$img->nid];
+      $n = $img->nid;
       $obfuscate = image_obfuscate($img->base . $img->nid);
       $prefix = bgimage_get_prefix($obfuscate);
       $uri = 'public://raw/' . $prefix . $obfuscate  .'.jpg';
@@ -593,8 +593,8 @@ function _bgimage_filter_thumb_process($text, $filter, $format) {
       //        [thumb:144595]
       $search[] = $matches[0][$key];
       //        <img src="https://bugguide.net/files/styles/bg_small/public/0L3/H0L/0L3H0LDHXL8RHZOZFL4L6ZQLPZLL6ZKL6Z8HVH5HVHZL6ZQLDHUHYH8LBZML1Z2HFH9HFHXLUZ6HFH9HZRNHRRGL9ZEHVHKL.jpg" alt="" />
-      if (isset($expanded[$key])) {
-        $replace[] = $expanded[$key];
+      if (isset($expanded[$value])) {
+        $replace[] = $expanded[$value];
       }
       else {
         // [thumb:55] references nid 55 but nid 55 was deleted.
