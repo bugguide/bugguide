@@ -419,6 +419,11 @@ function bgimage_node_validate($node, $form, &$form_state) {
     form_set_error('field_bgimage_county', 'You have entered a country here. Please specify the county/parish/district/region instead.');
   }
 
+  $state_province_code = $form_state['values']['field_bgimage_location_code'][LANGUAGE_NONE][0]['value'];
+  if ($county && $state_province_code == 'ZZ') {
+    form_set_error('field_bgimage_location_code', t('Please select the State/Province corresponding to the entered County/Parish/District/Region.'));
+  }
+
   // TODO
   // bgimage_set_titles()
 }
