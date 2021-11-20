@@ -420,8 +420,27 @@ function bgimage_node_validate($node, $form, &$form_state) {
   }
 
   $state_province_code = $form_state['values']['field_bgimage_location_code'][LANGUAGE_NONE][0]['value'];
-  if ($county && $state_province_code == 'ZZ') {
-    form_set_error('field_bgimage_location_code', t('Please select the State/Province corresponding to the entered County/Parish/District/Region.'));
+  if ($county) {
+    if ($state_province_code == 'ZZ') {
+      form_set_error('field_bgimage_location_code', t('Please select the State/Province corresponding to the entered County/Parish/District/Region.'));
+    }
+    else {
+      include_once drupal_get_path('module', 'bgmap') . '/bgmap.fips.inc';
+      global $FIPS, $FIPS_STATES;
+      // We currently only have county data for US states, so check that we have
+      // a state first.
+      if (isset($FIPS_STATES[$state_province_code])) {
+        $state = $form['field_bgimage_location_code']['und']['#options'][$state_province_code];
+        if (!isset($FIPS[$state][$county])) {
+          // Our counties coincide with those of GBIF, which uses GADM names,
+          // so send users there for accepted county names for a given state.
+          $gadm_state = strtolower($state);
+          $gadm_state = str_replace(' ', '', $gadm_state);
+          $gadm_link = l('GADM', 'https://gadm.org/maps/USA/' . $gadm_state . '_2.html');
+          form_set_error('field_bgimage_county', t('Unrecognized county - please visit !link for a list of accepted county names in @state.', array('!link' => $gadm_link, '@state' => $state)));
+        }
+      }
+    }
   }
 
   // TODO
