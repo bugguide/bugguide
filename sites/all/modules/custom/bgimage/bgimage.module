@@ -430,7 +430,7 @@ function bgimage_node_validate($node, $form, &$form_state) {
       // We currently only have county data for US states, so check that we have
       // a state first.
       if (isset($FIPS_STATES[$state_province_code])) {
-        $state = $form['field_bgimage_location_code']['und']['#options'][$state_province_code];
+        $state = $form['field_bgimage_location_code'][LANGUAGE_NONE]['#options'][$state_province_code];
         if (!isset($FIPS[$state][$county])) {
           // Our counties coincide with those of GBIF, which uses GADM names,
           // so send users there for accepted county names for a given state.
