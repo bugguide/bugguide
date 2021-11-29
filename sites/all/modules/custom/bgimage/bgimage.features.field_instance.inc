@@ -664,13 +664,13 @@ function bgimage_field_default_field_instances() {
         'module' => 'fivestar',
         'settings' => array(
           'expose' => 1,
-          'style' => 'average',
+          'style' => 'anonymous-or-not',
           'text' => 'average',
           'widget' => array(
             'fivestar_widget' => 'sites/all/modules/fivestar/widgets/outline/outline.css',
           ),
         ),
-        'type' => 'fivestar_formatter_default',
+        'type' => 'bgimage_fivestar_formatter',
         'weight' => 15,
       ),
       'homepage' => array(
@@ -725,13 +725,13 @@ function bgimage_field_default_field_instances() {
         'module' => 'fivestar',
         'settings' => array(
           'expose' => 1,
-          'style' => 'average',
+          'style' => 'anonymous-or-not',
           'text' => 'average',
           'widget' => array(
             'fivestar_widget' => 'sites/all/modules/fivestar/widgets/outline/outline.css',
           ),
         ),
-        'type' => 'fivestar_formatter_default',
+        'type' => 'bgimage_fivestar_formatter',
         'weight' => 14,
       ),
       'homepage' => array(
