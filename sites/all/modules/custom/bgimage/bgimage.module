@@ -149,16 +149,19 @@ function bgimage_menu() {
 function bgimage_redirect_raw($path) {
   // ABCDEFGHIJ.jpg
   $s = explode('.', $path);
-  if (isset($s[1]) || $s[1] == 'jpg') {
+  if (isset($s[1]) && $s[1] == 'jpg') {
     $hash = image_deobfuscate($s[0]);
-    $uuid = substr($hash, 0, 32);
+    if (strlen($hash) <= 32) {
+      bgimage_fast_404();
+    }
+    $nid = substr($hash, 32);
     // TODO add index to avoid table scan.
     $fid = db_query("
       SELECT f.fid
       FROM file_usage f
           LEFT JOIN field_data_field_bgimage_base b
               ON b.entity_id = f.id
-      WHERE b.field_bgimage_base_value = :uuid", array(':uuid' => $uuid))->fetchField();
+      WHERE b.entity_id = :nid", array(':nid' => $nid))->fetchField();
     if ($fid) {
       $file = file_load($fid);
       drupal_goto(file_create_url($file->uri));
@@ -671,7 +674,7 @@ function bgimage_thumb($node) {
 
   // This is what legacy BugGuide used, before image styles:
   // $obfuscate = image_obfuscate($base . $node->nid . "?l=125");
-  $obfuscate = image_obfuscate($base);
+  $obfuscate = image_obfuscate($base . $node->nid);
   $prefix = bgimage_get_prefix($obfuscate);
   // $uri = public://raw/MZA/LMZ/MZALMZWLLZELSRWLFL9LKRJZLZ6LYL9LRZJZHZ9L0R3Z3LDZGRTLERDLHZCLHZULXZ9LFLWLFL.jpg
   $uri = 'public://raw/' . $prefix . $obfuscate  .'.jpg';
@@ -747,7 +750,7 @@ function _bgimage_obfuscate_uploaded_image(&$node) {
   // Even though the image field is required, during migration it may not be
   // present.
   if (isset($node->field_bgimage_image[LANGUAGE_NONE])) {
-    $obfuscate = image_obfuscate($node->{'field_bgimage_base'}[LANGUAGE_NONE][0]['value']);
+    $obfuscate = image_obfuscate($node->{'field_bgimage_base'}[LANGUAGE_NONE][0]['value'] . $node->nid);
     $prefix = bgimage_get_prefix($obfuscate);
     $directory = 'public://raw/' . $prefix;
     if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
