@@ -30,6 +30,17 @@ function bgimage_menu_alter(&$items) {
 }
 
 /**
+ * Same as in bootstrap.inc but with no path requirements. Directly callable.
+ */
+function bgimage_fast_404() {
+  drupal_add_http_header('Status', '404 Not Found');
+  $fast_404_html = variable_get('404_fast_html', '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>');
+  // Replace @path in the variable with the page path.
+  print strtr($fast_404_html, array('@path' => check_plain(request_uri())));
+  exit;
+}
+
+/**
  * Implements hook_menu().
  */
 function bgimage_menu() {
@@ -122,7 +133,42 @@ function bgimage_menu() {
     'file' => 'bgimage.pages.inc',
   );
 
+  $items['images/raw/%/%/%'] = array(
+    'page arguments' => array(4),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+    'page callback' => 'bgimage_redirect_raw',
+  );
+
   return $items;
+}
+
+/**
+ * Redirect legacy raw URLs to current paths.
+ */
+function bgimage_redirect_raw($path) {
+  // ABCDEFGHIJ.jpg
+  $s = explode('.', $path);
+  if (isset($s[1]) && $s[1] == 'jpg') {
+    $hash = image_deobfuscate($s[0]);
+    if (strlen($hash) <= 32) {
+      bgimage_fast_404();
+    }
+    $nid = substr($hash, 32);
+    // TODO add index to avoid table scan.
+    $fid = db_query("
+      SELECT f.fid
+      FROM file_usage f
+          LEFT JOIN field_data_field_bgimage_base b
+              ON b.entity_id = f.id
+      WHERE b.entity_id = :nid", array(':nid' => $nid))->fetchField();
+    if ($fid) {
+      $file = file_load($fid);
+      drupal_goto(file_create_url($file->uri));
+    }
+  }
+  // Improper path or no matching uuid.
+  bgimage_fast_404();
 }
 
 /**
@@ -628,7 +674,7 @@ function bgimage_thumb($node) {
 
   // This is what legacy BugGuide used, before image styles:
   // $obfuscate = image_obfuscate($base . $node->nid . "?l=125");
-  $obfuscate = image_obfuscate($base);
+  $obfuscate = image_obfuscate($base . $node->nid);
   $prefix = bgimage_get_prefix($obfuscate);
   // $uri = public://raw/MZA/LMZ/MZALMZWLLZELSRWLFL9LKRJZLZ6LYL9LRZJZHZ9L0R3Z3LDZGRTLERDLHZCLHZULXZ9LFLWLFL.jpg
   $uri = 'public://raw/' . $prefix . $obfuscate  .'.jpg';
@@ -714,7 +760,7 @@ function _bgimage_obfuscate_uploaded_image(&$node) {
   // Even though the image field is required, during migration it may not be
   // present.
   if (isset($node->field_bgimage_image[LANGUAGE_NONE])) {
-    $obfuscate = image_obfuscate($node->{'field_bgimage_base'}[LANGUAGE_NONE][0]['value']);
+    $obfuscate = image_obfuscate($node->{'field_bgimage_base'}[LANGUAGE_NONE][0]['value'] . $node->nid);
     $prefix = bgimage_get_prefix($obfuscate);
     $directory = 'public://raw/' . $prefix;
     if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {

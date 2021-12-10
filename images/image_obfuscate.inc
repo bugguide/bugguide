@@ -33,7 +33,7 @@ function char_to_base36($char) {
 function base36_to_char($string) { 
   $base36_charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
   return chr((strpos($base36_charset, substr($string, 0, 1)) * 36) +
-    strpos($base36_charset, substr($string, 1, 1)));
+    @strpos($base36_charset, substr($string, 1, 1)));
 }
 
 function base36_encode($string) {

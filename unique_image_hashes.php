@@ -41,11 +41,10 @@ foreach ($result as $record) {
 
 
   // 2. New filepath
-  $obfuscate = image_obfuscate($uuid);
+  $obfuscate = image_obfuscate($uuid . $record->nid);
   hashlog("new_filepath: $obfuscate");
   
   // 3. If we have not already done so, copy the file.
-  $obfuscate = image_obfuscate($uuid);
   $prefix = bgimage_get_prefix($obfuscate);
   $directory = 'public://raw/' . $prefix;
   hashlog ("new directory: $directory");
