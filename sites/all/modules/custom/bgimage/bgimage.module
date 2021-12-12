@@ -1224,6 +1224,8 @@ function bgimage_form_bgimage_node_form_alter(&$form, &$form_state) {
     $form['field_bgimage_base']['#access'] = FALSE;
   }
 
+  $form['field_bgimage_date'][LANGUAGE_NONE][0]['#after_build'][] = '_bgimage_node_form_after_build';
+
   // Add an additional #process function on the image field so that we can alter
   // the results of other #process functions which run after hook_form_alter.
   $form['field_bgimage_image'][LANGUAGE_NONE][0]['#process'][] = 'field_bgimage_image_process';
@@ -1401,5 +1403,34 @@ function bgimage_views_pre_render(&$view) {
         unset($view->result[$key]);
       }
     }
+  }
+}
+
+/**
+ * An #after_build function for the bgimage node form.
+ */
+function _bgimage_node_form_after_build($element, &$form_state) {
+  // We're using an #after_build function on form _submission_ to change any
+  // year entered as two digits to a four digit year so that it will validate.
+  if (isset($form_state['input']['field_bgimage_date'][LANGUAGE_NONE][0]['value']['date'])) {
+    // This is needed so that date_combo_validate will validate if a two-digit
+    // year was entered.
+    _bgimage_change_two_digit_year_to_four_digit($form_state['input']['field_bgimage_date'][LANGUAGE_NONE][0]['value']['date']);
+  }
+  if (isset($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value']['date'])) {
+    // This is needed so that date_popup_validate will validate if a two-digit
+    // year was entered.
+    _bgimage_change_two_digit_year_to_four_digit($form_state['values']['field_bgimage_date'][LANGUAGE_NONE][0]['value']['date']);
+  }
+
+  return $element;
+}
+
+function _bgimage_change_two_digit_year_to_four_digit(&$date) {
+  if (preg_match('@^(\d{1,2}/\d{1,2}/)(\d{2})$@', $date, $matches)) {
+    $year = (int) $matches[2];
+    $current_year = (int) date('y');
+    $year = $year <= $current_year ? 2000 + $year : 1900 + $year;
+    $date = $matches[1] . (string) $year;
   }
 }
