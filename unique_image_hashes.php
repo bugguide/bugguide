@@ -70,15 +70,16 @@ foreach ($result as $record) {
     // If FILE_EXISTS_ERROR then it will create a new file entry?
     //file_copy($file, $directory . $obfuscate . '.jpg', FILE_EXISTS_ERROR); 
     file_unmanaged_copy($file->uri, $directory . $obfuscate . '.jpg', FILE_EXISTS_ERROR); 
-    // 4. Update the uri in file_managed
-    // but file_copy() does not update the filename so we have to do that
-    db_query("UPDATE {file_managed} SET filename = :filename, uri = :uri WHERE fid = :fid", array(':filename' => $obfuscate . '.jpg', ':uri' => $uri, ':fid' => $fid));
     $file_existed = 0;
   }
   else {
     //hashlog("file already exists");
     $file_existed = 1;
   }
+  // 4. Update the uri in file_managed
+  // but file_copy() does not update the filename so we have to do that
+  db_query("UPDATE {file_managed} SET filename = :filename, uri = :uri WHERE fid = :fid", array(':filename' => $obfuscate . '.jpg', ':uri' => $uri, ':fid' => $fid));
+  
   // TODO delete $raw_file_url which is the original image path.
   // Deferring this.
   
