@@ -1178,6 +1178,12 @@ function bgimage_image_ajax_callback($form, $form_state) {
   }
 
   $exif = @_exif_get_data_from_file_uri(_exif_get_class(), $file_uri);
+
+  // It's not clear if/how these js settings are used, but file_ajax_upload
+  // does it, so we do too.
+  $js = drupal_add_js();
+  $settings = drupal_array_merge_deep_array($js['settings']['data']);
+  $feedback = array();
   if (isset($exif['exif']['datetime'])) {
     $exif_date = $exif['exif']['datetime'];
     // The EXIF standard for datetime is "YYYY:MM:DD HH:MM:SS", but the exif
@@ -1188,17 +1194,23 @@ function bgimage_image_ajax_callback($form, $form_state) {
     $exif_date = date_create_from_format('Y-m-d', $exif_date)->format('n/j/Y');
     $form['field_bgimage_date'][LANGUAGE_NONE][0]['value']['date']['#value'] = $exif_date;
 
+    $feedback[] = t('The date @date was extracted from the image.', array('@date' => $exif_date));
+
     // Re-render just the date field to replace the current markup.
     $new_date_markup = drupal_render($form['field_bgimage_date']);
 
-    // It's not clear if/how these js settings are used, but file_ajax_upload
-    // does it, so we do too.
-    $js = drupal_add_js();
-    $settings = drupal_array_merge_deep_array($js['settings']['data']);
     // Create the Drupal AJAX command for replacing the current date field.
     // Targeting class field-name-field-bgimage-date.
     $ajax_commands['#commands'][] = ajax_command_replace('.field-name-field-bgimage-date', $new_date_markup, $settings);
   }
+
+  // Provide feedback on any extracted data (the feedback will be overwritten
+  // if/when the image is removed).
+  if (!$feedback) {
+    $feedback[] = t('No data was extracted from the image.');
+  }
+  $feedback_markup = '<div class="status messages">' . implode('<br>', $feedback) . '</div>';
+  $ajax_commands['#commands'][] = ajax_command_prepend('.form-item-field-bgimage-image-und-0', $feedback_markup, $settings);
 
   return $ajax_commands;
 }
