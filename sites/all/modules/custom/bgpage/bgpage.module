@@ -250,6 +250,8 @@ function bgpage_form_bgpage_node_form_alter(&$form, &$form_state, $form_id) {
   // Thus, hide the title field on the edit form.
   $form['title']['#access'] = FALSE;
 
+  $form['field_sequence']['#access'] = FALSE;
+
   if (!user_access('view taxon ID field')) {
     $form['field_taxon']['#access'] = FALSE;
   }
