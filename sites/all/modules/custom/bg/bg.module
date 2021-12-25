@@ -695,12 +695,21 @@ function _bg_node_process_display_suite_field_cite_html(&$build) {
   // Loop all fields and search for citation tokens.
   // These are not Drupal tokens and that is why they are processed here.
   $citation_nids = array();
+  $citation_field_weights = array();
   foreach ($build as $field_key => $field) {
     if (strpos('#', $field_key) === 0) {
       continue;
     }
     if (is_array($field) && !empty($field[0]['#markup'])) {
-      $text = $field[0]['#markup'];
+      $citation_field_weights[$field_key] = $field['#weight'];
+    }
+  }
+  if ($citation_field_weights) {
+    // Sort the fields before we process them so that citations are numbered in
+    // the same order as they appear on the page.
+    asort($citation_field_weights);
+    foreach(array_keys($citation_field_weights) as $field_key) {
+      $text = $build[$field_key][0]['#markup'];
       $build[$field_key][0]['#markup'] = _bg_get_citations_html($text, $citation_nids);
     }
   }
