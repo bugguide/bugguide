@@ -444,6 +444,21 @@ function bgpage_field_default_field_bases() {
     'type' => 'text_long',
   );
 
+  // Exported field_base: 'field_sequence'.
+  $field_bases['field_sequence'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_sequence',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
   // Exported field_base: 'field_size'.
   $field_bases['field_size'] = array(
     'active' => 1,
