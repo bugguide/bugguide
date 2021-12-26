@@ -136,8 +136,16 @@ function bgpage_reorder_guide_page_form($form, $form_state, $node, $children_res
     '#markup' => '<p>Change numeric values and click Reorder to change the display order of the given children. No need to use only multiples of 10 (the system will internally change your values to multiples of 10).</p>',
   );
 
+  // Keep an array of child nids to make validation and submission processing
+  // easier.
+  $form['nids'] = array(
+    '#type' => 'value',
+    '#value' => array(),
+  );
+
   $sequence = 10;
   foreach($children_results as $result) {
+    $form['nids']['#value'][] = $result->entity_id;
     $child_title = bgpage_tree_child($result);
     $form['reorder-' . $result->{'entity_id'}] = array(
       '#type' => 'textfield',
@@ -155,6 +163,38 @@ function bgpage_reorder_guide_page_form($form, $form_state, $node, $children_res
   );
 
   return $form;
+}
+
+function bgpage_reorder_guide_page_form_validate($form, &$form_state) {
+  $weights = array();
+  foreach($form_state['values']['nids'] as $nid) {
+    $weight = $form_state['values']['reorder-' . $nid];
+    if (!is_numeric($weight)) {
+      form_set_error('reorder-' . $nid, t('Please enter a numeric value.'));
+      continue;
+    }
+    if (in_array($weight, $weights)) {
+      form_set_error('reorder-' . $nid, t('No number can be repeated.'));
+      continue;
+    }
+    $weights[] = $weight;
+  }
+}
+
+function bgpage_reorder_guide_page_form_submit($form, &$form_state) {
+  foreach ($form_state['values']['nids'] as $nid) {
+    $sequence = $form_state['values']['reorder-' . $nid];
+    $old_sequence = db_query('SELECT field_sequence_value FROM {field_data_field_sequence} WHERE entity_id = :nid', array(':nid' => $nid))->fetchField();
+    if ($sequence != $old_sequence) {
+      db_update('field_data_field_sequence')
+        ->fields(array('field_sequence_value' => $sequence))
+        ->condition('entity_id', $nid)
+        ->execute();
+    }
+  }
+
+  drupal_set_message(t('Ordering updated.'));
+  $form_state['redirect'] = 'node/' . $form_state['build_info']['args'][0]->nid . '/tree';
 }
 
 /**
