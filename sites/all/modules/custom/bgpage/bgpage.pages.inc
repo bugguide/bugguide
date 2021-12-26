@@ -132,8 +132,12 @@ function bgpage_tree($nid) {
  *   Array of solr query results for immediate children of $node.
  */
 function bgpage_reorder_guide_page_form($form, $form_state, $node, $children_results) {
+  $form['#attributes'] = array('class' => 'guide-edit-form');
+
   $form['reorder-instructions'] = array(
     '#markup' => '<p>Change numeric values and click Reorder to change the display order of the given children. No need to use only multiples of 10 (the system will internally change your values to multiples of 10).</p>',
+    '#prefix' => '<div class="guide-reorder-directions">',
+    '#suffix' => '</div>',
   );
 
   // Keep an array of child nids to make validation and submission processing
@@ -204,6 +208,8 @@ function bgpage_reorder_guide_page_form_submit($form, &$form_state) {
  *   The node object of the node to add guide page below.
  */
 function bgpage_quickadd_guide_page_form($form, $form_state, $node) {
+  $form['#attributes'] = array('class' => 'guide-edit-form');
+
   $options = bgpage_get_allowed_children($node->field_taxon[LANGUAGE_NONE][0]['value']);
 
   $soon_to_be_parent = _bg_get_title_classification($node);
