@@ -105,15 +105,18 @@ function bgpage_tree($nid) {
           'attributes' => array('class' => array('button', 'is-small')),
         )
       );
-      // TODO: don't display the reorder link if there are no children.
-      $links[] = l(
-        t('Reorder Guide'),
-        'node/' . $nid . '/tree/reorder',
-        array(
-          'title' => t('Reorder the children of this guide page'),
-          'attributes' => array('class' => array('button', 'is-small')),
-        )
-      );
+      // If the nid of the last result in the tree is the node we're on then
+      // there are no children, so don't offer to reorder them.
+      if ($classified_results[count($classified_results) - 1]->entity_id != $nid) {
+        $links[] = l(
+          t('Reorder Guide'),
+          'node/' . $nid . '/tree/reorder',
+          array(
+            'title' => t('Reorder the children of this guide page'),
+            'attributes' => array('class' => array('button', 'is-small')),
+          )
+        );
+      }
     }
   }
 
