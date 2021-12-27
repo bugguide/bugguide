@@ -193,10 +193,9 @@ function bgpage_reorder_guide_page_form_submit($form, &$form_state) {
     $sequence = $form_state['values']['reorder-' . $nid];
     $old_sequence = db_query('SELECT field_sequence_value FROM {field_data_field_sequence} WHERE entity_id = :nid', array(':nid' => $nid))->fetchField();
     if ($sequence != $old_sequence) {
-      db_update('field_data_field_sequence')
-        ->fields(array('field_sequence_value' => $sequence))
-        ->condition('entity_id', $nid)
-        ->execute();
+      $node_wrapper = entity_metadata_wrapper('node', $nid);
+      $node_wrapper->field_sequence->set($sequence);
+      $node_wrapper->save();
     }
   }
 
