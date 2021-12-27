@@ -233,9 +233,6 @@ function bgpage_theme() {
     'bgpage_tree' => array(
       'arguments' => array('children' => NULL, 'nids' => NULL, 'taxons' => NULL, 'titles' => NULL, 'scientific_names' => NULL),
     ),
-    'bgpage_taxonomy_reorder' => array(
-      'arguments' => array('element' => NULL),
-    ),
   );
 }
 
