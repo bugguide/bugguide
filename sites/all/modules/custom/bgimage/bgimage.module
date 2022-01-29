@@ -1177,15 +1177,16 @@ function bgimage_image_ajax_callback($form, $form_state) {
     return $ajax_commands;
   }
 
-  $exif = @_exif_get_data_from_file_uri(_exif_get_class(), $file_uri);
-  if (isset($exif['exif']['datetime'])) {
-    $exif_date = $exif['exif']['datetime'];
-    // The EXIF standard for datetime is "YYYY:MM:DD HH:MM:SS", but the exif
-    // module formats it as "YYYY-MM-DDTHH:MM:SS" - strip off the time portion,
-    // leaving just the date.
-    $exif_date = substr($exif_date, 0, 10);
+  $exif_metadata = @exif_read_data($file_uri);
+
+  if (isset($exif_metadata['DateTime'])) {
+    // https://web.archive.org/web/20190624045241if_/http://www.cipa.jp:80/std/documents/e/DC-008-Translation-2019-E.pdf
+    // The EXIF standard for datetime is "YYYY:MM:DD HH:MM:SS"
+    // e.g., 2021:10:12 22:32:46
+    // Strip off the time portion, leaving just the date.
+    $exif_date = substr($exif_metadata['DateTime'], 0, 10);
     // Now put it in the format the date picker expects.
-    $exif_date = date_create_from_format('Y-m-d', $exif_date)->format('n/j/Y');
+    $exif_date = date_create_from_format('Y:m:d', $exif_date)->format('n/j/Y');
     $form['field_bgimage_date'][LANGUAGE_NONE][0]['value']['date']['#value'] = $exif_date;
 
     // Re-render just the date field to replace the current markup.
