@@ -132,7 +132,7 @@ function bgstat_comments_by_user($limit = 50) {
     $years = array(5,4,3,2,1);
     foreach ($years as $years_ago ) {
       $low = strtotime('-' . $years_ago . ' years');
-      $high = strtotime('-' . $years_ago + 1 . ' years');
+      $high = strtotime('-' . ($years_ago + 1) . ' years');
       //print "SELECT COUNT(c.cid) as comments from comment c WHERE c.uid = $uid AND c.created > $low AND c.created < $high)\r";
       $result = db_query("SELECT COUNT(c.cid) AS comments FROM {comment} c WHERE c.uid = :uid AND c.created > :low AND c.created < :high", array(':uid' => $uid, ':low' => $low, ':high' => $high))->fetchObject();
       //print "$low $high $result->comments \r";
@@ -377,4 +377,3 @@ function _bgstat_get_html_statistics_page() {
   $html .= "</table>";
   return $html;
 }
-
