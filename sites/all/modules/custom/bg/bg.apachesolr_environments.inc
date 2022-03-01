@@ -51,6 +51,7 @@ function bg_apachesolr_environments() {
       'hash' => '0',
       'id' => '0',
       'is_bgimage_immediate_parent' => '0',
+      'is_bgimage_photo_quality_avg' => '0',
       'is_bgimage_rating_avg' => '0',
       'is_bgimage_rating_count' => '0',
       'is_comment_count' => '0',

@@ -257,16 +257,25 @@ function bgimage_apachesolr_index_document_build_node($document, $entity, $env_i
     $document->addField('ss_bgimage_thumbnail', $link);
   }
 
-  // Rating field used for sorting.
+  // 'Representative of taxon' rating field used for sorting.
   $rating_avg = 0;
   $rating_count = 0;
   // Rating cannot be accessed through an EMW :-(
   if (!empty($entity->field_bgimage_representative[LANGUAGE_NONE][0])) {
-    $rating_avg = $entity->field_bgimage_representative[LANGUAGE_NONE][0]['average'];
+    // Truncate to an int for Solr.
+    $rating_avg = intval($entity->field_bgimage_representative[LANGUAGE_NONE][0]['average']);
     $rating_count = $entity->field_bgimage_representative[LANGUAGE_NONE][0]['count'];
   }
   $document->addField('is_bgimage_rating_avg', $rating_avg);
   $document->addField('is_bgimage_rating_count', $rating_count);
+
+  // 'Photo quality' rating field used for filtering.
+  $photo_quality_avg = 0;
+  if (!empty($entity->field_bgimage_photo_quality[LANGUAGE_NONE][0]['average'])) {
+    // Truncate to an int for Solr.
+    $photo_quality_avg = intval($entity->field_bgimage_photo_quality[LANGUAGE_NONE][0]['average']);
+  }
+  $document->addField('is_bgimage_photo_quality_avg', $photo_quality_avg);
 }
 
 /**

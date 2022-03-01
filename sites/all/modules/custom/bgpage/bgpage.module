@@ -136,6 +136,12 @@ function bgpage_ds_fields_info($entity_type) {
       'function' => 'bgpage_representative_images',
       'file' => drupal_get_path('module', 'bgpage') . '/bgpage.ds.field.inc',
     );
+
+    $fields['bgpage_filter_options'] = array(
+      'title' => t('Display the image filter options'),
+      'field_type' => DS_FIELD_TYPE_FUNCTION,
+      'function' => 'bgpage_display_filters',
+    );
   }
   return array($entity_type => $fields);
 }
@@ -225,7 +231,7 @@ function bgpage_permission() {
   );
 }
 
-function bgpage_theme() {
+function bgpage_theme($existing, $type, $theme, $path) {
   return array(
     'bgpage_classification' => array(
       'arguments' => array('node' => NULL),
@@ -235,6 +241,10 @@ function bgpage_theme() {
     ),
     'bgpage_taxonomy_reorder' => array(
       'arguments' => array('element' => NULL),
+    ),
+    'bgpage_filters' => array(
+      'template' => 'filters',
+      'path' => $path . '/templates',
     ),
   );
 }
@@ -689,4 +699,148 @@ function _bgpage_views_query_alter_for_field_parent(&$view, &$query) {
     'direction' => 'DESC',
   );
   array_unshift($query->orderby, $order_by);
+}
+
+/*
+ * Constructor for the image filter options form.
+ */
+function bgpage_filters_form($form, $form_state) {
+  $form = array();
+  $form['#attributes'] = array('class' => 'filters-form');
+
+  // Life stage.
+  $life_stage_value = !empty($_SESSION['filter_life_stage']) ? $_SESSION['filter_life_stage'] : t('any');
+  $form['life_stage'] = array(
+    '#title' => t('Life stage'),
+    '#type' => 'select',
+    '#options' => drupal_map_assoc(array(
+      t('any'),
+      t('egg'),
+      t('immature'),
+      t('pupa'),
+      t('adult'),
+    )),
+    '#default_value' => $life_stage_value,
+  );
+
+  // Sex.
+  $sex_value = !empty($_SESSION['filter_sex']) ? $_SESSION['filter_sex'] : t('any');
+  $form['sex'] = array(
+    '#title' => t('Sex'),
+    '#type' => 'select',
+    '#options' => drupal_map_assoc(array(
+      t('any'),
+      t('female'),
+      t('male'),
+    )),
+    '#default_value' => $sex_value,
+  );
+
+  // State/Province.
+  global $LOCATION_CODES;
+  // Make a copy.
+  $locations = $LOCATION_CODES;
+  unset($locations['']);
+  // Place an 'any' option at the front.
+  $locations = array_merge(array('ZZ' => t('any')), $locations);
+  $state_value = !empty($_SESSION['filter_state_province']) ? $_SESSION['filter_state_province'] : 'ZZ';
+  $form['state_province'] = array(
+    '#title' => t('State/Province'),
+    '#type' => 'select',
+    '#options' => $locations,
+    '#default_value' => $state_value,
+  );
+
+  // Use a container to group the photo quality rating and the checkbox for
+  // whether or not to display photos that haven't been rated.
+  $form['rating_container'] = array(
+    '#type' => 'container',
+  );
+
+  // Photo quality.
+  $photo_quality_value = !empty($_SESSION['filter_photo_quality']) ? $_SESSION['filter_photo_quality'] : 1;
+  $form['rating_container']['photo_quality'] = array(
+    '#title' => t('Photo quality'),
+    '#type' => 'select',
+    '#options' => array(
+      1 => t('1 or higher'),
+      2 => t('2 or higher'),
+      3 => t('3 or higher'),
+      4 => t('4 or higher'),
+      5 => t('5'),
+    ),
+    '#default_value' => $photo_quality_value,
+  );
+
+  // Allow the user to choose if they want to view only images that have been
+  // given a rating.
+  $rated_only_value = !empty($_SESSION['filter_rated_images_only']) ? 1 : 0;
+  $form['rating_container']['rated_images_only'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Display rated images only'),
+    '#default_value' => $rated_only_value,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Set filters'),
+  );
+
+  return $form;
+}
+
+function bgpage_filters_form_submit($form, $form_state) {
+  $values = $form_state['values'];
+
+  // Life stage.
+  if ($values['life_stage'] != t('any')) {
+    $_SESSION['filter_life_stage'] = $values['life_stage'];
+  }
+  else {
+    unset($_SESSION['filter_life_stage']);
+  }
+
+  // Sex.
+  if ($values['sex'] != t('any')) {
+    $_SESSION['filter_sex'] = $values['sex'];
+  }
+  else {
+    unset($_SESSION['filter_sex']);
+  }
+
+  // State/Province.
+  if ($values['state_province'] != 'ZZ') {
+    $_SESSION['filter_state_province'] = $values['state_province'];
+  }
+  else {
+    unset($_SESSION['filter_state_province']);
+  }
+
+  // Photo quality.
+  if ($values['photo_quality'] != '1') {
+    $_SESSION['filter_photo_quality'] = $values['photo_quality'];
+  }
+  else {
+    unset($_SESSION['filter_photo_quality']);
+  }
+
+  // Display only images that have been rated?
+  if ($values['rated_images_only']) {
+    $_SESSION['filter_rated_images_only'] = TRUE;
+  }
+  else {
+    unset($_SESSION['filter_rated_images_only']);
+  }
+}
+
+/**
+ * Implements template_preprocess_HOOK() for theme bgpage_filters.
+ */
+function template_preprocess_bgpage_filters(&$variables) {
+  // Make the 'filters_form' form available in the 'bgpage_filters' template.
+  $variables['filters_form'] = drupal_get_form('bgpage_filters_form');
+}
+
+function bgpage_display_filters() {
+  return theme('bgpage_filters');
 }
