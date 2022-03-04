@@ -91,7 +91,7 @@ function bgimage_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 8,
+      'weight' => 10,
     ),
   );
 
@@ -142,7 +142,7 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 13,
+      'weight' => 15,
     ),
   );
 
@@ -193,7 +193,7 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 11,
+      'weight' => 13,
     ),
   );
 
@@ -311,7 +311,7 @@ function bgimage_field_default_field_instances() {
         'year_range' => '1902:+0',
       ),
       'type' => 'date_popup',
-      'weight' => 4,
+      'weight' => 6,
     ),
   );
 
@@ -392,7 +392,7 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 8,
     ),
   );
 
@@ -466,7 +466,65 @@ function bgimage_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 7,
+      'weight' => 9,
+    ),
+  );
+
+  // Exported field_instance: 'node-bgimage-field_bgimage_latitude'.
+  $field_instances['node-bgimage-field_bgimage_latitude'] = array(
+    'bundle' => 'bgimage',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 2,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_decimal',
+        'weight' => 43,
+      ),
+      'homepage' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'recent' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_bgimage_latitude',
+    'label' => 'Latitude',
+    'required' => 0,
+    'settings' => array(
+      'max' => 90,
+      'min' => -90,
+      'prefix' => '',
+      'suffix' => '°',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 4,
     ),
   );
 
@@ -515,7 +573,7 @@ function bgimage_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 10,
+      'weight' => 12,
     ),
   );
 
@@ -652,6 +710,65 @@ function bgimage_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-bgimage-field_bgimage_longitude'.
+  $field_instances['node-bgimage-field_bgimage_longitude'] = array(
+    'bundle' => 'bgimage',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 2,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_decimal',
+        'weight' => 44,
+      ),
+      'homepage' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'recent' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_bgimage_longitude',
+    'label' => 'Longitude',
+    'required' => 0,
+    'settings' => array(
+      'max' => 180,
+      'min' => -180,
+      'prefix' => '',
+      'suffix' => '°',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 5,
+    ),
+  );
+
+
   // Exported field_instance: 'node-bgimage-field_bgimage_photo_quality'.
   $field_instances['node-bgimage-field_bgimage_photo_quality'] = array(
     'bundle' => 'bgimage',
@@ -709,7 +826,7 @@ function bgimage_field_default_field_instances() {
       'module' => 'fivestar',
       'settings' => array(),
       'type' => 'exposed',
-      'weight' => 13,
+      'weight' => 15,
     ),
   );
 
@@ -770,7 +887,7 @@ function bgimage_field_default_field_instances() {
       'module' => 'fivestar',
       'settings' => array(),
       'type' => 'exposed',
-      'weight' => 8,
+      'weight' => 10,
     ),
   );
 
@@ -819,7 +936,7 @@ function bgimage_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 9,
+      'weight' => 11,
     ),
   );
 
@@ -901,7 +1018,7 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 5,
+      'weight' => 7,
     ),
   );
 
@@ -952,7 +1069,7 @@ function bgimage_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 14,
+      'weight' => 16,
     ),
   );
 
@@ -975,6 +1092,8 @@ function bgimage_field_default_field_instances() {
   t('Life stage');
   t('Location');
   t('State/Province');
+  t('Latitude');
+  t('Longitude');
   t('Optional. An identifier for your own use. If you choose something unique here from your own records, you can easily find this image later using search.');
   t('Parent');
   t('Photographic Quality');

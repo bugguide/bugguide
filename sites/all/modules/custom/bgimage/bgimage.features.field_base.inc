@@ -167,6 +167,23 @@ function bgimage_field_default_field_bases() {
     'type' => 'image',
   );
 
+  // Exported field_base: 'field_bgimage_latitude'.
+  $field_bases['field_bgimage_latitude'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_bgimage_latitude',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(
+      'decimal_separator' => '.',
+    ),
+    'translatable' => 0,
+    'type' => 'number_float',
+  );
+
   // Exported field_base: 'field_bgimage_life_stage'.
   $field_bases['field_bgimage_life_stage'] = array(
     'active' => 1,
@@ -301,6 +318,23 @@ function bgimage_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'list_text',
+  );
+
+  // Exported field_base: 'field_bgimage_longitude'.
+  $field_bases['field_bgimage_longitude'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_bgimage_longitude',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(
+      'decimal_separator' => '.',
+    ),
+    'translatable' => 0,
+    'type' => 'number_float',
   );
 
   // Exported field_base: 'field_bgimage_photo_quality'.
