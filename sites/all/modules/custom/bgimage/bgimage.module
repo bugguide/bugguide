@@ -1122,6 +1122,27 @@ function bgimage_get_series($nid) {
 }
 
 /**
+ * Translates a latitude or longitude value from exif_read_data to a float.
+ *
+ * @param array $value
+ *   The latitude or longitude value returned from exif_read_data.
+ *
+ * @return float
+ *   The value translated to a float.
+ */
+function bgimage_translate_latlng(array $value) {
+  if (count($value) != 3) {
+    return NULL;
+  }
+  $result = 0;
+  foreach (array_reverse($value) as $v) {
+    [$a, $b] = sscanf($v, "%d/%d");
+    $result = $a / $b + $result / 60;
+  }
+  return $result;
+}
+
+/**
  * This is a #process function for the image field of the bgimage_node_form -
  * the file module's upload functionality is added through #process functions
  * (file_managed_file_process in particular for the AJAX code we're dealing with
@@ -1179,6 +1200,10 @@ function bgimage_image_ajax_callback($form, $form_state) {
 
   $exif_metadata = @exif_read_data(drupal_realpath($file_uri));
 
+  // It's not clear if/how these js settings are used, but file_ajax_upload
+  // does it, so we do too.
+  $js = drupal_add_js();
+  $settings = drupal_array_merge_deep_array($js['settings']['data']);
   if (isset($exif_metadata['DateTime'])) {
     // https://web.archive.org/web/20190624045241if_/http://www.cipa.jp:80/std/documents/e/DC-008-Translation-2019-E.pdf
     // The EXIF standard for datetime is "YYYY:MM:DD HH:MM:SS"
@@ -1192,13 +1217,28 @@ function bgimage_image_ajax_callback($form, $form_state) {
     // Re-render just the date field to replace the current markup.
     $new_date_markup = drupal_render($form['field_bgimage_date']);
 
-    // It's not clear if/how these js settings are used, but file_ajax_upload
-    // does it, so we do too.
-    $js = drupal_add_js();
-    $settings = drupal_array_merge_deep_array($js['settings']['data']);
     // Create the Drupal AJAX command for replacing the current date field.
     // Targeting class field-name-field-bgimage-date.
     $ajax_commands['#commands'][] = ajax_command_replace('.field-name-field-bgimage-date', $new_date_markup, $settings);
+  }
+
+  if (isset($exif_metadata['GPSLatitude']) && isset($exif_metadata['GPSLatitudeRef']) &&
+    isset($exif_metadata['GPSLongitude']) && isset($exif_metadata['GPSLongitudeRef'])) {
+    $latitude = bgimage_translate_latlng($exif_metadata['GPSLatitude']);
+    $longitude = bgimage_translate_latlng($exif_metadata['GPSLongitude']);
+
+    if ($exif_metadata['GPSLatitudeRef'] == 'S') {
+      $latitude = -$latitude;
+    }
+    if ($exif_metadata['GPSLongitudeRef'] == 'W') {
+      $longitude = -$longitude;
+    }
+
+    $form['field_bgimage_latitude'][LANGUAGE_NONE][0]['value']['#value'] = rtrim(number_format($latitude, 5), '0.');
+    $form['field_bgimage_longitude'][LANGUAGE_NONE][0]['value']['#value'] = rtrim(number_format($longitude, 5), '0.');
+
+    $ajax_commands['#commands'][] = ajax_command_replace('.field-name-field-bgimage-latitude', drupal_render($form['field_bgimage_latitude']), $settings);
+    $ajax_commands['#commands'][] = ajax_command_replace('.field-name-field-bgimage-longitude', drupal_render($form['field_bgimage_longitude']), $settings);
   }
 
   return $ajax_commands;
