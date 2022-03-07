@@ -491,7 +491,7 @@ function bgimage_node_insert($node) {
     $result = db_query('select * from {bgimage_series} where nid = :nid', array(
       ':nid' => $node->original_nid,
     ))->fetchObject();
-    
+
     // The bgimage_series table is only used if there is more than one image.
     // If this is the second image initialize the series.
     if (!$result) {
@@ -506,7 +506,7 @@ function bgimage_node_insert($node) {
     $max_weight = db_query('SELECT MAX(weight) FROM {bgimage_series} WHERE series = :nid', array(
       ':nid' => $node->original_nid,
     ))->fetchField();
-    
+
     // Add the new image at the end of the series.
     db_insert('bgimage_series')
       ->fields(array(
@@ -611,12 +611,12 @@ function _bgimage_filter_thumb_process($text, $filter, $format) {
   // Extract all the nids referenced by [thumb:124], [thumb:83], etc.
   if (preg_match_all("/\[thumb:(\d+)\]/i", $text, $matches)) {
     $nids = $matches[1];
-    
+
     // In $map, nid is the key and match occurrence number is the value.
     // Thus we have keys of every match:
     // array( 83 => 2, 124 => 1, ...)
     $map = array_flip($matches[1]);
-    
+
     // Retrieve information about each nid.
     $result = db_query('SELECT n.nid, n.title, i.base
                         FROM {node} n, {bgimage} i
@@ -734,7 +734,7 @@ function bgimage_preprocess_image_widget(&$variables) {
  *
  * @return string
  *   A string that will be placed in the field_data_field_bgimage_base field
- *   and the bgimage.base field. 
+ *   and the bgimage.base field.
  */
 function bgimage_generate_uuid() {
   $unique_base_created = FALSE;
@@ -742,10 +742,10 @@ function bgimage_generate_uuid() {
     $uuid = md5(drupal_random_bytes(32));
     $already_exists = db_query("SELECT field_bgimage_base_value FROM {field_data_field_bgimage_base} WHERE field_bgimage_base_value = :uuid", array(':uuid' => $uuid))->fetchField();
     if ($already_exists) {
-      watchdog('image', 'md5 hash collision, regenerating (' . $uuid . ')');      
+      watchdog('image', 'md5 hash collision, regenerating (' . $uuid . ')');
     }
     else {
-      $unique_base_created = TRUE;  
+      $unique_base_created = TRUE;
     }
   }
   return $uuid;
@@ -1177,7 +1177,7 @@ function bgimage_image_ajax_callback($form, $form_state) {
     return $ajax_commands;
   }
 
-  $exif_metadata = @exif_read_data($file_uri);
+  $exif_metadata = @exif_read_data(drupal_realpath($file_uri));
 
   if (isset($exif_metadata['DateTime'])) {
     // https://web.archive.org/web/20190624045241if_/http://www.cipa.jp:80/std/documents/e/DC-008-Translation-2019-E.pdf
