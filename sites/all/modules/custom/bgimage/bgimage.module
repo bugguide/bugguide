@@ -1163,6 +1163,57 @@ function field_bgimage_image_process($element, $form_state, $form) {
 }
 
 /**
+ * Modifies a bgimage form to update the state and county to match the lat/long.
+ *
+ * @param array $form
+ *   The form on which the AJAX call has been made.
+ * @param float $latitude
+ *   Latitude of the location, in degrees.
+ * @param float $longitude
+ *   Longitude of the location, in degrees.
+ *
+ * @return array
+ *   An array of Drupal AJAX commands for updating the form.
+ */
+function _bgimage_location_to_county(array $form, $latitude, $longitude) {
+  $request = curl_init();
+  curl_setopt($request, CURLOPT_URL, variable_get('county_shapes_server') . "/county/$latitude/$longitude");
+  curl_setopt($request, CURLOPT_RETURNTRANSFER, TRUE);
+  $county_data = json_decode(curl_exec($request), TRUE) ?: array();
+
+  $form['field_bgimage_location_code'][LANGUAGE_NONE]['#value'] = $county_data['state'] ?? 'ZZ';
+  $form['field_bgimage_county'][LANGUAGE_NONE][0]['value']['#value'] = $county_data['name'] ?? '';
+
+  $result = array(
+    'field_bgimage_location_code' => $form['field_bgimage_location_code'],
+    'field_bgimage_county' => $form['field_bgimage_county'],
+  );
+
+  if (isset($county_data['note'])) {
+    $result['location_note'] = array(
+      '#type' => 'item',
+      '#markup' => $county_data['note'],
+      '#weight' => 100,
+    );
+  }
+
+  return $result;
+}
+
+/**
+ * AJAX callback function for updating the state and county.
+ *
+ * @param array $form
+ *   The form on which the AJAX call has been made.
+ *
+ * @return array
+ *   An array of Drupal AJAX commands for updating the form.
+ */
+function bgimage_location_ajax_callback(array $form, $form_state) {
+  return _bgimage_location_to_county($form, floatval($form['field_bgimage_latitude'][LANGUAGE_NONE][0]['value']['#value']), floatval($form['field_bgimage_longitude'][LANGUAGE_NONE][0]['value']['#value']));
+}
+
+/**
  * Drupal AJAX callback function which wraps the managed-file file upload AJAX
  * code. Our addition to that functionality is to update the date field in the
  * $form using EXIF data from the uploaded image (when it includes a date taken
@@ -1239,6 +1290,9 @@ function bgimage_image_ajax_callback($form, $form_state) {
 
     $ajax_commands['#commands'][] = ajax_command_replace('.field-name-field-bgimage-latitude', drupal_render($form['field_bgimage_latitude']), $settings);
     $ajax_commands['#commands'][] = ajax_command_replace('.field-name-field-bgimage-longitude', drupal_render($form['field_bgimage_longitude']), $settings);
+
+    $location = bgimage_location_ajax_callback($form, $form_state);
+    $ajax_commands['#commands'][] = ajax_command_replace('#location-ajax-wrapper', drupal_render($location), $settings);
   }
 
   return $ajax_commands;
@@ -1315,6 +1369,27 @@ function bgimage_form_bgimage_node_form_alter(&$form, &$form_state) {
       $form['actions']['#suffix'] = $save_and_sync_markup;
     }
   }
+
+  $form['update_location'] = array(
+    '#type' => 'button',
+    '#value' => t('Update State and County'),
+    '#ajax' => array(
+      'callback' => 'bgimage_location_ajax_callback',
+      'effect' => 'fade',
+      'wrapper' => 'location-ajax-wrapper',
+    ),
+    '#limit_validation_errors' => array(),
+    '#weight' => 5,
+    '#validate' => array(),
+    '#submit' => array(),
+  );
+  $form['field_bgimage_location_code']['#prefix'] = '<div id="location-ajax-wrapper">';
+  $form['location_note'] = array(
+    '#type' => 'item',
+    '#markup' => '',
+    '#weight' => $form['field_bgimage_county']['#weight'],
+    '#suffix' => '</div>',
+  );
 }
 
 function _bgimage_save_and_sync_submit($form, &$form_state) {
