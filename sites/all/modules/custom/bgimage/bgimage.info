@@ -82,6 +82,7 @@ features[variable][] = comment_default_per_page_bgimage
 features[variable][] = comment_form_location_bgimage
 features[variable][] = comment_preview_bgimage
 features[variable][] = comment_subject_field_bgimage
+features[variable][] = county_shapes_server
 features[variable][] = field_bundle_settings_node__bgimage
 features[variable][] = menu_options_bgimage
 features[variable][] = menu_parent_bgimage
