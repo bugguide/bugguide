@@ -131,6 +131,11 @@ function restful_token_auth_restful_resource_alter(ResourceInterface &$resource)
  * Implements hook_user_update().
  */
 function restful_token_auth_user_update(&$edit, $account, $category) {
+  // Begin hack to stop Undefined index: status in restful_token_auth_user_update() -JV
+  if (!isset($edit['status'])) {
+    return;
+  }  
+  // End hack to stop Undefined index: status in restful_token_auth_user_update() -JV
   if ($edit['status']) {
     return;
   }
