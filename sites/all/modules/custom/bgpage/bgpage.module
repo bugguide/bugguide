@@ -535,7 +535,7 @@ function bgpage_tree_build($results) {
  *   The rendered tree item.
  */
 function bgpage_tree_child($result) {
-  global $TAXON_NAMES, $TAXON_IDS;
+  global $TAXON_NAMES, $TAXON_IDS, $base_url;
   if (!empty($result->its_field_taxon) && isset($TAXON_NAMES[$result->its_field_taxon])) {
     $taxon_name = $TAXON_NAMES[$result->its_field_taxon];
     $taxon_id = $result->its_field_taxon;
@@ -556,7 +556,7 @@ function bgpage_tree_child($result) {
   if ($italics) {
     $output .= "<i>";
   }
-  $output .= l("<strong>$scientific_name</strong>", "node/" . $result->entity_id . "/tree", array('html' => TRUE));
+  $output .= t('<a href="@url"><strong>@name</strong></a>', array('@url' => $base_url . "/node/" . $result->entity_id . "/tree", '@name' => $scientific_name));
   if ($italics) {
     $output .= "</i>";
   }
