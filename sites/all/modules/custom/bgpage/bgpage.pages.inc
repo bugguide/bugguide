@@ -84,7 +84,7 @@ function bgpage_tree($nid) {
       }
       else {
         // Get this node's children.
-        $children_results = bgpage_fetch_children_by_sequence($nid);
+        $children_results = bgpage_fetch_children_by_weight($nid);
         $form_array = drupal_get_form('bgpage_reorder_guide_page_form', $node, $children_results);
       }
       $output .= drupal_render($form_array);
@@ -150,18 +150,18 @@ function bgpage_reorder_guide_page_form($form, $form_state, $node, $children_res
     '#value' => array(),
   );
 
-  $sequence = 10;
+  $weight = 10;
   foreach($children_results as $result) {
     $form['nids']['#value'][] = $result->entity_id;
     $child_title = bgpage_tree_child($result);
     $form['reorder-' . $result->{'entity_id'}] = array(
       '#type' => 'textfield',
-      '#default_value' => $sequence,
+      '#default_value' => $weight,
       '#size' => 3,
       '#maxlength' => 3,
       '#field_suffix' => $child_title,
     );
-    $sequence += 10;
+    $weight += 10;
   }
 
   $form['submit'] = array(
@@ -190,11 +190,11 @@ function bgpage_reorder_guide_page_form_validate($form, &$form_state) {
 
 function bgpage_reorder_guide_page_form_submit($form, &$form_state) {
   foreach ($form_state['values']['nids'] as $nid) {
-    $sequence = $form_state['values']['reorder-' . $nid];
-    $old_sequence = db_query('SELECT field_sequence_value FROM {field_data_field_sequence} WHERE entity_id = :nid', array(':nid' => $nid))->fetchField();
-    if ($sequence != $old_sequence) {
+    $weight = $form_state['values']['reorder-' . $nid];
+    $old_weight = db_query('SELECT field_weight_value FROM {field_data_field_weight} WHERE entity_id = :nid', array(':nid' => $nid))->fetchField();
+    if ($weight != $old_weight) {
       $node_wrapper = entity_metadata_wrapper('node', $nid);
-      $node_wrapper->field_sequence->set($sequence);
+      $node_wrapper->field_weight->set($weight);
       $node_wrapper->save();
     }
   }

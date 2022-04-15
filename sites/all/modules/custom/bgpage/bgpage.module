@@ -247,7 +247,7 @@ function bgpage_form_bgpage_node_form_alter(&$form, &$form_state, $form_id) {
   // Thus, hide the title field on the edit form.
   $form['title']['#access'] = FALSE;
 
-  $form['field_sequence']['#access'] = FALSE;
+  $form['field_weight']['#access'] = FALSE;
 
   if (!user_access('view taxon ID field')) {
     $form['field_taxon']['#access'] = FALSE;
@@ -465,8 +465,8 @@ function bgpage_apachesolr_index_document_build_node($document, $entity, $env_id
     $document->addField('ss_bgpage_immediate_parent', $parent_nid);
   }
 
-  if (isset($entity->field_sequence[LANGUAGE_NONE][0]['value'])) {
-    $document->addField('is_field_sequence', $entity->field_sequence[LANGUAGE_NONE][0]['value']);
+  if (isset($entity->field_weight[LANGUAGE_NONE][0]['value'])) {
+    $document->addField('is_field_weight', $entity->field_weight[LANGUAGE_NONE][0]['value']);
   }
 }
 
@@ -619,18 +619,18 @@ function bgpage_fetch_classification($nid, $filter) {
  *
  * @param int $nid
  *   The nid of the parent whose children should be returned.
- * @return array of ApacheSolr search result objects, ordered by sequence value.
+ * @return array of ApacheSolr search result objects, ordered by weight value.
  */
-function bgpage_fetch_children_by_sequence($nid) {
+function bgpage_fetch_children_by_weight($nid) {
   $results = array();
   try {
-    $query = apachesolr_drupal_query('bgpage_children_sequence', array());
+    $query = apachesolr_drupal_query('bgpage_children_weight', array());
     $immediate_parent_filter = new SolrFilterSubQuery('AND');
     $immediate_parent_filter->addFilter('ss_bgpage_immediate_parent', $nid);
     $query->addFilterSubQuery($immediate_parent_filter);
     $query->addParam('fl', 'entity_id,label,sm_field_hodges_number,its_field_taxon,sm_field_scientific_name,is_bgpage_total_images');
     $query->addParam('rows', 10000000);
-    $query->addParam('sort', 'is_field_sequence asc');
+    $query->addParam('sort', 'is_field_weight asc');
 
     list($final_query, $response) = apachesolr_do_query($query);
 
@@ -638,7 +638,7 @@ function bgpage_fetch_children_by_sequence($nid) {
       $results = $response->response->docs;
     }
     else {
-      watchdog('bgpage', 'No child sequence results found for nid !nid', array('!nid' => $nid));
+      watchdog('bgpage', 'No child weight results found for nid !nid', array('!nid' => $nid));
     }
   }
   catch (Exception $e) {

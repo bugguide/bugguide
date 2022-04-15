@@ -85,7 +85,7 @@ class BGPageFieldMigration extends BasicBugGuideMigration {
     $this->addFieldMapping('field_internet_references', 'web_references');
     $this->addFieldMapping('field_internet_references:format')->defaultValue('f');
     $this->addFieldMapping('field_representative_images', 'images');
-    $this->addFieldMapping('field_sequence', 'sequence');
+    $this->addFieldMapping('field_weight', 'sequence');
 
     $this->addUnmigratedDestinations(array(
       'uid',
