@@ -1342,68 +1342,6 @@ function bgpage_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-bgpage-field_sequence'.
-  $field_instances['node-bgpage-field_sequence'] = array(
-    'bundle' => 'bgpage',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'browse' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 51,
-      ),
-      'homepage' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'images' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_sequence',
-    'label' => 'Sequence',
-    'required' => 1,
-    'settings' => array(
-      'max' => '',
-      'min' => '',
-      'prefix' => '',
-      'suffix' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'number',
-      'settings' => array(),
-      'type' => 'number',
-      'weight' => 29,
-    ),
-  );
-
   // Exported field_instance: 'node-bgpage-field_size'.
   $field_instances['node-bgpage-field_size'] = array(
     'bundle' => 'bgpage',
@@ -1689,6 +1627,68 @@ function bgpage_field_default_field_instances() {
   t('Typical specimen dimensions may be specified here. Metric is preferred, but English units may additionally be specified. Be sure to indicate what the measure applies to (wingspan, perhaps, or body length). It may also be appropriate to include sizes for larvae (caterpillars, for example).');
   t('When typically found. For butterflies, moths, and dragonflies, when do they fly? You may want to note separately when the larvae are found (caterpillars, for example).');
   t('Where generally found. In or around water? In the ground? On trees or low bushes?');
+
+  // Exported field_instance: 'node-bgpage-field_weight'.
+  $field_instances['node-bgpage-field_weight'] = array(
+    'bundle' => 'bgpage',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'browse' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 51,
+      ),
+      'homepage' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'images' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_weight',
+    'label' => 'Weight',
+    'required' => 1,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 29,
+    ),
+  );
 
   return $field_instances;
 }
