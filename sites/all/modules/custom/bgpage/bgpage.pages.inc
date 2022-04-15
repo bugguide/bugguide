@@ -27,9 +27,12 @@ function bgpage_tree($nid) {
 
   // Next, decide whether we want to list immediate children or the full tree.
   if (!isset($query['expand'])) {
-    $immediate_parent_filter = new SolrFilterSubQuery('AND');
-    $immediate_parent_filter->addFilter('ss_bgpage_immediate_parent', $nid);
-    $main_filter->addFilterSubQuery($immediate_parent_filter);
+    // If we're in reorder mode we'll display the children in a separate form.
+    if ($mode != 'reorder') {
+      $immediate_parent_filter = new SolrFilterSubQuery('AND');
+      $immediate_parent_filter->addFilter('ss_bgpage_immediate_parent', $nid);
+      $main_filter->addFilterSubQuery($immediate_parent_filter);
+    }
 
     // Only offer to expand the tree in normal view mode.
     if ($mode == 'normal') {
@@ -73,9 +76,17 @@ function bgpage_tree($nid) {
   global $TAXON_IDS;
   $node_taxon = $node->field_taxon[LANGUAGE_NONE][0]['value'];
   if (user_access('create bgpage content') && $node_taxon < $TAXON_IDS['Subspecies']) {
-    if ($mode == 'add') {
-      // Add form for adding new guide page.
-      $form_array = drupal_get_form('bgpage_quickadd_guide_page_form', $node);
+    if ($mode == 'add' || $mode == 'reorder') {
+      // Add the form that goes with the corresponding mode.
+      $form_array = '';
+      if ($mode == 'add') {
+        $form_array = drupal_get_form('bgpage_quickadd_guide_page_form', $node);
+      }
+      else {
+        // Get this node's children.
+        $children_results = bgpage_fetch_children_by_sequence($nid);
+        $form_array = drupal_get_form('bgpage_reorder_guide_page_form', $node, $children_results);
+      }
       $output .= drupal_render($form_array);
       $links[] = l(
         t('Normal View'),
@@ -94,6 +105,18 @@ function bgpage_tree($nid) {
           'attributes' => array('class' => array('button', 'is-small')),
         )
       );
+      // If the nid of the last result in the tree is the node we're on then
+      // there are no children, so don't offer to reorder them.
+      if ($classified_results[count($classified_results) - 1]->entity_id != $nid) {
+        $links[] = l(
+          t('Reorder Guide'),
+          'node/' . $nid . '/tree/reorder',
+          array(
+            'title' => t('Reorder the children of this guide page'),
+            'attributes' => array('class' => array('button', 'is-small')),
+          )
+        );
+      }
     }
   }
 
@@ -103,12 +126,92 @@ function bgpage_tree($nid) {
 }
 
 /**
+ * Form for reordering children of a taxon from the taxonomic view.
+ *
+ * @param $node
+ *   The node object of the node whose children are to be reordered.
+ *
+ * @param $children_results
+ *   Array of solr query results for immediate children of $node.
+ */
+function bgpage_reorder_guide_page_form($form, $form_state, $node, $children_results) {
+  $form['#attributes'] = array('class' => 'guide-edit-form');
+
+  $form['reorder-instructions'] = array(
+    '#markup' => '<p>Change numeric values and click Reorder to change the display order of the given children. No need to use only multiples of 10 (the system will internally change your values to multiples of 10).</p>',
+    '#prefix' => '<div class="guide-reorder-directions">',
+    '#suffix' => '</div>',
+  );
+
+  // Keep an array of child nids to make validation and submission processing
+  // easier.
+  $form['nids'] = array(
+    '#type' => 'value',
+    '#value' => array(),
+  );
+
+  $sequence = 10;
+  foreach($children_results as $result) {
+    $form['nids']['#value'][] = $result->entity_id;
+    $child_title = bgpage_tree_child($result);
+    $form['reorder-' . $result->{'entity_id'}] = array(
+      '#type' => 'textfield',
+      '#default_value' => $sequence,
+      '#size' => 3,
+      '#maxlength' => 3,
+      '#field_suffix' => $child_title,
+    );
+    $sequence += 10;
+  }
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reorder'),
+  );
+
+  return $form;
+}
+
+function bgpage_reorder_guide_page_form_validate($form, &$form_state) {
+  $weights = array();
+  foreach($form_state['values']['nids'] as $nid) {
+    $weight = $form_state['values']['reorder-' . $nid];
+    if (!is_numeric($weight)) {
+      form_set_error('reorder-' . $nid, t('Please enter a numeric value.'));
+      continue;
+    }
+    if (in_array($weight, $weights)) {
+      form_set_error('reorder-' . $nid, t('No number can be repeated.'));
+      continue;
+    }
+    $weights[] = $weight;
+  }
+}
+
+function bgpage_reorder_guide_page_form_submit($form, &$form_state) {
+  foreach ($form_state['values']['nids'] as $nid) {
+    $sequence = $form_state['values']['reorder-' . $nid];
+    $old_sequence = db_query('SELECT field_sequence_value FROM {field_data_field_sequence} WHERE entity_id = :nid', array(':nid' => $nid))->fetchField();
+    if ($sequence != $old_sequence) {
+      $node_wrapper = entity_metadata_wrapper('node', $nid);
+      $node_wrapper->field_sequence->set($sequence);
+      $node_wrapper->save();
+    }
+  }
+
+  drupal_set_message(t('Ordering updated.'));
+  $form_state['redirect'] = 'node/' . $form_state['build_info']['args'][0]->nid . '/tree';
+}
+
+/**
  * Form for adding a guide page from the taxonomic view.
  *
  * @param $node
  *   The node object of the node to add guide page below.
  */
 function bgpage_quickadd_guide_page_form($form, $form_state, $node) {
+  $form['#attributes'] = array('class' => 'guide-edit-form');
+
   $options = bgpage_get_allowed_children($node->field_taxon[LANGUAGE_NONE][0]['value']);
 
   $soon_to_be_parent = _bg_get_title_classification($node);
