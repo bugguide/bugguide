@@ -590,10 +590,13 @@ function bgpage_fetch_classification($nid, $filter) {
     $query = apachesolr_drupal_query('apachesolr', array());
     // Configure query.
     $query->addFilterSubQuery($filter);
-    $query->addParam('fl', 'entity_id,label,ss_bgpage_classification,sm_field_hodges_number,its_field_taxon,sm_field_scientific_name,is_bgpage_total_images');
+    $query->addParam('fl', 'entity_id,label,ss_bgpage_classification,sm_field_hodges_number,its_field_taxon,sm_field_scientific_name,is_bgpage_total_images,ss_bgpage_immediate_parent');
     $query->addParam('rows', 10000000);
-    $query->addParam('sort', 'sort_bgpage_classification asc');
-    $query->addParam('sort', 'sort_label asc');
+    // We need to sort in the reverse direction of the final result due to the
+    // stack in the algorithm below.
+    $query->addParam('sort', 'its_field_weight desc');
+    // There are some cases where weights of multiple children are the same.
+    $query->addParam('sort', 'entity_id desc');
 
     // Run query and render results if matches are found.
     list($final_query, $response) = apachesolr_do_query($query);
@@ -611,7 +614,24 @@ function bgpage_fetch_classification($nid, $filter) {
     ), WATCHDOG_ERROR);
   }
 
-  return $results;
+  $grouped_results = array();
+  foreach ($results as $row) {
+    $grouped_results[$row->ss_bgpage_immediate_parent ?? NULL][] = $row;
+  }
+
+  $ordered_results = array();
+  $stack = $grouped_results[NULL];
+  while (($row = array_pop($stack))) {
+    $ordered_results[] = $row;
+    if (!array_key_exists($row->entity_id, $grouped_results)) {
+      continue;
+    }
+    foreach ($grouped_results[$row->entity_id] as $child) {
+      $stack[] = $child;
+    }
+  }
+
+  return $ordered_results;
 }
 
 /**
