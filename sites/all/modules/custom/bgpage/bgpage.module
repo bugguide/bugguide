@@ -556,7 +556,7 @@ function bgpage_tree_child($result) {
   if ($italics) {
     $output .= "<i>";
   }
-  $output .= t('<a href="@url"><strong>@name</strong></a>', array('@url' => $base_url . "/node/" . $result->entity_id . "/tree", '@name' => $scientific_name));
+  $output .= t('<a href="@url"><strong>!name</strong></a>', array('@url' => $base_url . "/node/" . $result->entity_id . "/tree", '!name' => $scientific_name));
   if ($italics) {
     $output .= "</i>";
   }
