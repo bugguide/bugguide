@@ -330,6 +330,10 @@ a.card-footer-item {
   margin-right: 0.5rem;
 }
 
+.card .links.inline > li {
+  margin-bottom: 0.5rem;
+}
+
 .links.inline > li > a {
   align-items: center;
   border: 1px solid transparent;

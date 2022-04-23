@@ -6,6 +6,61 @@ function bulmabug_preprocess_page(&$vars) {
   $vars['current_database'] = $GLOBALS['databases']['default']['default']['database'];
 }
 
+function bulmabug_preprocess_views_view_field(&$variables, $hook) {
+  if ($variables['view']->name != 'links') {
+    return;
+  }
+
+  if (isset($variables['field']->field) && $variables['field']->field == 'comments_link' && user_access('post comments')) {
+    // The comment module doesn't show the 'Add new comment' link if there
+    // aren't any comments yet, so we just always add it here instead (as long
+    // as the user is logged in).
+    $nid = $variables['row']->nid;
+    $variables['output'] = l(t('Add new comment'), '/node/' . $nid, array('fragment' => 'comment-form', 'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.'))));
+  }
+
+  // You can't format_plural using 'Rewrite results' in the UI, so we do it here
+  // instead.
+  if (isset($variables['field']->field) && $variables['field']->field == 'new_comments') {
+    $output = '';
+    // New comments aren't tracked for anonymous users, so check first.
+    if (isset($variables['row']->node_new_comments)) {
+      $new_comment_count = $variables['row']->node_new_comments;
+      if ($new_comment_count > 0) {
+        $title = format_plural($new_comment_count, '1 new comment', '@count new comments');
+        $nid = $variables['row']->nid;
+        $output = l($title, '/node/' . $nid, array('fragment' => 'new', 'attributes' => array('title' => t('Jump to the first new comment of this posting.'))));
+      }
+      $variables['output'] = $output;
+    }
+  }
+
+  if (isset($variables['field']->field) && $variables['field']->field == 'comment_count') {
+    $output = '';
+    $comment_count = $variables['row']->node_comment_statistics_comment_count;
+    if ($comment_count > 0) {
+      $title = format_plural($comment_count, '1 comment', '@count comments');
+      $nid = $variables['row']->nid;
+      $output = l($title, '/node/' . $nid, array('fragment' => 'comments', 'attributes' => array('title' => t('Jump to the first comment of this posting.'))));
+    }
+    $variables['output'] = $output;
+  }
+
+  if (isset($variables['field']->field) && $variables['field']->options['ui_name'] == 'Breadcrumbs') {
+    // Add a taxonomic path.
+    $node = node_load($variables['row']->nid);
+    $bc = bg_create_taxonomic_breadcrumb($node);
+    if (empty($bc)) {
+      $variables['output'] = '';
+    }
+    else {
+      // Remove the Home link.
+      array_shift($bc);
+      $variables['output'] = implode(' &raquo; ', $bc);
+    }
+  }
+}
+
 /**
  * Implements theme_breadcrumb().
  *

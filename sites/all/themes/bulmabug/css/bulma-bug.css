@@ -693,6 +693,33 @@ input#edit-submit-save-and-sync {
 }
 
 /* --------------------- */
+/* ## LINKS TAB
+/* --------------------- */
+
+.bg-link_title-link {
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.bg-link_byline {
+  margin-bottom: 0.5rem;
+}
+
+.node-type-bglink .bg-link_byline {
+  margin-bottom: 0;
+}
+
+.bg-link_byline span,
+.bg-link_byline .field {
+  margin-bottom: 0;
+}
+
+.bg-link_byline div,
+.bg-link_updated div {
+  display: inline;
+}
+
+/* --------------------- */
 /* ## GUIDE PAGE
 /* --------------------- */
 
@@ -860,6 +887,10 @@ input#edit-submit-save-and-sync {
 /* --------------------- */
 /* ## MISC
 /* --------------------- */
+
+.node-authoring-data {
+  margin-bottom: 0.75rem;
+}
 
 .bg-image-list img {
   margin: 0 !important;

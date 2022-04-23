@@ -109,7 +109,7 @@ function bglink_field_default_field_instances() {
           'custom_title' => '',
         ),
         'type' => 'link_default',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -169,10 +169,9 @@ function bglink_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
+        'type' => 'hidden',
+        'weight' => 28,
       ),
       'homepage' => array(
         'label' => 'above',
@@ -245,7 +244,7 @@ function bglink_field_default_field_instances() {
     'bundle' => 'bglink',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Enter terms separated by commas. Do not prefix terms with a hash (#). Terms should describe and can be used to group content. Examples: green, feathery, mating, gathering2017, subterranean.',
     'display' => array(
       'default' => array(
         'label' => 'inline',
@@ -258,7 +257,7 @@ function bglink_field_default_field_instances() {
           'fallback_settings' => array(),
         ),
         'type' => 'editable',
-        'weight' => 3,
+        'weight' => 29,
       ),
       'homepage' => array(
         'label' => 'above',
