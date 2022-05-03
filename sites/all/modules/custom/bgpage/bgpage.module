@@ -423,6 +423,26 @@ function bgpage_node_form_validate(&$form, &$form_state) {
 
   // Synchronize Drupal node title field with common name field.
   $form_state['values']['title'] = $form_state['values']['field_common_name'][LANGUAGE_NONE][0]['value'];
+
+  // Validate that nids in the representative images list are actually bgimage nodes.
+  $rep_images = $form_state['values']['field_representative_images'][LANGUAGE_NONE][0]['value'];
+  $rep_nids = explode(',', $rep_images);
+  foreach($rep_nids as $rep_nid) {
+    if (!ctype_digit($rep_nid)) {
+      form_set_error('field_representative_images', t("Unrecognized representative image: '@nid'.", array('@nid' => $rep_nid)));
+      break;
+    }
+
+    $node = node_load($rep_nid);
+    if (!$node) {
+      form_set_error('field_representative_images', t('Unknown representative image: !nid.', array('!nid' => $rep_nid)));
+      break;
+    }
+    if ($node->type != 'bgimage') {
+      form_set_error('field_representative_images', t('Node !nid in the Representative Images list is not an image.', array('!nid' => $rep_nid)));
+      break;
+    }
+  }
 }
 
 /**
