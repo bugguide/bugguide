@@ -252,7 +252,7 @@ function bgimage_field_default_field_instances() {
   $field_instances['node-bgimage-field_bgimage_date'] = array(
     'bundle' => 'bgimage',
     'deleted' => 0,
-    'description' => 'Date taken, if known (mm/dd/yy). Only specify this for wild specimens.',
+    'description' => 'Date taken, if known (mm/dd/yyyy). Only specify this for wild specimens.',
     'display' => array(
       'default' => array(
         'label' => 'above',
