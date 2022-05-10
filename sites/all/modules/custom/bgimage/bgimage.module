@@ -229,7 +229,7 @@ function bgimage_apachesolr_index_document_build_node($document, $entity, $env_i
     }
   }
 
-  // List of parents as links, including current node. Used at the Images tab.
+  // List of parents as links (doesn't include the current image node). Used at the Images tab.
   $breadcrumbs = bg_create_taxonomic_breadcrumb($entity, 'Scientific name');
   foreach ($breadcrumbs as $breadcrumb) {
     $document->addField('sm_bgimage_breadcrumbs', $breadcrumb);
