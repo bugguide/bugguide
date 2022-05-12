@@ -74,7 +74,8 @@ function _bgpage_browse($field) {
 
     // If this bgpage node has no children, then create an array with a dummy
     // document containing the current bgpage.
-    if (empty($children_docs)) {
+    $leaf_taxon = empty($children_docs);
+    if ($leaf_taxon) {
       $document = new ApacheSolrDocument();
       $document->entity_id = $node->nid;
       $document->label = check_plain($node->title);
@@ -94,7 +95,12 @@ function _bgpage_browse($field) {
       $node = node_load($child_doc->entity_id);
       // @TODO: Work on title classification by using apache solr query instead.
       list($title_no_markup, $title_markup) = _bg_get_title_classification($node);
-      $output .= '<div class="card mb-3"><div class="card-header"><h2 class="card-header-title"><a href="' . url('node/' . $child_doc->entity_id . '/bgpage') . '" title="' . $title_no_markup . '">' . $title_markup . ' <span class="icon"><span class="fa fa-angle-right" aria-hidden="true"></span></span></a></h2></div>';
+      if (!$leaf_taxon) {
+        $output .= '<div class="card mb-3"><div class="card-header"><h2 class="card-header-title"><a href="' . url('node/' . $child_doc->entity_id . '/bgpage') . '" title="' . $title_no_markup . '">' . $title_markup . ' <span class="icon"><span class="fa fa-angle-right" aria-hidden="true"></span></span></a></h2></div>';
+      }
+      else {
+        $output .= '<div class="card mb-3"><div class="card-header"><h2 class="card-header-title"><span>' . $title_markup . '</span></h2></div>';
+      }
       if (!empty($child_doc->matches)) {
         $output .= '<div class="card-content p-3 bg-image-list"><ul class="columns is-mobile is-multiline">';
         foreach ($child_doc->matches as $image_doc) {
@@ -115,8 +121,13 @@ function _bgpage_browse($field) {
       $output .= '</div>';
     }
 
-    // Print pager.
-    $output .= '<p>' . theme('pager') . '</p>';
+    if (!$leaf_taxon) {
+      // Print pager.
+      $output .= '<p>' . theme('pager') . '</p>';
+    }
+    else {
+      $output .= '<p>' . t('There are no guide pages below this one.') . '</p>';
+    }
   }
   catch (Exception $e) {
     watchdog('bgpage', 'Could not connect to Solr to fetch data for !nid. Error was %error.', array(
