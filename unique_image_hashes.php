@@ -25,7 +25,16 @@ function hashlog($s) {
     echo "";
 }
 
+function writequery($query) {
+  $file = '/var/bugguide/queries.txt';
+  // Write the contents to the file, 
+  // using the FILE_APPEND flag to append the content to the end of the file
+  // and the LOCK_EX flag to prevent anyone else writing to the file at the same time
+  file_put_contents($file, $query . ';' . PHP_EOL, FILE_APPEND | LOCK_EX);
+}
+
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+writequery("--beginning");
 //hashlog("booted up");
 // Walk through bgimage table.
 $result = db_query("SELECT nid, base, newbase FROM bgimage WHERE newbase IS NOT NULL ORDER BY nid");
@@ -79,18 +88,22 @@ foreach ($result as $record) {
   // 4. Update the uri in file_managed
   // but file_copy() does not update the filename so we have to do that
   db_query("UPDATE {file_managed} SET filename = :filename, uri = :uri WHERE fid = :fid", array(':filename' => $obfuscate . '.jpg', ':uri' => $uri, ':fid' => $fid));
+  writequery("UPDATE file_managed SET filename = '$obfuscate', uri = '$uri' WHERE fid = $fid");
   
   // TODO delete $raw_file_url which is the original image path.
   // Deferring this.
   
   // 5. Update the hash in bgimage
   db_query("UPDATE {bgimage} SET base = :uuid WHERE nid = :nid", array(':uuid' => $uuid, ':nid' => $record->nid));
+  writequery("UPDATE bgimage SET base = '$uuid' WHERE nid = $record->nid");
   
   // 6. Update the hash in field_data_bgimage_base
   db_query("UPDATE {field_data_field_bgimage_base} SET field_bgimage_base_value = :uuid WHERE entity_id = :nid", array(':uuid' => $uuid, ':nid' => $record->nid));
+  writequery("UPDATE field_data_field_bgimage_base SET field_bgimage_base_value = '$uuid' WHERE entity_id = $record->nid");
   
   // 7. Update the hash in field_revisions_bgimage_base
   db_query("UPDATE {field_revision_field_bgimage_base} SET field_bgimage_base_value = :uuid WHERE entity_id = :nid", array(':uuid' => $uuid, ':nid' => $record->nid));
+  writequery("UPDATE field_revision_field_bgimage_base SET field_bgimage_base_value = '$uuid' WHERE entity_id = $record->nid");
   
   hashlog("$file_existed $record->nid $record->base $uuid $old_filepath $obfuscate.jpg");
   
