@@ -19,7 +19,6 @@ function bgpage_tree($nid) {
   $query = drupal_get_query_parameters();
 
   $links = array();
-  $output = '';
 
   // First, create the filter that loads parent taxons plus the current one.
   $main_filter = new SolrFilterSubQuery('OR');
@@ -64,14 +63,23 @@ function bgpage_tree($nid) {
     );
   }
 
-  // Fetch the tree from Apache Solr.
-  $classified_results = bgpage_fetch_classification($node->nid, $main_filter);
+  // if (isset($query['expand']) && $mode == 'normal' && ($cache = cache_get('taxonomy_tree_expand_' . $nid))) {
+  //   $output = $cache->data;
+  // }
+  // else {
+  {
+    // Fetch the tree from Apache Solr.
+    $classified_results = bgpage_fetch_classification($node->nid, $main_filter);
 
-  if (empty($classified_results)) {
-    return '<p>No results found.</p>';
+    if (empty($classified_results)) {
+      return '<p>No results found.</p>';
+    }
+
+    $output = bgpage_tree_build($classified_results);
+    // if (isset($query['expand'])) {
+    //   cache_set('taxonomy_tree_expand_' . $nid, $output, 'cache', time() + 3600);
+    // }
   }
-
-  $output = bgpage_tree_build($classified_results);
 
   global $TAXON_IDS;
   $node_taxon = $node->field_taxon[LANGUAGE_NONE][0]['value'];
