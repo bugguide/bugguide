@@ -63,10 +63,11 @@ function bgpage_tree($nid) {
     );
   }
 
-  if (isset($query['expand']) && $mode == 'normal' && ($cache = cache_get('taxonomy_tree_expand_' . $nid))) {
-    $output = $cache->data;
-  }
-  else {
+  // if (isset($query['expand']) && $mode == 'normal' && ($cache = cache_get('taxonomy_tree_expand_' . $nid))) {
+  //   $output = $cache->data;
+  // }
+  // else {
+  {
     // Fetch the tree from Apache Solr.
     $classified_results = bgpage_fetch_classification($node->nid, $main_filter);
 
@@ -75,9 +76,9 @@ function bgpage_tree($nid) {
     }
 
     $output = bgpage_tree_build($classified_results);
-    if (isset($query['expand'])) {
-      cache_set('taxonomy_tree_expand_' . $nid, $output, 'cache', time() + 3600);
-    }
+    // if (isset($query['expand'])) {
+    //   cache_set('taxonomy_tree_expand_' . $nid, $output, 'cache', time() + 3600);
+    // }
   }
 
   global $TAXON_IDS;
