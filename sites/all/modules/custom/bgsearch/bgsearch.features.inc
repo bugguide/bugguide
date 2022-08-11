@@ -280,7 +280,7 @@ function bgsearch_default_search_api_server() {
       "clean_ids" : true,
       "site_hash" : true,
       "scheme" : "http",
-      "host" : "bgsolr.ent.iastate.edu",
+      "host" : "bgsolr2.ent.iastate.edu",
       "port" : "8983",
       "path" : "solr\\/bugguide_search_api",
       "http_user" : "",
