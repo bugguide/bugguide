@@ -253,7 +253,8 @@ function bgpage_quickadd_guide_page_form($form, $form_state, $node) {
 function bgpage_quickadd_guide_page_form_validate($form, &$form_state) {
   global $TAXON_IDS;
   $parent_node = node_load($form_state['values']['original_nid']);
-  $parent = $parent_node->{'field_parent'}[LANGUAGE_NONE][0]['value'] . ',' . $form_state['values']['original_nid'];
+  $parent = empty($parent_node->field_parent) ? $form_state['values']['original_nid']
+    : $parent_node->{'field_parent'}[LANGUAGE_NONE][0]['value'] . ',' . $form_state['values']['original_nid'];
   $taxon_name = $form['taxon']['#options'][$form_state['values']['taxon']];
   // For validation purposes we don't need to know the taxon id of a new No
   // Taxon node (that will be determined in the submit function) - for now any
@@ -284,7 +285,8 @@ function bgpage_quickadd_guide_page_form_submit($form, &$form_state) {
   $new_node = entity_create('node', $new_node_values);
   $new_node_wrapper = entity_metadata_wrapper('node', $new_node);
 
-  $parent = $parent_wrapper->field_parent->value() . ',' . $parent_node->nid;
+  $field_parent = $parent_wrapper->field_parent->value();
+  $parent = $field_parent ? $field_parent . ',' . $parent_node->nid : $parent_node->nid;
   $new_node_wrapper->field_parent->set($parent);
 
   $taxon_name = $form['taxon']['#options'][$form_state['values']['taxon']];
