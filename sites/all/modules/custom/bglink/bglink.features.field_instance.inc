@@ -254,8 +254,11 @@ function bglink_field_default_field_instances() {
           'click_to_edit' => 1,
           'click_to_edit_style' => 'button',
           'empty_text' => '',
-          'fallback_format' => 'taxonomy_term_reference_link',
-          'fallback_settings' => array(),
+          'fallback_format' => 'ds_taxonomy_separator',
+          'fallback_settings' => array(
+            'taxonomy_term_link' => 1,
+            'taxonomy_term_separator' => ' ',
+          ),
         ),
         'type' => 'editable',
         'weight' => 3,
