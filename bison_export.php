@@ -709,8 +709,9 @@ foreach ($r as $t) {
     // 2019 and later can just take a URL
     $taxon['children'][$image->entity_id]['associated_media'] = 'https://bugguide.net/node/view/' . $node->nid;
     
-    $general_comments = check_plain(strip_tags($node->{'body'}[LANGUAGE_NONE][0]['safe_value']));
-    $taxon['children'][$image->entity_id]['general_comments'] = $general_comments;
+    //$general_comments = check_plain(strip_tags($node->{'body'}[LANGUAGE_NONE][0]['safe_value']));
+    //$taxon['children'][$image->entity_id]['general_comments'] = $general_comments;
+    $taxon['children'][$image->entity_id]['general_comments'] = '';
     
     // When no common name is available, BugGuide sets the node title to the scientific name.
     // Take common name if available, otherwise set provided_common_name to be empty string.
