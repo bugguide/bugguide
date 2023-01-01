@@ -372,7 +372,7 @@ foreach ($r as $taxon) {
 
 bison_log("Finding order names");
 // Find name of immediate parent. Continue up the tree til we find a parent
-// that is a family.
+// that is an order.
 $counter = 1;
 foreach ($r as $taxon) {
   if ($counter % 100 == 0) {
