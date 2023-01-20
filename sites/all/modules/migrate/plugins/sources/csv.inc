@@ -152,9 +152,9 @@ class MigrateListCSV extends MigrateList {
       if (!$this->validResource()) {
         return $count;
       }
-      // Skip all but the last header
+      // Skip header rows
       for ($i = 0; $i < $this->headerRows; $i++) {
-        fgets($this->csvHandle);
+        $this->getNextLine();
       }
       while ($this->getNextLine()) {
         $count++;
