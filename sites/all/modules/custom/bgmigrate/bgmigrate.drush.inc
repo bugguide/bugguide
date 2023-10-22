@@ -62,7 +62,7 @@ function drush_bgmigrate_users() {
     // location
     $city_state_country = isset($data['location']) ? $data['location'] : '';
     if ($city_state_country) {
-      $account->field_user_city_state_country[LANGUAGE_NONE][0] = $city_state_country;
+      $account->field_user_city_state_country[LANGUAGE_NONE][0]['value'] = $city_state_country;
     }
     
     // biography
