@@ -118,7 +118,8 @@ function better_formats_filter_process_format($element) {
   if (!$show_selection) {
     if (count($element['format']['format']['#options']) >= 1 && variable_get('better_formats_per_field_core', 0)) {
       $element['#element_validate'] = array('better_formats_only_allow_defaults_if_limited_by_permission');
-      $element['format']['format']['#type'] = 'hidden';
+      $element['format']['format']['#attributes']['class'][] = 'element-invisible';
+      $element['format']['format']['#title_display'] = 'invisible';
     }
     else {
       $element['format']['format']['#access'] = FALSE;
@@ -169,7 +170,8 @@ function better_formats_filter_process_format($element) {
       // If there is only one allowed format, deny access to the text format
       // selector for cosmetic reasons, just like filter_process_format() does.
       if (count($options) == 1) {
-        $element['format']['format']['#type'] = 'hidden';
+        $element['format']['format']['#attributes']['class'][] = 'element-invisible';
+        $element['format']['format']['#title_display'] = 'invisible';
         $show_selection = FALSE;
       }
 

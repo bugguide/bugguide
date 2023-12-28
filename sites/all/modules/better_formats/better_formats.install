@@ -239,7 +239,7 @@ function better_formats_update_7102(&$sandbox) {
   }
 
   if (empty($sandbox)) {
-    $sandbox['max'] = db_query("SELECT COUNT(*) FROM temp_fix_better_formats WHERE fixed = 0")->fetchField();
+    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {temp_fix_better_formats} WHERE fixed = 0")->fetchField();
     if (empty($sandbox['max'])) {
       return t('No records to fix.');
     }
@@ -260,7 +260,7 @@ function better_formats_update_7102(&$sandbox) {
   // The default format available for the site.
   $default_format = filter_default_format();
 
-  $results = db_query_range("SELECT * FROM temp_fix_better_formats WHERE fixed = 0", 0, $limit);
+  $results = db_query_range("SELECT * FROM {temp_fix_better_formats} WHERE fixed = 0", 0, $limit);
 
   if ($results->rowCount() > 0) {
     foreach ($results as $record) {
