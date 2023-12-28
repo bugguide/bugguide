@@ -13,7 +13,6 @@ function bugguide_install() {
 
   // Create menu links
   $main_menu_links = array(
-    array('title' => 'Home', 'path' => '<front>'),
     array('title' => 'Guide', 'path' => 'node/3/bgpage'),
     array('title' => 'ID Request', 'path' => 'node/6/bgimage'),
     array('title' => 'Recent', 'path' => 'node'),
