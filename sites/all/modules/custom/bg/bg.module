@@ -16,6 +16,28 @@ include_once 'bg.features.inc';
  */
 
 /**
+ * @param $message string
+ * @return void
+ *
+ * Simple debug logging to text file. Watchdog may not be accurate within transactions.
+ */
+function bg_log($message) {
+  if (!variable_get('debug_logging', FALSE)) {
+    return;
+  }
+  // Short timestamp to preserve space.
+  $timestamp = date('d H:i:s', REQUEST_TIME);
+
+  $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+  $caller = isset($backtrace[1]['function']) ? $backtrace[1]['function'] : 'none';
+
+  $log_message = sprintf("[%s] %s %s", $timestamp, $caller, $message) . PHP_EOL;
+  $log_file = variable_get('debug_logfile', '/opt/local/var/log/bg.log');
+
+  file_put_contents($log_file, $log_message, FILE_APPEND);
+}
+
+/**
  * Implementation of hook_theme().
  */
 function bg_theme() {
