@@ -26,7 +26,7 @@ function bugguide_install() {
       'link_title' => $link['title'],
       'link_path' => $link['path'],
       'menu_name' => 'main-menu',
-      'weight' => $weight,
+      'weight' => $weight + 1,
       'plid' => 0,
     );
     menu_link_save($item);
