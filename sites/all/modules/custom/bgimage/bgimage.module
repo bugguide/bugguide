@@ -362,6 +362,19 @@ function bgimage_field_formatter_info() {
       'field types' => array('image'),
       'settings' => array('image_style' => 'bg_large', 'image_link' => ''),
     ),
+    // A formatter for fivestar which adds an option for displaying user's stars
+    // if logged in but average stars if not, and otherwise simply delegates to
+    // fivestar's formatter.
+    'bgimage_fivestar_formatter' => array(
+      'label' => t('BugGuide Stars'),
+      'field types' => array('fivestar'),
+      'settings' => array(
+        'widget' => array('fivestar_widget' => NULL),
+        'style' => 'anonymous-or-not',
+        'text' => 'average',
+        'expose' => TRUE,
+      ),
+    ),
   );
 
   return $formatters;
@@ -371,47 +384,73 @@ function bgimage_field_formatter_info() {
  * Implements hook_field_formatter_view().
  */
 function bgimage_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  $element = array();
-  // Check if the formatter involves a link.
-  if ($display['settings']['image_link'] == 'content') {
-    $uri = entity_uri($entity_type, $entity);
-  }
-  elseif ($entity->type == 'bgimage' && count($items) == 1) {
-    // Provide a link to the fullsize image if either the user created the image
-    // or they have the right permission.
-    global $user;
-    if ($items[0]['uid'] == $user->uid || user_access('view fullsize bgimages')) {
-      $uri = array(
-        'path' => file_create_url($items[0]['uri']),
-        'options' => array(),
+  if ($display['type'] == 'bgimage_conditional_link_formatter') {
+    $element = array();
+    // Check if the formatter involves a link.
+    if ($display['settings']['image_link'] == 'content') {
+      $uri = entity_uri($entity_type, $entity);
+    }
+    elseif ($entity->type == 'bgimage' && count($items) == 1) {
+      // Provide a link to the fullsize image if either the user created the
+      // image or they have the right permission.
+      global $user;
+      if ($items[0]['uid'] == $user->uid || user_access('view fullsize bgimages')) {
+        $uri = array(
+          'path' => file_create_url($items[0]['uri']),
+          'options' => array(),
+        );
+      }
+    }
+
+    foreach ($items as $delta => $item) {
+      $element[$delta] = array(
+        '#theme' => 'image_formatter',
+        '#item' => $item,
+        '#image_style' => $display['settings']['image_style'],
+        '#path' => isset($uri) ? $uri : '',
       );
     }
-  }
 
-  foreach ($items as $delta => $item) {
-    $element[$delta] = array(
-      '#theme' => 'image_formatter',
-      '#item' => $item,
-      '#image_style' => $display['settings']['image_style'],
-      '#path' => isset($uri) ? $uri : '',
-    );
+    return $element;
   }
-
-  return $element;
+  elseif ($display['type'] == 'bgimage_fivestar_formatter') {
+    $display['type'] = 'fivestar_formatter_default';
+    if ($display['settings']['style'] == 'anonymous-or-not') {
+      // Switch to one of fivestar's styles for display.
+      $display['settings']['style'] = user_is_logged_in() ? 'user' : 'average';
+    }
+    return fivestar_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display);
+  }
 }
 
 /**
- * Implements hook_field_formatter_settings_form() by wrapping the default.
+ * Implements hook_field_formatter_settings_form().
  */
 function bgimage_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
-  return image_field_formatter_settings_form($field, $instance, $view_mode, $form,$form_state);
+  if ($instance['display'][$view_mode]['type'] == 'bgimage_conditional_link_formatter') {
+    return image_field_formatter_settings_form($field, $instance, $view_mode, $form,$form_state);
+  }
+  elseif ($instance['display'][$view_mode]['type'] == 'bgimage_fivestar_formatter') {
+    $instance['display'][$view_mode]['type'] = 'fivestar_formatter_default';
+    $element = fivestar_field_formatter_settings_form($field, $instance, $view_mode, $form, $form_state);
+    // Prepend a new option.
+    $element['style']['#options'] = array('anonymous-or-not' => t("User's vote if logged in, average otherwise")) + $element['style']['#options'];
+
+    return $element;
+  }
 }
 
 /**
- * Implements hook_field_formatter_settings_summary() by wrapping the default.
+ * Implements hook_field_formatter_settings_summary().
  */
 function bgimage_field_formatter_settings_summary($field, $instance, $view_mode) {
-  return image_field_formatter_settings_summary($field, $instance, $view_mode);
+  if ($instance['display'][$view_mode]['type'] == 'bgimage_conditional_link_formatter') {
+    return image_field_formatter_settings_summary($field, $instance, $view_mode);
+  }
+  elseif ($instance['display'][$view_mode]['type'] == 'bgimage_fivestar_formatter') {
+    $instance['display'][$view_mode]['type'] = 'fivestar_formatter_default';
+    return fivestar_field_formatter_settings_summary($field, $instance, $view_mode);
+  }
 }
 
 /**
